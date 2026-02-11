@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface LogoProps {
   className?: string;
@@ -47,11 +50,12 @@ export function Logo({ className, size = 32 }: LogoProps) {
 }
 
 export function LogoText() {
+  const t = useTranslations('Common');
   return (
     <div className="flex items-center gap-3">
       <Logo size={40} />
-      <span className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40">
-        MALLAH
+      <span className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40 uppercase">
+        {t('logo')}
       </span>
     </div>
   );
