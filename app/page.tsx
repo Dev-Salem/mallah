@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/app/auth/actions";
+import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { 
   ArrowRight, 
@@ -16,7 +19,10 @@ import {
   Cpu
 } from "lucide-react";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="flex flex-min-h-screen flex-col overflow-x-hidden">
       {/* Navigation */}
@@ -37,10 +43,29 @@ export default function LandingPage() {
             <a href="#outcomes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Outcomes</a>
           </nav>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" className="text-sm">Sign In</Button>
-            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <form action={signOut}>
+                  <Button variant="ghost" className="text-sm">Sign Out</Button>
+                </form>
+                <Link href="/dashboard">
+                  <Button className="bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                    Dashboard
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" className="text-sm">Sign In</Button>
+                </Link>
+                <Link href="/login">
+                  <Button className="bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -62,9 +87,11 @@ export default function LandingPage() {
               University gives you the degree. Mallah gives you the career. Structured roadmaps, project-based evidence, and AI-assisted optimization to make you job-ready from day one.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="h-12 px-8 bg-emerald-600 hover:bg-emerald-500 text-white text-base">
-                Start Your Career Path <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href={user ? "/dashboard" : "/login"}>
+                <Button size="lg" className="h-12 px-8 bg-emerald-600 hover:bg-emerald-500 text-white text-base">
+                  {user ? "Continue Your Journey" : "Start Your Career Path"} <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
               <Button variant="outline" size="lg" className="h-12 px-8 border-white/10 glass hover:bg-white/5 text-base">
                 View Roadmap Demo
               </Button>
@@ -336,14 +363,16 @@ export default function LandingPage() {
              <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
                Stop consuming and start preparing. Join Mallah today and build the specialized technical profile for the career you want.
              </p>
-             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="h-14 px-10 bg-emerald-600 hover:bg-emerald-500 text-white text-lg shadow-[0_0_30px_rgba(16,185,129,0.4)]">
-                  Start Your Career Path
-                </Button>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href={user ? "/dashboard" : "/login"}>
+                  <Button size="lg" className="h-14 px-10 bg-emerald-600 hover:bg-emerald-500 text-white text-lg shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+                    {user ? "Access Your Dashboard" : "Start Your Career Path"}
+                  </Button>
+                </Link>
                 <Button variant="outline" size="lg" className="h-14 px-10 glass border-white/10 text-lg">
                   Learn More
                 </Button>
-             </div>
+              </div>
            </div>
         </section>
       </main>
