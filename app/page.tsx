@@ -18,6 +18,7 @@ import {
   Briefcase, 
   Cpu
 } from "lucide-react";
+import { Logo, LogoText } from "@/components/ui/logo";
 
 export default async function LandingPage() {
   const supabase = await createClient();
@@ -28,14 +29,7 @@ export default async function LandingPage() {
       {/* Navigation */}
       <header className="fixed top-0 z-50 w-full border-b border-white/10 glass">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-purple-600 flex items-center justify-center">
-              <span className="font-bold text-white text-lg">M</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-              Mallah
-            </span>
-          </div>
+          <LogoText />
           <nav className="hidden md:flex items-center gap-8">
             <a href="#problem" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">The Gap</a>
             <a href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Process</a>
@@ -49,7 +43,7 @@ export default async function LandingPage() {
                   <Button variant="ghost" className="text-sm">Sign Out</Button>
                 </form>
                 <Link href="/dashboard">
-                  <Button className="bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 shadow-[0_0_20px_var(--primary)] shadow-primary/20">
                     Dashboard
                   </Button>
                 </Link>
@@ -60,7 +54,7 @@ export default async function LandingPage() {
                   <Button variant="ghost" className="text-sm">Sign In</Button>
                 </Link>
                 <Link href="/login">
-                  <Button className="bg-emerald-600 hover:bg-emerald-500 text-white border-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground border-0 shadow-[0_0_20px_var(--primary)] shadow-primary/20">
                     Get Started
                   </Button>
                 </Link>
@@ -70,15 +64,18 @@ export default async function LandingPage() {
         </div>
       </header>
 
-      <main className="flex-1 pt-16">
+      <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative px-4 pt-24 pb-32 md:pt-32 md:pb-48">
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1),transparent_50%)]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-20 h-[500px] w-[500px] bg-purple-600/10 blur-[120px]" />
+        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+          {/* Navigational Glows */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 h-[600px] w-full max-w-[1200px] bg-[radial-gradient(ellipse_at_center,var(--primary),transparent_70%)] opacity-10" />
+          <div className="absolute top-1/4 -right-20 -z-10 h-[400px] w-[400px] bg-primary/5 blur-[120px]" />
+          <div className="absolute bottom-0 -left-20 -z-10 h-[400px] w-[400px] bg-primary/5 blur-[120px]" />
           
-          <div className="container mx-auto text-center max-w-4xl">
-            <Badge variant="outline" className="mb-6 px-4 py-1 border-emerald-500/30 bg-emerald-500/5 text-emerald-400 font-medium">
-              Career Preparation Platform
+          <div className="container mx-auto px-4 text-center">
+            <Badge variant="outline" className="mb-6 py-1.5 px-4 border-primary/30 bg-primary/5 text-primary glass animate-in fade-in slide-in-from-bottom-3 duration-1000">
+              <span className="h-2 w-2 rounded-full bg-primary mr-2 animate-pulse" />
+              Navigation for Your Career Journey
             </Badge>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
               Bridge the Gap Between Graduation and Employment
@@ -88,7 +85,7 @@ export default async function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href={user ? "/dashboard" : "/login"}>
-                <Button size="lg" className="h-12 px-8 bg-emerald-600 hover:bg-emerald-500 text-white text-base">
+                <Button size="lg" className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground text-base">
                   {user ? "Continue Your Journey" : "Start Your Career Path"} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -107,8 +104,8 @@ export default async function LandingPage() {
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">The Academic Disconnect</h2>
                 <div className="space-y-6">
                   <div className="flex gap-4">
-                    <div className="h-10 w-10 shrink-0 rounded-full bg-red-500/10 flex items-center justify-center">
-                      <ShieldCheck className="h-5 w-5 text-red-400" />
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <ShieldCheck className="h-5 w-5 text-destructive" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-lg text-white">Theory vs. Practice</h4>
@@ -116,8 +113,8 @@ export default async function LandingPage() {
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="h-10 w-10 shrink-0 rounded-full bg-red-500/10 flex items-center justify-center">
-                      <Search className="h-5 w-5 text-red-400" />
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <Search className="h-5 w-5 text-destructive" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-lg text-white">Information Overload</h4>
@@ -127,7 +124,7 @@ export default async function LandingPage() {
                 </div>
               </div>
               <Card className="glass border-white/10 p-8">
-                <blockquote className="text-xl italic text-white/80 leading-relaxed border-l-4 border-emerald-500 pl-6 mb-6">
+                <blockquote className="text-xl italic text-white/80 leading-relaxed border-l-4 border-primary pl-6 mb-6">
                   "Most CS graduates feel qualified for a degree, but unqualified for a job. Mallah was built to solve this transition."
                 </blockquote>
                 <p className="text-sm text-muted-foreground">— The Mallah Philosophy</p>
@@ -145,17 +142,17 @@ export default async function LandingPage() {
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="p-8 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
-                <Target className="h-10 w-10 text-emerald-500 mb-6" />
+                <Target className="h-10 w-10 text-primary mb-6" />
                 <h3 className="text-xl font-bold text-white mb-3">Structured Direction</h3>
                 <p className="text-muted-foreground">No more guessing. Predefined roadmaps show exactly where you are and what step you need to take next.</p>
               </div>
               <div className="p-8 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
-                <Rocket className="h-10 w-10 text-purple-500 mb-6" />
+                <Rocket className="h-10 w-10 text-primary mb-6" />
                 <h3 className="text-xl font-bold text-white mb-3">Skill Evidence</h3>
                 <p className="text-muted-foreground">Don't just claim skills. Build verified projects that serve as tangible proof of your technical capabilities.</p>
               </div>
               <div className="p-8 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
-                <FileText className="h-10 w-10 text-blue-500 mb-6" />
+                <FileText className="h-10 w-10 text-primary mb-6" />
                 <h3 className="text-xl font-bold text-white mb-3">Job Readiness</h3>
                 <p className="text-muted-foreground">Move beyond 'content consumption'. Our platform forces an outcome-focused approach to every topic you learn.</p>
               </div>
@@ -164,7 +161,7 @@ export default async function LandingPage() {
         </section>
 
         {/* How Mallah Works */}
-        <section id="how-it-works" className="py-24 bg-emerald-500/5 border-y border-emerald-500/10">
+        <section id="how-it-works" className="py-24 bg-primary/5 border-y border-primary/10">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Your Path to Preparation</h2>
@@ -178,7 +175,7 @@ export default async function LandingPage() {
                 { title: "Validation", desc: "Generate a skills-first resume and portfolio optimized for hiring managers." }
               ].map((step, idx) => (
                 <div key={idx} className="relative">
-                  <div className="mb-4 text-4xl font-extrabold text-emerald-500/20">{idx + 1}</div>
+                  <div className="mb-4 text-4xl font-extrabold text-primary/20">{idx + 1}</div>
                   <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
                   <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
                 </div>
@@ -195,7 +192,7 @@ export default async function LandingPage() {
               <Card className="glass border-white/10 overflow-hidden group">
                 <CardContent className="p-0 flex flex-col md:flex-row h-full">
                   <div className="p-8 flex-1">
-                    <Map className="h-8 w-8 text-emerald-500 mb-4" />
+                    <Map className="h-8 w-8 text-primary mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">Learning Roadmaps</h3>
                     <p className="text-muted-foreground mb-4">Granular, step-by-step paths from basics to advanced specialization. Never feel lost again with clear stages and actionable topics.</p>
                     <ul className="text-sm space-y-2 text-white/70">
@@ -204,8 +201,8 @@ export default async function LandingPage() {
                       <li className="flex items-center gap-2">• Resource curation for every topic</li>
                     </ul>
                   </div>
-                  <div className="md:w-1/3 bg-emerald-900/10 border-l border-white/5 flex items-center justify-center p-8">
-                    <div className="h-full w-full rounded border border-emerald-500/20 bg-emerald-500/5 animate-pulse" />
+                  <div className="md:w-1/3 bg-primary/10 border-l border-white/5 flex items-center justify-center p-8">
+                    <div className="h-full w-full rounded border border-primary/20 bg-primary/5 animate-pulse" />
                   </div>
                 </CardContent>
               </Card>
@@ -213,7 +210,7 @@ export default async function LandingPage() {
               <Card className="glass border-white/10 overflow-hidden group">
                 <CardContent className="p-0 flex flex-col md:flex-row h-full">
                   <div className="p-8 flex-1">
-                    <Cpu className="h-8 w-8 text-purple-500 mb-4" />
+                    <Cpu className="h-8 w-8 text-primary mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">Opportunity Analyzer</h3>
                     <p className="text-muted-foreground mb-4">Upload any job description and let AI map your current skills against market requirements. Identify gaps and generate action plans.</p>
                     <ul className="text-sm space-y-2 text-white/70">
@@ -222,8 +219,8 @@ export default async function LandingPage() {
                       <li className="flex items-center gap-2">• Market demand scoring</li>
                     </ul>
                   </div>
-                  <div className="md:w-1/3 bg-purple-900/10 border-l border-white/5 flex items-center justify-center p-8">
-                    <div className="h-full w-full rounded border border-purple-500/20 bg-purple-500/5 animate-pulse" />
+                  <div className="md:w-1/3 bg-primary/10 border-l border-white/5 flex items-center justify-center p-8">
+                    <div className="h-full w-full rounded border border-primary/20 bg-primary/5 animate-pulse" />
                   </div>
                 </CardContent>
               </Card>
@@ -231,13 +228,13 @@ export default async function LandingPage() {
               <Card className="glass border-white/10 overflow-hidden">
                 <CardContent className="p-0 flex flex-col md:flex-row h-full">
                   <div className="p-8 flex-1">
-                    <Layers className="h-8 w-8 text-emerald-500 mb-4" />
+                    <Layers className="h-8 w-8 text-primary mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">Skills & Projects Hub</h3>
                     <p className="text-muted-foreground mb-4">A central repository for your technical evidence. Every project you complete is tagged with specific skills to build your professional profile.</p>
                   </div>
-                  <div className="md:w-1/3 bg-emerald-900/10 border-l border-white/5 p-8 flex items-center justify-center">
+                  <div className="md:w-1/3 bg-primary/10 border-l border-white/5 p-8 flex items-center justify-center">
                     <div className="grid grid-cols-2 gap-2 w-full">
-                      {[1,2,3,4].map(i => <div key={i} className="h-8 rounded bg-emerald-500/10 border border-emerald-500/20" />)}
+                      {[1,2,3,4].map(i => <div key={i} className="h-8 rounded bg-primary/10 border border-primary/20" />)}
                     </div>
                   </div>
                 </CardContent>
@@ -246,14 +243,14 @@ export default async function LandingPage() {
               <Card className="glass border-white/10 overflow-hidden">
                 <CardContent className="p-0 flex flex-col md:flex-row h-full">
                   <div className="p-8 flex-1">
-                    <FileText className="h-8 w-8 text-purple-500 mb-4" />
+                    <FileText className="h-8 w-8 text-primary mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">Smart Resume Builder</h3>
                     <p className="text-muted-foreground mb-4">AI assistance that focuses on wording and impact. Turn basic descriptions into powerful professional statements that pass ATS systems.</p>
                   </div>
-                  <div className="md:w-1/3 bg-purple-900/10 border-l border-white/5 p-8 flex flex-col gap-2 justify-center">
-                    <div className="h-4 w-full bg-purple-500/20 rounded" />
-                    <div className="h-4 w-3/4 bg-purple-500/10 rounded" />
-                    <div className="h-4 w-full bg-purple-500/20 rounded" />
+                  <div className="md:w-1/3 bg-primary/10 border-l border-white/5 p-8 flex flex-col gap-2 justify-center">
+                    <div className="h-4 w-full bg-primary/20 rounded" />
+                    <div className="h-4 w-3/4 bg-primary/10 rounded" />
+                    <div className="h-4 w-full bg-primary/20 rounded" />
                   </div>
                 </CardContent>
               </Card>
@@ -276,13 +273,13 @@ export default async function LandingPage() {
                 </ul>
               </div>
               <div className="bg-zinc-900/50 p-10 relative">
-                <div className="absolute top-0 right-0 p-4"><Badge className="bg-emerald-600">The Mallah Way</Badge></div>
+                <div className="absolute top-0 right-0 p-4"><Badge className="bg-primary text-primary-foreground">The Mallah Way</Badge></div>
                 <h4 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Mallah Platform</h4>
                 <ul className="space-y-4 text-white/90 font-medium">
-                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-emerald-500" /> Focus on career readiness outcomes</li>
-                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-emerald-500" /> Role-specific specialized paths</li>
-                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-emerald-500" /> Evidence-based skill verification</li>
-                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-emerald-500" /> Active preparation for job markets</li>
+                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-primary" /> Focus on career readiness outcomes</li>
+                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-primary" /> Role-specific specialized paths</li>
+                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-primary" /> Evidence-based skill verification</li>
+                  <li className="flex items-center gap-3"><ArrowRight className="h-4 w-4 text-primary" /> Active preparation for job markets</li>
                 </ul>
               </div>
             </div>
@@ -296,21 +293,21 @@ export default async function LandingPage() {
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div className="flex flex-col items-center">
                 <div className="h-16 w-16 rounded-full glass flex items-center justify-center mb-6">
-                  <GraduationCap className="h-8 w-8 text-emerald-500" />
+                  <GraduationCap className="h-8 w-8 text-primary" />
                 </div>
                 <h4 className="text-xl font-bold text-white mb-2">CS/IT Students</h4>
                 <p className="text-muted-foreground text-sm px-4">Bridge the gap between your university degree and the fast-moving tech market requirements.</p>
               </div>
               <div className="flex flex-col items-center">
                 <div className="h-16 w-16 rounded-full glass flex items-center justify-center mb-6">
-                  <Briefcase className="h-8 w-8 text-purple-500" />
+                  <Briefcase className="h-8 w-8 text-primary" />
                 </div>
                 <h4 className="text-xl font-bold text-white mb-2">Fresh Graduates</h4>
                 <p className="text-muted-foreground text-sm px-4">Structure your first 6 months post-grad to land a competitive junior role at top firms.</p>
               </div>
               <div className="flex flex-col items-center">
                 <div className="h-16 w-16 rounded-full glass flex items-center justify-center mb-6">
-                  <Rocket className="h-8 w-8 text-blue-500" />
+                  <Rocket className="h-8 w-8 text-primary" />
                 </div>
                 <h4 className="text-xl font-bold text-white mb-2">Career Switchers</h4>
                 <p className="text-muted-foreground text-sm px-4">Direct, focused learning that skips the fluff and gets you ready for your new technical field fast.</p>
@@ -320,9 +317,9 @@ export default async function LandingPage() {
         </section>
 
         {/* Outcome-Focused Section */}
-        <section id="outcomes" className="py-24 bg-gradient-to-b from-transparent to-emerald-500/5">
+        <section id="outcomes" className="py-24 bg-gradient-to-b from-transparent to-primary/5">
           <div className="container mx-auto px-4 max-w-4xl">
-            <Card className="glass border-emerald-500/20 p-8 md:p-12">
+            <Card className="glass border-primary/20 p-8 md:p-12">
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div>
                   <h2 className="text-3xl font-bold text-white mb-6">The Outcome: Total Readiness</h2>
@@ -330,21 +327,21 @@ export default async function LandingPage() {
                   <div className="space-y-4">
                     {["Clarity and Direction", "A Verified Portfolio", "ATS-Optimized Resume", "Skill Market Awareness"].map(item => (
                       <div key={item} className="flex items-center gap-3 text-white/80">
-                        <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                        <ShieldCheck className="h-5 w-5 text-primary" />
                         <span>{item}</span>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-0 bg-emerald-500/20 blur-[60px]" />
+                  <div className="absolute inset-0 bg-primary/20 blur-[60px]" />
                   <div className="relative h-64 rounded-xl border border-white/10 glass bg-white/5 p-6 overflow-hidden">
                     <div className="space-y-4 animate-pulse">
                       <div className="h-2 w-full bg-white/10 rounded" />
                       <div className="h-2 w-3/4 bg-white/10 rounded" />
                       <div className="h-2 w-full bg-white/10 rounded" />
                       <div className="mt-8 border-t border-white/10 pt-4">
-                        <div className="h-4 w-1/2 bg-emerald-500/20 rounded mb-2" />
+                        <div className="h-4 w-1/2 bg-primary/20 rounded mb-2" />
                         <div className="h-10 w-full bg-white/5 rounded" />
                       </div>
                     </div>
@@ -357,7 +354,7 @@ export default async function LandingPage() {
 
         {/* Final CTA */}
         <section className="py-32 relative overflow-hidden">
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[400px] w-[800px] bg-emerald-500/10 blur-[100px] rounded-full" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[400px] w-[800px] bg-primary/10 blur-[100px] rounded-full" />
            <div className="container mx-auto px-4 text-center">
              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">Your preparation starts now.</h2>
              <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
@@ -365,7 +362,7 @@ export default async function LandingPage() {
              </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href={user ? "/dashboard" : "/login"}>
-                  <Button size="lg" className="h-14 px-10 bg-emerald-600 hover:bg-emerald-500 text-white text-lg shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+                  <Button size="lg" className="h-14 px-10 bg-primary hover:bg-primary/90 text-primary-foreground text-lg shadow-[0_0_30px_var(--primary)] shadow-primary/40">
                     {user ? "Access Your Dashboard" : "Start Your Career Path"}
                   </Button>
                 </Link>
@@ -379,10 +376,7 @@ export default async function LandingPage() {
 
       <footer className="py-12 border-t border-white/5">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded bg-gradient-to-br from-emerald-500 to-purple-600" />
-            <span className="text-lg font-bold text-white">Mallah</span>
-          </div>
+          <LogoText />
           <div className="flex gap-8 text-sm text-muted-foreground">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

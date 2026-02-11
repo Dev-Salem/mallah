@@ -17,24 +17,22 @@ export default function AuthForm() {
           variables: {
             default: {
               colors: {
-                brand: 'oklch(0.6171 0.1375 39.0427)',
-                brandAccent: 'oklch(0.6171 0.1375 39.0427 / 0.8)',
+                brand: 'var(--primary)',
+                brandAccent: 'var(--primary)',
                 inputBackground: 'transparent',
                 inputText: 'inherit',
-                inputBorder: 'oklch(0.8847 0.0069 97.3627 / 0.2)',
-                inputPlaceholder: 'oklch(0.6059 0.0075 97.4233)',
+                inputBorder: 'var(--border)',
+                inputPlaceholder: 'var(--muted-foreground)',
               },
               radii: {
-                borderRadiusButton: '0.5rem',
-                buttonPadding: '0.75rem',
-                inputPadding: '0.75rem',
+                borderRadiusButton: 'var(--radius)',
               },
             },
           },
           className: {
             container: 'flex flex-col gap-4',
             button: 'font-medium transition-all hover:scale-[1.02] active:scale-[0.98]',
-            input: 'glass border-white/10 rounded-lg focus:ring-2 focus:ring-emerald-500/50 outline-none',
+            input: 'glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none',
             label: 'text-sm font-medium text-white/70 mb-1',
           }
         }}
