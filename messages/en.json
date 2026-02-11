@@ -65,7 +65,11 @@
     "authorized": "Authorized Navigator",
     "sessionActive": "Session Active",
     "signOut": "Deauthorize Terminal",
-    "welcome": "Welcome back, Navigator"
+    "welcome": "Welcome back, Navigator",
+    "roadmap": "Roadmap",
+    "skillsHub": "Skills & Projects",
+    "resumeBuilder": "Resume Builder",
+    "opportunityAnalyzer": "Opportunity Analyzer"
   },
   "Common": {
     "logo": "MALLAH"

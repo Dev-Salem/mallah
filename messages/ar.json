@@ -65,7 +65,11 @@
     "authorized": "ملاح معتمد",
     "sessionActive": "الجلسة نشطة",
     "signOut": "إنهاء الجلسة",
-    "welcome": "مرحباً بك مجدداً، أيها الملاح"
+    "welcome": "مرحباً بك مجدداً، أيها الملاح",
+    "roadmap": "خارطة الطريق",
+    "skillsHub": "المهارات والمشاريع",
+    "resumeBuilder": "بناء السيرة",
+    "opportunityAnalyzer": "محلل الفرص"
   },
   "Common": {
     "logo": "ملاح"
