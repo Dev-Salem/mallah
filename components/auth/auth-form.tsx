@@ -37,7 +37,7 @@ export default function AuthForm() {
           }
         }}
         theme="dark"
-        showLinks={true}
+        showLinks={false}
         providers={[]} // Add 'github' or 'google' here if configured in Supabase Dashboard
         redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`}
       />

@@ -12,16 +12,9 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      const forwardedHost = request.headers.get('x-forwarded-host') // i.e. vercel.com
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        // we can be sure that origin is localhost
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
+      // Direct redirect to origin + next. 
+      // The middleware will handle localizing the route if next is '/'
+      return NextResponse.redirect(`${origin}${next}`)
     }
   }
 

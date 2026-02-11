@@ -6,6 +6,13 @@ import { updateSession } from './lib/supabase/middleware'
 const intlMiddleware = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  
+  // Skip intl middleware for technical routes
+  if (pathname.startsWith('/auth') || pathname.startsWith('/api')) {
+    return await updateSession(request)
+  }
+
   const response = intlMiddleware(request);
   return await updateSession(request, response)
 }
