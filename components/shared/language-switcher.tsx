@@ -13,7 +13,7 @@ export function LanguageSwitcher() {
   const pathname = usePathname();
 
   function onLanguageChange() {
-    const nextLocale = locale === 'en' ? 'ar-SA' : 'en';
+    const nextLocale = locale === 'en' ? 'ar' : 'en';
     startTransition(() => {
       router.replace(pathname, {locale: nextLocale});
     });
@@ -28,7 +28,7 @@ export function LanguageSwitcher() {
       className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground hover:text-primary transition-all rounded-none border border-white/5 px-3"
     >
       <Languages className="mr-2 h-3 w-3" />
-      {locale === 'en' ? 'AR-SA' : 'EN'}
+      {locale === 'en' ? 'AR' : 'EN'}
     </Button>
   );
 }

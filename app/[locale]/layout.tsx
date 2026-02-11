@@ -1,4 +1,4 @@
-import { Inter, JetBrains_Mono, Alexandria } from "next/font/google";
+import { Inter, JetBrains_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
 import { getMessages, getLocale } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
 import "../globals.css";
@@ -13,10 +13,10 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const alexandria = Alexandria({
-  subsets: ["arabic"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-alexandria",
+const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  variable: "--font-ibm-plex-arabic",
   display: "swap",
 });
 
@@ -37,8 +37,8 @@ export default async function RootLayout({
   const isArabic = locale.startsWith('ar');
 
   return (
-    <html lang={locale} className="dark" dir={isArabic ? 'rtl' : 'ltr'}>
-      <body className={`${inter.variable} ${mono.variable} ${alexandria.variable} font-sans antialiased bg-background text-foreground`}>
+    <html lang={locale} className={`dark ${inter.variable} ${mono.variable} ${ibmPlexArabic.variable}`} dir={isArabic ? 'rtl' : 'ltr'}>
+      <body className="antialiased bg-background text-foreground">
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>

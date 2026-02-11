@@ -24,7 +24,7 @@ export default async function LandingPage() {
   ];
 
   return (
-    <div className={`relative min-h-screen bg-background ${isArabic ? 'font-arabic' : 'font-sans'} selection:bg-primary selection:text-primary-foreground overflow-x-hidden`}>
+    <div className="relative min-h-screen bg-background selection:bg-primary selection:text-primary-foreground overflow-x-hidden">
       {/* Visual Infrastructure */}
       <div className="fixed inset-0 noise z-[100] mix-blend-overlay pointer-events-none" />
       <div className="fixed inset-0 hud-grid opacity-[0.4] pointer-events-none" />
@@ -154,7 +154,7 @@ export default async function LandingPage() {
                   <div className="absolute top-0 left-0 w-1 h-0 bg-primary group-hover:h-full transition-all duration-500" />
                   <span className="text-[9px] font-mono text-primary/60 mb-8 block tracking-[0.3em] font-bold">{item.label}</span>
                   <h4 className="text-lg font-mono font-bold text-white mb-4 tracking-tight uppercase group-hover:text-primary transition-colors">{t(`Problem.${item.key}Title`)}</h4>
-                  <p className="text-sm font-mono text-muted-foreground/70 leading-relaxed font-monos">{t(`Problem.${item.key}Desc`)}</p>
+                  <p className="text-sm font-mono text-muted-foreground/70 leading-relaxed font-mono">{t(`Problem.${item.key}Desc`)}</p>
                 </div>
               ))}
             </div>

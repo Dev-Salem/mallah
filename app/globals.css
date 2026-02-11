@@ -1,4 +1,3 @@
-@plugin "tailwindcss-animate";
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
@@ -23,11 +22,13 @@
   --border: oklch(0.8847 0.0069 97.3627);
   --input: oklch(0.7621 0.0156 98.3528);
   --ring: oklch(0.6171 0.1375 39.0427);
+  
   --chart-1: oklch(0.5583 0.1276 42.9956);
   --chart-2: oklch(0.6898 0.1581 290.4107);
   --chart-3: oklch(0.8816 0.0276 93.1280);
   --chart-4: oklch(0.8822 0.0403 298.1792);
   --chart-5: oklch(0.5608 0.1348 42.0584);
+  
   --sidebar: oklch(0.9663 0.0080 98.8792);
   --sidebar-foreground: oklch(0.3590 0.0051 106.6524);
   --sidebar-primary: oklch(0.6171 0.1375 39.0427);
@@ -36,7 +37,18 @@
   --sidebar-accent-foreground: oklch(0.3250 0 0);
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0.7731 0 0);
+  
   --radius: 0.5rem;
+
+  /* Base font variables */
+  --font-sans-internal: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono-internal: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Aggressive RTL Reset - ONLY IBM Plex Sans Arabic */
+:root[dir="rtl"], [dir="rtl"] * {
+  --font-sans-internal: var(--font-ibm-plex-arabic) !important;
+  --font-mono-internal: var(--font-ibm-plex-arabic) !important;
 }
 
 .dark {
@@ -59,19 +71,6 @@
   --border: oklch(0.3618 0.0101 106.8928);
   --input: oklch(0.4336 0.0113 100.2195);
   --ring: oklch(0.6724 0.1308 38.7559);
-  --chart-1: oklch(0.5583 0.1276 42.9956);
-  --chart-2: oklch(0.6898 0.1581 290.4107);
-  --chart-3: oklch(0.2130 0.0078 95.4245);
-  --chart-4: oklch(0.3074 0.0516 289.3230);
-  --chart-5: oklch(0.5608 0.1348 42.0584);
-  --sidebar: oklch(0.2357 0.0024 67.7077);
-  --sidebar-foreground: oklch(0.8074 0.0142 93.0137);
-  --sidebar-primary: oklch(0.3250 0 0);
-  --sidebar-primary-foreground: oklch(0.9881 0 0);
-  --sidebar-accent: oklch(0.1680 0.0020 106.6177);
-  --sidebar-accent-foreground: oklch(0.8074 0.0142 93.0137);
-  --sidebar-border: oklch(0.9401 0 0);
-  --sidebar-ring: oklch(0.7731 0 0);
 }
 
 @theme {
@@ -94,23 +93,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono), ui-monospace, monospace;
-  --font-arabic: var(--font-alexandria), var(--font-inter), sans-serif;
+  /* Map standard Tailwind fonts to our dynamic variables */
+  --font-sans: var(--font-sans-internal);
+  --font-mono: var(--font-mono-internal);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -119,17 +105,14 @@
 }
 
 @layer base {
-  :root[dir="rtl"] {
-    --font-sans: var(--font-alexandria), sans-serif;
-  }
-  
   * {
-    border-color: var(--color-border);
+    border-color: var(--border);
   }
+
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans-internal) !important;
   }
 }
 
@@ -137,8 +120,8 @@
 .hud-grid {
   background-size: 30px 30px;
   background-image: 
-    linear-gradient(to right, color-mix(in oklch, var(--color-primary), transparent 95%) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklch, var(--color-primary), transparent 95%) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklch, var(--primary), transparent 95%) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--primary), transparent 95%) 1px, transparent 1px);
 }
 
 .noise {
@@ -151,7 +134,7 @@
 .scanline {
   width: 100%;
   height: 2px;
-  background: linear-gradient(to bottom, transparent, var(--color-primary), transparent);
+  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
   opacity: 0.1;
   position: absolute;
   top: 0;
@@ -165,12 +148,12 @@
 }
 
 .glass {
-  background: color-mix(in oklch, var(--color-background), transparent 60%);
+  background: color-mix(in oklch, var(--background), transparent 60%);
   backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in oklch, var(--color-primary), transparent 90%);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 90%);
 }
 
 .glow-border {
-  box-shadow: 0 0 15px color-mix(in oklch, var(--color-primary), transparent 90%);
-  border: 1px solid color-mix(in oklch, var(--color-primary), transparent 70%);
+  box-shadow: 0 0 15px color-mix(in oklch, var(--primary), transparent 90%);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 70%);
 }

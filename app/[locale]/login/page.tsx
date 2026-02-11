@@ -10,7 +10,7 @@ export default async function LoginPage() {
   const locale = await getLocale();
 
   return (
-    <div className={`relative min-h-screen bg-background flex items-center justify-center p-6 overflow-hidden ${locale.startsWith('ar') ? 'font-arabic' : 'font-mono'}`}>
+    <div className="relative min-h-screen bg-background flex items-center justify-center p-6 overflow-hidden">
       {/* Visual Infrastructure */}
       <div className="fixed inset-0 noise z-[100] mix-blend-overlay pointer-events-none" />
       <div className="fixed inset-0 hud-grid opacity-[0.4] pointer-events-none" />
