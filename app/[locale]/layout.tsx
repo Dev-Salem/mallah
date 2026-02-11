@@ -1,31 +1,28 @@
-import { Outfit, Instrument_Serif, IBM_Plex_Sans_Arabic } from "next/font/google";
-import type { Metadata } from "next";
+import { Inter, JetBrains_Mono, Alexandria } from "next/font/google";
+import { getMessages, getLocale } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { routing } from '@/lib/i18n/routing';
-import "./globals.css";
+import "../globals.css";
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-inter",
 });
 
-const instrumentSerif = Instrument_Serif({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-serif",
+  variable: "--font-mono",
 });
 
-const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
+const alexandria = Alexandria({
   subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-arabic",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-alexandria",
+  display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Mallah | Navigate Your Career",
-  description: "Bridge the gap between graduation and employment with structured roadmaps and technical evidence.",
+export const metadata = {
+  title: "Mallah | Tactical Career Navigation",
+  description: "Bridge the gap between graduation and employment with mission-critical roadmaps.",
 };
 
 export default async function RootLayout({
@@ -36,19 +33,13 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-
-  if (!routing.locales.includes(locale as any)) {
-    notFound();
-  }
-
   const messages = await getMessages();
+  const isArabic = locale.startsWith('ar');
 
   return (
-    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="dark">
-      <body
-        className={`${outfit.variable} ${instrumentSerif.variable} ${ibmPlexSansArabic.variable} ${locale === 'ar' ? 'font-arabic' : 'font-sans'} antialiased`}
-      >
-        <NextIntlClientProvider messages={messages}>
+    <html lang={locale} className="dark" dir={isArabic ? 'rtl' : 'ltr'}>
+      <body className={`${inter.variable} ${mono.variable} ${alexandria.variable} font-sans antialiased bg-background text-foreground`}>
+        <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>
       </body>

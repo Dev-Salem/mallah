@@ -56,9 +56,9 @@
     "copyright": "© 2026 Mallah Engineering Ltd."
   },
   "Login": {
-    "title": "Identification Required",
-    "terminal": "Secure Navigational Terminal",
-    "back": "Back to Surface"
+    "idRequired": "Identification Required",
+    "secureTerminal": "Secure Navigational Terminal",
+    "backToSurface": "Back to Surface"
   },
   "Common": {
     "logo": "MALLAH"
