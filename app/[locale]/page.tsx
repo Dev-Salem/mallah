@@ -40,7 +40,7 @@ export default async function LandingPage() {
                 <a 
                   key={item.key} 
                   href={`#${item.id}`} 
-                  className="text-[10px] uppercase tracking-[0.2em] font-mono font-medium text-muted-foreground hover:text-primary transition-all duration-300"
+                  className={`text-[10px] uppercase ${!isArabic ? 'tracking-[0.2em]' : ''} font-mono font-medium text-muted-foreground hover:text-primary transition-all duration-300`}
                 >
                   <span className="text-primary/40 mr-1 text-[8px]">0{navItems.indexOf(item) + 1}</span>
                   {t(`Navigation.${item.key}`)}
@@ -52,13 +52,13 @@ export default async function LandingPage() {
               <LanguageSwitcher />
               {user ? (
                 <Link href="/dashboard">
-                  <Button className="h-8 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-none uppercase tracking-widest text-[9px] font-mono font-bold glow-border">
+                  <Button className={`h-8 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-none uppercase ${!isArabic ? 'tracking-widest' : ''} text-[9px] font-mono font-bold glow-border`}>
                     {t('Navigation.dashboard')}
                   </Button>
                 </Link>
               ) : (
                 <Link href="/login">
-                  <Button className="h-8 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-none uppercase tracking-widest text-[9px] font-mono font-bold glow-border">
+                  <Button className={`h-8 px-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-none uppercase ${!isArabic ? 'tracking-widest' : ''} text-[9px] font-mono font-bold glow-border`}>
                     {t('Navigation.join')}
                   </Button>
                 </Link>
@@ -75,9 +75,9 @@ export default async function LandingPage() {
             <div className="relative z-10">
               <div className="inline-flex items-center gap-3 px-3 py-1 border border-primary/20 bg-primary/5 mb-8">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="text-[9px] uppercase tracking-[0.4em] text-primary font-mono font-bold">{t('Hero.navLog')}</span>
+                <span className={`text-[9px] uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} text-primary font-mono font-bold`}>{t('Hero.navLog')}</span>
               </div>
-              <h1 className="text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-white tracking-tighter uppercase">
+              <h1 className={`text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-white ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>
                 {t('Hero.title1')} <br />
                 <span className="text-primary">{t('Hero.title2')}</span> <br />
                 {t('Hero.title3')}
@@ -88,13 +88,13 @@ export default async function LandingPage() {
               </p>
               <div className="flex flex-wrap items-center gap-10">
                 <Link href="/login">
-                  <Button size="lg" className="h-14 px-10 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-[0.2em] font-mono font-bold rounded-none group transition-all glow-border">
+                  <Button size="lg" className={`h-14 px-10 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase ${!isArabic ? 'tracking-[0.2em]' : ''} font-mono font-bold rounded-none group transition-all glow-border`}>
                     {t('Hero.initiate')} <ArrowRight className={`ml-3 h-4 w-4 group-hover:translate-x-1 transition-transform ${locale === 'ar' ? 'rotate-180' : ''}`} />
                   </Button>
                 </Link>
                 <div className="flex flex-col border-l border-white/10 pl-6">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-white/40 mb-1">{t('Hero.status')}</span>
-                  <span className="text-[11px] font-mono text-primary/80 uppercase tracking-widest">{t('Hero.statusDetail')}</span>
+                  <span className={`text-[9px] font-mono uppercase ${!isArabic ? 'tracking-[0.3em]' : ''} text-white/40 mb-1`}>{t('Hero.status')}</span>
+                  <span className={`text-[11px] font-mono text-primary/80 uppercase ${!isArabic ? 'tracking-widest' : ''}`}>{t('Hero.statusDetail')}</span>
                 </div>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default async function LandingPage() {
           <div className="container mx-auto px-6 lg:px-12">
             <div className="max-w-4xl mb-24">
               <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-6 block px-3 py-1 border-l-2 border-primary bg-primary/5 w-fit">{t('Problem.label')}</span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-mono font-bold text-white mb-8 tracking-tighter uppercase">{t('Problem.title')}</h2>
+              <h2 className={`text-4xl md:text-5xl lg:text-6xl font-mono font-bold text-white mb-8 ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>{t('Problem.title')}</h2>
               <p className="text-muted-foreground text-lg leading-relaxed font-mono italic border-l border-white/10 pl-8">
                 {t('Problem.subtitle')}
               </p>
@@ -167,7 +167,7 @@ export default async function LandingPage() {
             <div className="flex flex-col lg:flex-row justify-between items-baseline mb-20 gap-8">
               <div className="max-w-2xl">
                 <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-6 block">{t('Process.label')}</span>
-                <h2 className="text-4xl md:text-5xl font-mono font-bold text-white tracking-tighter uppercase">{t('Process.title')}</h2>
+                <h2 className={`text-4xl md:text-5xl font-mono font-bold text-white ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>{t('Process.title')}</h2>
               </div>
               <div className="px-6 py-4 border border-white/5 glass flex items-center gap-6">
                 <div className="h-10 w-10 flex items-center justify-center rounded-full border border-primary/20 font-mono text-primary text-xs italic">
@@ -189,7 +189,7 @@ export default async function LandingPage() {
                     <span className="text-[9px] font-mono text-primary bg-primary/10 px-2 py-1 tracking-widest font-bold">STAGE_0{idx + 1}</span>
                     <div className="h-1.5 w-1.5 rounded-full bg-primary/20" />
                   </div>
-                  <h4 className="text-sm font-mono font-bold text-white mb-4 tracking-widest uppercase">{t(`Process.${step.key}Title`)}</h4>
+                  <h4 className={`text-sm font-mono font-bold text-white mb-4 ${!isArabic ? 'tracking-widest' : ''} uppercase`}>{t(`Process.${step.key}Title`)}</h4>
                   <div className="h-px w-8 bg-primary/40 mb-4 group-hover:w-full transition-all duration-700" />
                   <p className="text-[11px] font-mono text-muted-foreground leading-relaxed uppercase tracking-tighter">{t(`Process.${step.key}Desc`)}</p>
                 </div>
@@ -206,11 +206,11 @@ export default async function LandingPage() {
               // OVERRIDE_SYSTEM_INITIATE //
             </div>
             <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-10 block">{t('CTA.label')}</span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-mono font-black text-white mb-16 leading-[0.85] tracking-tighter uppercase px-4">
+            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-white mb-16 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
               {t('CTA.title')}
             </h2>
             <Link href="/login">
-              <Button size="lg" className="h-20 px-16 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-[0.4em] font-mono font-black rounded-none shadow-[0_45px_100px_-25px_var(--primary)] shadow-primary/30 relative overflow-hidden group border-2 border-primary">
+              <Button size="lg" className={`h-20 px-16 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} font-mono font-black rounded-none shadow-[0_45px_100px_-25px_var(--primary)] shadow-primary/30 relative overflow-hidden group border-2 border-primary`}>
                 <span className="relative z-10">{t('CTA.button')}</span>
                 <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white/10 transition-transform duration-300" />
               </Button>

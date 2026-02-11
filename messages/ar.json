@@ -58,7 +58,14 @@
   "Login": {
     "idRequired": "سجل دخولك",
     "secureTerminal": "منصة آمنة",
-    "backToSurface": "ارجع للرئيسية"
+    "backToSurface": "العودة للسطح"
+  },
+  "Dashboard": {
+    "title": "مركز القيادة",
+    "authorized": "ملاح معتمد",
+    "sessionActive": "الجلسة نشطة",
+    "signOut": "إنهاء الجلسة",
+    "welcome": "مرحباً بك مجدداً، أيها الملاح"
   },
   "Common": {
     "logo": "ملاح"

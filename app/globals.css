@@ -49,6 +49,7 @@
 :root[dir="rtl"], [dir="rtl"] * {
   --font-sans-internal: var(--font-ibm-plex-arabic) !important;
   --font-mono-internal: var(--font-ibm-plex-arabic) !important;
+  letter-spacing: normal !important;
 }
 
 .dark {

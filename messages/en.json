@@ -60,6 +60,13 @@
     "secureTerminal": "Secure Navigational Terminal",
     "backToSurface": "Back to Surface"
   },
+  "Dashboard": {
+    "title": "Command Center",
+    "authorized": "Authorized Navigator",
+    "sessionActive": "Session Active",
+    "signOut": "Deauthorize Terminal",
+    "welcome": "Welcome back, Navigator"
+  },
   "Common": {
     "logo": "MALLAH"
   }

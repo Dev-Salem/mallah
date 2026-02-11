@@ -21,12 +21,12 @@ export default async function LoginPage() {
           <div className="inline-block transform hover:rotate-12 transition-transform duration-500 mb-8 p-1 border border-primary/20 glass">
             <Logo size={64} />
           </div>
-          <h1 className="text-3xl font-black text-white mb-2 uppercase tracking-tighter">
+          <h1 className={`text-3xl font-black text-white mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
             {t('idRequired')}
           </h1>
           <div className="flex items-center justify-center gap-2">
             <div className="h-1 w-1 bg-primary animate-pulse" />
-            <p className="text-[10px] uppercase tracking-[0.4em] text-primary font-bold">
+            <p className={`text-[10px] uppercase ${locale !== 'ar' ? 'tracking-[0.4em]' : ''} text-primary font-bold`}>
               {t('secureTerminal')}
             </p>
           </div>
@@ -37,14 +37,14 @@ export default async function LoginPage() {
           
           <AuthForm />
           
-          <div className="mt-8 pt-8 border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-white/20 uppercase tracking-widest">
+          <div className={`mt-8 pt-8 border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-white/20 uppercase ${locale !== 'ar' ? 'tracking-widest' : ''}`}>
             <span>ENC: AES-256</span>
             <span>MALLAH_CORE_v4.0.2</span>
           </div>
         </Card>
 
         <div className="mt-8 text-center">
-          <Link href="/" className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-3 group">
+          <Link href="/" className={`text-[10px] uppercase ${locale !== 'ar' ? 'tracking-[0.3em]' : ''} text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-3 group`}>
             <ArrowRight className={`h-3 w-3 group-hover:-translate-x-1 transition-transform rotate-180 ${locale === 'ar' ? 'rotate-0' : ''}`} /> 
             {t('backToSurface')}
           </Link>
