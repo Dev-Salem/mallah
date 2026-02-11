@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/routing";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import { Logo } from "@/components/ui/logo";
+import { getTranslations, getLocale } from "next-intl/server";
 
-export default function AuthErrorPage() {
+export default async function AuthErrorPage() {
+  const t = await getTranslations("Common");
+  const locale = await getLocale();
+  const isArabic = locale.startsWith('ar');
+
   return (
     <div className="relative min-h-screen bg-background flex items-center justify-center p-6 overflow-hidden">
       {/* Visual Infrastructure */}
@@ -16,12 +20,12 @@ export default function AuthErrorPage() {
           <div className="inline-block mb-8 p-4 border border-destructive/20 glass animate-pulse">
             <AlertTriangle className="h-12 w-12 text-destructive" />
           </div>
-          <h1 className="text-3xl font-black text-white mb-2 uppercase tracking-tighter">
-            Access Denied
+          <h1 className={`text-3xl font-black text-white mb-2 uppercase ${!isArabic ? 'tracking-tighter' : ''}`}>
+            {isArabic ? 'تم رفض الوصول' : 'Access Denied'}
           </h1>
           <div className="flex items-center justify-center gap-2">
             <div className="h-1 w-1 bg-destructive animate-pulse" />
-            <p className="text-[10px] uppercase tracking-[0.4em] text-destructive font-bold">
+            <p className={`text-[10px] uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} text-destructive font-bold`}>
               AUTH_CODE_EXCHANGE_FAILURE
             </p>
           </div>
@@ -32,14 +36,16 @@ export default function AuthErrorPage() {
           
           <div className="space-y-6 text-center">
             <p className="text-sm font-mono text-muted-foreground leading-relaxed uppercase">
-              The authentication code is invalid, expired, or has already been used. Please try requesting a new magic link.
+              {isArabic 
+                ? 'رمز المصادقة غير صالح أو منتهي الصلاحية أو تم استخدامه بالفعل. يرجى المحاولة مرة أخرى.' 
+                : 'The authentication code is invalid, expired, or has already been used. Please try requesting a new magic link.'}
             </p>
             
             <div className="pt-4">
               <Link href="/login">
-                <Button variant="outline" className="w-full h-12 border-destructive/20 hover:bg-destructive/10 text-destructive rounded-none uppercase tracking-[0.2em] font-mono text-[10px] transition-all group">
-                  <ArrowLeft className="mr-3 h-3 w-3 group-hover:-translate-x-1 transition-transform" />
-                  Retry Authorization
+                <Button variant="outline" className={`w-full h-12 border-destructive/20 hover:bg-destructive/10 text-destructive rounded-none uppercase ${!isArabic ? 'tracking-[0.2em]' : ''} font-mono text-[10px] transition-all group`}>
+                  <ArrowLeft className={`mr-3 h-3 w-3 group-hover:-translate-x-1 transition-transform ${isArabic ? 'rotate-180' : ''}`} />
+                  {isArabic ? 'إعادة محاولة المصادقة' : 'Retry Authorization'}
                 </Button>
               </Link>
             </div>
@@ -52,8 +58,8 @@ export default function AuthErrorPage() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link href="/" className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-3">
-            Back to Surface
+          <Link href="/" className={`text-[10px] uppercase ${!isArabic ? 'tracking-[0.3em]' : ''} text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-3`}>
+            {isArabic ? 'العودة للسطح' : 'Back to Surface'}
           </Link>
         </div>
       </div>
