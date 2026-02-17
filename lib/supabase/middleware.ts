@@ -39,7 +39,44 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
 
   // IMPORTANT: Avoid writing any logic between createServerClient and getUser(). A simple
   // mistake can make it very hard to debug issues with emails being sent multiple times.
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Onboarding redirect logic
+  const pathname = request.nextUrl.pathname;
+  const isOnboardingPage = pathname.includes('/onboarding');
+  const isAuthRoute = pathname.startsWith('/auth');
+  const isPublicAuthPage = pathname.includes('/login') ||
+    pathname.includes('/register') ||
+    pathname.includes('/forgot-password') ||
+    pathname.includes('/reset-password');
+
+  if (user && !isAuthRoute && !isPublicAuthPage) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('onboarding_completed')
+      .eq('id', user.id)
+      .single();
+
+    const onboardingCompleted = profile?.onboarding_completed ?? false;
+
+    if (!onboardingCompleted && !isOnboardingPage) {
+      // Extract locale from pathname (e.g., /en/dashboard -> en)
+      const pathParts = pathname.split('/').filter(Boolean);
+      const locale = ['en', 'ar'].includes(pathParts[0]) ? pathParts[0] : 'en';
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/onboarding`;
+      return NextResponse.redirect(url);
+    }
+
+    if (onboardingCompleted && isOnboardingPage) {
+      const pathParts = pathname.split('/').filter(Boolean);
+      const locale = ['en', 'ar'].includes(pathParts[0]) ? pathParts[0] : 'en';
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/dashboard`;
+      return NextResponse.redirect(url);
+    }
+  }
 
   return supabaseResponse
 }
+

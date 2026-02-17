@@ -1,0 +1,88 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, ArrowLeft, GraduationCap, Briefcase, RefreshCw, HelpCircle } from "lucide-react";
+
+interface StepBackgroundProps {
+    initialValue: string | null;
+    onSave: (backgroundType: string) => Promise<void>;
+    onBack: () => void;
+}
+
+const OPTIONS = [
+    { value: "student", icon: GraduationCap },
+    { value: "fresh_graduate", icon: Briefcase },
+    { value: "career_shifter", icon: RefreshCw },
+    { value: "no_tech_background", icon: HelpCircle },
+] as const;
+
+export function StepBackground({ initialValue, onSave, onBack }: StepBackgroundProps) {
+    const t = useTranslations("Onboarding");
+    const [selected, setSelected] = useState<string>(initialValue || "");
+    const [loading, setLoading] = useState(false);
+
+    async function handleSubmit() {
+        if (!selected) return;
+        setLoading(true);
+        try {
+            await onSave(selected);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <div className="space-y-8">
+            <div>
+                <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">
+                    {t("step2Title")}
+                </h2>
+                <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                    {t("step2Subtitle")}
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {OPTIONS.map(({ value, icon: Icon }) => (
+                    <button
+                        key={value}
+                        onClick={() => setSelected(value)}
+                        className={`
+              relative p-6 border text-start transition-all duration-300 group cursor-pointer
+              ${selected === value
+                                ? "border-primary bg-primary/10 glow-border"
+                                : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8"
+                            }
+            `}
+                    >
+                        <Icon className={`h-6 w-6 mb-4 ${selected === value ? "text-primary" : "text-white/40 group-hover:text-white/60"} transition-colors`} />
+                        <span className="block text-sm font-bold text-white uppercase tracking-wide">
+                            {t(`bg_${value}`)}
+                        </span>
+                    </button>
+                ))}
+            </div>
+
+            <div className="flex gap-4">
+                <Button
+                    variant="outline"
+                    onClick={onBack}
+                    className="h-14 px-8 rounded-none border-white/10 hover:bg-white/5 text-white uppercase tracking-[0.2em] font-mono text-[11px] group"
+                >
+                    <ArrowLeft className="me-3 h-3 w-3 group-hover:-translate-x-1 transition-transform" />
+                    {t("back")}
+                </Button>
+                <Button
+                    onClick={handleSubmit}
+                    disabled={!selected || loading}
+                    className="flex-1 h-14 rounded-none uppercase tracking-[0.2em] font-mono text-[11px] bg-primary hover:bg-primary/90 text-primary-foreground transition-all group"
+                >
+                    {t("next")}
+                    <ArrowRight className="ms-3 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                </Button>
+            </div>
+        </div>
+    );
+}
