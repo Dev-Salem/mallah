@@ -1,42 +1,111 @@
-# Mallah Command Center (Dashboard)
+# Mallah – Learner Dashboard
 
-## Overview
+## 1. Overview
 
-The Mallah Dashboard functions as a Career Command Center, providing a structured, high-clarity interface that reflects a user’s learning progress, skill evidence, and job-readiness state.
+The Dashboard is the central hub the learner sees after login and completing onboarding. It
+summarizes current path, progress, skills, projects, resume status, and provides shortcuts to
+key tools (Roadmap, Skills & Projects, Resume Builder, Opportunity Analyzer).
 
-This document describes the functional and structural UX architecture of the Dashboard, independent of color schemes or visual styling.
+## 2. Goals
 
----
+- Give a clear “where am I now?” snapshot.
+- Provide a single “Resume Learning” entry point to the next topic.
+- Surface quick stats related to skills, projects, and job readiness.
+- Offer lightweight AI guidance (optional) without overwhelming the learner.
 
-## 1. Strategic Navigation & Identity
+## 3. Actors
 
-### The Anchor (Primary Sidebar Navigation)
+- **Learner**
+- **Frontend UI**
+- **Backend API**
+- **Database** (Users, Learners, Progress, Skills, Projects, Resumes)
+- **AI Engine** (for optional tip of the day)
 
-A fixed primary navigation sidebar contains the core platform pillars:
+## 4. Main Sections (UI Layout)
 
-- Dashboard
-- Roadmap
-- Skills & Projects Hub
-- Resume Builder
-- Opportunity Analyzer
+1. **Header / Greeting**
+   - “Welcome back, {FirstName}”
+   - Sub-line: “Path: {PathName} – Current Stage: {StageName}”
 
-The sidebar acts as a structural anchor for the system and must remain consistent across the application.
+2. **Global Progress Card**
+   - Overall progress bar:
+     - `% = completed_topics / total_topics_in_path * 100`.
+   - Text: “You’ve completed X of Y lessons in this path.”
 
----
+3. **Next Step / Resume Learning Card**
+   - Logic:
+     - Fetch first topic in current path where `status != Completed`.
+   - UI:
+     - Topic title + stage name.
+     - `Resume Learning` button → opens Topic Viewer on that topic.
 
-### Clean Workspace Principle
+4. **Quick Stats Row**
+   - `Skills Unlocked`: count of skills in `UserSkill` with any level.
+   - `Projects Completed`: count of completed `UserProject`.
+   - `Resume Readiness`: simple indicator:
+     - e.g. `Not Created`, `In Progress`, `Ready`.
+     - Optionally show `ats_score` if available.
 
-- No upper utility bars (search, notifications, clutter)
-- No unnecessary UI distractions
-- The dashboard is designed for deep focus and structured progression
+5. **AI Insight / Tip Panel (Optional)**
+   - Small card titled “Today’s Hint”:
+     - Example outputs:
+       - “You’re one lesson away from finishing Stage 1, consider completing {TopicName} today.”
+       - “You have 0 projects yet. Try starting a small project from your path.”
+   - Backend can decide simple rules first; AI can rephrase text later.
 
----
+6. **Quick Actions Section**
+   - Buttons:
+     - `View Roadmap`
+     - `Open Skills & Projects Hub`
+     - `Open Resume Builder`
+     - `Analyze Job Opportunity`
+   - Each button routes to the corresponding module.
 
-## 2. The Progress Command (Header & Global Progress Card)
+7. **Recent Activity (Optional v1 or v2)**
+   - List last 3–5 recent actions:
+     - Completed topics.
+     - Completed projects.
+     - Last job analysis.
 
-### Contextual Greeting
+## 5. Functional Requirements
 
-A personalized header identifies:
+- Dashboard should load in one backend call aggregating:
+  - User profile (name, current_path_id).
+  - Path & stage info.
+  - Progress summary for current path.
+  - Skills & projects counts.
+  - Resume status / ATS score (if any).
+- If learner has no path (`current_path_id` null) → redirect to onboarding.
+- “Resume Learning” must be disabled if all topics are completed (show “Path Completed” state).
+- AI tip:
+  - If AI not available, fall back to rule-based text or hide tip card.
 
-- The user by name
-- Their currently active career path
+## 6. Data Integration
+
+- **Reads**
+  - `Learner`:
+    - `first_name`, `current_path_id`, `primary_goal`.
+  - `Path`, `Stage`, `Topic`:
+    - To compute progress and find next topic.
+  - `UserProgress`:
+    - Counts of completed topics.
+  - `UserSkill`:
+    - Count of skills per learner.
+  - `UserProject`:
+    - Count of completed projects.
+  - `Resume`:
+    - If exists, latest `ats_score` and status.
+
+- **AI Integration (optional)**
+  - Input:
+    - Small summary: `{name, path_name, completion_percent, skills_count, projects_count}`.
+  - Output:
+    - 1–2 sentences of encouragement/tip.
+  - Display only after dashboard core data is ready.
+
+## 7. UX Notes
+
+- Keep the dashboard visually simple: 3–4 main cards max on first screen.
+- Make `Resume Learning` visually dominant (primary CTA).
+- All numbers should be clearly labeled (e.g., “Skills Unlocked” not just “12”).
+- Avoid overcrowding with charts in v1; simple cards and bars are enough.

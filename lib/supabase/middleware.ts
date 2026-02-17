@@ -2,13 +2,21 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest, existingResponse?: NextResponse) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('CRITICAL: Supabase environment variables are missing in middleware.');
+    return existingResponse || NextResponse.next({ request });
+  }
+
   let supabaseResponse = existingResponse || NextResponse.next({
     request,
   })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -16,6 +24,8 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          // Create a fresh response from the request to capture updated cookies
+          // while preserving the original response's intent if it was passed.
           supabaseResponse = NextResponse.next({
             request,
           })

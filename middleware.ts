@@ -1,20 +1,26 @@
 import createMiddleware from 'next-intl/middleware';
-import {routing} from './lib/i18n/routing';
+import { routing } from './lib/i18n/routing';
 import { type NextRequest } from 'next/server'
 import { updateSession } from './lib/supabase/middleware'
 
 const intlMiddleware = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  
-  // Skip intl middleware for technical routes
-  if (pathname.startsWith('/auth') || pathname.startsWith('/api')) {
-    return await updateSession(request)
-  }
+  try {
+    const pathname = request.nextUrl.pathname;
 
-  const response = intlMiddleware(request);
-  return await updateSession(request, response)
+    // Skip intl middleware for technical routes
+    if (pathname.startsWith('/auth') || pathname.startsWith('/api')) {
+      return await updateSession(request)
+    }
+
+    const response = intlMiddleware(request);
+    return await updateSession(request, response)
+  } catch (error) {
+    console.error('Middleware execution error:', error);
+    // Return a default response instead of letting the middleware crash
+    return NextResponse.next({ request });
+  }
 }
 
 export const config = {
