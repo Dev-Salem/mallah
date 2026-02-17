@@ -1,0 +1,77 @@
+{
+  "Navigation": {
+    "gap": "The Gap",
+    "process": "Process",
+    "features": "Features",
+    "outcomes": "Outcomes",
+    "dashboard": "Dashboard",
+    "join": "Join the Mission"
+  },
+  "Hero": {
+    "navLog": "Navigational Log 24.02",
+    "title1": "Graduate",
+    "title2": "into a",
+    "title3": "Career.",
+    "subtitle": "University provides the coordinates. Mallah provides the vessel. A professional engineering engine dedicated to bridging the academic disconnect.",
+    "initiate": "Initiate Prep",
+    "status": "Status Report",
+    "statusDetail": "Ready for Onboarding // 842 Navigators Enrolled",
+    "latLong": "FIX: LAT 25.0 // LONG 55.0"
+  },
+  "Problem": {
+    "label": "Diagnostics",
+    "title": "The Academic Disconnect",
+    "subtitle": "Universities are legacy systems optimized for theory. The market is a real-time environment optimized for production. Mallah bridges this gap.",
+    "item1Title": "Theory vs. Practice",
+    "item1Desc": "Traditional education ends at the degree. Real careers begin with practical evidence. We enforce the latter.",
+    "item2Title": "Information Noise",
+    "item2Desc": "The internet is a sea of scattered data. We provide the compass and the path through curated roadmap logic.",
+    "item3Title": "Job Readiness Gap",
+    "item3Desc": "Hiring managers don't want knowledge; they want readiness. Mallah engineers your professional identity."
+  },
+  "Process": {
+    "label": "Navigation Flow",
+    "title": "Career Engineering",
+    "quote": "A steady hand on the rudder, a clear eye on the horizon.",
+    "step1Title": "Assessment",
+    "step1Desc": "We map your current technical coordinates.",
+    "step2Title": "Selection",
+    "step2Desc": "Choose a role-specific navigational path.",
+    "step3Title": "Execution",
+    "step3Desc": "Build evidence through structured projects.",
+    "step4Title": "Arrival",
+    "step4Desc": "Deploy your professional identity to market."
+  },
+  "CTA": {
+    "label": "Final Approach",
+    "title": "Ready to embark?",
+    "button": "Join the Mallah"
+  },
+  "Footer": {
+    "desc": "Precision instrumentation for the next generation of technical navigators. Bridge the academic disconnect.",
+    "coords": "Coordinates",
+    "trans": "Transmission",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "copyright": "© 2026 Mallah Engineering Ltd."
+  },
+  "Login": {
+    "idRequired": "Identification Required",
+    "secureTerminal": "Secure Navigational Terminal",
+    "backToSurface": "Back to Surface"
+  },
+  "Dashboard": {
+    "title": "Command Center",
+    "authorized": "Authorized Navigator",
+    "sessionActive": "Session Active",
+    "signOut": "Deauthorize Terminal",
+    "welcome": "Welcome back, Navigator",
+    "roadmap": "Roadmap",
+    "skillsHub": "Skills & Projects",
+    "resumeBuilder": "Resume Builder",
+    "opportunityAnalyzer": "Opportunity Analyzer"
+  },
+  "Common": {
+    "logo": "MALLAH"
+  }
+}
