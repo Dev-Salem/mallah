@@ -148,7 +148,13 @@
     "systemMaintenance": "صيانة النظام",
     "returnToOrbit": "العودة إلى المدار",
     "moduleStatusOffline": "حالة_الوحدة: غير متصل",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "aiTutorTitle": "معلم الذكاء الاصطناعي",
+    "aiTutorOpen": "اسأل المعلم الذكي",
+    "aiTutorWelcome": "اسألني أي سؤال حول هذا الموضوع",
+    "aiTutorPlaceholder": "اكتب سؤالك...",
+    "aiTutorError": "عذراً، لم أتمكن من معالجة سؤالك. حاول مرة أخرى.",
+    "careerAdvisor": "المستشار المهني"
   },
   "Common": {
     "logo": "مَلّاح"
@@ -251,5 +257,52 @@
     "passwordTooShort": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
     "save": "حفظ التغييرات",
     "saved": "تم الحفظ"
+  },
+  "ResumeBuilder": {
+    "title": "بناء السيرة الذاتية",
+    "subtitle": "بناء هويتك المهنية",
+    "noResumesTitle": "لا توجد سير ذاتية بعد",
+    "noResumesDesc": "أنشئ سيرتك الذاتية الأولى لبناء هويتك المهنية",
+    "createResume": "سيرة جديدة",
+    "resumeTitlePlaceholder": "عنوان السيرة (مثل: سيرة مطور واجهات)",
+    "english": "إنجليزي",
+    "arabic": "عربي",
+    "create": "إنشاء",
+    "atsScore": "نتيجة توافق ATS",
+    "calculateScore": "حساب النتيجة",
+    "sectionSummary": "الملخص المهني",
+    "sectionSkills": "المهارات",
+    "sectionProjects": "المشاريع",
+    "sectionExperience": "الخبرة",
+    "sectionEducation": "التعليم",
+    "sectionCertificates": "الشهادات",
+    "sectionActivities": "الأنشطة",
+    "sectionCustom": "قسم مخصص",
+    "save": "حفظ",
+    "saved": "تم الحفظ",
+    "aiImprove": "تحسين بالذكاء الاصطناعي"
+  },
+  "OpportunityAnalyzer": {
+    "title": "محلل الفرص",
+    "subtitle": "تحليل أوصاف الوظائف وتحديد الفجوات المهارية",
+    "inputTitle": "وصف الوظيفة",
+    "inputPlaceholder": "الصق وصف الوظيفة هنا...",
+    "analyzeButton": "تحليل الفرصة",
+    "pastAnalyses": "التحليلات السابقة",
+    "untitledJob": "وظيفة بدون عنوان",
+    "matchScore": "نسبة التوافق",
+    "matchedSkills": "المهارات المتطابقة",
+    "missingSkills": "المهارات الناقصة",
+    "none": "لا يوجد",
+    "actionPlan": "خطة العمل"
+  },
+  "CareerAdvisor": {
+    "title": "المستشار المهني",
+    "subtitle": "نظام الإرشاد المهني بالذكاء الاصطناعي",
+    "newChat": "محادثة جديدة",
+    "startMessage": "أنشئ أو اختر جلسة محادثة للبدء",
+    "welcomeMessage": "اسألني أي شيء حول مسارك المهني أو البحث عن عمل أو تطوير المهارات",
+    "inputPlaceholder": "اكتب رسالتك...",
+    "errorMessage": "عذراً، لم أتمكن من معالجة رسالتك. حاول مرة أخرى."
   }
 }

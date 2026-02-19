@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { ArrowLeft, BookOpen, CheckCircle, Clock, Zap, PlayCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, Clock, Zap, PlayCircle } from "lucide-react";
 import Link from "next/link";
-import { updateTopicProgress } from "../services/roadmap-service";
+import { updateTopicProgress, getNextTopic } from "../services/roadmap-service";
 import { useRouter } from "next/navigation";
+import { TopicChatPanel } from "./TopicChatPanel";
 
 interface TopicContentProps {
     topic: any;
@@ -19,8 +20,15 @@ export function TopicContent({ topic, progress, userId }: TopicContentProps) {
     const isArabic = locale === "ar";
     const router = useRouter();
     const [updating, setUpdating] = useState(false);
+    const [nextTopicId, setNextTopicId] = useState<string | null>(null);
 
     const isCompleted = progress?.status === "Completed";
+
+    useEffect(() => {
+        getNextTopic(topic.id, userId).then((result) => {
+            setNextTopicId(result.nextTopicId);
+        });
+    }, [topic.id, userId]);
 
     async function handleComplete() {
         setUpdating(true);
@@ -150,7 +158,21 @@ export function TopicContent({ topic, progress, userId }: TopicContentProps) {
                     </div>
                 </div>
 
-                <div className="mt-12 pt-12 border-t border-white/5 flex justify-end">
+                <div className="mt-12 pt-12 border-t border-white/5 flex items-center justify-between">
+                    {/* Next Topic Button */}
+                    <div>
+                        {isCompleted && nextTopicId && (
+                            <Link
+                                href={`/${locale}/dashboard/roadmap/${nextTopicId}`}
+                                className={`h-12 px-6 border border-white/10 bg-white/5 hover:border-primary/40 hover:bg-primary/5 text-white text-[10px] font-mono uppercase ${!isArabic ? "tracking-[0.2em]" : ""} transition-all inline-flex items-center gap-2`}
+                            >
+                                {t("nextTopic")}
+                                <ArrowRight className="h-3 w-3" />
+                            </Link>
+                        )}
+                    </div>
+
+                    {/* Mark Complete */}
                     <button
                         onClick={handleComplete}
                         disabled={updating || isCompleted}
@@ -174,6 +196,9 @@ export function TopicContent({ topic, progress, userId }: TopicContentProps) {
                     </button>
                 </div>
             </div>
+
+            {/* AI Tutor Chat Panel */}
+            <TopicChatPanel topicId={topic.id} />
         </div>
     );
 }

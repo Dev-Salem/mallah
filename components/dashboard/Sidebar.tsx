@@ -12,7 +12,8 @@ import {
   LogOut,
   ChevronRight,
   Hexagon,
-  Settings
+  Settings,
+  Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/logo';
@@ -53,6 +54,12 @@ export function Sidebar() {
       href: '/dashboard/opportunities',
       icon: Radar,
       label: t('opportunityAnalyzer')
+    },
+    {
+      key: 'careerAdvisor',
+      href: '/dashboard/advisor',
+      icon: Bot,
+      label: t('careerAdvisor')
     },
     {
       key: 'settings',

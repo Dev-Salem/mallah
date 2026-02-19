@@ -148,7 +148,13 @@
     "systemMaintenance": "System Maintenance",
     "returnToOrbit": "Return into Orbit",
     "moduleStatusOffline": "Module_Status: Offline",
-    "settings": "Settings"
+    "settings": "Settings",
+    "aiTutorTitle": "AI Lesson Tutor",
+    "aiTutorOpen": "Ask AI Tutor",
+    "aiTutorWelcome": "Ask me anything about this topic",
+    "aiTutorPlaceholder": "Type your question...",
+    "aiTutorError": "Sorry, I could not process your question. Please try again.",
+    "careerAdvisor": "Career Advisor"
   },
   "Common": {
     "logo": "MALLAH"
@@ -251,5 +257,52 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "save": "Save Changes",
     "saved": "Changes Saved"
+  },
+  "ResumeBuilder": {
+    "title": "Resume Builder",
+    "subtitle": "Construct your professional identity",
+    "noResumesTitle": "No Resumes Yet",
+    "noResumesDesc": "Create your first resume to build your professional identity",
+    "createResume": "New Resume",
+    "resumeTitlePlaceholder": "Resume Title (e.g. Frontend Developer CV)",
+    "english": "English",
+    "arabic": "Arabic",
+    "create": "Create",
+    "atsScore": "ATS Compatibility Score",
+    "calculateScore": "Calculate Score",
+    "sectionSummary": "Professional Summary",
+    "sectionSkills": "Skills",
+    "sectionProjects": "Projects",
+    "sectionExperience": "Experience",
+    "sectionEducation": "Education",
+    "sectionCertificates": "Certificates",
+    "sectionActivities": "Activities",
+    "sectionCustom": "Custom Section",
+    "save": "Save",
+    "saved": "Saved",
+    "aiImprove": "AI Improve"
+  },
+  "OpportunityAnalyzer": {
+    "title": "Opportunity Analyzer",
+    "subtitle": "Analyze job descriptions and identify skill gaps",
+    "inputTitle": "Job Description",
+    "inputPlaceholder": "Paste the job description here...",
+    "analyzeButton": "Analyze Opportunity",
+    "pastAnalyses": "Previous Analyses",
+    "untitledJob": "Untitled Position",
+    "matchScore": "Match Score",
+    "matchedSkills": "Matched Skills",
+    "missingSkills": "Missing Skills",
+    "none": "None",
+    "actionPlan": "Action Plan"
+  },
+  "CareerAdvisor": {
+    "title": "Career Advisor",
+    "subtitle": "Your AI-powered career guidance system",
+    "newChat": "New Chat",
+    "startMessage": "Create or select a chat session to begin",
+    "welcomeMessage": "Ask me anything about your career path, job search, or skill development",
+    "inputPlaceholder": "Type your message...",
+    "errorMessage": "Sorry, I could not process your message. Please try again."
   }
 }

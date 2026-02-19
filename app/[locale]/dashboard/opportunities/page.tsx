@@ -1,18 +1,22 @@
-import { SystemModule } from "@/components/dashboard/SystemModule";
-import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import { createClient } from "@/lib/supabase/server";
+import { getUserAnalyses } from "@/features/opportunity-analyzer/services/opportunity-service";
+import { OpportunityAnalyzerClient } from "@/features/opportunity-analyzer/components/OpportunityAnalyzerClient";
 
 export default async function OpportunitiesPage() {
-  const t = await getTranslations('Dashboard');
+  const locale = await getLocale();
+  const supabase = await createClient();
 
-  return (
-    <div className="h-full">
-      <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">
-        {t('opportunityAnalyzer')}
-      </h1>
-      <SystemModule 
-        title={t('opportunityAnalyzer')}
-        description="The Opportunity Analyzer scans the market for your next destination. Coming online soon."
-      />
-    </div>
-  );
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect(`/${locale}/login`);
+  }
+
+  const analyses = await getUserAnalyses(user.id);
+
+  return <OpportunityAnalyzerClient analyses={analyses} />;
 }

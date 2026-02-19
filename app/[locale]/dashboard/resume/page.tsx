@@ -1,18 +1,34 @@
-import { SystemModule } from "@/components/dashboard/SystemModule";
-import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import { createClient } from "@/lib/supabase/server";
+import { getUserResumes, getResumeDetail } from "@/features/resume-builder/services/resume-service";
+import { ResumeBuilderClient } from "@/features/resume-builder/components/ResumeBuilderClient";
 
-export default async function ResumePage() {
-  const t = await getTranslations('Dashboard');
+interface Props {
+  searchParams: Promise<{ id?: string }>;
+}
 
-  return (
-    <div className="h-full">
-      <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">
-        {t('resumeBuilder')}
-      </h1>
-      <SystemModule 
-        title={t('resumeBuilder')}
-        description="The Resume Builder engine is warming up. Prepare for automated dossier creation."
-      />
-    </div>
-  );
+export default async function ResumePage({ searchParams }: Props) {
+  const locale = await getLocale();
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect(`/${locale}/login`);
+  }
+
+  const params = await searchParams;
+  const resumes = await getUserResumes(user.id);
+
+  let activeResume = null;
+  if (params.id) {
+    activeResume = await getResumeDetail(params.id);
+  } else if (resumes.length > 0) {
+    activeResume = await getResumeDetail(resumes[0].id);
+  }
+
+  return <ResumeBuilderClient resumes={resumes} activeResume={activeResume} />;
 }

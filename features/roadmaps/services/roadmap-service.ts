@@ -123,6 +123,88 @@ export async function updateTopicProgress(topicId: string, userId: string, statu
         });
 
     if (error) throw new Error(error.message);
+
+    // Auto-unlock skills when completing a topic
+    if (status === 'Completed') {
+        await unlockSkillsForTopic(topicId, userId);
+    }
+
     return { success: true };
+}
+
+export async function getNextTopic(topicId: string, userId: string): Promise<{ nextTopicId: string | null }> {
+    const supabase = await createClient();
+
+    // Get current topic with stage info
+    const { data: currentTopic } = await supabase
+        .from("topics")
+        .select("id, order_index, stage_id, stages!inner(id, order_index, path_id)")
+        .eq("id", topicId)
+        .single();
+
+    if (!currentTopic) return { nextTopicId: null };
+
+    const stageData = currentTopic.stages as any;
+
+    // Try next topic in same stage
+    const { data: nextInStage } = await supabase
+        .from("topics")
+        .select("id")
+        .eq("stage_id", currentTopic.stage_id)
+        .gt("order_index", currentTopic.order_index)
+        .order("order_index", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+    if (nextInStage) return { nextTopicId: nextInStage.id };
+
+    // Try first topic of next stage
+    const { data: nextStage } = await supabase
+        .from("stages")
+        .select("id")
+        .eq("path_id", stageData.path_id)
+        .gt("order_index", stageData.order_index)
+        .order("order_index", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+    if (!nextStage) return { nextTopicId: null };
+
+    const { data: firstTopicInNextStage } = await supabase
+        .from("topics")
+        .select("id")
+        .eq("stage_id", nextStage.id)
+        .order("order_index", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+    return { nextTopicId: firstTopicInNextStage?.id || null };
+}
+
+async function unlockSkillsForTopic(topicId: string, userId: string) {
+    const supabase = await createClient();
+
+    // Get skills linked to this topic
+    const { data: topicSkills } = await supabase
+        .from("topic_skills")
+        .select("skill_id")
+        .eq("topic_id", topicId);
+
+    if (!topicSkills || topicSkills.length === 0) return;
+
+    const now = new Date().toISOString();
+
+    // Upsert each skill into user_skills
+    for (const ts of topicSkills) {
+        await supabase
+            .from("user_skills")
+            .upsert({
+                user_id: userId,
+                skill_id: ts.skill_id,
+                unlocked_at: now,
+            }, {
+                onConflict: 'user_id,skill_id'
+            });
+    }
 }
 
