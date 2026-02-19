@@ -24,11 +24,14 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          // Create a fresh response from the request to capture updated cookies
-          // while preserving the original response's intent if it was passed.
-          supabaseResponse = NextResponse.next({
-            request,
-          })
+
+          // Use the existing response if it exists, otherwise create a new one
+          if (!supabaseResponse) {
+            supabaseResponse = NextResponse.next({
+              request,
+            })
+          }
+
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -52,9 +55,9 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
 
   if (user && !isAuthRoute && !isPublicAuthPage) {
     const { data: profile } = await supabase
-      .from('profiles')
+      .from('learners')
       .select('onboarding_completed')
-      .eq('id', user.id)
+      .eq('user_id', user.id)
       .single();
 
     const onboardingCompleted = profile?.onboarding_completed ?? false;

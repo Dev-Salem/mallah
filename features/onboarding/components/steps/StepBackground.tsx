@@ -12,10 +12,10 @@ interface StepBackgroundProps {
 }
 
 const OPTIONS = [
-    { value: "student", icon: GraduationCap },
-    { value: "fresh_graduate", icon: Briefcase },
-    { value: "career_shifter", icon: RefreshCw },
-    { value: "no_tech_background", icon: HelpCircle },
+    { value: "Student", icon: GraduationCap },
+    { value: "FreshGraduate", icon: Briefcase },
+    { value: "CareerShifter", icon: RefreshCw },
+    { value: "NoTechBackground", icon: HelpCircle },
 ] as const;
 
 export function StepBackground({ initialValue, onSave, onBack }: StepBackgroundProps) {

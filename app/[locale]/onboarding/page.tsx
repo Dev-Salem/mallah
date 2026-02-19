@@ -39,7 +39,7 @@ export default async function OnboardingPage() {
             <OnboardingWizard
                 profile={profile}
                 paths={paths}
-                initialStep={profile.onboarding_step || 1}
+                initialStep={1}
             />
         </div>
     );

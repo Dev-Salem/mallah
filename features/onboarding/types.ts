@@ -18,27 +18,26 @@ export interface InterestScores {
 }
 
 export type BackgroundType =
-    | "student"
-    | "fresh_graduate"
-    | "career_shifter"
-    | "no_tech_background";
+    | "Student"
+    | "FreshGraduate"
+    | "CareerShifter"
+    | "NoTechBackground";
 
-export type PrimaryGoal = "full_time_job" | "freelance" | "own_project";
+export type PrimaryGoal = "FullTimeJob" | "Freelance" | "OwnProject";
 
 export type WeeklyLearningHours = "0-3" | "4-7" | "8-12" | "13+";
 
-export type LearningStyle = "video" | "reading" | "hands_on";
+export type LearningStyle = "Video" | "Reading" | "HandsOn";
 
-export type AiLanguagePref = "arabic" | "english" | "mix";
+export type AiLanguagePref = "AR" | "EN" | "MIX";
 
-export type AiDetailLevel = "short" | "balanced" | "detailed";
+export type AiDetailLevel = "Short" | "Balanced" | "Detailed";
 
 export interface OnboardingProfile {
-    id: string;
+    user_id: string;
     first_name: string | null;
     last_name: string | null;
     onboarding_completed: boolean;
-    onboarding_step: number;
     current_path_id: string | null;
     background_type: BackgroundType | null;
     primary_goal: PrimaryGoal | null;

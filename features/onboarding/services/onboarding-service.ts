@@ -2,16 +2,16 @@ import { createClient } from "@/lib/supabase/server";
 import type { OnboardingProfile, Path } from "../types";
 
 const ONBOARDING_PROFILE_FIELDS =
-    "id, first_name, last_name, onboarding_completed, onboarding_step, current_path_id, background_type, primary_goal, ai_language_pref, ai_detail_level, weekly_learning_hours, learning_style_primary, interest_scores";
+    "user_id, first_name, last_name, onboarding_completed, current_path_id, background_type, primary_goal, ai_language_pref, ai_detail_level, weekly_learning_hours, learning_style_primary, interest_scores";
 
 export async function getProfile(
     userId: string
 ): Promise<OnboardingProfile | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
-        .from("profiles")
+        .from("learners")
         .select(ONBOARDING_PROFILE_FIELDS)
-        .eq("id", userId)
+        .eq("user_id", userId)
         .single();
 
     if (error || !data) return null;

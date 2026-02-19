@@ -72,16 +72,46 @@ export async function login(
 
     const supabase = await createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
 
-    if (error) {
+    if (signInError) {
         return { error: "Invalid email or password.", success: null };
     }
 
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Login failed.", success: null };
+    }
+
+    // Check for admin role
+    const { data: adminData } = await supabase
+        .from("admins")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .single();
+
+    if (adminData) {
+        revalidatePath("/", "layout");
+        redirect("/admin");
+    }
+
+    // Check learner onboarding status
+    const { data: learnerData } = await supabase
+        .from("learners")
+        .select("onboarding_completed")
+        .eq("user_id", user.id)
+        .single();
+
     revalidatePath("/", "layout");
+
+    if (learnerData && !learnerData.onboarding_completed) {
+        redirect("/onboarding");
+    }
+
     redirect("/dashboard");
 }
 

@@ -4,45 +4,39 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { InterestScores, Path } from "../types";
 
-async function getAuthenticatedUserId(): Promise<string> {
+async function getAuthenticatedUserIdAndClient() {
     const supabase = await createClient();
     const {
         data: { user },
     } = await supabase.auth.getUser();
     if (!user) throw new Error("Not authenticated");
-    return user.id;
+    return { userId: user.id, supabase };
 }
 
 export async function saveStepOne(firstName: string, lastName: string) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             first_name: firstName.trim(),
             last_name: lastName.trim(),
-            onboarding_step: 2,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");
 }
 
 export async function saveStepTwo(backgroundType: string) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             background_type: backgroundType,
-            onboarding_step: 3,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");
@@ -52,52 +46,43 @@ export async function saveStepThree(
     weeklyLearningHours: string,
     learningStylePrimary: string
 ) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             weekly_learning_hours: weeklyLearningHours,
             learning_style_primary: learningStylePrimary,
-            onboarding_step: 4,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");
 }
 
 export async function saveStepFour(interestScores: InterestScores) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             interest_scores: interestScores,
-            onboarding_step: 5,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");
 }
 
 export async function saveStepFive(primaryGoal: string) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             primary_goal: primaryGoal,
-            onboarding_step: 6,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");
@@ -107,18 +92,15 @@ export async function saveStepSix(
     aiLanguagePref: string,
     aiDetailLevel: string
 ) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             ai_language_pref: aiLanguagePref,
             ai_detail_level: aiDetailLevel,
-            onboarding_step: 7,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");
@@ -142,18 +124,15 @@ export async function computeRecommendedPath(
 }
 
 export async function completeOnboarding(pathId: string) {
-    const userId = await getAuthenticatedUserId();
-    const supabase = await createClient();
+    const { userId, supabase } = await getAuthenticatedUserIdAndClient();
 
     const { error } = await supabase
-        .from("profiles")
+        .from("learners")
         .update({
             current_path_id: pathId,
             onboarding_completed: true,
-            onboarding_step: 7,
-            updated_at: new Date().toISOString(),
         })
-        .eq("id", userId);
+        .eq("user_id", userId);
 
     if (error) throw new Error(error.message);
     revalidatePath("/onboarding");

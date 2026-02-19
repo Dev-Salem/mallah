@@ -20,9 +20,9 @@ const HOURS_OPTIONS = [
 ] as const;
 
 const STYLE_OPTIONS = [
-    { value: "video", icon: Video },
-    { value: "reading", icon: BookOpen },
-    { value: "hands_on", icon: Wrench },
+    { value: "Video", icon: Video },
+    { value: "Reading", icon: BookOpen },
+    { value: "HandsOn", icon: Wrench },
 ] as const;
 
 export function StepCommitment({ initialHours, initialStyle, onSave, onBack }: StepCommitmentProps) {

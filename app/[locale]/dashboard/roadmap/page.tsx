@@ -1,18 +1,33 @@
-import { SystemModule } from "@/components/dashboard/SystemModule";
-import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import { createClient } from "@/lib/supabase/server";
+import { getRoadmapData } from "@/features/roadmaps/services/roadmap-service";
+import { RoadmapView } from "@/features/roadmaps/components/RoadmapView";
 
 export default async function RoadmapPage() {
-  const t = await getTranslations('Dashboard');
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const locale = await getLocale();
 
-  return (
-    <div className="h-full">
-      <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">
-        {t('roadmap')}
-      </h1>
-      <SystemModule 
-        title={t('roadmap')}
-        description="The Career Roadmap module is currently being calibrated. Check back soon for your personalized navigation instructions."
-      />
-    </div>
-  );
+  if (!user) {
+    redirect(`/${locale}/login`);
+  }
+
+  const { data: learner } = await supabase
+    .from("learners")
+    .select("current_path_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!learner?.current_path_id) {
+    redirect(`/${locale}/onboarding`);
+  }
+
+  const data = await getRoadmapData(learner.current_path_id, user.id);
+
+  if ("error" in data) {
+    return <div className="p-8 text-destructive font-mono uppercase">Error: {data.error}</div>;
+  }
+
+  return <RoadmapView data={data} />;
 }

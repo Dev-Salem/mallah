@@ -12,9 +12,9 @@ interface StepGoalProps {
 }
 
 const OPTIONS = [
-    { value: "full_time_job", icon: Building2 },
-    { value: "freelance", icon: Laptop },
-    { value: "own_project", icon: Rocket },
+    { value: "FullTimeJob", icon: Building2 },
+    { value: "Freelance", icon: Laptop },
+    { value: "OwnProject", icon: Rocket },
 ] as const;
 
 export function StepGoal({ initialValue, onSave, onBack }: StepGoalProps) {

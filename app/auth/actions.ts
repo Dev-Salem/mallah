@@ -1,12 +1,2 @@
-'use server'
-
-import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
-
-export async function signOut() {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
-  revalidatePath('/', 'layout')
-  redirect('/')
-}
+// This file is intentionally left empty.
+// Use the signOut action from features/auth/actions/auth-actions.ts instead.

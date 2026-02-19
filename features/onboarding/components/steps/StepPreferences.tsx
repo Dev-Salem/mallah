@@ -12,8 +12,8 @@ interface StepPreferencesProps {
     onBack: () => void;
 }
 
-const LANGUAGE_OPTIONS = ["arabic", "english", "mix"] as const;
-const DETAIL_OPTIONS = ["short", "balanced", "detailed"] as const;
+const LANGUAGE_OPTIONS = ["AR", "EN", "MIX"] as const;
+const DETAIL_OPTIONS = ["Short", "Balanced", "Detailed"] as const;
 
 export function StepPreferences({
     initialLanguage,
