@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getTopicData } from "@/features/roadmaps/services/roadmap-service";
 import { TopicContent } from "@/features/roadmaps";
 
-export default async function TopicPage({ params }: { params: { topicId: string } }) {
+export default async function TopicPage({ params }: { params: Promise<{ topicId: string }> }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     const locale = await getLocale();
@@ -13,7 +13,7 @@ export default async function TopicPage({ params }: { params: { topicId: string 
         redirect(`/${locale}/login`);
     }
 
-    const { topicId } = params;
+    const { topicId } = await params;
     const data = await getTopicData(topicId, user.id);
 
     if ("error" in data) {
