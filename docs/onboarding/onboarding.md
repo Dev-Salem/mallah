@@ -1,127 +1,386 @@
-# Mallah – Smart Onboarding
+# Mallah – Smart Onboarding v3 (Mandatory OpenAI Recommendation)
 
 ## 1. Overview
 
-The Smart Onboarding module is a guided multi-step wizard that collects key learner information
-and assigns a recommended career path (track) and roadmap (paths → stages → topics). It runs
-once on first login (or until completed), then stores the selected path and preferences in the
-Learner profile.
+Smart Onboarding v3 is a guided multi-step wizard that runs once after user registration.
 
-## 2. Goals
+The AI recommendation is mandatory.
 
-- Understand who the learner is (background, current level, time, and goal).
-- Capture high-level interests to recommend a suitable path.
-- Persist AI and learning preferences for later AI-powered features.
-- Assign `current_path_id` and mark `onboarding_completed = true`.
+Onboarding is considered complete only when:
+1. All onboarding responses are stored.
+2. A valid OpenAI-generated recommendation is stored in the database.
 
-## 3. Actors
+If OpenAI is temporarily unavailable, onboarding enters a `pending_ai` state and the system must retry automatically. The learner may continue with manual path selection, but AI recommendation generation remains required at the system level.
 
-- **Learner** (primary actor)
-- **Backend API**
-- **Database** (Users & Learners, Learning Content)
-- **(Optional) AI Engine** – may be used later to refine logic, but v1 is rules-based.
+Purpose:
+- Collect structured learner signals.
+- Build deterministic feature vectors.
+- Call OpenAI for path recommendation.
+- Return recommendation with explanation.
+- Generate a 2-week starter plan.
+- Initialize roadmap safely.
+- Persist all AI outputs for auditability.
 
-## 4. Main Flow (UX)
+---
 
-1. **Entry**
-   - Trigger: After successful login, if `onboarding_completed = false`.
-   - Redirect to `/onboarding` wizard (cannot skip; only “Back” within steps).
+## 2. Actors
 
-2. **Step 1 – Basic Info (from Register + completion)**
-   - Already have email & password from registration.
-   - Display and allow editing:
-     - First name
-     - Last name
-   - Action: `Save & Continue` → update Learner row.
+- Learner
+- Frontend Wizard
+- Backend API
+- Database
+- OpenAI API (mandatory recommendation engine)
 
-3. **Step 2 – Background & Current Situation**
-   - Single-choice cards:
-     - `Student`
-     - `Fresh Graduate`
-     - `Career Shifter`
-     - `No Tech Background`
-   - Store as `background_type`.
-   - Action: `Next`.
+---
 
-4. **Step 3 – Learning Commitment & Style**
-   - Question: “How many hours per week can you study seriously?”
-     - Options: `0–3`, `4–7`, `8–12`, `13+` → store as `weekly_learning_hours` (category).
-   - Question: “How do you prefer to learn?”
-     - `Video`, `Reading`, `Hands-on / Projects` → store as `learning_style_primary`.
-   - Action: `Next`.
+## 3. Allowed Paths (Closed Set)
 
-5. **Step 4 – Tech Interests (lightweight)**
-   - 3–5 simple questions with single-choice answers, e.g.:
-     - “Do you enjoy building things people use visually on the web?” → Frontend score +1.
-     - “Are you more excited about protecting systems and understanding attacks?” → Cybersecurity score +1.
-     - “Do you like working with numbers / patterns / data?” → Data / AI score +1.
-   - Internal scoring:
-     - Build a score vector like `{frontend, cybersecurity, data, backend, ...}`.
-   - Action: `Next`.
+The AI must select one of the following:
 
-6. **Step 5 – Career Goal**
-   - Cards:
-     - `Full-time Job`
-     - `Freelance`
-     - `Own Project / Startup`
-   - Store as `primary_goal`.
-   - Action: `Next`.
+| Path ID         | Path Name                       |
+|-----------------|---------------------------------|
+| `frontend`      | Frontend Development            |
+| `fullstack`     | Full-Stack Web Development      |
+| `cybersecurity` | Cybersecurity & Ethical Hacking |
+| `datascience`   | Data Science & Machine Learning |
 
-7. **Step 6 – AI & Language Preferences**
-   - “Preferred AI assistant language?”
-     - `Arabic`, `English`, `Mix` → `ai_language_pref`.
-   - “How do you prefer AI answers?”
-     - `Short`, `Balanced`, `Detailed` → `ai_detail_level`.
-   - Action: `Next`.
+The model is not allowed to invent new paths.
 
-8. **Step 7 – Path Recommendation Screen**
-   - Backend computes `recommended_path`:
-     - Use interest scores + simple rules (e.g., if cybersecurity highest and active → `current_path_id = cybersecurity`).
-     - If top-scored path is inactive, fallback to closest active path (e.g., Data path if Cyber not ready).
-   - UI shows:
-     - Recommended path name (e.g. “Frontend Development”).
-     - 2–3 bullet points (what you will learn, typical role).
-   - Controls:
-     - `Accept Recommendation` → save `current_path_id` and mark `onboarding_completed = true`.
-     - `Choose Another Path` → allow manual selection from list of active paths.
+---
 
-9. **Finish**
-   - After accepting a path, redirect to **Dashboard**.
-   - Dashboard uses `current_path_id` and learner data to initialize progress.
+## 4. Onboarding Questions (High-Signal Set)
 
-## 5. Functional Requirements
+All questions are structured (no free-text).
 
-- Validate required fields in each step before allowing “Next”.
-- Persist partial answers on each step (don’t lose data on refresh).
-- Only allow one active `current_path_id` per learner.
-- On re-login:
-  - If `onboarding_completed = true` → go directly to Dashboard.
-  - If `false` → resume from last completed onboarding step.
+### Step 1 – Background
+Where are you starting from?
+- Student
+- Fresh Graduate
+- Career Shifter
+- No Tech Background
 
-## 6. Data Integration
+Stored:
+- `background_type`
 
-- **Entities used**
-  - `User` (auth)
-  - `Learner`
-    - `first_name`, `last_name`
-    - `background_type`
-    - `primary_goal`
-    - `onboarding_completed`
-    - `current_path_id`
-    - `ai_language_pref`
-    - `ai_detail_level`
-    - `weekly_learning_hours`
-    - `learning_style_primary`
-  - `Path` (for recommendation & manual selection)
+---
 
-- **Main writes**
-  - Create `Learner` row after registration.
-  - Update learner attributes per step.
-  - Set `current_path_id` and `onboarding_completed = true` on final acceptance.
+### Step 2 – Primary Goal
+What do you want first?
+- Get a full-time job
+- Freelance
+- Build my own product
+- Just exploring
 
-## 7. UI Notes
+Stored:
+- `primary_goal`
 
-- Use big tappable cards for answers (mobile-friendly, but web-first).
-- Show step indicators (e.g., “Step 2 of 7”).
-- Keep language simple and beginner-friendly.
-- Avoid any AI text generation at this stage to keep it predictable.
+---
+
+### Step 3 – Weekly Commitment
+How many hours per week can you realistically commit?
+- 0–3
+- 4–7
+- 8–12
+- 13+
+
+Derived:
+- `learning_velocity`
+
+Stored:
+- `weekly_hours_category`
+- `learning_velocity`
+
+---
+
+### Step 4 – Interest Signals (Scaled Responses)
+
+Rate each statement:
+Strongly Disagree → Strongly Agree
+
+1. I enjoy building things people interact with (UI/screens).
+2. I enjoy building backend logic and system architecture.
+3. I enjoy finding weaknesses and protecting systems.
+4. I enjoy working with data, numbers, and patterns.
+5. I enjoy debugging and optimizing systems.
+6. I enjoy experimenting and testing hypotheses.
+
+Derived:
+- `interest_vector` (normalized)
+
+Stored:
+- `interest_vector`
+
+---
+
+### Step 5 – Preference Discriminator
+
+Pick the closest statement:
+
+A)
+- I want to ship visual features quickly.
+- I want to build complete products end-to-end.
+- I want to secure and investigate systems.
+- I want to analyze data and build predictive models.
+
+B)
+- I prefer clear step-by-step tasks.
+- I can handle moderate ambiguity.
+- I enjoy open-ended problems.
+
+C)
+Math comfort:
+- Low
+- Medium
+- High
+
+Derived:
+- `workstyle_vector`
+
+Stored:
+- `workstyle_vector`
+
+---
+
+### Step 6 – Readiness Snapshot
+
+Rate:
+Never / Tried / Comfortable
+
+- Git / version control
+- Command line basics
+- Writing small programs
+- Understanding APIs
+- Basic database usage
+- Basic web fundamentals
+
+Derived:
+- `readiness_level`
+- `confidence_snapshot`
+
+Stored:
+- `confidence_snapshot`
+- `readiness_level`
+
+---
+
+### Step 7 – AI Preferences
+
+Preferred language:
+- Arabic
+- English
+- Mix
+
+Preferred explanation style:
+- Short
+- Balanced
+- Detailed
+
+Stored:
+- `ai_language_pref`
+- `ai_detail_level`
+
+---
+
+## 5. Deterministic Pre-AI Scoring
+
+Backend computes weighted scores for each path before calling OpenAI:
+
+Inputs:
+- `interest_vector`
+- `workstyle_vector`
+- `readiness_level`
+- `weekly_hours_category`
+- `primary_goal`
+
+Output:
+- `path_scorecard`
+  - frontend
+  - fullstack
+  - cybersecurity
+  - datascience
+- `top_signals` (top 3 strongest indicators)
+
+This prevents random AI decisions.
+
+---
+
+## 6. Mandatory OpenAI Call
+
+### 6.1 Technical Requirements
+
+- Must use OpenAI Responses API.
+- Must use structured JSON schema.
+- Strict output enforcement.
+- Temperature low for stability.
+
+### 6.2 Input Payload
+
+Backend sends:
+
+- background_type
+- primary_goal
+- weekly_hours_category
+- learning_velocity
+- interest_vector
+- workstyle_vector
+- readiness_level
+- confidence_snapshot
+- path_scorecard
+- allowed_paths (enum list)
+- ai_language_pref
+- ai_detail_level
+
+---
+
+### 6.3 Required Output Schema
+
+AI must return:
+
+- `recommended_path_id` (enum)
+- `confidence_score` (0–100)
+- `explanation`
+  - `summary`
+  - `top_3_reasons` (array)
+  - `what_this_path_looks_like`
+- `alternatives` (0–2)
+  - `path_id`
+  - `why_it_was_close`
+- `starter_plan_2_weeks` (array of actions)
+- `first_milestone`
+  - `title`
+  - `success_criteria` (array)
+- `risk_flags` (optional)
+- `next_step_choice`
+  - recommended
+  - ask_one_more_question
+  - manual_pick_suggested
+- `followup_question` (if needed)
+
+No additional fields allowed.
+
+---
+
+## 7. Recommendation Screen
+
+Display:
+- Recommended path
+- Confidence score
+- Explanation summary
+- Top 3 reasons
+- 2-week starter plan
+- First milestone
+- Alternatives (if any)
+
+User actions:
+- Accept recommendation
+- Manually choose another path
+- Answer follow-up question (if provided)
+
+---
+
+## 8. AI Status Enforcement
+
+Add to `onboarding_responses`:
+
+- `ai_status` ENUM:
+  - not_started
+  - pending
+  - success
+  - failed
+- `ai_attempt_count`
+- `ai_last_attempt_at`
+
+Onboarding completion condition:
+
+- `onboarding_responses.completed_at` exists
+- AND `ai_recommendations` row exists
+- AND `ai_status = success`
+
+If OpenAI fails:
+- Set `ai_status = pending`
+- Allow manual selection
+- Retry in background
+- Notify user when recommendation becomes available
+
+---
+
+## 9. Data Model Updates
+
+### onboarding_responses
+
+| Field                | Type |
+|----------------------|------|
+| id                   | UUID |
+| user_id              | UUID |
+| background_type      | ENUM |
+| primary_goal         | ENUM |
+| weekly_hours_category| ENUM |
+| learning_velocity    | ENUM |
+| interest_vector      | JSONB |
+| workstyle_vector     | JSONB |
+| confidence_snapshot  | JSONB |
+| readiness_level      | INT |
+| ai_language_pref     | ENUM |
+| ai_detail_level      | ENUM |
+| ai_status            | ENUM |
+| ai_attempt_count     | INT |
+| ai_last_attempt_at   | TIMESTAMP |
+| completed_at         | TIMESTAMP |
+
+### ai_recommendations
+
+| Field                | Type |
+|----------------------|------|
+| id                   | UUID |
+| user_id              | UUID |
+| onboarding_id        | UUID |
+| recommended_path_id  | VARCHAR |
+| confidence_score     | INT |
+| explanation          | JSONB |
+| alternatives         | JSONB |
+| starter_plan_2_weeks | JSONB |
+| first_milestone      | JSONB |
+| risk_flags           | JSONB |
+| accepted_path_id     | VARCHAR |
+| created_at           | TIMESTAMP |
+
+---
+
+## 10. Learning Velocity Logic
+
+| Weekly Hours | Velocity |
+|--------------|----------|
+| 0–3          | slow     |
+| 4–7          | normal   |
+| 8–12         | fast     |
+| 13+          | fast     |
+
+Velocity affects:
+- Starter plan density
+- Roadmap pacing configuration
+
+---
+
+## 11. Error Handling
+
+| Scenario                      | Behavior |
+|------------------------------|----------|
+| OpenAI timeout                | Set ai_status=pending, allow manual pick, retry |
+| Invalid JSON                  | Retry once, then pending |
+| User exits mid-flow           | Save step state |
+| AI returns low confidence     | Show alternatives clearly |
+| AI repeatedly fails           | Keep pending + background retries |
+
+---
+
+## 12. Integration Points
+
+- Roadmap Initialization:
+  - `POST /roadmap/init`
+  - `{ user_id, path_id, learning_velocity }`
+
+- AI Preferences:
+  - Saved immediately after onboarding.
+
+- Dashboard:
+  - Reads starter plan + milestone from `ai_recommendations`.

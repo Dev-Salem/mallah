@@ -1,111 +1,284 @@
-# Mallah – Learner Dashboard
+# Mallah – Learner Dashboard v3 (Functional Contract)
 
-## 1. Overview
+## 1. Purpose
 
-The Dashboard is the central hub the learner sees after login and completing onboarding. It
-summarizes current path, progress, skills, projects, resume status, and provides shortcuts to
-key tools (Roadmap, Skills & Projects, Resume Builder, Opportunity Analyzer).
+The Dashboard is a read-only aggregation layer for learners.
 
-## 2. Goals
+It exists to:
+- Present the single highest-priority next action (Mission).
+- Display real progress metrics (path + stage).
+- Display readiness indicators (skills, projects, resume).
+- Display pacing indicators (streak, sessions, pace status).
+- Optionally display a non-blocking AI tip.
 
-- Give a clear “where am I now?” snapshot.
-- Provide a single “Resume Learning” entry point to the next topic.
-- Surface quick stats related to skills, projects, and job readiness.
-- Offer lightweight AI guidance (optional) without overwhelming the learner.
+The Dashboard does not own roadmap logic, onboarding logic, or skill inference logic. It renders backend-provided state only.
 
-## 3. Actors
+---
 
-- **Learner**
-- **Frontend UI**
-- **Backend API**
-- **Database** (Users, Learners, Progress, Skills, Projects, Resumes)
-- **AI Engine** (for optional tip of the day)
+## 2. Actors
 
-## 4. Main Sections (UI Layout)
+- Learner (authenticated)
+- Backend API
+- Database
+- Optional: OpenAI (AI Micro-Coach only)
 
-1. **Header / Greeting**
-   - “Welcome back, {FirstName}”
-   - Sub-line: “Path: {PathName} – Current Stage: {StageName}”
+---
 
-2. **Global Progress Card**
-   - Overall progress bar:
-     - `% = completed_topics / total_topics_in_path * 100`.
-   - Text: “You’ve completed X of Y lessons in this path.”
+## 3. Scope Boundaries
 
-3. **Next Step / Resume Learning Card**
-   - Logic:
-     - Fetch first topic in current path where `status != Completed`.
-   - UI:
-     - Topic title + stage name.
-     - `Resume Learning` button → opens Topic Viewer on that topic.
+### This module CAN:
+- Render a mission object returned by the backend.
+- Render progress and readiness metrics returned by the backend.
+- Render an onboarding banner returned by the backend.
+- Render an optional AI tip returned by the backend.
 
-4. **Quick Stats Row**
-   - `Skills Unlocked`: count of skills in `UserSkill` with any level.
-   - `Projects Completed`: count of completed `UserProject`.
-   - `Resume Readiness`: simple indicator:
-     - e.g. `Not Created`, `In Progress`, `Ready`.
-     - Optionally show `ats_score` if available.
+### This module CANNOT:
+- Compute or override mission selection.
+- Compute progress percentages.
+- Compute next-topic logic.
+- Mutate roadmap progress or onboarding state.
+- Derive skills or projects counts beyond what is returned.
 
-5. **AI Insight / Tip Panel (Optional)**
-   - Small card titled “Today’s Hint”:
-     - Example outputs:
-       - “You’re one lesson away from finishing Stage 1, consider completing {TopicName} today.”
-       - “You have 0 projects yet. Try starting a small project from your path.”
-   - Backend can decide simple rules first; AI can rephrase text later.
+---
 
-6. **Quick Actions Section**
-   - Buttons:
-     - `View Roadmap`
-     - `Open Skills & Projects Hub`
-     - `Open Resume Builder`
-     - `Analyze Job Opportunity`
-   - Each button routes to the corresponding module.
+## 4. Mission System (Primary Output)
 
-7. **Recent Activity (Optional v1 or v2)**
-   - List last 3–5 recent actions:
-     - Completed topics.
-     - Completed projects.
-     - Last job analysis.
+Exactly one mission is returned per request.
 
-## 5. Functional Requirements
+Mission selection is server-side only and follows this strict priority order:
 
-- Dashboard should load in one backend call aggregating:
-  - User profile (name, current_path_id).
-  - Path & stage info.
-  - Progress summary for current path.
-  - Skills & projects counts.
-  - Resume status / ATS score (if any).
-- If learner has no path (`current_path_id` null) → redirect to onboarding.
-- “Resume Learning” must be disabled if all topics are completed (show “Path Completed” state).
-- AI tip:
-  - If AI not available, fall back to rule-based text or hide tip card.
+| Priority | Condition | Mission Type |
+|----------|-----------|--------------|
+| 1 | learners.onboarding_completed = false | CompleteOnboarding |
+| 2 | Path is complete (all mandatory topics completed) | ChooseNewPath |
+| 3 | completed_projects_count = 0 AND learner has passed Stage 1 | StartFirstProject |
+| 4 | Inactive for >= inactivity_threshold_days | GetBackOnTrack |
+| 5 | current stage completion >= 80% | FinishStage |
+| 6 | default | ContinueLearning |
 
-## 6. Data Integration
+Notes:
+- inactivity_threshold_days must be configurable server-side.
+- “passed Stage 1” is determined by roadmap engine progress (not UI).
 
-- **Reads**
-  - `Learner`:
-    - `first_name`, `current_path_id`, `primary_goal`.
-  - `Path`, `Stage`, `Topic`:
-    - To compute progress and find next topic.
-  - `UserProgress`:
-    - Counts of completed topics.
-  - `UserSkill`:
-    - Count of skills per learner.
-  - `UserProject`:
-    - Count of completed projects.
-  - `Resume`:
-    - If exists, latest `ats_score` and status.
+Mission object must always include:
+- type
+- title
+- description
+- cta_label
+- cta_target
 
-- **AI Integration (optional)**
-  - Input:
-    - Small summary: `{name, path_name, completion_percent, skills_count, projects_count}`.
-  - Output:
-    - 1–2 sentences of encouragement/tip.
-  - Display only after dashboard core data is ready.
+Frontend must not modify mission content or apply local mission logic.
 
-## 7. UX Notes
+---
 
-- Keep the dashboard visually simple: 3–4 main cards max on first screen.
-- Make `Resume Learning` visually dominant (primary CTA).
-- All numbers should be clearly labeled (e.g., “Skills Unlocked” not just “12”).
-- Avoid overcrowding with charts in v1; simple cards and bars are enough.
+## 5. Onboarding Banner
+
+Onboarding banner is optional and returned by the backend.
+
+Shown only when:
+- learners.onboarding_completed = true
+- completed_topics = 0
+
+Data source:
+- ai_recommendations.starter_plan_2_weeks
+- ai_recommendations.first_milestone
+
+Banner must include:
+- show (boolean)
+- starter_plan_2_weeks (array)
+- first_milestone (string)
+- cta_target (next_topic_id or topic URL)
+
+Banner dismissal behavior is UI-only and must not change data state except a local preference flag (recommended: client-side or a lightweight server preference field).
+
+---
+
+## 6. Progress Outputs (Read-only)
+
+All progress values are computed server-side (Roadmap Engine is the source of truth).
+
+### Path Progress
+- completion_percent (nullable if undefined)
+- completed_topics
+- total_mandatory_topics
+
+### Stage Progress
+- current_stage_id
+- current_stage_title
+- stage_completion_percent (nullable if undefined)
+- stage_completed_topics
+- stage_total_topics
+
+### Forecast (Optional)
+Forecast is returned only if it can be computed from real data.
+
+It may include:
+- estimated_days_to_finish_stage
+- assumption_basis (e.g., learning_velocity)
+
+Frontend must hide forecast if backend returns null.
+
+---
+
+## 7. Readiness Indicators (Read-only)
+
+Backend provides:
+- unlocked_skills_count
+- completed_projects_count
+- resume_status (not_created | in_progress | ready)
+- ats_score (nullable)
+
+Frontend may apply warning styling when:
+- completed_projects_count = 0
+This is purely visual and does not change logic.
+
+---
+
+## 8. Pace & Momentum (Read-only)
+
+Backend provides:
+- streak_days
+- sessions_this_week
+- target_sessions_per_week
+- pace_status (On Track | Behind | Ahead)
+
+Rules:
+- If no activity is present, backend may return neutral text and/or streak_days = 0.
+- Frontend must not synthesize streak or pace values.
+
+---
+
+## 9. AI Micro-Coach (Optional, Non-Blocking)
+
+AI tip:
+- Must never block dashboard rendering.
+- Must reference real fields only (no fabrication).
+- Must respect:
+  - ai_language_pref
+  - ai_detail_level
+
+If AI is unavailable:
+- Backend returns ai_tip = null OR a deterministic rule-based message.
+
+Constraints:
+- short: max 1 sentence
+- balanced: max 2 sentences
+- detailed: max 3 sentences
+
+AI tip must not alter mission selection.
+
+---
+
+## 10. Quick Navigation
+
+Static navigation links (no logic):
+- Roadmap
+- Projects & Skills
+- Resume Builder
+- Opportunity Analyzer
+
+---
+
+## 11. Recent Activity (Optional)
+
+Backend may return last 3–5 activity items derived from:
+- user_progress.completed_at
+- user_projects.completed_at
+- resumes.last_updated_at
+- opportunity_analyses.created_at
+
+If no activity exists:
+- Return empty array or omit section.
+Frontend must hide the section when empty.
+
+---
+
+## 12. Redirect Rules (Hard Rules)
+
+Frontend must redirect and not render dashboard if:
+- learners.onboarding_completed = false → onboarding route
+- learners.current_path_id is null → path selection route (or onboarding resolution)
+
+Backend should also enforce these rules via response flags or a 409/redirect directive object.
+
+---
+
+## 13. API Contract
+
+Endpoint:
+GET /api/dashboard/summary
+
+Response shape (contract):
+
+- learner:
+  - first_name
+  - primary_goal
+  - ai_language_pref
+  - ai_detail_level
+  - learning_velocity
+  - weekly_hours_category
+  - onboarding_completed
+- path:
+  - path_id
+  - path_display_name
+  - completion_percent
+- stage:
+  - current_stage_id
+  - current_stage_title
+  - stage_completion_percent
+  - stage_completed_topics
+  - stage_total_topics
+- topics:
+  - completed_topics
+  - total_mandatory_topics
+  - next_topic_id
+  - next_topic_title
+  - next_topic_estimated_time_min
+- mission:
+  - type
+  - title
+  - description
+  - cta_label
+  - cta_target
+- readiness:
+  - unlocked_skills_count
+  - completed_projects_count
+  - resume_status
+  - ats_score
+- pace:
+  - streak_days
+  - sessions_this_week
+  - target_sessions_per_week
+  - pace_status
+- onboarding_banner:
+  - show
+  - starter_plan_2_weeks
+  - first_milestone
+  - cta_target
+- forecast (optional):
+  - estimated_days_to_finish_stage
+  - assumption_basis
+- ai_tip (optional):
+  - text
+
+Rules:
+- ai_tip must be computed asynchronously or returned as null if delayed.
+- Dashboard must be renderable without ai_tip.
+
+---
+
+## 14. Non-Functional Requirements
+
+- API response time target: < 2 seconds under normal load.
+- No mock values returned.
+- Enumerations must match shared system enums (onboarding + roadmap).
+- No client-side reimplementation of mission/progress algorithms.
+
+---
+
+## 15. Invariants
+
+- Exactly one mission is displayed.
+- Mission always includes a CTA.
+- Roadmap Engine remains the single source of truth for progress and next topic.
+- Dashboard remains usable with AI disabled.

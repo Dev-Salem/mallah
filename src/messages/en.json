@@ -1,0 +1,186 @@
+{
+  "Navigation": {
+    "gap": "The Gap",
+    "process": "Process",
+    "features": "Features",
+    "outcomes": "Outcomes",
+    "dashboard": "Dashboard",
+    "join": "Join the Mission"
+  },
+  "Hero": {
+    "navLog": "Navigational Log 24.02",
+    "title1": "Graduate",
+    "title2": "into a",
+    "title3": "Career.",
+    "subtitle": "University provides the coordinates. Mallah provides the vessel. A professional engineering engine dedicated to bridging the academic disconnect.",
+    "initiate": "Initiate Prep",
+    "status": "Status Report",
+    "statusDetail": "Ready for Onboarding // 842 Navigators Enrolled",
+    "latLong": "FIX: LAT 25.0 // LONG 55.0"
+  },
+  "Problem": {
+    "label": "Diagnostics",
+    "title": "The Academic Disconnect",
+    "subtitle": "Universities are legacy systems optimized for theory. The market is a real-time environment optimized for production. Mallah bridges this gap.",
+    "item1Title": "Theory vs. Practice",
+    "item1Desc": "Traditional education ends at the degree. Real careers begin with practical evidence. We enforce the latter.",
+    "item2Title": "Information Noise",
+    "item2Desc": "The internet is a sea of scattered data. We provide the compass and the path through curated roadmap logic.",
+    "item3Title": "Job Readiness Gap",
+    "item3Desc": "Hiring managers don't want knowledge; they want readiness. Mallah engineers your professional identity."
+  },
+  "Process": {
+    "label": "Navigation Flow",
+    "title": "Career Engineering",
+    "quote": "A steady hand on the rudder, a clear eye on the horizon.",
+    "step1Title": "Assessment",
+    "step1Desc": "We map your current technical coordinates.",
+    "step2Title": "Selection",
+    "step2Desc": "Choose a role-specific navigational path.",
+    "step3Title": "Execution",
+    "step3Desc": "Build evidence through structured projects.",
+    "step4Title": "Arrival",
+    "step4Desc": "Deploy your professional identity to market."
+  },
+  "CTA": {
+    "label": "Final Approach",
+    "title": "Ready to embark?",
+    "button": "Join the Mallah"
+  },
+  "Footer": {
+    "desc": "Precision instrumentation for the next generation of technical navigators. Bridge the academic disconnect.",
+    "coords": "Coordinates",
+    "trans": "Transmission",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "copyright": "© 2026 Mallah Engineering Ltd."
+  },
+  "Login": {
+    "idRequired": "Navigator Identification",
+    "secureTerminal": "Secure Access Terminal",
+    "backToSurface": "Back to Surface",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "signIn": "Sign In",
+    "noAccount": "Don't have an account?",
+    "registerNow": "Join the Fleet",
+    "forgotPassword": "Forgot Password?"
+  },
+  "Register": {
+    "title": "Join the Fleet",
+    "subtitle": "Set your coordinates and start your journey.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Create Account",
+    "haveAccount": "Already a navigator?",
+    "loginNow": "Login here"
+  },
+  "Common": {
+    "logo": "MALLAH",
+    "loading": "Processing...",
+    "error": "Something went wrong. Please try again."
+  },
+  "ForgotPassword": {
+    "title": "Recovery",
+    "subtitle": "Signal Recovery Protocol",
+    "emailLabel": "Registered Email",
+    "submit": "Send Recovery Signal",
+    "successTitle": "Signal Dispatched",
+    "successMessage": "If an account exists with this email, a password reset link has been sent. Check your email inbox.",
+    "backToLogin": "Back to Terminal"
+  },
+  "ResetPassword": {
+    "title": "New Credentials",
+    "subtitle": "Credential Override Protocol",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "submit": "Update Credentials",
+    "successTitle": "Credentials Updated",
+    "successMessage": "Your password has been successfully updated. You can now log in with your new credentials.",
+    "loginNow": "Return to Terminal",
+    "backToLogin": "Back to Terminal"
+  },
+  "Dashboard": {
+    "title": "Command Center",
+    "welcome": "Welcome aboard",
+    "signOut": "Sign Out",
+    "authorized": "Authorized",
+    "sessionActive": "Session Active",
+    "roadmap": "Roadmap",
+    "skillsHub": "Skills Hub",
+    "resumeBuilder": "Resume Builder",
+    "opportunityAnalyzer": "Opportunity Analyzer"
+  },
+  "Onboarding": {
+    "title": "Vessel Initialization",
+    "subtitle": "Set your technical coordinates for the journey ahead.",
+    "next": "Continue",
+    "back": "Previous",
+    "finish": "Complete Assessment",
+    "Step1": {
+      "title": "Background",
+      "question": "Where are you starting from?",
+      "Student": "Student",
+      "FreshGraduate": "Fresh Graduate",
+      "CareerShifter": "Career Shifter",
+      "NoTechBackground": "No Tech Background"
+    },
+    "Step2": {
+      "title": "Primary Goal",
+      "question": "What do you want first?",
+      "FullTimeJob": "Get a full-time job",
+      "Freelance": "Freelance",
+      "OwnProject": "Build my own product",
+      "JustExploring": "Just exploring"
+    },
+    "Step3": {
+      "title": "Weekly Commitment",
+      "question": "How many hours per week can you realistically commit?",
+      "hours": "{count} hours"
+    },
+    "Step4": {
+      "title": "Interest Signals",
+      "question": "Rate each statement based on your enjoyment:",
+      "Statement1": "I enjoy building things people interact with (UI/screens).",
+      "Statement2": "I enjoy building backend logic and system architecture.",
+      "Statement3": "I enjoy finding weaknesses and protecting systems.",
+      "Statement4": "I enjoy working with data, numbers, and patterns.",
+      "Statement5": "I enjoy debugging and optimizing systems.",
+      "Statement6": "I enjoy experimenting and testing hypotheses."
+    },
+    "Step5": {
+      "title": "Preference Discriminator",
+      "question": "Pick the closest style to your personality:",
+      "Visual": "I want to ship visual features quickly.",
+      "Complete": "I want to build complete products end-to-end.",
+      "Secure": "I want to secure and investigate systems.",
+      "Analyze": "I want to analyze data and build predictive models.",
+      "StepByStep": "I prefer clear step-by-step tasks.",
+      "Ambiguity": "I can handle moderate ambiguity.",
+      "OpenEnded": "I enjoy open-ended problems.",
+      "MathComfort": "Math comfort level"
+    },
+    "Step6": {
+      "title": "Readiness Snapshot",
+      "question": "How comfortable are you with these tools?",
+      "Never": "Never",
+      "Tried": "Tried",
+      "Comfortable": "Comfortable"
+    },
+    "Step7": {
+      "title": "AI Preferences",
+      "question": "How should the AI communicate with you?",
+      "Language": "Preferred Language",
+      "Detail": "Explanation Style",
+      "AR": "Arabic Only",
+      "EN": "English Only",
+      "MIX": "Mix of Both",
+      "Short": "Short & Quick",
+      "Balanced": "Balanced Output",
+      "Detailed": "Deep Analysis"
+    }
+  }
+}

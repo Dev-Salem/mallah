@@ -1,0 +1,46 @@
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\actions\onboarding-actions.ts
+  24:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\components\OnboardingWizard.tsx
+   8:30  warning  'BackgroundType' is defined but never used       @typescript-eslint/no-unused-vars
+   8:46  warning  'PrimaryGoal' is defined but never used          @typescript-eslint/no-unused-vars
+   8:59  warning  'WeeklyHoursCategory' is defined but never used  @typescript-eslint/no-unused-vars
+   8:80  warning  'AILanguagePref' is defined but never used       @typescript-eslint/no-unused-vars
+   8:96  warning  'AIDetailLevel' is defined but never used        @typescript-eslint/no-unused-vars
+  34:58  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\components\RecommendationResult.tsx
+   14:21  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   18:11  warning  't' is assigned a value but never used    @typescript-eslint/no-unused-vars
+   67:73  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  108:68  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\components\StepReadiness.tsx
+  25:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\components\StepWorkstyleVector.tsx
+  30:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  44:106  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:112  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\services\ai-service.ts
+   6:5   warning  'InterestVector' is defined but never used      @typescript-eslint/no-unused-vars
+   7:5   warning  'WorkstyleVector' is defined but never used     @typescript-eslint/no-unused-vars
+   8:5   warning  'ConfidenceSnapshot' is defined but never used  @typescript-eslint/no-unused-vars
+   9:5   warning  'AILanguagePref' is defined but never used      @typescript-eslint/no-unused-vars
+  10:5   warning  'AIDetailLevel' is defined but never used       @typescript-eslint/no-unused-vars
+  42:20  error    Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\services\onboarding-service.ts
+   2:30  warning  'AIRecommendation' is defined but never used  @typescript-eslint/no-unused-vars
+  39:98  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  89:23  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\src\features\onboarding\services\scoring-logic.ts
+  1:30  warning  'InterestVector' is defined but never used   @typescript-eslint/no-unused-vars
+  1:46  warning  'WorkstyleVector' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 27 problems (13 errors, 14 warnings)
+
