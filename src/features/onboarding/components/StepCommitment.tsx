@@ -16,14 +16,22 @@ export function StepCommitment({ value, onChange }: Props) {
     return (
         <div className="space-y-6">
             <h2 className="text-xl font-medium text-slate-200">{t("question")}</h2>
-            <RadioGroup value={value} onValueChange={(v) => onChange(v as WeeklyHoursCategory)} className="grid grid-cols-1 gap-6">
+            <RadioGroup value={value} onValueChange={(v) => onChange(v as WeeklyHoursCategory)} className="grid grid-cols-1 gap-4">
                 {options.map((opt) => (
-                    <div key={opt} className="flex items-center space-x-4 space-x-reverse p-4 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-all bg-slate-800/20">
-                        <RadioGroupItem value={opt} id={opt} className="border-cyan-500 text-cyan-500" />
-                        <Label htmlFor={opt} className="text-xl font-mono cursor-pointer text-slate-200">
-                            {opt} {t("hours")}
-                        </Label>
-                    </div>
+                    <Label
+                        key={opt}
+                        htmlFor={opt}
+                        className={`flex items-center gap-6 p-5 border rounded-xl cursor-pointer transition-all duration-300 group
+                            ${value === opt
+                                ? "border-cyan-500/50 bg-cyan-500/10 shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                                : "border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/40"
+                            }`}
+                    >
+                        <RadioGroupItem value={opt} id={opt} className="border-cyan-500/50 text-cyan-500" />
+                        <span className={`text-2xl font-mono transition-colors ${value === opt ? "text-cyan-400" : "text-slate-300 group-hover:text-slate-200"}`}>
+                            {t("hours", { count: opt })}
+                        </span>
+                    </Label>
                 ))}
             </RadioGroup>
         </div>

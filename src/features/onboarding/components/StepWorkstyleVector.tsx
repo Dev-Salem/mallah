@@ -27,12 +27,24 @@ export function StepWorkstyleVector({ value, onChange }: Props) {
         <div className="space-y-8 overflow-y-auto max-h-[500px] pr-2">
             <div className="space-y-4">
                 <h3 className="text-lg font-medium text-slate-200">{t("question")}</h3>
-                <RadioGroup value={iv.choice} onValueChange={(v) => onChange({ ...iv, choice: v as any })}>
+                <RadioGroup
+                    value={iv.choice}
+                    onValueChange={(v) => onChange({ ...iv, choice: v as any })}
+                    className="grid grid-cols-2 gap-3"
+                >
                     {choices.map((c) => (
-                        <div key={c} className="flex items-center space-x-2 space-x-reverse">
-                            <RadioGroupItem value={c} id={c} />
-                            <Label htmlFor={c} className="cursor-pointer text-slate-300">{t(c.charAt(0).toUpperCase() + c.slice(1))}</Label>
-                        </div>
+                        <Label
+                            key={c}
+                            htmlFor={c}
+                            className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all duration-300
+                                ${iv.choice === c
+                                    ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400"
+                                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                                }`}
+                        >
+                            <RadioGroupItem value={c} id={c} className="border-cyan-500/50 text-cyan-500" />
+                            <span className="text-sm font-medium">{t(c.charAt(0).toUpperCase() + c.slice(1))}</span>
+                        </Label>
                     ))}
                 </RadioGroup>
             </div>
@@ -40,13 +52,25 @@ export function StepWorkstyleVector({ value, onChange }: Props) {
             <Separator className="bg-slate-800" />
 
             <div className="space-y-4">
-                <h3 className="text-lg font-medium text-slate-200">Problem Style</h3>
-                <RadioGroup value={iv.ambiguity} onValueChange={(v) => onChange({ ...iv, ambiguity: v as any })}>
+                <h3 className="text-lg font-medium text-slate-200">{t("ProblemStyle")}</h3>
+                <RadioGroup
+                    value={iv.ambiguity}
+                    onValueChange={(v) => onChange({ ...iv, ambiguity: v as any })}
+                    className="grid grid-cols-1 gap-3"
+                >
                     {ambiguity.map((a) => (
-                        <div key={a} className="flex items-center space-x-2 space-x-reverse">
-                            <RadioGroupItem value={a} id={a} />
-                            <Label htmlFor={a} className="cursor-pointer text-slate-300">{t(a.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(''))}</Label>
-                        </div>
+                        <Label
+                            key={a}
+                            htmlFor={a}
+                            className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all duration-300
+                                ${iv.ambiguity === a
+                                    ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400 font-medium"
+                                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                                }`}
+                        >
+                            <RadioGroupItem value={a} id={a} className="border-cyan-500/50 text-cyan-500" />
+                            <span>{t(a.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(''))}</span>
+                        </Label>
                     ))}
                 </RadioGroup>
             </div>
@@ -55,12 +79,24 @@ export function StepWorkstyleVector({ value, onChange }: Props) {
 
             <div className="space-y-4">
                 <h3 className="text-lg font-medium text-slate-200">{t("MathComfort")}</h3>
-                <RadioGroup value={iv.math_comfort} onValueChange={(v) => onChange({ ...iv, math_comfort: v as any })} className="flex space-x-6 space-x-reverse">
+                <RadioGroup
+                    value={iv.math_comfort}
+                    onValueChange={(v) => onChange({ ...iv, math_comfort: v as any })}
+                    className="flex gap-4"
+                >
                     {math.map((m) => (
-                        <div key={m} className="flex items-center space-x-2 space-x-reverse">
-                            <RadioGroupItem value={m} id={m} />
-                            <Label htmlFor={m} className="cursor-pointer text-slate-300">{m}</Label>
-                        </div>
+                        <Label
+                            key={m}
+                            htmlFor={m}
+                            className={`flex flex-1 items-center justify-center gap-3 p-4 border rounded-xl cursor-pointer transition-all duration-300
+                                ${iv.math_comfort === m
+                                    ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400 font-medium"
+                                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700"
+                                }`}
+                        >
+                            <RadioGroupItem value={m} id={m} className="border-cyan-500/50 text-cyan-500" />
+                            <span>{t(m)}</span>
+                        </Label>
                     ))}
                 </RadioGroup>
             </div>

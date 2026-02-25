@@ -1,6 +1,6 @@
-import OpenAI from "openai";
+import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
 import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
 import {
     OnboardingResponse,
     InterestVector,
@@ -30,9 +30,9 @@ const RecommendationSchema = z.object({
         title: z.string(),
         success_criteria: z.array(z.string()),
     }),
-    risk_flags: z.array(z.string()).optional(),
+    risk_flags: z.array(z.string()),
     next_step_choice: z.enum(["recommended", "ask_one_more_question", "manual_pick_suggested"]),
-    followup_question: z.string().optional(),
+    followup_question: z.string().nullable(),
 });
 
 export type AIRecommendationOutput = z.infer<typeof RecommendationSchema>;
@@ -42,10 +42,6 @@ export async function generateRecommendation(
     pathScorecard: any,
     topSignals: string[]
 ): Promise<AIRecommendationOutput> {
-    const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-    });
-
     const prompt = `
     You are the Mallah Career Navigator. Your goal is to recommend the best learning path for a student based on their onboarding signals.
     
@@ -69,20 +65,20 @@ export async function generateRecommendation(
   `;
 
     try {
-        const completion = await openai.beta.chat.completions.parse({
-            model: "gpt-4o-2024-08-06", // Use latest model supporting structured outputs
-            messages: [
-                { role: "system", content: "You are a professional maritime-themed career advisor for software engineering." },
-                { role: "user", content: prompt },
-            ],
-            response_format: zodResponseFormat(RecommendationSchema, "recommendation"),
+        const { object } = await generateObject({
+            model: openai.chat("gpt-4o"),
+            schema: RecommendationSchema,
+            system: "You are a professional maritime-themed career advisor for software engineering specialized in mapping student signals to career paths.",
+            prompt: prompt,
             temperature: 0.1,
+            providerOptions: {
+                openai: {
+                    strictJsonSchema: false,
+                },
+            },
         });
 
-        const result = completion.choices[0].message.parsed;
-        if (!result) throw new Error("Failed to parse AI response");
-
-        return result;
+        return object;
     } catch (error) {
         console.error("OpenAI Recommendation Error:", error);
         throw error;

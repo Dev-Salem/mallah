@@ -145,11 +145,23 @@
       "title": "Interest Signals",
       "question": "Rate each statement based on your enjoyment:",
       "Statement1": "I enjoy building things people interact with (UI/screens).",
+      "Statement1Hint": "Designing and building the visual part of applications that users see and interact with.",
+      "Statement1Example": "Creating a login page with smooth animations and responsive buttons.",
       "Statement2": "I enjoy building backend logic and system architecture.",
+      "Statement2Hint": "Building the \"brain\" and data storage of applications.",
+      "Statement2Example": "Handling user accounts securely and managing the database.",
       "Statement3": "I enjoy finding weaknesses and protecting systems.",
+      "Statement3Hint": "Protecting systems from attacks and finding security vulnerabilities.",
+      "Statement3Example": "Testing if a website is safe from hackers or setting up encrypted communication.",
       "Statement4": "I enjoy working with data, numbers, and patterns.",
+      "Statement4Hint": "Finding patterns in data to make predictions or insights.",
+      "Statement4Example": "Predicting future sales based on past data or building a recommendation system.",
       "Statement5": "I enjoy debugging and optimizing systems.",
-      "Statement6": "I enjoy experimenting and testing hypotheses."
+      "Statement5Hint": "Fixing broken code and making applications run faster and more efficiently.",
+      "Statement5Example": "Finding why a specific button isn't working or reducing page load time.",
+      "Statement6": "I enjoy experimenting and testing hypotheses.",
+      "Statement6Hint": "Trying out new ideas and testing which one works best.",
+      "Statement6Example": "A/B testing two different designs to see which one gets more clicks."
     },
     "Step5": {
       "title": "Preference Discriminator",
@@ -159,9 +171,13 @@
       "Secure": "I want to secure and investigate systems.",
       "Analyze": "I want to analyze data and build predictive models.",
       "StepByStep": "I prefer clear step-by-step tasks.",
-      "Ambiguity": "I can handle moderate ambiguity.",
+      "Moderate": "I can handle moderate ambiguity.",
       "OpenEnded": "I enjoy open-ended problems.",
-      "MathComfort": "Math comfort level"
+      "ProblemStyle": "Problem Style",
+      "MathComfort": "Math comfort level",
+      "Low": "Low",
+      "Medium": "Medium",
+      "High": "High"
     },
     "Step6": {
       "title": "Readiness Snapshot",
@@ -181,6 +197,24 @@
       "Short": "Short & Quick",
       "Balanced": "Balanced Output",
       "Detailed": "Deep Analysis"
+    },
+    "Result": {
+      "badge": "ANALYSIS COMPLETE",
+      "confidence": "CONFIDENCE",
+      "heading": "Your Navigational Path",
+      "whyTitle": "Why this path?",
+      "operationalPreview": "OPERATIONAL PREVIEW",
+      "starterPlanTitle": "2-Week Starter Plan",
+      "week": "Week",
+      "firstMilestoneTitle": "First Milestone",
+      "alternativesTitle": "Alternative Paths Considered",
+      "selectPathLabel": "Selected Path",
+      "acceptButton": "Accept & Enter Command Center",
+      "accepting": "Processing...",
+      "pathFrontend": "Frontend",
+      "pathFullstack": "Fullstack",
+      "pathCybersecurity": "Cybersecurity",
+      "pathDatascience": "Data Science"
     }
   }
 }

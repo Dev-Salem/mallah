@@ -5,7 +5,8 @@ import {
     saveOnboardingStep,
     saveAIRecommendation,
     updateAIStatus,
-    getOnboardingState
+    getOnboardingState,
+    acceptRecommendation
 } from "../services/onboarding-service";
 import { computePathScorecard, deriveLearningVelocity } from "../services/scoring-logic";
 import { generateRecommendation } from "../services/ai-service";
@@ -19,7 +20,6 @@ export async function saveStepAction(userId: string, data: Partial<OnboardingRes
         }
 
         await saveOnboardingStep(userId, data);
-        revalidatePath("/onboarding");
         return { success: true };
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "An unknown error occurred";
@@ -41,17 +41,32 @@ export async function finishOnboardingAction(userId: string) {
         const recommendation = await generateRecommendation(state, scorecard, top_signals);
 
         // 3. Save recommendation
-        await saveAIRecommendation(userId, state.id, recommendation);
+        const recommendationId = await saveAIRecommendation(userId, state.id, recommendation);
 
-        revalidatePath("/onboarding");
         revalidatePath("/dashboard");
 
-        return { success: true, recommendation };
+        return { success: true, recommendation: { ...recommendation, id: recommendationId } };
     } catch (error: unknown) {
         console.error("Finish Onboarding Error:", error);
         const message = error instanceof Error ? error.message : "An unknown error occurred";
         // Note: In real production, we'd trigger a background retry if this fails.
         // For now, we return the error to the UI.
+        return { error: message };
+    }
+}
+
+export async function acceptRecommendationAction(
+    userId: string,
+    recommendationId: string,
+    selectedPathId?: "frontend" | "fullstack" | "cybersecurity" | "datascience"
+) {
+    try {
+        await acceptRecommendation(userId, recommendationId, selectedPathId);
+        revalidatePath("/dashboard");
+        revalidatePath("/dashboard/roadmap");
+        return { success: true };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "An unknown error occurred";
         return { error: message };
     }
 }

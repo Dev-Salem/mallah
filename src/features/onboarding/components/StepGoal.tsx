@@ -18,12 +18,20 @@ export function StepGoal({ value, onChange }: Props) {
             <h2 className="text-xl font-medium text-slate-200">{t("question")}</h2>
             <RadioGroup value={value} onValueChange={(v) => onChange(v as PrimaryGoal)} className="grid grid-cols-1 gap-4">
                 {options.map((opt) => (
-                    <div key={opt} className="flex items-center space-x-2 space-x-reverse">
-                        <RadioGroupItem value={opt} id={opt} className="border-cyan-500 text-cyan-500" />
-                        <Label htmlFor={opt} className="text-lg cursor-pointer text-slate-300 hover:text-cyan-400 transition-colors">
+                    <Label
+                        key={opt}
+                        htmlFor={opt}
+                        className={`flex items-center gap-4 p-5 border rounded-xl cursor-pointer transition-all duration-300 group
+                            ${value === opt
+                                ? "border-cyan-500/50 bg-cyan-500/10 shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                                : "border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/40"
+                            }`}
+                    >
+                        <RadioGroupItem value={opt} id={opt} className="border-cyan-500/50 text-cyan-500" />
+                        <span className={`text-lg font-medium transition-colors ${value === opt ? "text-cyan-400" : "text-slate-300 group-hover:text-slate-200"}`}>
                             {t(opt)}
-                        </Label>
-                    </div>
+                        </span>
+                    </Label>
                 ))}
             </RadioGroup>
         </div>

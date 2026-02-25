@@ -46,13 +46,21 @@ export function StepReadiness({ value, onChange }: Props) {
                         <RadioGroup
                             value={cv[tool.key as keyof ConfidenceSnapshot]}
                             onValueChange={(v) => handleUpdate(tool.key as keyof ConfidenceSnapshot, v)}
-                            className="flex space-x-4 space-x-reverse"
+                            className="flex gap-4 md:gap-6"
                         >
                             {levels.map((l) => (
-                                <div key={l} className="flex items-center space-x-2 space-x-reverse">
-                                    <RadioGroupItem value={l} id={`${tool.key}-${l}`} />
-                                    <Label htmlFor={`${tool.key}-${l}`} className="text-xs cursor-pointer text-slate-400">{t(l)}</Label>
-                                </div>
+                                <Label
+                                    key={l}
+                                    htmlFor={`${tool.key}-${l}`}
+                                    className={`flex items-center gap-2 cursor-pointer transition-colors group px-3 py-1.5 rounded-lg border
+                                        ${cv[tool.key as keyof ConfidenceSnapshot] === l
+                                            ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400"
+                                            : "border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-800/50"
+                                        }`}
+                                >
+                                    <RadioGroupItem value={l} id={`${tool.key}-${l}`} className="border-cyan-500/50 text-cyan-500" />
+                                    <span className="text-sm font-medium">{t(l)}</span>
+                                </Label>
                             ))}
                         </RadioGroup>
                     </div>

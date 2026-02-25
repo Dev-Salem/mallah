@@ -66,7 +66,7 @@ export function OnboardingWizard({ userId, initialState }: Props) {
     };
 
     if (recommendation) {
-        return <RecommendationResult recommendation={recommendation} />;
+        return <RecommendationResult recommendation={recommendation} userId={userId} />;
     }
 
     return (

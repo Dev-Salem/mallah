@@ -9,7 +9,7 @@ import {
   Cpu, 
   FileText, 
   Radar, 
-  LogOut,
+  Settings,
   ChevronRight,
   Hexagon
 } from 'lucide-react';
@@ -52,6 +52,12 @@ export function Sidebar() {
       href: '/dashboard/opportunities',
       icon: Radar,
       label: t('opportunityAnalyzer')
+    },
+    {
+      key: 'profile',
+      href: '/dashboard/profile',
+      icon: Settings,
+      label: 'Profile'
     }
   ];
 

@@ -23,24 +23,40 @@ export function StepAIPrefs({ lang, detail, onLangChange, onDetailChange }: Prop
 
             <div className="space-y-4">
                 <Label className="text-lg text-slate-300">{t("Language")}</Label>
-                <RadioGroup value={lang} onValueChange={(v) => onLangChange(v as AILanguagePref)} className="grid grid-cols-3 gap-2">
+                <RadioGroup value={lang} onValueChange={(v) => onLangChange(v as AILanguagePref)} className="grid grid-cols-3 gap-3">
                     {langs.map((l) => (
-                        <div key={l} className="flex flex-col items-center p-3 border border-slate-800 rounded-lg hover:border-cyan-500/50 cursor-pointer">
-                            <RadioGroupItem value={l} id={l} className="mb-2" />
-                            <Label htmlFor={l} className="text-xs cursor-pointer">{t(l)}</Label>
-                        </div>
+                        <Label
+                            key={l}
+                            htmlFor={l}
+                            className={`flex flex-col items-center gap-2 p-4 border rounded-xl cursor-pointer transition-all duration-300
+                                ${lang === l
+                                    ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:bg-slate-800/40"
+                                }`}
+                        >
+                            <RadioGroupItem value={l} id={l} className="border-cyan-500/50 text-cyan-500" />
+                            <span className="text-sm font-medium">{t(l)}</span>
+                        </Label>
                     ))}
                 </RadioGroup>
             </div>
 
             <div className="space-y-4">
                 <Label className="text-lg text-slate-300">{t("Detail")}</Label>
-                <RadioGroup value={detail} onValueChange={(v) => onDetailChange(v as AIDetailLevel)} className="grid grid-cols-3 gap-2">
+                <RadioGroup value={detail} onValueChange={(v) => onDetailChange(v as AIDetailLevel)} className="grid grid-cols-3 gap-3">
                     {details.map((d) => (
-                        <div key={d} className="flex flex-col items-center p-3 border border-slate-800 rounded-lg hover:border-cyan-500/50 cursor-pointer">
-                            <RadioGroupItem value={d} id={d} className="mb-2" />
-                            <Label htmlFor={d} className="text-xs cursor-pointer">{t(d)}</Label>
-                        </div>
+                        <Label
+                            key={d}
+                            htmlFor={d}
+                            className={`flex flex-col items-center gap-2 p-4 border rounded-xl cursor-pointer transition-all duration-300
+                                ${detail === d
+                                    ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                                    : "border-slate-800 bg-slate-900/50 text-slate-400 hover:border-slate-700 hover:bg-slate-800/40"
+                                }`}
+                        >
+                            <RadioGroupItem value={d} id={d} className="border-cyan-500/50 text-cyan-500" />
+                            <span className="text-sm font-medium">{t(d)}</span>
+                        </Label>
                     ))}
                 </RadioGroup>
             </div>

@@ -7,9 +7,11 @@ trigger: always_on
 ---
 
 ---
-project id on supabase is: ``
+project id on supabase is: `wxelvdwsvkrqhwzhajgr`
 # 🧠 Comprehensive Cursor Rules for Next.js + Supabase
-
+TODOS:
+- FORBIDDEN: HARDCODING any texts in the UI, everything presetend to the user should be localized in both english (en.json) and arabic (ar.json)
+- for anything related to ai, use ai-sdk
 These rules define a **modular monolith** architecture, prioritizing the **Feature-Sliced Design** philosophy. We aim for a "Plug-and-Play" developer experience where features are self-contained, typed, and localized.
 
 ## 📁 1. The "Feature-First" File Structure
