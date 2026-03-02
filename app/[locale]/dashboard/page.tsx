@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
-import { signOut } from "@/app/auth/actions";
+import { signOutAction as signOut } from "@/features/auth";
 import { Logo } from "@/components/ui/logo";
 import { User, ShieldCheck, LogOut, Terminal as TerminalIcon } from "lucide-react";
 
@@ -41,8 +41,8 @@ export default async function DashboardPage() {
         </div>
 
         <form action={signOut}>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className={`h-12 px-8 border-white/10 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 text-white rounded-none uppercase ${locale !== 'ar' ? 'tracking-[0.2em]' : ''} font-mono text-[10px] transition-all group`}
           >
             <LogOut className="mr-3 h-3 w-3 group-hover:rotate-12 transition-transform" />
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
           <div className="absolute top-0 right-0 p-4 opacity-5">
             <Logo size={120} />
           </div>
-          
+
           <div className="relative z-10">
             <div className="flex items-center gap-4 mb-8">
               <div className="p-3 bg-primary/10 border border-primary/20">
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
                 <div className="flex justify-between border-b border-white/5 pb-2">
                   <span>Status:</span>
                   <span className="text-green-500 flex items-center gap-2">
-                     <ShieldCheck className="h-3 w-3" /> VERIFIED
+                    <ShieldCheck className="h-3 w-3" /> VERIFIED
                   </span>
                 </div>
               </div>
@@ -110,19 +110,19 @@ export default async function DashboardPage() {
 
         {/* Tactical HUD Static Card */}
         <div className="glass border-primary/20 p-8 flex flex-col items-center justify-center text-center group transition-colors hover:bg-primary/5">
-           <div className="relative mb-8">
-             <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20 scale-x-150 rotate-45" />
-             <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20 scale-x-150 -rotate-45" />
-             <Logo size={100} className="filter grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
-           </div>
-           <div className={`text-[10px] font-mono text-primary/40 uppercase ${locale !== 'ar' ? 'tracking-[0.4em]' : ''} mb-4`}>
-             Tactical Telemetry
-           </div>
-           <div className="space-y-1 font-mono text-[9px] text-muted-foreground/60 uppercase">
-             <p>LAT: 25.1972° N</p>
-             <p>LNG: 55.2744° E</p>
-             <p className="text-primary/20">MALLAH_STATION_ALPHA</p>
-           </div>
+          <div className="relative mb-8">
+            <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20 scale-x-150 rotate-45" />
+            <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20 scale-x-150 -rotate-45" />
+            <Logo size={100} className="filter grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" />
+          </div>
+          <div className={`text-[10px] font-mono text-primary/40 uppercase ${locale !== 'ar' ? 'tracking-[0.4em]' : ''} mb-4`}>
+            Tactical Telemetry
+          </div>
+          <div className="space-y-1 font-mono text-[9px] text-muted-foreground/60 uppercase">
+            <p>LAT: 25.1972° N</p>
+            <p>LNG: 55.2744° E</p>
+            <p className="text-primary/20">MALLAH_STATION_ALPHA</p>
+          </div>
         </div>
       </div>
     </>

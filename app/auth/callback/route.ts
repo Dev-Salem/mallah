@@ -1,23 +1,32 @@
 import { NextResponse } from 'next/server'
-// The client you created in Step 2
 import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  // if "next" is in param, use it as the redirect address
   const next = searchParams.get('next') ?? '/'
+  const type = searchParams.get('type')
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
+
     if (!error) {
-      // Direct redirect to origin + next. 
-      // The middleware will handle localizing the route if next is '/'
+      // Handle password recovery → redirect to reset-password page
+      if (type === 'recovery') {
+        return NextResponse.redirect(`${origin}/en/reset-password`)
+      }
+
+      // Handle email signup verification → redirect to dashboard
+      if (type === 'signup') {
+        return NextResponse.redirect(`${origin}/en/dashboard`)
+      }
+
+      // Default: follow the `next` parameter
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
 
-  // return the user to an error page with instructions
+  // Return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth-error`)
 }

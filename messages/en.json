@@ -55,9 +55,56 @@
     "privacy": "Privacy",
     "copyright": "© 2026 Mallah Engineering Ltd."
   },
-  "Login": {
-    "idRequired": "Identification Required",
-    "secureTerminal": "Secure Navigational Terminal",
+  "Auth": {
+    "login": {
+      "title": "Identification Required",
+      "subtitle": "Secure Navigational Terminal",
+      "emailLabel": "Email Address",
+      "passwordLabel": "Password",
+      "submit": "Authenticate",
+      "forgotPassword": "Forgot your passcode?",
+      "noAccount": "No credentials yet?",
+      "registerLink": "Register"
+    },
+    "register": {
+      "title": "Create Credentials",
+      "subtitle": "New Navigator Registration",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "emailLabel": "Email Address",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "submit": "Register",
+      "hasAccount": "Already have credentials?",
+      "loginLink": "Log In"
+    },
+    "forgotPassword": {
+      "title": "Recover Access",
+      "emailLabel": "Email Address",
+      "submit": "Send Reset Link",
+      "successMessage": "If an account exists with that email, a reset link has been sent. Check your inbox.",
+      "backToLogin": "Back to Login"
+    },
+    "resetPassword": {
+      "title": "Set New Passcode",
+      "passwordLabel": "New Password",
+      "confirmLabel": "Confirm New Password",
+      "submit": "Update Password",
+      "successMessage": "Password updated successfully. Redirecting to login..."
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailTaken": "An account with this email already exists.",
+      "weakPassword": "Password is too weak.",
+      "passwordMismatch": "Passwords do not match.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "invalidEmail": "Please enter a valid email address.",
+      "minLength": "Must be at least 8 characters.",
+      "passwordRequirements": "Must contain at least one letter and one number."
+    },
     "backToSurface": "Back to Surface"
   },
   "Dashboard": {

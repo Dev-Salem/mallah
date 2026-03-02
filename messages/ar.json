@@ -55,9 +55,56 @@
     "privacy": "الخصوصية",
     "copyright": "© ٢٠٢٦ ملاح الهندسة."
   },
-  "Login": {
-    "idRequired": "سجل دخولك",
-    "secureTerminal": "منصة آمنة",
+  "Auth": {
+    "login": {
+      "title": "سجل دخولك",
+      "subtitle": "منصة آمنة",
+      "emailLabel": "البريد الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "noAccount": "ما عندك حساب؟",
+      "registerLink": "سجل حساب"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "تسجيل ملاح جديد",
+      "firstNameLabel": "الاسم الأول",
+      "lastNameLabel": "اسم العائلة",
+      "emailLabel": "البريد الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "confirmPasswordLabel": "تأكيد كلمة المرور",
+      "submit": "تسجيل",
+      "hasAccount": "عندك حساب بالفعل؟",
+      "loginLink": "سجل دخولك"
+    },
+    "forgotPassword": {
+      "title": "استعادة الوصول",
+      "emailLabel": "البريد الإلكتروني",
+      "submit": "أرسل رابط الاستعادة",
+      "successMessage": "إذا كان الحساب موجود، تم إرسال رابط استعادة لبريدك. تحقق من صندوق الوارد.",
+      "backToLogin": "الرجوع لتسجيل الدخول"
+    },
+    "resetPassword": {
+      "title": "تعيين كلمة مرور جديدة",
+      "passwordLabel": "كلمة المرور الجديدة",
+      "confirmLabel": "تأكيد كلمة المرور الجديدة",
+      "submit": "تحديث كلمة المرور",
+      "successMessage": "تم تحديث كلمة المرور بنجاح. جاري التوجيه..."
+    },
+    "errors": {
+      "invalidCredentials": "البريد أو كلمة المرور غير صحيحة.",
+      "emailTaken": "هذا البريد مسجل بالفعل.",
+      "weakPassword": "كلمة المرور ضعيفة.",
+      "passwordMismatch": "كلمات المرور غير متطابقة.",
+      "generic": "حدث خطأ. حاول مرة ثانية."
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب.",
+      "invalidEmail": "أدخل بريد إلكتروني صحيح.",
+      "minLength": "يجب ألا يقل عن 8 أحرف.",
+      "passwordRequirements": "يجب أن تحتوي على حرف ورقم على الأقل."
+    },
     "backToSurface": "العودة للسطح"
   },
   "Dashboard": {

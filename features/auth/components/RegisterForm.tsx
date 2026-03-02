@@ -1,0 +1,156 @@
+'use client'
+
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
+import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import { registerSchema, type RegisterFormData } from '../types'
+import { registerAction } from '../actions/auth-actions'
+import { Link } from '@/lib/i18n/routing'
+import { Button } from '@/components/ui/button'
+
+export default function RegisterForm() {
+    const t = useTranslations('Auth')
+    const router = useRouter()
+    const [isPending, startTransition] = useTransition()
+    const [serverError, setServerError] = useState<string | null>(null)
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<RegisterFormData>({
+        resolver: zodResolver(registerSchema),
+    })
+
+    const onSubmit = (data: RegisterFormData) => {
+        setServerError(null)
+        startTransition(async () => {
+            const result = await registerAction(data)
+            if (!result.success && result.error) {
+                setServerError(t(result.error))
+            } else if (result.redirectTo) {
+                router.push(result.redirectTo)
+            }
+        })
+    }
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+            {/* Name Row */}
+            <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                    <label htmlFor="firstName" className="text-sm font-medium text-white/70">
+                        {t('register.firstNameLabel')}
+                    </label>
+                    <input
+                        id="firstName"
+                        type="text"
+                        autoComplete="given-name"
+                        {...register('firstName')}
+                        className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    />
+                    {errors.firstName && (
+                        <span className="text-xs text-red-400">{t(errors.firstName.message!)}</span>
+                    )}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                    <label htmlFor="lastName" className="text-sm font-medium text-white/70">
+                        {t('register.lastNameLabel')}
+                    </label>
+                    <input
+                        id="lastName"
+                        type="text"
+                        autoComplete="family-name"
+                        {...register('lastName')}
+                        className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    />
+                    {errors.lastName && (
+                        <span className="text-xs text-red-400">{t(errors.lastName.message!)}</span>
+                    )}
+                </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+                <label htmlFor="email" className="text-sm font-medium text-white/70">
+                    {t('register.emailLabel')}
+                </label>
+                <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    {...register('email')}
+                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                />
+                {errors.email && (
+                    <span className="text-xs text-red-400">{t(errors.email.message!)}</span>
+                )}
+            </div>
+
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+                <label htmlFor="password" className="text-sm font-medium text-white/70">
+                    {t('register.passwordLabel')}
+                </label>
+                <input
+                    id="password"
+                    type="password"
+                    autoComplete="new-password"
+                    {...register('password')}
+                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    placeholder="••••••••"
+                />
+                {errors.password && (
+                    <span className="text-xs text-red-400">{t(errors.password.message!)}</span>
+                )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className="flex flex-col gap-1.5">
+                <label htmlFor="confirmPassword" className="text-sm font-medium text-white/70">
+                    {t('register.confirmPasswordLabel')}
+                </label>
+                <input
+                    id="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    {...register('confirmPassword')}
+                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    placeholder="••••••••"
+                />
+                {errors.confirmPassword && (
+                    <span className="text-xs text-red-400">{t(errors.confirmPassword.message!)}</span>
+                )}
+            </div>
+
+            {/* Server Error */}
+            {serverError && (
+                <div className="p-3 border border-red-500/30 bg-red-500/10 rounded-lg">
+                    <p className="text-sm text-red-400">{serverError}</p>
+                </div>
+            )}
+
+            {/* Submit */}
+            <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full py-3 font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+                {isPending ? '...' : t('register.submit')}
+            </Button>
+
+            {/* Links */}
+            <p className="text-center text-sm text-white/40">
+                {t('register.hasAccount')}{' '}
+                <Link
+                    href="/login"
+                    className="text-primary/80 hover:text-primary transition-colors font-medium"
+                >
+                    {t('register.loginLink')}
+                </Link>
+            </p>
+        </form>
+    )
+}

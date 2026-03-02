@@ -1,0 +1,385 @@
+# Mallah – Learning Roadmap & Topic Viewer
+
+## 1. Purpose
+
+The Learning Roadmap is the **core engine** of Mallah.  
+It turns a learner's profile (onboarding data + path choice) into a **structured, trackable curriculum**.
+
+The **Topic Viewer** is the lesson screen that lives inside the Roadmap — it is where learning actually happens. A learner opens a Topic from the Roadmap, studies the content, talks to the AI Lesson Tutor, and marks it complete. These two modules are documented together because they are tightly coupled and cannot be designed or implemented independently.
+
+Together they:
+- Organize learning into Path → Stage → Topic hierarchy
+- Deliver lesson content and external resources per Topic
+- Host the contextual AI Lesson Tutor per Topic
+- Track progress at Topic, Stage, and Path level
+- Drive all downstream modules: Dashboard, Skills Hub, Resume Builder, Opportunity Analyzer, and AI Career Advisor
+
+Any agent (human or AI) should treat the Roadmap as the **single source of truth** for what the learner should study next.
+
+---
+
+## 2. The 4 Learning Paths
+
+Mallah offers four paths. These are the only valid values for `path_id` across all roadmap logic, onboarding AI output, and UI.
+
+| Path ID          | Path Name                         | Primary Interest Signal                              |
+|------------------|-----------------------------------|------------------------------------------------------|
+| `frontend`       | Frontend Development              | Visual building, design, user-facing products        |
+| `fullstack`      | Full-Stack Web Development        | Logic, backend systems, building complete products   |
+| `cybersecurity`  | Cybersecurity & Ethical Hacking   | Puzzles, system weaknesses, security mindset         |
+| `datascience`    | Data Science & Machine Learning   | Numbers, patterns, data, analysis, AI                |
+
+Each path is composed of **Stages**, each Stage of **Topics**. Content structure is documented separately in the curriculum reference.
+
+---
+
+## 3. Scope & Dependencies
+
+### 3.1 Functional Scope
+
+This module covers:
+
+- Assigning a Path to the learner (via onboarding or manual change)
+- Rendering the full visual roadmap (all Stages and Topics with progress)
+- Opening a Topic in the Topic Viewer
+- Delivering topic content: internal text, videos, articles
+- Hosting the AI Lesson Tutor per Topic
+- Marking Topics complete and propagating progress upward
+- Exposing progress to all dependent modules
+
+### 3.2 Data Dependencies
+
+| Table              | Role in this module                                          |
+|--------------------|--------------------------------------------------------------|
+| `users`            | Identity and session                                         |
+| `learners`         | Holds `current_path_id`, AI prefs, background, velocity      |
+| `paths`            | Path metadata and active status                              |
+| `stages`           | Ordered chapters within a path                               |
+| `topics`           | Ordered lesson units within a stage                          |
+| `topic_resources`  | Content assets per topic (video, article, internal text)     |
+| `skills`           | Skill catalog                                                |
+| `topic_skills`     | Mapping of topics to skills they contribute to               |
+| `user_progress`    | Per-learner status per topic                                 |
+| `user_skills`      | Skill levels per learner (updated on topic completion)       |
+| `chat_sessions`    | AI Tutor conversation sessions scoped per topic + user       |
+| `chat_messages`    | Individual messages within a chat session                    |
+
+---
+
+## 4. Core Concepts & Terminology
+
+Use these terms consistently across UI, DB, API, and documentation. Do not substitute synonyms (no "track", "module", "lesson", "chapter").
+
+### 4.1 Path
+
+The top-level career track assigned to a learner. A learner has exactly one active path at a time, stored in `learners.current_path_id`. The four valid paths are listed in Section 2.
+
+### 4.2 Stage
+
+A logical chapter inside a Path — a group of related Topics. Stages are ordered by `order_index` within their path. Completing earlier stages may be required to unlock later ones.
+
+Key fields from `stages`: `stage_id`, `path_id`, `title`, `description`, `difficulty_level` (Beginner / Intermediate / Advanced), `order_index`.
+
+### 4.3 Topic
+
+The smallest learning unit — a single lesson. Topics are ordered within their Stage by `order_index`. Each topic has a status per learner tracked in `user_progress`.
+
+Key fields from `topics`: `topic_id`, `stage_id`, `title`, `summary`, `estimated_time_min`, `difficulty_level`, `order_index`, `is_mandatory`.
+
+### 4.4 Topic Resource
+
+A concrete learning asset attached to a Topic. Three types:
+
+- `VIDEO` — external link (YouTube or other). Displayed as an embedded card.
+- `ARTICLE` — external blog, doc, or guide link. Opens in a new tab.
+- `INTERNAL_TEXT` — a short internal explanation written by the Mallah team. Rendered inline in the Topic Viewer.
+
+Key fields: `resource_id`, `topic_id`, `resource_type`, `title`, `url` (for VIDEO/ARTICLE), `content` (for INTERNAL_TEXT), `order_index`.
+
+If a Topic has no resources, the Topic Viewer falls back to: topic summary + AI Lesson Tutor only.
+
+### 4.5 Topic Skill Mapping
+
+The `topic_skills` table connects Topics to the Skills they teach. Fields: `topic_id`, `skill_id`.
+
+There is no importance or priority field on this link — the skill's own `category` field (defined once on the `skills` table) carries all the classification meaning needed by downstream modules.
+
+Used for:
+- Unlocking or strengthening skills in `user_skills` when a Topic is completed
+- Allowing the Opportunity Analyzer to map a missing skill back to specific Topics to study — using `skills.category` to prioritize gaps (e.g. a missing `fundamentals` skill is more urgent than a missing `tool`)
+
+### 4.6 User Progress
+
+The `user_progress` table tracks each learner's status per Topic.
+
+| Field              | Type       | Notes                                          |
+|--------------------|------------|------------------------------------------------|
+| `user_id`          | FK         |                                                |
+| `topic_id`         | FK         |                                                |
+| `status`           | ENUM       | `not_started` / `in_progress` / `completed`    |
+| `completed_at`     | TIMESTAMP  | NULL until completed                           |
+| `last_accessed_at` | TIMESTAMP  | Updated on every open                          |
+
+Derived metrics:
+- **Stage completion %** = completed mandatory topics in stage / total mandatory topics in stage
+- **Path completion %** = completed mandatory topics across all stages / total mandatory topics in path
+
+---
+
+## 5. UI – Roadmap Page
+
+### 5.1 Entry Points
+
+- Sidebar navigation → "Learning Roadmap"
+- Dashboard → "View Roadmap" button
+- Dashboard → "Resume Learning" → opens Topic Viewer directly (Roadmap accessible via breadcrumb)
+
+### 5.2 Page Layout
+
+**Header Section**
+- Path name (e.g., "Frontend Development Roadmap")
+- Overall path progress bar (% completion)
+- Summary indicators: `Stages completed / total` and `Topics completed / total`
+
+**Stage Accordion List**
+
+Each Stage is rendered as an expandable row, ordered by `order_index`:
+
+Stage header (always visible):
+- Stage title (e.g., "Stage 1 – Web Foundations")
+- Difficulty badge (Beginner / Intermediate / Advanced)
+- Stage progress bar (% of topics completed within this stage)
+- State label: `Current Stage` / `Completed` / `Locked`
+- Expand / Collapse toggle
+
+Expanded content (list of Topics):
+- Topic title
+- Estimated time
+- Difficulty badge
+- Status badge: `Not Started` / `In Progress` / `Completed` / `Locked`- `Start` or `Continue` button for the currently active topic
+- Clicking any non-locked topic row → opens Topic Viewer
+
+**Optional Side Panel (future v2)**
+- "Recommended next topics"
+- Topics tagged from Opportunity Analyzer
+- Path-level tips
+
+---
+
+## 6. UI – Topic Viewer
+
+The Topic Viewer is the full-screen lesson experience. It is accessed by clicking any active Topic from the Roadmap.
+
+### 6.1 Layout
+
+**Header Bar**
+- Topic title
+- Breadcrumb: Path name → Stage name → Topic title
+- Position indicator: "Topic X of Y in Stage Z"
+
+**Main Content Area (left/center)**
+- Topic summary (short description from `topics.summary`)
+- Lesson content rendered in order by `topic_resources.order_index`:
+  - `INTERNAL_TEXT` blocks rendered inline
+  - `VIDEO` resources shown as embedded card (external link or iframe)
+  - `ARTICLE` resources shown as styled link cards (open in new tab)
+- Estimated time label: "Estimated time: ~N minutes"
+
+**AI Lesson Tutor Panel (right)**
+- Title: "Mallah Lesson Tutor"
+- Subtitle: "Ask anything about this topic"
+- Chat window with message history (User vs AI bubbles)
+- Input field + "Ask" button
+- Quick prompt chips:
+  - "Explain again with a simpler example"
+  - "Summarize this topic"
+  - "Give me a small practice task"
+
+**Bottom Action Bar**
+- `← Back to Roadmap`
+- `Mark as Complete` (primary action, disabled if already completed)
+- `Next Topic →` (appears once current topic is marked complete)
+
+---
+
+## 7. Core Flows
+
+### 7.1 Assign Path after Onboarding
+
+**Trigger:** Onboarding completed, AI recommendation accepted (or manual path chosen).
+
+**Input:** `user_id`, `accepted_path_id`
+
+**Backend process:**
+1. Validate `accepted_path_id` is active (`paths.is_active = true`). If not, surface the next available active path.
+2. Set `learners.current_path_id = accepted_path_id`.
+3. `user_progress` rows are not pre-created — they are created on first access to each topic.
+
+**Output:** Learner is sent to Dashboard or Roadmap page. First load highlights the first topic with a "Start Here" prompt.
+
+---
+
+### 7.2 Roadmap View Rendering
+
+**Input:** `user_id` (session) → derives `current_path_id` from `learners`
+
+**Backend queries (in order):**
+1. `SELECT * FROM paths WHERE path_id = current_path_id AND is_active = true`
+2. `SELECT * FROM stages WHERE path_id = current_path_id ORDER BY order_index`
+3. `SELECT * FROM topics WHERE stage_id IN (...) ORDER BY stage_id, order_index`
+4. `SELECT * FROM user_progress WHERE user_id = ... AND topic_id IN (...)`
+
+**Computed server-side:**
+- Per-topic status (default `NotStarted` if no `user_progress` row exists)
+- Per-stage completion %
+- Overall path completion %
+
+All progress computation is **server-side only**. Do not compute progress on the frontend.
+
+---
+
+### 7.3 Open Topic (Topic Viewer)
+
+**Input:** `topic_id` from URL, `user_id` from session
+
+**Backend loads:**
+- `topics` — title, summary, difficulty, estimated_time_min
+- Stage + Path names via joins
+- `topic_resources` ordered by `order_index`
+- `user_progress` row for this user + topic (if exists)
+
+**Side effect:**
+- If `user_progress` row does not exist → create it with `status = 'in_progress'`, set `last_accessed_at = NOW()`.
+- If row exists with `status = 'not_started'` → update to `'in_progress'`.
+- If already `'completed'` → leave as-is, show "Completed ✔" state.
+
+**Output:** Topic Viewer rendered with content, resources, AI panel, and correct status state.
+
+---
+
+### 7.4 AI Lesson Tutor – Ask a Question
+
+**Input:** User's question text, `topic_id`, `user_id`
+
+**Backend process:**
+1. Check for an active `chat_session` where `session_type = 'topic_tutor'` AND `topic_id` matches AND `user_id` matches.
+   - If none exists: create a new row in `chat_sessions`.
+2. Insert user message into `chat_messages`.
+3. Build AI context payload:
+   - Topic title + summary
+   - Related skills from `topic_skills` → `skills`
+   - Learner's `ai_language_pref` and `ai_detail_level` from `learners`
+   - Learner's `background_type` and `readiness_level` from onboarding snapshot
+4. Call OpenAI API with context + user question.
+5. Store AI response in `chat_messages`.
+
+**Output:** AI answer appended in chat panel. Full message history persists per session.
+
+**Rate limiting:** If a learner sends too many messages in a short window, display a gentle delay message. Do not hard-block.
+
+---
+
+### 7.5 Mark Topic as Complete
+
+**Input:** Button click from Topic Viewer, `user_id`, `topic_id`
+
+**Backend process:**
+1. Upsert `user_progress`:
+   - `status = 'completed'`
+   - `completed_at = NOW()`
+   - `last_accessed_at = NOW()`
+2. Fetch all skills linked to this topic via `topic_skills`.
+3. For each linked skill: create or upgrade the row in `user_skills` (`source = 'roadmap'`). Level is set based on the learner's existing level for that skill — if no existing row, defaults to `beginner`; if already `beginner`, upgrades to `intermediate` on repeated coverage across multiple topics.
+
+**Output:**
+- Success notification shown in Topic Viewer
+- Status badge updates to `Completed ✔`
+- `Next Topic →` button becomes active
+- Roadmap stage/path progress recalculated on next roadmap load
+
+---
+
+### 7.6 "Resume Learning" – Next Topic Logic
+
+Used by both Dashboard ("Resume Learning" button) and Roadmap (highlight current topic).
+
+**Algorithm (v1):**
+1. Fetch all stages and topics for `current_path_id`, ordered by `stage.order_index` then `topic.order_index`.
+2. Iterate in order. For each topic:
+   - If `user_progress.status` is not `'completed'` AND topic is not `Locked` → this is the next topic. Stop.
+3. If all mandatory topics are `Completed` → surface "Path Complete" state.
+
+**Returns:** `next_topic_id` + topic/stage metadata (used for button labels and navigation).
+
+---
+
+## 8. States & Edge Cases
+
+### Roadmap-Level
+
+| Scenario                          | Behavior                                                                        |
+|-----------------------------------|---------------------------------------------------------------------------------|
+| No path assigned                  | Redirect to onboarding or manual path selection page                            |
+| Assigned path is inactive         | Show message: "This path is no longer available. Please choose a new path."     |
+| Path has no stages or topics      | Show empty state UI. Log for admin to resolve content issue.                    |
+| Learner changes path              | Require confirmation modal. Old path progress is preserved, not deleted.        |
+
+### Topic Viewer-Level
+
+| Scenario                          | Behavior                                                                        |
+|-----------------------------------|---------------------------------------------------------------------------------|
+| Topic is locked                   | Content is visible (read-only). Actions disabled. Message explains prerequisite.|
+| Topic already completed           | Viewer opens normally. "Mark as Complete" replaced with "Completed ✔".          |
+| No resources attached to topic    | Show fallback: topic summary + AI Tutor only. No empty content error.           |
+| AI Tutor fails or times out       | Show inline error: "Tutor is unavailable right now. Try again in a moment."     |
+| AI rate limit hit                 | Show gentle message: "Take a moment — ask your next question in a few seconds." |
+
+---
+
+## 9. Integration with Other Modules
+
+### 9.1 Dashboard
+Consumes: path name, path completion %, completed topic count, next topic for "Resume Learning" button.  
+Source tables: `paths`, `stages`, `topics`, `user_progress`.
+
+### 9.2 Skills & Projects Hub
+On topic completion → `topic_skills` → `user_skills` updated with `source = 'roadmap'`.  
+Skills Hub differentiates skills earned from Roadmap vs Manual addition vs Projects.
+
+### 9.3 Resume Builder
+Pulls skills from `user_skills` (populated by roadmap completion).  
+Future: projects tied to specific path stages will also surface here.
+
+### 9.4 Opportunity Analyzer
+When a job requires a skill the learner lacks → uses `topic_skills` to surface which Topics (and Stages) to study.  
+Roadmap can badge those topics with a "From Opportunity Analyzer" tag.
+
+### 9.5 AI Career Advisor
+Not in scope for v1. This integration point is reserved for v2.
+
+### 9.6 AI Lesson Tutor (Topic Viewer)
+Scoped to a single Topic. Context includes topic content, linked skills, and learner profile (background, velocity, AI language/detail preferences from onboarding).  
+Sessions stored in `chat_sessions` and `chat_messages`.
+
+---
+
+## 10. Non-Functional Requirements
+
+- All progress computation must be **server-side**. Never trust client-calculated progress values.
+- Roadmap queries should be structured as a predictable set of 4 queries (path → stages → topics → progress). Avoid unbounded joins.
+- Naming convention: use `Path`, `Stage`, `Topic` everywhere in code, APIs, and UI copy. Do not use synonyms.
+- All business logic for "what the learner should see or do next" must route through the Roadmap's next-topic logic — no ad-hoc queries from other modules.
+- Topic Viewer must handle slow AI responses gracefully with a loading state. The rest of the page must remain usable while the AI is thinking.
+- Chat history in the AI Tutor panel must persist for the session — learners should be able to scroll up and re-read earlier answers within the same topic visit.
+
+---
+
+## 11. Summary for Agents
+
+When implementing or extending Mallah:
+
+- The **Roadmap** is the backbone. Everything that measures progress, recommends learning, or analyzes readiness reads from or writes to: `paths`, `stages`, `topics`, `topic_skills`, `user_progress`, `user_skills`.
+- The **Topic Viewer** is where progress is actually made. It is the only place that writes `'completed'` status to `user_progress` and triggers skill unlocks.
+- The **AI Lesson Tutor** lives inside the Topic Viewer. It is scoped to one topic at a time. Its context is always built fresh from topic metadata + learner profile. Session type stored as `topic_tutor`.
+- The four valid path IDs are: `frontend`, `fullstack`, `cybersecurity`, `datascience`. No other values are valid anywhere in the system.
+- If the Roadmap and Topic Viewer are correct and consistent, the Dashboard, Portfolio Hub, Resume Builder, and Opportunity Analyzer stay coherent by design — they are consumers, not owners, of this data.

@@ -1,0 +1,24 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rear Sail - Glassy / Translucent -->
+  <path
+    d="M12 3L4 19H12V3Z"
+    fill="white"
+    fill-opacity="0.05"
+    stroke="white"
+    stroke-opacity="0.2"
+    stroke-width="0.5"
+  />
+  
+  <!-- Front Main Sail -->
+  <path
+    d="M13 5L21 21H13V5Z"
+    fill="#C95F3F"
+  />
+  
+  <defs>
+    <linearGradient id="sail-gradient" x1="13" y1="5" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C95F3F" />
+      <stop offset="1" stop-color="#C95F3F" stop-opacity="0.8" />
+    </linearGradient>
+  </defs>
+</svg>
