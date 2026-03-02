@@ -116,7 +116,108 @@
     "roadmap": "Roadmap",
     "skillsHub": "Skills & Projects",
     "resumeBuilder": "Resume Builder",
-    "opportunityAnalyzer": "Opportunity Analyzer"
+    "opportunityAnalyzer": "Opportunity Analyzer",
+    "settings": "Settings"
+  },
+  "Onboarding": {
+    "stepLabel": "Step {step} of {total}",
+    "back": "Back",
+    "continue": "Continue",
+    "intro": {
+      "title": "Let's Chart Your Course",
+      "subtitle": "Answer 6 quick questions and get your personalized learning path — powered by AI.",
+      "promise": "⏱ Takes about 3 minutes. Your answers help us build the perfect roadmap for you.",
+      "startButton": "Start"
+    },
+    "identity": {
+      "question": "Where are you starting from?",
+      "options": {
+        "student": "Student",
+        "fresh_grad": "Fresh Graduate",
+        "career_shifter": "Career Shifter",
+        "no_tech": "No Tech Background"
+      }
+    },
+    "goal": {
+      "question": "What do you want first?",
+      "options": {
+        "job": "Get a Full-Time Job",
+        "freelance": "Freelance",
+        "startup": "Build My Own Project",
+        "exploring": "Just Exploring"
+      }
+    },
+    "commitment": {
+      "question": "How many hours per week can you seriously commit?",
+      "options": {
+        "0-3": "0–3 hours",
+        "4-7": "4–7 hours",
+        "8-12": "8–12 hours",
+        "13+": "13+ hours"
+      },
+      "preview": "At this pace, you could reach your first milestone project in approximately {weeks} weeks."
+    },
+    "interests": {
+      "question": "What excites you most?",
+      "hint": "Select all that apply — or skip if unsure.",
+      "signals": {
+        "visual-building": "I enjoy building things people can see and use.",
+        "puzzles-weaknesses": "I like solving puzzles and finding system weaknesses.",
+        "numbers-data": "I enjoy working with numbers, patterns, and data.",
+        "logic-systems": "I prefer building the logic and systems behind applications."
+      }
+    },
+    "confidence": {
+      "question": "Quick skill check",
+      "hint": "No wrong answers — this helps us calibrate your starting point.",
+      "statements": {
+        "git": "I have used Git before.",
+        "api": "I understand what an API is.",
+        "program": "I wrote a small program before.",
+        "project": "I built any project (even a simple one)."
+      },
+      "levels": {
+        "never": "Never",
+        "tried": "Tried",
+        "comfortable": "Comfortable"
+      }
+    },
+    "preferences": {
+      "title": "AI Assistant Preferences",
+      "languageQuestion": "Preferred AI assistant language?",
+      "languages": {
+        "arabic": "Arabic",
+        "english": "English",
+        "mix": "Mix"
+      },
+      "detailQuestion": "Preferred answer style?",
+      "details": {
+        "short": "Short",
+        "balanced": "Balanced",
+        "detailed": "Detailed"
+      },
+      "submit": "Get My Recommendation"
+    },
+    "loading": {
+      "title": "Analyzing Your Profile...",
+      "subtitle": "Our AI is matching your answers to the best career path. This takes a few seconds."
+    },
+    "recommendation": {
+      "whyFits": "Why this fits you",
+      "whatYoullLearn": "What you'll learn to do",
+      "skills": "Skills you'll gain",
+      "projects": "Projects you'll build",
+      "careers": "Where this path leads",
+      "alternatives": "Other paths to consider",
+      "startButton": "Start This Path",
+      "chooseDifferent": "Choose a Different Path",
+      "accepting": "Setting up..."
+    },
+    "manual": {
+      "title": "Choose Your Path",
+      "subtitle": "Pick the learning track that interests you most.",
+      "backToRecommendation": "← Back to AI Recommendation"
+    }
   },
   "Common": {
     "logo": "MALLAH"

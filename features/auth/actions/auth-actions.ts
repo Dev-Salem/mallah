@@ -34,6 +34,7 @@ export async function registerAction(
                 first_name: firstName,
                 last_name: lastName,
             },
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
         },
     })
 

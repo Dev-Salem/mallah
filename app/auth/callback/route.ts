@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
   const type = searchParams.get('type')
 
   if (code) {
@@ -17,16 +16,25 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}/en/reset-password`)
       }
 
-      // Handle email signup verification → redirect to dashboard
-      if (type === 'signup') {
-        return NextResponse.redirect(`${origin}/en/dashboard`)
+      // For signup / other flows → check onboarding status
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: learner } = await supabase
+          .from('learners')
+          .select('onboarding_completed')
+          .eq('user_id', user.id)
+          .single()
+
+        if (learner && !learner.onboarding_completed) {
+          return NextResponse.redirect(`${origin}/en/onboarding`)
+        }
       }
 
-      // Default: follow the `next` parameter
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`${origin}/en/dashboard`)
     }
   }
 
   // Return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth-error`)
 }
+

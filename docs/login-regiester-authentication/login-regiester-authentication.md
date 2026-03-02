@@ -63,14 +63,14 @@ This module always runs **before Onboarding** and decides:
 | `first_name`            | VARCHAR              |                                                              |
 | `last_name`             | VARCHAR              |                                                              |
 | `onboarding_completed`  | BOOLEAN              | Default `false`                                              |
-| `current_path_id`       | VARCHAR              | NULL until onboarding complete. Valid values: `frontend`, `fullstack`, `cybersecurity`, `datascience` |
-| `background_type`       | ENUM                 | NULL until set by onboarding                                 |
-| `primary_goal`          | ENUM                 | NULL until set by onboarding                                 |
-| `learning_velocity`     | ENUM                 | NULL until set by onboarding (`slow` / `normal` / `fast`)    |
-| `weekly_hours_category` | ENUM                 | NULL until set by onboarding                                 |
+| `current_path_id`       | VARCHAR              | NULL until onboarding complete. Valid values: `frontend` / `fullstack` / `cybersecurity` / `datascience` |
+| `background_type`       | ENUM                 | NULL until set by onboarding. Values: `student` / `fresh_grad` / `career_shifter` / `no_tech` |
+| `primary_goal`          | ENUM                 | NULL until set by onboarding. Values: `job` / `freelance` / `startup` / `exploring` |
+| `learning_velocity`     | ENUM                 | NULL until set by onboarding. Values: `slow` / `normal` / `fast` |
+| `weekly_hours_category` | ENUM                 | NULL until set by onboarding. Values: `0-3` / `4-7` / `8-12` / `13+` |
 | `ai_language_pref`      | ENUM                 | NULL until set by onboarding (`arabic` / `english` / `mix`)  |
 | `ai_detail_level`       | ENUM                 | NULL until set by onboarding (`short` / `balanced` / `detailed`) |
-| `readiness_level`       | INT                  | NULL until set by onboarding (0–3)                           |
+| `readiness_level`       | INT                  | NULL until set by onboarding (0–3). Set once at end of onboarding based on background + goal inputs. Read-only after onboarding — used by Dashboard readiness tile and pace logic. |
 
 All onboarding fields are initialized as NULL at registration. They are populated during the Onboarding Wizard. The dashboard and roadmap modules treat NULL values in these fields as "onboarding not yet complete."
 
@@ -81,6 +81,8 @@ All onboarding fields are initialized as NULL at registration. They are populate
 | `user_id`      | UUID (PK, FK → User) |                        |
 | `display_name` | VARCHAR              |                        |
 | `admin_level`  | ENUM                 | `normal` / `super`     |
+
+**Admin level gating:** `super` admins can promote/demote other admins, block/unblock admin accounts, and access platform-wide configuration. `normal` admins manage content (paths, stages, topics, skills, projects) and view analytics only. All admin actions that modify `users.role` or `admins.admin_level` are restricted to `super` only.
 
 ---
 
@@ -107,6 +109,7 @@ All onboarding fields are initialized as NULL at registration. They are populate
    - `email`, `password_hash` (bcrypt/argon2), `role = 'learner'`, `status = 'active'`, `email_verified = false`
 6. Insert into `learners`:
    - `user_id`, `first_name`, `last_name`, `onboarding_completed = false`, all other fields NULL
+   - **Note:** During the Onboarding Wizard, each step writes its data to the `learners` row immediately on "Next" click — before `onboarding_completed` is set. `onboarding_completed` only flips to `true` on final step submission. If a learner drops off mid-onboarding and returns, the Wizard checks which `learners` fields are non-NULL and resumes from the appropriate step automatically.
 7. Send verification email:
    - Generate a time-limited token (expires in 24 hours).
    - Send link: `https://mallah.app/verify-email?token=...`
@@ -133,7 +136,9 @@ All onboarding fields are initialized as NULL at registration. They are populate
 **Access rules:**
 - Email verification is **not required** to use Mallah. Learners can complete onboarding and use the platform with an unverified email.
 - Email verification **is required** to use Forgot Password (see Section 5.4).
-- A persistent but dismissable banner is shown on the dashboard while `email_verified = false`: "Please verify your email address. Resend email →"
+- A persistent banner is shown at the top of the Dashboard (above all content) while `email_verified = false`: "Please verify your email address. [Resend email →]"
+  - The banner is **dismissable per session** — if the user closes it, it does not reappear until the next login. It reappears every session until the email is verified.
+  - Clicking "Resend email" triggers a new verification email and shows inline feedback: "Verification email sent." The button is disabled for 60 seconds after each click to prevent spam.
 
 ---
 
@@ -175,7 +180,7 @@ All onboarding fields are initialized as NULL at registration. They are populate
 - User enters their email on the Forgot Password screen.
 - Backend looks up the email. Whether or not a matching account exists, always show: "If this email is registered, you'll receive a reset link shortly." Never confirm or deny that an account exists.
 - If account exists AND `email_verified = true`: generate a one-time reset token (expires in 1 hour) and send reset email.
-- If account exists but `email_verified = false`: prompt user to verify their email first before resetting password.
+- If account exists but `email_verified = false`: do **not** send a reset email. Instead, automatically send a new verification email to the address and display: "You need to verify your email before resetting your password. We've sent a new verification link to [email]." This unblocks the user without revealing whether the account exists in a harmful way.
 
 **Step 2 — Reset password:**
 - User clicks link in email → directed to Reset Password screen.
@@ -237,10 +242,11 @@ Applied server-side, not frontend-only:
 - Onboarding Wizard
 - Dashboard
 - Learning Roadmap & Topic Viewer
+- Portfolio Hub
 - Skills & Projects Hub
 - Resume Builder
 - Opportunity Analyzer
-- AI Career Advisor
+- ~~AI Career Advisor~~ *(planned — not in v1)*
 
 **Admin-only:**
 - Admin Dashboard
@@ -281,4 +287,27 @@ Applied server-side, not frontend-only:
 - New learner → Onboarding Wizard populates all NULL fields in `learners` and sets `onboarding_completed = true`
 - Returning learner → Dashboard reads `learners` fields directly (`current_path_id`, `learning_velocity`, `ai_language_pref`, etc.)
 
-All other modules — Roadmap, Topic Viewer, Dashboard, Skills Hub, Resume Builder, Opportunity Analyzer, AI Career Advisor — require a valid authenticated session and `onboarding_completed = true` to function. Authentication is the gatekeeper of the entire Mallah journey.
+All other modules — Roadmap, Topic Viewer, Dashboard, Portfolio Hub, Skills Hub, Resume Builder, Opportunity Analyzer — require a valid authenticated session and `onboarding_completed = true` to function. Authentication is the gatekeeper of the entire Mallah journey.
+
+---
+
+## 9. Notes on Key Design Decisions
+
+**`readiness_level` is set once, not recalculated:** It is computed at the end of the Onboarding Wizard from `background_type` + `primary_goal` + `weekly_hours_category` and stored as an integer (0–3). It is not updated as the learner progresses. Downstream features (Dashboard pace tile, AI micro-coach prompts) treat it as a fixed starting baseline, not a live metric.
+
+**`primary_goal` display mapping (used by Dashboard and AI coach):**
+
+| DB value | Display label |
+|---|---|
+| `job` | Get a Full-Time Job |
+| `freelance` | Freelance |
+| `startup` | Build My Own Project |
+| `exploring` | Explore & Learn |
+
+**`skills.category` ENUM (canonical values):** `fundamentals` / `language` / `framework_library` / `tool` / `platform_service` / `practice` / `other`
+
+**`user_skills.level` ENUM (canonical values):** `beginner` / `intermediate` / `advanced`
+
+**`users.password_hash`:** Mallah uses **bcrypt** (cost factor ≥ 12). The "or argon2" alternative noted above is for future consideration only — the implementation standard is bcrypt.
+
+**`admin_level` access enforcement:** The Admin Panel enforces `super`-only actions at the API level — the frontend hides controls, but the backend re-checks `admins.admin_level` on every sensitive request and returns `403` if the caller is not `super`.
