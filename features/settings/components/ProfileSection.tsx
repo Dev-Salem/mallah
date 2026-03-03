@@ -5,7 +5,7 @@ import { useLocale } from 'next-intl';
 import { User, CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { BACKGROUND_OPTIONS, GOAL_OPTIONS } from '../types';
+import { BACKGROUND_OPTIONS, GOAL_OPTIONS, HOURS_OPTIONS, AI_LANG_OPTIONS, AI_DETAIL_OPTIONS } from '../types';
 import type { ProfileData } from '../types';
 import { updateProfileAction, resendVerificationAction } from '../actions/settings-actions';
 
@@ -21,6 +21,9 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
     const [lastName, setLastName] = useState(profile.learner.last_name);
     const [backgroundType, setBackgroundType] = useState(profile.learner.background_type || '');
     const [primaryGoal, setPrimaryGoal] = useState(profile.learner.primary_goal || '');
+    const [weeklyHours, setWeeklyHours] = useState(profile.learner.weekly_hours_category || '');
+    const [aiLanguage, setAiLanguage] = useState(profile.learner.ai_language_pref || '');
+    const [aiDetail, setAiDetail] = useState(profile.learner.ai_detail_level || '');
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
@@ -37,6 +40,9 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
             last_name: lastName,
             background_type: backgroundType,
             primary_goal: primaryGoal,
+            weekly_hours_category: weeklyHours,
+            ai_language_pref: aiLanguage,
+            ai_detail_level: aiDetail,
         });
         setSaving(false);
         if (result.success) {
@@ -174,6 +180,51 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                     >
                         <option value="">Select...</option>
                         {GOAL_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Weekly Hours */}
+                <div>
+                    <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                        Weekly Commitment
+                    </label>
+                    <select value={weeklyHours} onChange={e => setWeeklyHours(e.target.value)}
+                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                    >
+                        <option value="">Select...</option>
+                        {HOURS_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* AI Language */}
+                <div>
+                    <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                        AI Language Preference
+                    </label>
+                    <select value={aiLanguage} onChange={e => setAiLanguage(e.target.value)}
+                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                    >
+                        <option value="">Select...</option>
+                        {AI_LANG_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* AI Detail */}
+                <div>
+                    <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                        AI Explanation Detail
+                    </label>
+                    <select value={aiDetail} onChange={e => setAiDetail(e.target.value)}
+                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                    >
+                        <option value="">Select...</option>
+                        {AI_DETAIL_OPTIONS.map(opt => (
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                     </select>

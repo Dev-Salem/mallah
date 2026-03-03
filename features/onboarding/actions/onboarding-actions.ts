@@ -9,6 +9,7 @@ import {
     buildInterestVector,
     computeReadinessLevel,
 } from "../services/ai-service";
+import { RoadmapService } from "@/features/roadmap/services/roadmap-service";
 
 // ─── Partial Draft Persistence ───
 
@@ -215,8 +216,6 @@ export async function submitOnboardingAction(
             confidence_score: recommendation.match_score,
             reasons: recommendation.reasons,
             alternatives: recommendation.alternatives,
-            plan_2_weeks: recommendation.plan_2_weeks,
-            first_milestone: recommendation.first_milestone,
             accepted_path_id: null,
         });
 
@@ -296,6 +295,9 @@ export async function acceptPathAction(
             console.error("Learner update error:", updateError);
             return { success: false, error: "Failed to finalize onboarding." };
         }
+
+        // Initialize roadmap scaffolding
+        await RoadmapService.initializeUserRoadmap(user.id, pathId);
 
         // 5. Update accepted_path_id in ai_recommendations
         await supabase

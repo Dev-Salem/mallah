@@ -103,4 +103,70 @@ export class RoadmapService {
             stages
         };
     }
+
+    static async initializeUserRoadmap(userId: string, pathId: string): Promise<{ success: boolean; error?: string }> {
+        const supabase = await createClient();
+
+        // 1. Fetch all stages, topics, and projects for this path
+        const { data: stagesData, error: stagesError } = await supabase
+            .from('stages')
+            .select(`
+                stage_id,
+                topics (topic_id),
+                projects (project_id)
+            `)
+            .eq('path_id', pathId);
+
+        if (stagesError || !stagesData) {
+            console.error('Error fetching roadmap for initialization:', stagesError);
+            return { success: false, error: 'Failed to fetch roadmap stages' };
+        }
+
+        const topicProgressRows: any[] = [];
+        const projectProgressRows: any[] = [];
+
+        for (const stage of stagesData) {
+            if (stage.topics) {
+                for (const topic of stage.topics) {
+                    topicProgressRows.push({
+                        user_id: userId,
+                        topic_id: topic.topic_id,
+                        status: 'not_started'
+                    });
+                }
+            }
+            if (stage.projects) {
+                for (const project of stage.projects) {
+                    projectProgressRows.push({
+                        user_id: userId,
+                        project_id: project.project_id,
+                        status: 'available'
+                    });
+                }
+            }
+        }
+
+        // 2. Perform bulk inserts using upsert/on conflict to avoid duplicates if re-initialized
+        if (topicProgressRows.length > 0) {
+            const { error: topicError } = await supabase
+                .from('user_progress')
+                .upsert(topicProgressRows, { onConflict: 'user_id,topic_id', ignoreDuplicates: true });
+
+            if (topicError) {
+                console.error('Error initializing topic progress:', topicError);
+            }
+        }
+
+        if (projectProgressRows.length > 0) {
+            const { error: projectError } = await supabase
+                .from('user_projects')
+                .upsert(projectProgressRows, { onConflict: 'user_id,project_id', ignoreDuplicates: true });
+
+            if (projectError) {
+                console.error('Error initializing project progress:', projectError);
+            }
+        }
+
+        return { success: true };
+    }
 }

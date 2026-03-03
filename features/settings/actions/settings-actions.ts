@@ -68,15 +68,20 @@ export async function updateProfileAction(formData: Record<string, string>) {
         return { success: false, error: parsed.error.issues[0].message };
     }
 
+    const updateData: any = { ...parsed.data };
+    if (updateData.weekly_hours_category) {
+        updateData.learning_velocity = deriveVelocity(updateData.weekly_hours_category);
+    }
+
     const { error } = await supabase
         .from("learners")
-        .update(parsed.data)
+        .update(updateData)
         .eq("user_id", user.id);
 
     if (error) return { success: false, error: error.message };
 
     revalidatePath("/dashboard");
-    return { success: true, updated_fields: Object.keys(parsed.data) };
+    return { success: true, updated_fields: Object.keys(updateData) };
 }
 
 // ── Update Learning Preferences ──

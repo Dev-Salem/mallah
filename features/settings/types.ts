@@ -7,6 +7,9 @@ export const profileUpdateSchema = z.object({
     last_name: z.string().min(1, "Last name is required").max(100).optional(),
     background_type: z.enum(["student", "fresh_grad", "career_shifter", "no_tech"]).optional(),
     primary_goal: z.enum(["job", "freelance", "startup", "exploring"]).optional(),
+    weekly_hours_category: z.enum(["0-3", "4-7", "8-12", "13+"]).optional(),
+    ai_language_pref: z.enum(["arabic", "english", "mix"]).optional(),
+    ai_detail_level: z.enum(["short", "balanced", "detailed"]).optional(),
 });
 
 export const learningPrefsSchema = z.object({
