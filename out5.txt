@@ -1,0 +1,11 @@
+[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (3) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+Reading seed.sql...
+Executing 305311 bytes of SQL via RPC...
+Error executing seed SQL:
+{
+  code: '23514',
+  details: 'Failing row contains (d0f3b39e-eb50-49bf-9959-337fa614caf0, e427709f-be67-4653-bb7f-0fed4cceb79b, PROJECT: Predictive Model, , project_milestone, 12, intermediate → advanced, t, 7, 2026-03-02 16:36:47.509006+00).',
+  hint: null,
+  message: 'new row for relation "topics" violates check constraint "topics_difficulty_level_check"'
+}

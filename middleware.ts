@@ -2,6 +2,7 @@ import createMiddleware from 'next-intl/middleware';
 import { routing } from './lib/i18n/routing';
 import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from './lib/supabase/middleware'
+import { createServerClient } from '@supabase/ssr'
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -47,11 +48,65 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Authenticated → trying to access login/register → redirect to dashboard
-    if (user && (pathname.match(/^\/(en|ar)\/(login|register)$/))) {
+    // Authenticated logic
+    if (user) {
       const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
-      const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
-      return NextResponse.redirect(dashboardUrl);
+
+      // 1. Block unverified users from protected routes (unless it's the verify-success page or public)
+      if (!user.email_confirmed_at && !isPublic && !pathname.includes('/verify-success')) {
+        const loginUrl = new URL(`/${locale}/login`, request.url);
+        // We can't easily logout here, but we can redirect to login with an error or just block
+        return NextResponse.redirect(loginUrl);
+      }
+
+      // 2. Auth Page Guard: Redirect authenticated users AWAY from login/register
+      if (pathname.match(/^\/(en|ar)\/(login|register)$/)) {
+        const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
+        return NextResponse.redirect(dashboardUrl);
+      }
+
+      // 3. Status & Role Guard (Fetch profile)
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            getAll() { return request.cookies.getAll() },
+            setAll(cookiesToSet) {
+              cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+            },
+          },
+        }
+      )
+
+      const { data: learner } = await supabase
+        .from('learners')
+        .select('role, onboarding_completed, status')
+        .eq('user_id', user.id)
+        .single();
+
+      // Blocked account check
+      if (learner?.status === 'blocked' && !isPublic) {
+        const loginUrl = new URL(`/${locale}/login`, request.url);
+        return NextResponse.redirect(loginUrl);
+      }
+
+      // 4. Onboarding Guard: Redirect to /onboarding if not completed
+      const isDashboard = pathname.includes('/dashboard');
+      const isSettings = pathname.includes('/settings');
+      const isOnboarding = pathname.includes('/onboarding');
+
+      if (learner && !learner.onboarding_completed && (isDashboard || isSettings) && !isOnboarding) {
+        const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
+        return NextResponse.redirect(onboardingUrl);
+      }
+
+      // 5. Admin Guard
+      const isAdminArea = pathname.includes('/admin');
+      if (isAdminArea && learner?.role !== 'admin') {
+        const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
+        return NextResponse.redirect(dashboardUrl);
+      }
     }
 
     return supabaseResponse;

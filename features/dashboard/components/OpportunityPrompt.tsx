@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Radar, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/i18n/routing';
@@ -14,12 +14,13 @@ interface OpportunityPromptProps {
 export function OpportunityPrompt({ analyzer }: OpportunityPromptProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Dashboard.Widgets.Opportunity');
 
     if (!analyzer.show_prompt) return null;
 
     const subtext = analyzer.analyses_count > 0
-        ? `You've analyzed ${analyzer.analyses_count} job posting(s). Run another to track how your skills have grown.`
-        : "Paste a job description and we'll show you exactly which skills you have and which you still need.";
+        ? t('subtextRuns', { count: analyzer.analyses_count })
+        : t('subtextZero');
 
     return (
         <div className="border border-white/10 bg-white/[0.02] p-6 mb-6 relative overflow-hidden group hover:border-white/15 transition-colors">
@@ -33,14 +34,14 @@ export function OpportunityPrompt({ analyzer }: OpportunityPromptProps) {
                             "text-[10px] font-mono text-primary/60 uppercase font-bold",
                             !isArabic && "tracking-[0.2em]"
                         )}>
-                            Opportunity Analyzer
+                            {t('label')}
                         </span>
                     </div>
                     <h3 className={cn(
                         "text-sm font-bold text-white uppercase mb-1",
                         !isArabic && "tracking-wide"
                     )}>
-                        See how ready you are for a real job
+                        {t('title')}
                     </h3>
                     <p className="text-xs text-muted-foreground leading-relaxed max-w-lg">
                         {subtext}
@@ -55,7 +56,7 @@ export function OpportunityPrompt({ analyzer }: OpportunityPromptProps) {
                             !isArabic && "tracking-[0.15em]"
                         )}
                     >
-                        Analyze a Job Posting
+                        {t('analyze')}
                         <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform rtl:rotate-180" />
                     </Button>
                 </Link>

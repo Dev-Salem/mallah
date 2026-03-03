@@ -1,0 +1,11 @@
+[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (3) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+Reading seed.sql...
+Executing 295808 bytes of SQL via RPC...
+Error executing seed SQL:
+{
+  code: '21000',
+  details: null,
+  hint: null,
+  message: 'DELETE requires a WHERE clause'
+}

@@ -1,8 +1,8 @@
-# Mallah – Smart Onboarding v2 (AI-Driven)
+# Mallah – Smart Onboarding (AI-Driven)
 
 ## 1. Overview
 
-Smart Onboarding v2 is a guided, AI-powered multi-step wizard that runs once after user
+Smart Onboarding is a guided, AI-powered multi-step wizard that runs once after user
 registration.
 
 Its purpose is to:

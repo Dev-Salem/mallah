@@ -76,7 +76,9 @@
       "confirmPasswordLabel": "Confirm Password",
       "submit": "Register",
       "hasAccount": "Already have credentials?",
-      "loginLink": "Log In"
+      "loginLink": "Log In",
+      "successTitle": "Registration Success",
+      "successMessage": "Coordinates accepted. A verification link has been transmitted to your email. Please authenticate to activate your terminal."
     },
     "forgotPassword": {
       "title": "Recover Access",
@@ -95,6 +97,9 @@
     "errors": {
       "invalidCredentials": "Invalid email or password.",
       "emailTaken": "An account with this email already exists.",
+      "emailNotVerified": "Please verify your email address before logging in.",
+      "accountBlocked": "This account has been terminal-locked. Contact command.",
+      "accountNotFound": "Account not found or deleted.",
       "weakPassword": "Password is too weak.",
       "passwordMismatch": "Passwords do not match.",
       "generic": "Something went wrong. Please try again."
@@ -104,6 +109,10 @@
       "invalidEmail": "Please enter a valid email address.",
       "minLength": "Must be at least 8 characters.",
       "passwordRequirements": "Must contain at least one letter and one number."
+    },
+    "verifySuccess": {
+      "title": "Email Verified",
+      "message": "Authentication successful. You can now close this terminal and return to the login interface to access your dashboard."
     },
     "backToSurface": "Back to Surface"
   },
@@ -117,7 +126,144 @@
     "skillsHub": "Skills & Projects",
     "resumeBuilder": "Resume Builder",
     "opportunityAnalyzer": "Opportunity Analyzer",
-    "settings": "Settings"
+    "settings": "Settings",
+    "Widgets": {
+      "todayMission": "Today's Mission",
+      "estMin": "Est. {time} min",
+      "Tiles": {
+        "skillsUnlocked": "Skills Unlocked",
+        "projectsCompleted": "Projects Completed",
+        "resume": "Resume",
+        "portfolio": "Portfolio",
+        "status": {
+          "inProgress": "In Progress",
+          "ready": "Ready",
+          "notStarted": "Not Started",
+          "live": "Live",
+          "notPublic": "Not Public",
+          "ats": "ATS: {score}/100"
+        }
+      },
+      "Opportunity": {
+        "label": "Opportunity Analyzer",
+        "title": "See how ready you are for a real job",
+        "subtextRuns": "You've analyzed {count} job posting(s). Run another to track how your skills have grown.",
+        "subtextZero": "Paste a job description and we'll show you exactly which skills you have and which you still need.",
+        "analyze": "Analyze a Job Posting"
+      },
+      "Pace": {
+        "label": "Pace & Momentum",
+        "streak": "{days} Day Streak",
+        "sessions": "{count}/{target} Sessions",
+        "status": {
+          "ahead": "Ahead of Schedule",
+          "on_track": "On Track",
+          "slightly_behind": "Slightly Behind",
+          "behind": "Falling Behind"
+        }
+      },
+      "Forecast": {
+        "label": "Velocity Forecast",
+        "velocity": "Learning Velocity: {velocity}",
+        "velocityModes": {
+          "slow": "Thorough",
+          "normal": "Balanced",
+          "fast": "Accelerated"
+        }
+      },
+      "QuickNav": {
+        "label": "Quick Navigation",
+        "viewRoadmap": "View Full Roadmap",
+        "portfolioHub": "Portfolio Hub",
+        "resumeBuilder": "Resume Builder",
+        "analyzeJob": "Analyze Job Opportunity"
+      }
+    },
+    "Opportunities": {
+      "pageTitle": "Opportunity Analyzer",
+      "pageDescription": "Paste a job description to see how your skills match and what you need to learn.",
+      "pasteJobLabel": "Job Description",
+      "pasteJobPlaceholder": "Paste the full job description here...",
+      "analyzeButton": "Analyze Match",
+      "analyzing": "Analyzing...",
+      "errorFallback": "Failed to analyze. Please try again.",
+      "matchScoreLabel": "Match Score",
+      "fulfilledSkills": "Skills You Have",
+      "noFulfilledSkills": "No direct matches found.",
+      "missingSkills": "Skills You Need",
+      "noMissingSkills": "You have all the required skills!",
+      "missingSkillsCallToAction": "These skills are missing from your profile. We can help you build them.",
+      "suggestLearningPath": "Find Learning Resources"
+    }
+  },
+  "Roadmap": {
+    "title": "Your Navigational Roadmap",
+    "subtitle": "Follow the sequence to build your expertise. Milestones unlock subsequent stages.",
+    "modules": "Modules",
+    "difficulty": "{level} Level",
+    "start": "Start Mission",
+    "continue": "Resume",
+    "review": "Review",
+    "start_project": "Start Project",
+    "view_submission": "View Submission",
+    "milestone_project": "Milestone Project",
+    "types": {
+      "lesson": "Lesson",
+      "concept": "Concept",
+      "lesson_lab": "Lab",
+      "project_milestone": "Milestone",
+      "project_capstone": "Capstone"
+    }
+  },
+  "TopicViewer": {
+    "backToRoadmap": "Back to Roadmap",
+    "difficulty": "{level} Level",
+    "types": {
+      "lesson": "Lesson",
+      "concept": "Concept",
+      "lesson_lab": "Lab",
+      "project_milestone": "Milestone",
+      "project_capstone": "Capstone"
+    },
+    "minutes": "min",
+    "completed": "Completed",
+    "saving": "Saving...",
+    "markComplete": "Mark as Complete",
+    "overview": "Overview",
+    "resources": "Resources",
+    "noSummary": "No overview provided for this topic.",
+    "noResources": "No extra resources attached.",
+    "aiTutor": "Mallah AI Tutor",
+    "aiTutorSubtitle": "Your personal guide for this topic",
+    "aiGreeting": "Hello! I am your AI assistant for {topic}. What would you like to explore?",
+    "askQuestion": "Ask a question..."
+  },
+  "ProjectViewer": {
+    "backToRoadmap": "Back to Roadmap",
+    "projectMilestone": "Project Milestone",
+    "completed": "Completed",
+    "overview": "Overview",
+    "yourSubmission": "Your Submission",
+    "submitProject": "Submit Project",
+    "submitInstructions": "Please review the requirements carefully. Ensure your project is public so instructors can review it.",
+    "submissionUrl": "Submission URL (GitHub, Vercel, Figma)",
+    "submissionUrlPlaceholder": "https://...",
+    "submissionNotes": "Implementation Notes (Optional)",
+    "submissionNotesPlaceholder": "Any challenges, decisions, or things to highlight?",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "submit": "Submit Project",
+    "submittedOn": "Submitted on {date}",
+    "editSubmission": "Edit Submission",
+    "instructorFeedback": "Instructor Feedback",
+    "projectDetails": "Details",
+    "difficultyLabel": "Difficulty",
+    "difficulty": "{level} Level",
+    "estimatedTime": "Estimated Time",
+    "hoursAmount": "{count} hours",
+    "grade": "Grade",
+    "urlRequired": "Submission URL is required.",
+    "submitError": "Failed to submit. Try again."
   },
   "Onboarding": {
     "stepLabel": "Step {step} of {total}",

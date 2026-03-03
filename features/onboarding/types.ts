@@ -67,6 +67,12 @@ export type PathId = (typeof PATH_IDS)[number];
 export type ConfidenceItem = z.infer<typeof confidenceItemSchema>;
 export type OnboardingFormData = z.infer<typeof onboardingFormDataSchema>;
 
+export const onboardingDraftSchema = onboardingFormDataSchema.partial().extend({
+  currentStep: z.string().optional(),
+});
+
+export type OnboardingDraft = z.infer<typeof onboardingDraftSchema>;
+
 export interface InterestSignal {
   id: string;
   statement: string;
@@ -88,6 +94,8 @@ export interface AIRecommendationResponse {
     path_id: PathId;
     reason: string;
   }>;
+  plan_2_weeks: string[];
+  first_milestone: string;
 }
 
 export interface OnboardingResult {

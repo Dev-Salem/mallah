@@ -3,7 +3,9 @@
 import type { DashboardSummary } from '../types';
 import { GreetingBar } from './GreetingBar';
 import { OnboardingBanner } from './OnboardingBanner';
+import { PaceMomentumStrip } from './PaceMomentumStrip';
 import { MissionCard } from './MissionCard';
+import { ForecastLine } from './ForecastLine';
 import { ReadinessTiles } from './ReadinessTiles';
 import { OpportunityPrompt } from './OpportunityPrompt';
 import { QuickNav } from './QuickNav';
@@ -28,19 +30,28 @@ export function DashboardView({ summary }: DashboardViewProps) {
                 pathDisplayName={summary.path.path_display_name}
             />
 
-            {/* 3. Mission Card (primary section) */}
+            {/* 3. Pace & Momentum Strip */}
+            <PaceMomentumStrip pace={summary.pace} />
+
+            {/* 4. Mission Card (primary section) */}
             <MissionCard
                 mission={summary.mission}
                 estimatedTime={summary.topics.next_topic_estimated_time_min}
             />
 
-            {/* 5. Readiness Tiles */}
+            {/* 5. Forecast Line */}
+            <ForecastLine
+                velocity={summary.learner.learning_velocity}
+                completionPercent={summary.path.completion_percent}
+            />
+
+            {/* 6. Readiness Tiles */}
             <ReadinessTiles readiness={summary.readiness} />
 
-            {/* 8. Opportunity Analyzer Prompt (contextual) */}
+            {/* 7. Opportunity Analyzer Prompt (contextual) */}
             <OpportunityPrompt analyzer={summary.opportunity_analyzer} />
 
-            {/* 9. Quick Navigation */}
+            {/* 8. Quick Navigation */}
             <QuickNav />
         </div>
     );

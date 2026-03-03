@@ -1,18 +1,17 @@
-import { SystemModule } from "@/components/dashboard/SystemModule";
-import { getTranslations } from "next-intl/server";
+import { getTranslations } from 'next-intl/server';
+import { OpportunityAnalyzerUI } from '@/features/ai/components/OpportunityAnalyzerUI';
 
-export default async function OpportunitiesPage() {
-  const t = await getTranslations('Dashboard');
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations({ locale, namespace: 'Dashboard.Opportunities' });
+  return {
+    title: `${t('pageTitle')} | Mallah`,
+  };
+}
 
+export default function OpportunitiesPage() {
   return (
-    <div className="h-full">
-      <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">
-        {t('opportunityAnalyzer')}
-      </h1>
-      <SystemModule 
-        title={t('opportunityAnalyzer')}
-        description="The Opportunity Analyzer scans the market for your next destination. Coming online soon."
-      />
+    <div className="py-8 px-4">
+      <OpportunityAnalyzerUI />
     </div>
   );
 }

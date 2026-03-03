@@ -1,14 +1,126 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { onboardingFormDataSchema } from "../types";
-import type { OnboardingFormData, OnboardingResult, PathId } from "../types";
+import { onboardingFormDataSchema, onboardingDraftSchema } from "../types";
+import type { OnboardingFormData, OnboardingDraft, OnboardingResult, PathId } from "../types";
 import { VELOCITY_MAP } from "../constants";
 import {
     generatePathRecommendation,
     buildInterestVector,
     computeReadinessLevel,
 } from "../services/ai-service";
+
+// ─── Partial Draft Persistence ───
+
+export async function saveOnboardingDraftAction(
+    draft: OnboardingDraft
+): Promise<{ success: true; onboardingId: string } | { success: false; error: string }> {
+    try {
+        const supabase = await createClient();
+        const {
+            data: { user },
+            error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            return { success: false, error: "Not authenticated." };
+        }
+
+        // Find existing non-completed onboarding session
+        const { data: existing } = await supabase
+            .from("onboarding_responses")
+            .select("onboarding_id")
+            .eq("user_id", user.id)
+            .is("completed_at", null)
+            .order("created_at", { ascending: false })
+            .maybeSingle();
+
+        const payload = {
+            user_id: user.id,
+            background_type: draft.backgroundType,
+            primary_goal: draft.primaryGoal,
+            weekly_hours_category: draft.weeklyHoursCategory,
+            learning_velocity: draft.weeklyHoursCategory
+                ? VELOCITY_MAP[draft.weeklyHoursCategory]
+                : undefined,
+            raw_interests: draft.interests,
+            interest_vector: draft.interests ? buildInterestVector(draft.interests) : undefined,
+            confidence_snapshot: draft.confidenceItems,
+            readiness_level: draft.confidenceItems
+                ? computeReadinessLevel(draft.confidenceItems)
+                : undefined,
+            ai_language_pref: draft.aiLanguagePref,
+            ai_detail_level: draft.aiDetailLevel,
+            current_step: draft.currentStep,
+        };
+
+        if (existing) {
+            const { error: updateError } = await supabase
+                .from("onboarding_responses")
+                .update(payload)
+                .eq("onboarding_id", existing.onboarding_id);
+
+            if (updateError) throw updateError;
+            return { success: true, onboardingId: existing.onboarding_id };
+        } else {
+            const { data: insertRow, error: insertError } = await supabase
+                .from("onboarding_responses")
+                .insert(payload)
+                .select("onboarding_id")
+                .single();
+
+            if (insertError || !insertRow) throw insertError;
+            return { success: true, onboardingId: insertRow.onboarding_id };
+        }
+    } catch (error: any) {
+        console.error("saveOnboardingDraftAction error:", error);
+        return { success: false, error: error.message || "Failed to save draft." };
+    }
+}
+
+export async function getOnboardingDraftAction(): Promise<
+    { success: true; draft: OnboardingDraft | null } | { success: false; error: string }
+> {
+    try {
+        const supabase = await createClient();
+        const {
+            data: { user },
+            error: authError,
+        } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            return { success: false, error: "Not authenticated." };
+        }
+
+        const { data, error } = await supabase
+            .from("onboarding_responses")
+            .select("*")
+            .eq("user_id", user.id)
+            .is("completed_at", null)
+            .order("created_at", { ascending: false })
+            .maybeSingle();
+
+        if (error) throw error;
+        if (!data) return { success: true, draft: null };
+
+        return {
+            success: true,
+            draft: {
+                backgroundType: data.background_type,
+                primaryGoal: data.primary_goal,
+                weeklyHoursCategory: data.weekly_hours_category,
+                interests: data.raw_interests || [],
+                confidenceItems: data.confidence_snapshot || [],
+                aiLanguagePref: data.ai_language_pref,
+                aiDetailLevel: data.ai_detail_level,
+                currentStep: data.current_step,
+            },
+        };
+    } catch (error: any) {
+        console.error("getOnboardingDraftAction error:", error);
+        return { success: false, error: error.message || "Failed to fetch draft." };
+    }
+}
 
 // ─── Submit Onboarding & Get AI Recommendation ───
 
@@ -35,27 +147,50 @@ export async function submitOnboardingAction(
         const interestVector = buildInterestVector(data.interests);
         const readinessLevel = computeReadinessLevel(data.confidenceItems);
 
-        // 4. Insert onboarding_responses
-        const { data: onboardingRow, error: insertError } = await supabase
+        // 4. Find existing draft to update or insert fresh
+        const { data: existing } = await supabase
             .from("onboarding_responses")
-            .insert({
-                user_id: user.id,
-                background_type: data.backgroundType,
-                primary_goal: data.primaryGoal,
-                weekly_hours_category: data.weeklyHoursCategory,
-                learning_velocity: learningVelocity,
-                interest_vector: interestVector,
-                confidence_snapshot: data.confidenceItems,
-                readiness_level: readinessLevel,
-                ai_language_pref: data.aiLanguagePref,
-                ai_detail_level: data.aiDetailLevel,
-            })
             .select("onboarding_id")
-            .single();
+            .eq("user_id", user.id)
+            .is("completed_at", null)
+            .order("created_at", { ascending: false })
+            .maybeSingle();
 
-        if (insertError || !onboardingRow) {
-            console.error("Onboarding insert error:", insertError);
-            return { success: false, error: "Failed to save onboarding responses." };
+        const payload = {
+            user_id: user.id,
+            background_type: data.backgroundType,
+            primary_goal: data.primaryGoal,
+            weekly_hours_category: data.weeklyHoursCategory,
+            learning_velocity: learningVelocity,
+            raw_interests: data.interests,
+            interest_vector: interestVector,
+            confidence_snapshot: data.confidenceItems,
+            readiness_level: readinessLevel,
+            ai_language_pref: data.aiLanguagePref,
+            ai_detail_level: data.aiDetailLevel,
+            completed_at: new Date().toISOString(),
+            current_step: "completed",
+        };
+
+        let onboardingId: string;
+
+        if (existing) {
+            const { error: updateError } = await supabase
+                .from("onboarding_responses")
+                .update(payload)
+                .eq("onboarding_id", existing.onboarding_id);
+
+            if (updateError) throw updateError;
+            onboardingId = existing.onboarding_id;
+        } else {
+            const { data: insertRow, error: insertError } = await supabase
+                .from("onboarding_responses")
+                .insert(payload)
+                .select("onboarding_id")
+                .single();
+
+            if (insertError || !insertRow) throw insertError;
+            onboardingId = insertRow.onboarding_id;
         }
 
         // 5. Get AI recommendation
@@ -66,7 +201,7 @@ export async function submitOnboardingAction(
             return {
                 success: true,
                 result: {
-                    onboardingId: onboardingRow.onboarding_id,
+                    onboardingId: onboardingId,
                     recommendation: null,
                 },
             };
@@ -75,12 +210,13 @@ export async function submitOnboardingAction(
         // 6. Insert ai_recommendations
         const { error: recError } = await supabase.from("ai_recommendations").insert({
             user_id: user.id,
-            onboarding_id: onboardingRow.onboarding_id,
+            onboarding_id: onboardingId,
             recommended_path_id: recommendation.recommended_path_id,
             confidence_score: recommendation.match_score,
             reasons: recommendation.reasons,
             alternatives: recommendation.alternatives,
-            plan_2_weeks: {},
+            plan_2_weeks: recommendation.plan_2_weeks,
+            first_milestone: recommendation.first_milestone,
             accepted_path_id: null,
         });
 
@@ -91,13 +227,13 @@ export async function submitOnboardingAction(
         return {
             success: true,
             result: {
-                onboardingId: onboardingRow.onboarding_id,
+                onboardingId: onboardingId,
                 recommendation,
             },
         };
-    } catch (error) {
+    } catch (error: any) {
         console.error("submitOnboardingAction error:", error);
-        return { success: false, error: "An unexpected error occurred." };
+        return { success: false, error: error.message || "An unexpected error occurred." };
     }
 }
 
@@ -168,7 +304,7 @@ export async function acceptPathAction(
             .eq("onboarding_id", onboardingId);
 
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error("acceptPathAction error:", error);
         return { success: false, error: "An unexpected error occurred." };
     }

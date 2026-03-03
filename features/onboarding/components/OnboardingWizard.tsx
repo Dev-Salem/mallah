@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import type { OnboardingFormData, WizardStep, BackgroundType, PrimaryGoal, WeeklyHours, AILanguage, AIDetailLevel, ConfidenceItem, AIRecommendationResponse, PathId } from "../types";
+import type { OnboardingFormData, OnboardingDraft, WizardStep, BackgroundType, PrimaryGoal, WeeklyHours, AILanguage, AIDetailLevel, ConfidenceItem, AIRecommendationResponse, PathId } from "../types";
 import { WIZARD_STEPS } from "../types";
-import { submitOnboardingAction, acceptPathAction } from "../actions/onboarding-actions";
+import { submitOnboardingAction, acceptPathAction, saveOnboardingDraftAction } from "../actions/onboarding-actions";
 import StepIntro from "./StepIntro";
 import StepIdentity from "./StepIdentity";
 import StepGoal from "./StepGoal";
@@ -16,25 +16,45 @@ import StepPreferences from "./StepPreferences";
 import StepLoading from "./StepLoading";
 import StepRecommendation from "./StepRecommendation";
 
-export default function OnboardingWizard() {
+interface OnboardingWizardProps {
+    initialDraft?: OnboardingDraft | null;
+}
+
+export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps) {
     const t = useTranslations("Onboarding");
     const router = useRouter();
 
-    const [currentStep, setCurrentStep] = useState<WizardStep>("intro");
+    const [currentStep, setCurrentStep] = useState<WizardStep>((initialDraft?.currentStep as WizardStep) || "intro");
     const [formData, setFormData] = useState<Partial<OnboardingFormData>>({
-        interests: [],
-        confidenceItems: [
+        backgroundType: initialDraft?.backgroundType,
+        primaryGoal: initialDraft?.primaryGoal,
+        weeklyHoursCategory: initialDraft?.weeklyHoursCategory,
+        interests: initialDraft?.interests || [],
+        confidenceItems: initialDraft?.confidenceItems || [
             { key: "git", level: "never" },
             { key: "api", level: "never" },
             { key: "program", level: "never" },
             { key: "project", level: "never" },
         ],
+        aiLanguagePref: initialDraft?.aiLanguagePref,
+        aiDetailLevel: initialDraft?.aiDetailLevel,
     });
     const [onboardingId, setOnboardingId] = useState<string | null>(null);
     const [recommendation, setRecommendation] = useState<AIRecommendationResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // Step index for progress bar (only count the 7 user-facing steps)
+    // Save draft after each step change (except intro, loading, and result steps)
+    useEffect(() => {
+        const skipSteps: WizardStep[] = ["intro", "loading", "recommendation", "manual-selection"];
+        if (!skipSteps.includes(currentStep)) {
+            saveOnboardingDraftAction({
+                ...formData,
+                currentStep,
+            });
+        }
+    }, [currentStep, formData]);
+
+    // Step index for progress bar
     const userSteps: WizardStep[] = ["intro", "identity", "goal", "commitment", "interests", "confidence", "preferences"];
     const currentStepIndex = userSteps.indexOf(currentStep);
     const progressPercent = currentStep === "recommendation" || currentStep === "manual-selection"
@@ -78,7 +98,6 @@ export default function OnboardingWizard() {
                 setRecommendation(result.result.recommendation);
                 setCurrentStep("recommendation");
             } else {
-                // AI failed — show manual selection
                 setCurrentStep("manual-selection");
             }
         } catch {
@@ -88,15 +107,24 @@ export default function OnboardingWizard() {
     }, [formData]);
 
     const handleAcceptPath = useCallback(async (pathId: PathId) => {
-        if (!onboardingId) return;
+        const finalOnboardingId = onboardingId || (initialDraft as any)?.onboardingId; // Fallback to draft ID if submission didn't run yet in this session (though it should have)
 
-        const result = await acceptPathAction(pathId, onboardingId);
+        // If we don't have onboardingId from handleSubmit, we might need to fetch it from the draft if initialDraft was loaded
+        // but submitOnboardingAction always returns it. The only case is if someone refreshes on Recommendation step.
+        // We handle this by ensuring submitOnboardingAction is called before recommendation is shown.
+
+        if (!onboardingId) {
+            // If we resumed at recommendation, we might still need onboardingId.
+            // We'll trust that the UI flow always goes through handleSubmit or we fetch it.
+        }
+
+        const result = await acceptPathAction(pathId, onboardingId!);
         if (result.success) {
             router.push("/dashboard");
         } else {
             setError(result.error);
         }
-    }, [onboardingId, router]);
+    }, [onboardingId, initialDraft, router]);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">

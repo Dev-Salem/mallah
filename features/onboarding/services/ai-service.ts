@@ -61,8 +61,10 @@ export async function generatePathRecommendation(
 ## Instructions
 - Pick the BEST path for this learner based on their specific answers.
 - Give a match_score (0-100) reflecting how well the learner's profile fits the recommended path.
-- Provide 2-3 reasons that directly reference the learner's actual answers (e.g., "You said you enjoy building things people can see — that's exactly what frontend is about").
+- Provide 2-3 reasons that directly reference the learner's actual answers.
 - Suggest 1-2 alternative paths with a reason each.
+- Provide a "plan_2_weeks": A list of 4-6 specific, high-level learning steps for their first 14 days (e.g., "Day 1-3: Setup local dev environment and Hello World").
+- Provide a "first_milestone": A title and 1-sentence description of the first major achievement they should aim for (e.g., "Static Portfolio: Build a responsive single-page site using HTML and CSS").
 - Only use these path IDs: frontend, fullstack, cybersecurity, datascience.
 
 Return ONLY valid JSON, no explanation text.`;
@@ -99,8 +101,13 @@ Return ONLY valid JSON, no explanation text.`;
                             additionalProperties: false,
                         },
                     },
+                    plan_2_weeks: {
+                        type: "array",
+                        items: { type: "string" },
+                    },
+                    first_milestone: { type: "string" },
                 },
-                required: ["recommended_path_id", "match_score", "reasons", "alternatives"],
+                required: ["recommended_path_id", "match_score", "reasons", "alternatives", "plan_2_weeks", "first_milestone"],
                 additionalProperties: false,
             },
         },

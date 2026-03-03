@@ -15,6 +15,7 @@ export default function RegisterForm() {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const [serverError, setServerError] = useState<string | null>(null)
+    const [isSuccess, setIsSuccess] = useState(false)
 
     const {
         register,
@@ -30,10 +31,41 @@ export default function RegisterForm() {
             const result = await registerAction(data)
             if (!result.success && result.error) {
                 setServerError(t(result.error))
-            } else if (result.redirectTo) {
-                router.push(result.redirectTo)
+            } else if (result.success) {
+                setIsSuccess(true)
             }
         })
+    }
+
+    if (isSuccess) {
+        return (
+            <div className="flex flex-col gap-6 text-center py-8">
+                <div className="flex justify-center">
+                    <div className="h-16 w-16 rounded-full border border-primary/30 flex items-center justify-center bg-primary/5 animate-pulse">
+                        <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                            <div className="h-4 w-4 rounded-full bg-primary" />
+                        </div>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-white uppercase tracking-tight">
+                        {t('register.successTitle')}
+                    </h3>
+                    <p className="text-sm text-white/60 leading-relaxed">
+                        {t('register.successMessage')}
+                    </p>
+                </div>
+                <div className="pt-4">
+                    <Link
+                        href="/login"
+                        className="text-primary hover:text-primary/80 transition-colors font-medium text-sm flex items-center justify-center gap-2 group"
+                    >
+                        {t('register.loginLink')}
+                        <div className="h-px w-4 bg-primary group-hover:w-8 transition-all" />
+                    </Link>
+                </div>
+            </div>
+        )
     }
 
     return (

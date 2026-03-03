@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import OnboardingWizard from "@/features/onboarding/components/OnboardingWizard";
+import { getOnboardingDraftAction } from "@/features/onboarding/actions/onboarding-actions";
 
 export default async function OnboardingPage() {
     const supabase = await createClient();
@@ -23,5 +24,9 @@ export default async function OnboardingPage() {
         redirect("/dashboard");
     }
 
-    return <OnboardingWizard />;
+    // Fetch existing draft if any
+    const draftResult = await getOnboardingDraftAction();
+    const initialDraft = draftResult.success ? draftResult.draft : null;
+
+    return <OnboardingWizard initialDraft={initialDraft} />;
 }

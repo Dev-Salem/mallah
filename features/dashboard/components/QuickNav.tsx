@@ -1,18 +1,19 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/i18n/routing';
 
 export function QuickNav() {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Dashboard.Widgets.QuickNav');
 
     const links = [
-        { label: 'View Full Roadmap', href: '/dashboard/roadmap' },
-        { label: 'Portfolio Hub', href: '/dashboard/skills' },
-        { label: 'Resume Builder', href: '/dashboard/resume' },
-        { label: 'Analyze Job Opportunity', href: '/dashboard/opportunities' },
+        { label: t('viewRoadmap'), href: '/dashboard/roadmap' },
+        { label: t('portfolioHub'), href: '/dashboard/skills' },
+        { label: t('resumeBuilder'), href: '/dashboard/resume' },
+        { label: t('analyzeJob'), href: '/dashboard/opportunities' },
     ];
 
     return (
@@ -21,7 +22,7 @@ export function QuickNav() {
                 "text-[9px] font-mono text-muted-foreground/30 uppercase font-bold block mb-3",
                 !isArabic && "tracking-[0.3em]"
             )}>
-                Quick Navigation
+                {t('label')}
             </span>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {links.map((link) => (

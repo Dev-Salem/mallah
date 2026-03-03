@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Crosshair, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/i18n/routing';
@@ -15,6 +15,7 @@ interface MissionCardProps {
 export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Dashboard.Widgets');
 
     return (
         <div className="relative border border-primary/30 bg-gradient-to-br from-primary/10 via-transparent to-transparent p-8 lg:p-10 mb-8 overflow-hidden group">
@@ -35,7 +36,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
                         "text-[9px] font-mono text-primary uppercase font-bold",
                         !isArabic && "tracking-[0.4em]"
                     )}>
-                        Today&apos;s Mission
+                        {t('todayMission')}
                     </span>
                 </div>
 
@@ -58,7 +59,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
                         "text-[10px] font-mono text-primary/60 uppercase mb-6",
                         !isArabic && "tracking-widest"
                     )}>
-                        Est. {estimatedTime} min
+                        {t('estMin', { time: estimatedTime })}
                     </p>
                 )}
 

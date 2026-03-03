@@ -76,7 +76,9 @@
       "confirmPasswordLabel": "تأكيد كلمة المرور",
       "submit": "تسجيل",
       "hasAccount": "عندك حساب بالفعل؟",
-      "loginLink": "سجل دخولك"
+      "loginLink": "سجل دخولك",
+      "successTitle": "تم التسجيل بنجاح",
+      "successMessage": "تم قبول البيانات. تم إرسال رابط التفعيل إلى بريدك الإلكتروني. يرجى تفعيل الحساب لتتمكن من الدخول."
     },
     "forgotPassword": {
       "title": "استعادة الوصول",
@@ -95,6 +97,9 @@
     "errors": {
       "invalidCredentials": "البريد أو كلمة المرور غير صحيحة.",
       "emailTaken": "هذا البريد مسجل بالفعل.",
+      "emailNotVerified": "يرجى تفعيل البريد الإلكتروني قبل تسجيل الدخول.",
+      "accountBlocked": "هذا الحساب مغلق. تواصل مع الإدارة.",
+      "accountNotFound": "الحساب غير موجود أو تم حذفه.",
       "weakPassword": "كلمة المرور ضعيفة.",
       "passwordMismatch": "كلمات المرور غير متطابقة.",
       "generic": "حدث خطأ. حاول مرة ثانية."
@@ -104,6 +109,10 @@
       "invalidEmail": "أدخل بريد إلكتروني صحيح.",
       "minLength": "يجب ألا يقل عن 8 أحرف.",
       "passwordRequirements": "يجب أن تحتوي على حرف ورقم على الأقل."
+    },
+    "verifySuccess": {
+      "title": "تم تأكيد البريد",
+      "message": "تمت عملية التحقق بنجاح. يمكنك الآن إغلاق هذه الصفحة والعودة إلى شاشة تسجيل الدخول للوصول إلى لوحة التحكم الخاصة بك."
     },
     "backToSurface": "العودة للسطح"
   },
@@ -117,7 +126,144 @@
     "skillsHub": "المهارات والمشاريع",
     "resumeBuilder": "بناء السيرة",
     "opportunityAnalyzer": "محلل الفرص",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "Widgets": {
+      "todayMission": "مهمة اليوم",
+      "estMin": "الوقت المتوقع: {time} دقيقة",
+      "Tiles": {
+        "skillsUnlocked": "المهارات المكتسبة",
+        "projectsCompleted": "المشاريع المنجزة",
+        "resume": "السيرة الذاتية",
+        "portfolio": "معرض الأعمال",
+        "status": {
+          "inProgress": "قيد التنفيذ",
+          "ready": "جاهز",
+          "notStarted": "لم يبدأ",
+          "live": "منشور",
+          "notPublic": "غير عام",
+          "ats": "ATS: {score}/100"
+        }
+      },
+      "Opportunity": {
+        "label": "محلل الفرص",
+        "title": "اكتشف مدى جاهزيتك لسوق العمل",
+        "subtextRuns": "لقد قمت بتحليل {count} وظيفة. جرب وظيفة أخرى لتتبع تطور مهاراتك.",
+        "subtextZero": "ضع وصف الوظيفة هنا وسنعرض لك المهارات التي تمتلكها وما ينقصك منها.",
+        "analyze": "تحليل متطلبات وظيفة"
+      },
+      "Pace": {
+        "label": "الوتيرة والزخم",
+        "streak": "سلسلة من {days} أيام",
+        "sessions": "{count}/{target} جلسات",
+        "status": {
+          "ahead": "متفوق على الخطة",
+          "on_track": "على المسار الصحيح",
+          "slightly_behind": "متأخر قليلاً",
+          "behind": "متأخر عن الخطة"
+        }
+      },
+      "Forecast": {
+        "label": "توقع الإنجاز",
+        "velocity": "سرعة التعلم: {velocity}",
+        "velocityModes": {
+          "slow": "متأنق وكثيف",
+          "normal": "متوازن",
+          "fast": "سريع"
+        }
+      },
+      "QuickNav": {
+        "label": "تنقل سريع",
+        "viewRoadmap": "عرض الخارطة كاملة",
+        "portfolioHub": "مركز الأعمال",
+        "resumeBuilder": "بناء السيرة",
+        "analyzeJob": "تحليل فرصة وظيفية"
+      }
+    },
+    "Opportunities": {
+      "pageTitle": "محلل الفرص",
+      "pageDescription": "قم بلصق الوصف الوظيفي لترى مدى تطابق مهاراتك وما تحتاج إلى تعلمه.",
+      "pasteJobLabel": "الوصف الوظيفي",
+      "pasteJobPlaceholder": "قم بلصق الوصف الوظيفي الكامل هنا...",
+      "analyzeButton": "تحليل التطابق",
+      "analyzing": "جاري التحليل...",
+      "errorFallback": "فشل التحليل. يرجى المحاولة مرة أخرى.",
+      "matchScoreLabel": "نسبة التطابق",
+      "fulfilledSkills": "المهارات التي تمتلكها",
+      "noFulfilledSkills": "لم يتم العثور على تطابق مباشر.",
+      "missingSkills": "المهارات التي تحتاجها",
+      "noMissingSkills": "أنت تمتلك جميع المهارات المطلوبة!",
+      "missingSkillsCallToAction": "هذه المهارات مفقودة من ملفك الشخصي. يمكننا مساعدتك في بنائها.",
+      "suggestLearningPath": "البحث عن مصادر التعلم"
+    }
+  },
+  "Roadmap": {
+    "title": "خارطة طريقك",
+    "subtitle": "اتبع التسلسل لبناء خبرتك. المشاريع تفتح المراحل القادمة.",
+    "modules": "وحدات",
+    "difficulty": "مستوى {level}",
+    "start": "ابدأ المهمة",
+    "continue": "متابعة",
+    "review": "مراجعة",
+    "start_project": "ابدأ المشروع",
+    "view_submission": "عرض التسليم",
+    "milestone_project": "مشروع رئيسي",
+    "types": {
+      "lesson": "درس",
+      "concept": "مفهوم",
+      "lesson_lab": "تمرين عملي",
+      "project_milestone": "مشروع مرحلي",
+      "project_capstone": "مشروع تخرج"
+    }
+  },
+  "TopicViewer": {
+    "backToRoadmap": "العودة للخارطة",
+    "difficulty": "مستوى {level}",
+    "types": {
+      "lesson": "درس",
+      "concept": "مفهوم",
+      "lesson_lab": "تمرين عملي",
+      "project_milestone": "مشروع مرحلي",
+      "project_capstone": "مشروع تخرج"
+    },
+    "minutes": "دقيقة",
+    "completed": "مكتمل",
+    "saving": "جاري الحفظ...",
+    "markComplete": "تحديد كمكتمل",
+    "overview": "نظرة عامة",
+    "resources": "المصادر",
+    "noSummary": "لم يتم توفير ملخص لهذا الدرس.",
+    "noResources": "لا توجد مصادر إضافية مرفقة.",
+    "aiTutor": "مساعد ملاح الذكي",
+    "aiTutorSubtitle": "دليلك الشخصي خطوة بخطوة",
+    "aiGreeting": "أهلاً! أنا المساعد الذكي الخاص بك لموضوع {topic}. ما الذي تود استكشافه؟",
+    "askQuestion": "اطرح سؤالاً..."
+  },
+  "ProjectViewer": {
+    "backToRoadmap": "العودة للخارطة",
+    "projectMilestone": "مشروع مرحلي",
+    "completed": "مكتمل",
+    "overview": "نظرة عامة",
+    "yourSubmission": "تسليمك",
+    "submitProject": "تسليم المشروع",
+    "submitInstructions": "يرجى مراجعة المتطلبات بعناية. تأكد من أن مشروعك عام ليتمكن المدربون من تقييمه.",
+    "submissionUrl": "رابط التسليم (GitHub, Vercel, Figma)",
+    "submissionUrlPlaceholder": "https://...",
+    "submissionNotes": "ملاحظات التنفيذ (اختياري)",
+    "submissionNotesPlaceholder": "أي تحديات، قرارات، أو أشياء تود تسليط الضوء عليها؟",
+    "cancel": "إلغاء",
+    "saving": "جاري الحفظ...",
+    "submit": "تسليم المشروع",
+    "submittedOn": "تم التسليم في {date}",
+    "editSubmission": "تعديل التسليم",
+    "instructorFeedback": "ملاحظات المدرب",
+    "projectDetails": "التفاصيل",
+    "difficultyLabel": "مستوى الصعوبة",
+    "difficulty": "مستوى {level}",
+    "estimatedTime": "الوقت المتوقع",
+    "hoursAmount": "{count} ساعات",
+    "grade": "الدرجة",
+    "urlRequired": "رابط التسليم مطلوب.",
+    "submitError": "فشل التسليم. حاول مرة أخرى."
   },
   "Onboarding": {
     "stepLabel": "الخطوة {step} من {total}",

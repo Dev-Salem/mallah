@@ -11,26 +11,20 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
+      // Determine locale from referer or default to en
+      const referer = request.headers.get('referer')
+      const locale = referer?.includes('/ar/') ? 'ar' : 'en'
+
+      const type = searchParams.get('type')
+      const next = searchParams.get('next')
+
       // Handle password recovery → redirect to reset-password page
-      if (type === 'recovery') {
-        return NextResponse.redirect(`${origin}/en/reset-password`)
+      if (type === 'recovery' || next === '/reset-password') {
+        return NextResponse.redirect(`${origin}/${locale}/reset-password`)
       }
 
-      // For signup / other flows → check onboarding status
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data: learner } = await supabase
-          .from('learners')
-          .select('onboarding_completed')
-          .eq('user_id', user.id)
-          .single()
-
-        if (learner && !learner.onboarding_completed) {
-          return NextResponse.redirect(`${origin}/en/onboarding`)
-        }
-      }
-
-      return NextResponse.redirect(`${origin}/en/dashboard`)
+      // For signup / other flows → redirect to verify-success page
+      return NextResponse.redirect(`${origin}/${locale}/verify-success`)
     }
   }
 

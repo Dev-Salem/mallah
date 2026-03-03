@@ -1,14 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Service-role client — bypasses RLS.
-// ONLY use server-side in Server Actions after verifying authorization.
-export const supabaseAdmin = createClient(
+export const getSupabaseAdmin = () => createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-        auth: {
-            autoRefreshToken: false,
-            persistSession: false,
-        },
-    }
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
 );

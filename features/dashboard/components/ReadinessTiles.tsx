@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Cpu, FolderKanban, FileText, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/i18n/routing';
@@ -13,42 +13,43 @@ interface ReadinessTilesProps {
 export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Dashboard.Widgets.Tiles');
 
     const resumeDisplay = (() => {
-        if (readiness.ats_score !== null) return `ATS: ${readiness.ats_score}/100`;
+        if (readiness.ats_score !== null) return t('status.ats', { score: readiness.ats_score });
         switch (readiness.resume_status) {
-            case 'in_progress': return 'In Progress';
-            case 'ready': return 'Ready';
-            default: return 'Not Started';
+            case 'in_progress': return t('status.inProgress');
+            case 'ready': return t('status.ready');
+            default: return t('status.notStarted');
         }
     })();
 
-    const portfolioDisplay = readiness.portfolio_has_public_items ? 'Live' : 'Not Public';
+    const portfolioDisplay = readiness.portfolio_has_public_items ? t('status.live') : t('status.notPublic');
 
     const tiles = [
         {
-            label: 'Skills Unlocked',
+            label: t('skillsUnlocked'),
             value: String(readiness.unlocked_skills_count),
             icon: Cpu,
             href: '/dashboard/skills',
             warning: false,
         },
         {
-            label: 'Projects Completed',
+            label: t('projectsCompleted'),
             value: String(readiness.completed_projects_count),
             icon: FolderKanban,
-            href: '/dashboard/skills',
+            href: '/dashboard/roadmap', // Fixed from skills to roadmap (projects are in roadmap)
             warning: readiness.completed_projects_count === 0,
         },
         {
-            label: 'Resume',
+            label: t('resume'),
             value: resumeDisplay,
             icon: FileText,
             href: '/dashboard/resume',
             warning: readiness.resume_status === 'not_created',
         },
         {
-            label: 'Portfolio',
+            label: t('portfolio'),
             value: portfolioDisplay,
             icon: Globe,
             href: readiness.portfolio_has_public_items && readiness.portfolio_slug
