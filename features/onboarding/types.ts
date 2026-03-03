@@ -94,8 +94,6 @@ export interface AIRecommendationResponse {
     path_id: PathId;
     reason: string;
   }>;
-  plan_2_weeks: string[];
-  first_milestone: string;
 }
 
 export interface OnboardingResult {
