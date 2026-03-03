@@ -14,7 +14,6 @@ import {
     type ResetPasswordFormData,
     type AuthActionResult,
 } from '../types'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function registerAction(
     formData: RegisterFormData
@@ -27,7 +26,7 @@ export async function registerAction(
     const { firstName, lastName, email, password } = parsed.data
     const supabase = await createClient()
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -41,12 +40,18 @@ export async function registerAction(
 
     if (error) {
         if (error.message.toLowerCase().includes('already registered')) {
-            return { success: false, error: 'errors.emailTaken' }
+            return { success: true, redirectTo: '/login' }
         }
         return { success: false, error: 'errors.generic' }
     }
 
-    return { success: true }
+    // Supabase returns an empty identities array for repeated signups of already-confirmed users
+    // In that case, redirect to login instead of check-email
+    if (data?.user?.identities?.length === 0) {
+        return { success: true, redirectTo: '/login' }
+    }
+
+    return { success: true, redirectTo: '/register/check-email' }
 }
 
 export async function loginAction(
@@ -66,6 +71,10 @@ export async function loginAction(
     })
 
     if (error) {
+        // Map specific Supabase confirm email errors to our i18n key
+        if (error.message.toLowerCase().includes('email not confirmed')) {
+            return { success: false, error: 'errors.emailNotVerified' }
+        }
         return { success: false, error: 'errors.invalidCredentials' }
     }
 
@@ -116,28 +125,11 @@ export async function forgotPasswordAction(
     const { email } = parsed.data
     const supabase = await createClient()
 
-    // Check if user exists and is confirmed via admin client
-    const supabaseAdmin = getSupabaseAdmin()
-    const { data: { users } } = await supabaseAdmin.auth.admin.listUsers()
-    const user = users.find((u: { email?: string }) => u.email === email)
-
-    if (user) {
-        if (!user.email_confirmed_at) {
-            // If not confirmed, resend verification email instead
-            await supabase.auth.resend({
-                type: 'signup',
-                email,
-                options: {
-                    emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-                }
-            })
-        } else {
-            // If confirmed, send reset link
-            await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/auth/callback?next=/reset-password`,
-            })
-        }
-    }
+    // Just send the reset link — Supabase will silently do nothing if the email doesn't exist,
+    // which aligns with the spec: never reveal whether an account exists.
+    await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/auth/callback?next=/reset-password`,
+    })
 
     // Always return success to avoid revealing whether email exists
     return { success: true }
@@ -168,4 +160,24 @@ export async function signOutAction() {
     await supabase.auth.signOut()
     revalidatePath('/', 'layout')
     redirect('/')
+}
+
+export async function resendVerificationEmailAction(
+    email: string
+): Promise<AuthActionResult> {
+    const supabase = await createClient()
+
+    const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/auth/callback`,
+        }
+    })
+
+    if (error) {
+        return { success: false, error: 'errors.generic' }
+    }
+
+    return { success: true }
 }

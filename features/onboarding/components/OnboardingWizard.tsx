@@ -79,12 +79,13 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
         }
     }, [currentStep]);
 
-    const handleSubmit = useCallback(async () => {
+    const handleSubmit = useCallback(async (overrides?: Partial<OnboardingFormData>) => {
         setCurrentStep("loading");
         setError(null);
 
         try {
-            const result = await submitOnboardingAction(formData as OnboardingFormData);
+            const finalData = { ...formData, ...overrides } as OnboardingFormData;
+            const result = await submitOnboardingAction(finalData);
 
             if (!result.success) {
                 setError(result.error);
@@ -107,24 +108,18 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
     }, [formData]);
 
     const handleAcceptPath = useCallback(async (pathId: PathId) => {
-        const finalOnboardingId = onboardingId || (initialDraft as any)?.onboardingId; // Fallback to draft ID if submission didn't run yet in this session (though it should have)
-
-        // If we don't have onboardingId from handleSubmit, we might need to fetch it from the draft if initialDraft was loaded
-        // but submitOnboardingAction always returns it. The only case is if someone refreshes on Recommendation step.
-        // We handle this by ensuring submitOnboardingAction is called before recommendation is shown.
-
         if (!onboardingId) {
-            // If we resumed at recommendation, we might still need onboardingId.
-            // We'll trust that the UI flow always goes through handleSubmit or we fetch it.
+            setError("Missing onboarding session. Please restart onboarding.");
+            return;
         }
 
-        const result = await acceptPathAction(pathId, onboardingId!);
+        const result = await acceptPathAction(pathId, onboardingId);
         if (result.success) {
             router.push("/dashboard");
         } else {
             setError(result.error);
         }
-    }, [onboardingId, initialDraft, router]);
+    }, [onboardingId, router]);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
@@ -213,7 +208,7 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
                                 aiLanguagePref: lang,
                                 aiDetailLevel: detail,
                             }));
-                            handleSubmit();
+                            handleSubmit({ aiLanguagePref: lang, aiDetailLevel: detail });
                         }}
                         onBack={goBack}
                     />

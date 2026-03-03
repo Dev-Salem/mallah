@@ -46,7 +46,7 @@ This module always runs **before Onboarding** and decides:
 |------------------|-----------|--------------------------------------------|
 | `user_id`        | UUID (PK) |                                            |
 | `email`          | VARCHAR   | Unique                                     |
-| `password_hash`  | VARCHAR   | bcrypt or argon2, never plain text         |
+| `password_hash`  | VARCHAR   | bcrypt (cost ≥ 12), never plain text       |
 | `role`           | ENUM      | `learner` / `admin`                        |
 | `status`         | ENUM      | `active` / `blocked`                       |
 | `email_verified` | BOOLEAN   | Default `false`, set to `true` on verification |
@@ -106,45 +106,52 @@ All onboarding fields are initialized as NULL at registration. They are populate
 3. Validate password strength — minimum 8 characters, at least one letter and one number.
 4. Confirm password fields match.
 5. Insert into `users`:
-   - `email`, `password_hash` (bcrypt/argon2), `role = 'learner'`, `status = 'active'`, `email_verified = false`
+   - `email`, `password_hash` (bcrypt, cost ≥ 12), `role = 'learner'`, `status = 'active'`, `email_verified = false`
 6. Insert into `learners`:
    - `user_id`, `first_name`, `last_name`, `onboarding_completed = false`, all other fields NULL
    - **Note:** During the Onboarding Wizard, each step writes its data to the `learners` row immediately on "Next" click — before `onboarding_completed` is set. `onboarding_completed` only flips to `true` on final step submission. If a learner drops off mid-onboarding and returns, the Wizard checks which `learners` fields are non-NULL and resumes from the appropriate step automatically.
-7. Send verification email:
-   - Generate a time-limited token (expires in 24 hours).
-   - Send link: `https://mallah.app/verify-email?token=...`
-   - Email verification does not block access — the learner proceeds to onboarding immediately.
-8. Issue access token + refresh token (see Section 5.5).
-9. Redirect → Onboarding Wizard (Step 0).
+7. Send verification email via Supabase Auth (Supabase project setting: **"Confirm email" must be ON**):
+   - Supabase sends a verification link to the learner's email address.
+   - **No session is issued at this stage.** The learner cannot access any protected route until they verify.
+8. Redirect → `/register/check-email` holding page.
+
+**`/register/check-email` holding page:**
+- Message: "We've sent a verification link to [email]. Click the link in your inbox to activate your account."
+- "Resend email" button (disabled for 60 seconds after each click).
+- No navigation to dashboard or onboarding from this page — the learner must go through their inbox.
 
 **UI feedback:**
-- On success: brief welcome message ("Welcome to Mallah — let's set up your path"), auto-redirect to onboarding.
+- On success: immediate redirect to `/register/check-email`.
 - On failure: highlight the specific invalid field with a clear message. Never show a generic "something went wrong."
 
 ---
 
 ### 5.2 Email Verification
 
-**Goal:** confirm the learner owns the email address they registered with.
+**Goal:** confirm the learner owns the email address before granting any platform access.
 
 **Flow:**
-1. User receives email with a verification link containing a one-time token.
-2. User clicks the link → backend validates the token (not expired, not already used).
-3. On success: set `users.email_verified = true`. Show confirmation message. Redirect to Dashboard or current page.
-4. On failure (expired or invalid token): show message with a "Resend verification email" option.
+1. User receives Supabase verification email and clicks the link.
+2. Supabase validates the token and sets `email_verified = true` on the account.
+3. User is redirected to the **Login page** with a success message: "Your email has been verified. Please log in to continue."
+4. User logs in → routed to Onboarding Wizard (if `onboarding_completed = false`) or Dashboard (if `onboarding_completed = true`).
+
+**On failure (expired or invalid token):**
+- Show message: "This verification link has expired or is invalid."
+- Provide a "Resend verification email" button.
+- User must re-verify before they can log in.
 
 **Access rules:**
-- Email verification is **not required** to use Mallah. Learners can complete onboarding and use the platform with an unverified email.
-- Email verification **is required** to use Forgot Password (see Section 5.4).
-- A persistent banner is shown at the top of the Dashboard (above all content) while `email_verified = false`: "Please verify your email address. [Resend email →]"
-  - The banner is **dismissable per session** — if the user closes it, it does not reappear until the next login. It reappears every session until the email is verified.
-  - Clicking "Resend email" triggers a new verification email and shows inline feedback: "Verification email sent." The button is disabled for 60 seconds after each click to prevent spam.
+- Email verification **is required** to access Mallah. Learners cannot reach the Onboarding Wizard, Dashboard, or any protected route until `email_verified = true`.
+- Middleware enforces this: any authenticated session where `email_verified = false` is redirected to `/register/check-email`.
+- There is no "skip verification" path and no dashboard banner for unverified users — they simply cannot proceed until verified.
+- Email verification **is also required** to use Forgot Password (see Section 5.4).
 
 ---
 
 ### 5.3 Login
 
-**Goal:** authenticate a user and route them to the correct destination.
+**Goal:** authenticate a verified user and route them to the correct destination.
 
 **Input fields:**
 - Email
@@ -156,19 +163,20 @@ All onboarding fields are initialized as NULL at registration. They are populate
 1. Find `User` by email. If not found → return generic error ("Invalid email or password").
 2. Check `status`. If `blocked` → return specific message ("Your account has been blocked. Contact support.").
 3. Verify password against `password_hash`. If mismatch → return generic error ("Invalid email or password"). Increment failed attempt counter.
-4. If failed attempts exceed threshold (e.g. 5 attempts) → apply temporary lockout (e.g. 15 minutes). Return message: "Too many failed attempts. Try again in 15 minutes."
-5. On successful password match: reset failed attempt counter.
-6. Update `users.last_login_at = NOW()`.
-7. Read `users.role` directly.
-8. Issue access token + refresh token. If "Remember Me" checked → set longer refresh token expiry (e.g. 30 days vs default 7 days).
-9. Redirect:
-   - `role = 'admin'` → Admin Dashboard
-   - `role = 'learner'` AND `onboarding_completed = false` → Onboarding Wizard
-   - `role = 'learner'` AND `onboarding_completed = true` → Dashboard
+4. If failed attempts exceed threshold (5 attempts) → apply temporary lockout (15 minutes). Return message: "Too many failed attempts. Try again in 15 minutes."
+5. Check `email_verified`. If `false` → do not issue a session. Return message: "Please verify your email before logging in. Check your inbox or [resend the verification email]." The "resend" link triggers a new Supabase verification email.
+6. On successful password match with verified email: reset failed attempt counter.
+7. Update `users.last_login_at = NOW()`.
+8. Read `users.role` directly.
+9. Issue access token + refresh token (Supabase session). If "Remember Me" checked → set longer refresh token expiry (30 days vs default 7 days).
+10. Redirect:
+    - `role = 'admin'` → Admin Dashboard
+    - `role = 'learner'` AND `onboarding_completed = false` → Onboarding Wizard
+    - `role = 'learner'` AND `onboarding_completed = true` → Dashboard
 
 **UI feedback:**
 - On success: no delay, immediate redirect.
-- On failure: generic message only. Never indicate which field (email or password) was wrong.
+- On failure: inline error message. Never indicate which specific field (email or password) was wrong for credential failures.
 
 ---
 
@@ -256,8 +264,9 @@ Applied server-side, not frontend-only:
 ### 6.2 Routing Rules
 
 - **Not authenticated** → any protected URL → redirect to Login.
-- **Authenticated as Learner, `onboarding_completed = false`** → any learner page → redirect to Onboarding Wizard. The only exception is the Onboarding Wizard itself.
-- **Authenticated as Learner, `onboarding_completed = true`** → full access to all learner pages.
+- **Authenticated but `email_verified = false`** → any URL → redirect to `/register/check-email`. No exceptions. This state should only occur if a session was somehow issued before verification (e.g. edge case in Supabase config); the middleware treats it as a hard block.
+- **Authenticated as Learner, `email_verified = true`, `onboarding_completed = false`** → any learner page → redirect to Onboarding Wizard. The only exception is the Onboarding Wizard itself.
+- **Authenticated as Learner, `email_verified = true`, `onboarding_completed = true`** → full access to all learner pages.
 - **Authenticated as Admin** → access to Admin area only. Admins cannot access learner features.
 - **Authenticated as Learner trying to access Admin URL** → redirect to Dashboard.
 - **Authenticated as Admin trying to access Learner URL** → redirect to Admin Dashboard.
@@ -266,7 +275,7 @@ Applied server-side, not frontend-only:
 
 ## 7. Security Requirements
 
-- Passwords are never stored in plain text. Use bcrypt (cost factor ≥ 12) or argon2id.
+- Passwords are never stored in plain text. Use bcrypt (cost factor ≥ 12).
 - Access tokens are stored in memory only, never in localStorage.
 - Refresh tokens are stored in HTTP-only, Secure, SameSite=Strict cookies.
 - All auth endpoints are served over HTTPS only.
@@ -311,3 +320,5 @@ All other modules — Roadmap, Topic Viewer, Dashboard, Portfolio Hub, Skills Hu
 **`users.password_hash`:** Mallah uses **bcrypt** (cost factor ≥ 12). The "or argon2" alternative noted above is for future consideration only — the implementation standard is bcrypt.
 
 **`admin_level` access enforcement:** The Admin Panel enforces `super`-only actions at the API level — the frontend hides controls, but the backend re-checks `admins.admin_level` on every sensitive request and returns `403` if the caller is not `super`.
+
+**Supabase configuration requirement:** The Supabase project's Auth setting **"Confirm email" must be ON**. This ensures `auth.signUp` does not issue a session immediately — the learner is held at the `/register/check-email` holding page until they click the link in their inbox. If "Confirm email" is OFF, Supabase issues a session on sign-up and the verification gate breaks.

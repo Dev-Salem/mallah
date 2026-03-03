@@ -216,6 +216,7 @@ export async function submitOnboardingAction(
             confidence_score: recommendation.match_score,
             reasons: recommendation.reasons,
             alternatives: recommendation.alternatives,
+            plan_2_weeks: null,
             accepted_path_id: null,
         });
 
@@ -242,6 +243,9 @@ export async function acceptPathAction(
     pathId: PathId,
     onboardingId: string
 ): Promise<{ success: true } | { success: false; error: string }> {
+    if (!onboardingId) {
+        return { success: false, error: "Missing onboarding session. Please restart onboarding." };
+    }
     try {
         const supabase = await createClient();
         const {

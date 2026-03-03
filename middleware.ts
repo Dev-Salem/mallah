@@ -7,7 +7,7 @@ import { createServerClient } from '@supabase/ssr'
 const intlMiddleware = createMiddleware(routing);
 
 // Routes that don't require authentication (without locale prefix)
-const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/auth-error'];
+const publicRoutes = ['/', '/login', '/register', '/register/check-email', '/forgot-password', '/reset-password', '/auth-error'];
 
 function isPublicRoute(pathname: string): boolean {
   // Strip locale prefix (e.g. /en/login → /login, /login → /login)
@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     // Skip intl middleware for technical routes
-    if (pathname.startsWith('/auth') || pathname.startsWith('/api')) {
+    if (pathname.startsWith('/auth/') || pathname === '/auth' || pathname.startsWith('/api/') || pathname === '/api') {
       const { response } = await updateSession(request);
       return response;
     }

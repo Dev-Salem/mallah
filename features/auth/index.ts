@@ -10,6 +10,7 @@ export {
     forgotPasswordAction,
     resetPasswordAction,
     signOutAction,
+    resendVerificationEmailAction
 } from './actions/auth-actions'
 
 export type {

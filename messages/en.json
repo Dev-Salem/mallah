@@ -114,6 +114,15 @@
       "title": "Email Verified",
       "message": "Authentication successful. You can now close this terminal and return to the login interface to access your dashboard."
     },
+    "checkEmail": {
+      "title": "Check Your Email",
+      "message": "We have sent a verification link to your email. Click the link in your inbox to activate your account.",
+      "enterEmailResend": "Enter your email to receive a new link:",
+      "resendWait": "Resend in {seconds}s",
+      "resendButton": "Resend Email",
+      "resendSuccess": "Verification email sent successfully.",
+      "emailRequired": "Please enter your email address to resend."
+    },
     "backToSurface": "Back to Surface"
   },
   "Dashboard": {
