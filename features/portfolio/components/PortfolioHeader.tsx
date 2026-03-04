@@ -77,7 +77,9 @@ export function PortfolioHeader({ profile, isPublicView = false }: PortfolioHead
                                 maxLength={160}
                             />
                             <div className="flex justify-end gap-2">
-                                <Button variant="ghost" size="sm" onClick={() => setIsEditingBio(false)}>Cancel</Button>
+                                <Button variant="ghost" size="sm" onClick={() => setIsEditingBio(false)}>
+                                    {t('cancel')}
+                                </Button>
                                 <Button size="sm" onClick={handleSaveBio} disabled={isSaving}>
                                     {isSaving ? '...' : t('saveBio')}
                                 </Button>

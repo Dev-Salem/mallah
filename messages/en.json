@@ -441,6 +441,7 @@
       "bioPlaceholder": "Write a short bio about yourself...",
       "editBio": "Edit Bio",
       "saveBio": "Save Bio",
+      "cancel": "Cancel",
       "bioSaved": "Bio updated successfully.",
       "projectsCompleted": "{count} Projects Completed",
       "skillsMastered": "{count} Skills Mastered",
@@ -456,6 +457,7 @@
       "addSkill": "Add Skill",
       "searchSkills": "Search skills...",
       "noSkillsMessage": "You haven't unlocked or added any skills yet.",
+      "noSearchMatch": "No skills match your search.",
       "levelBadge": {
         "beginner": "Beginner",
         "intermediate": "Intermediate",
@@ -476,9 +478,14 @@
         "skillLabel": "Skill",
         "levelLabel": "Proficiency Level",
         "submit": "Add Skill",
+        "submitting": "Adding Skill...",
         "successMessage": "Skill added manually to your portfolio.",
         "placeholder": "Select a skill..."
-      }
+      },
+      "visibilityPublic": "Skill is now public",
+      "visibilityPrivate": "Skill is now private",
+      "removed": "Skill removed",
+      "earnedIn": "Earned in"
     },
     "projects": {
       "addExternal": "Add External Project",
@@ -504,8 +511,14 @@
         "techStackLabel": "Tech Stack (Comma Separated)",
         "skillsLabel": "Skills Demonstrated (Select multiple)",
         "submit": "Add Project",
+        "submitting": "Adding Project...",
         "successMessage": "External project added successfully."
-      }
+      },
+      "statusInProgress": "In Progress",
+      "visibilityPublic": "Project is now public",
+      "visibilityPrivate": "Project is now private",
+      "privateBadge": "Private",
+      "noDescription": "No description provided."
     }
   },
   "Common": {

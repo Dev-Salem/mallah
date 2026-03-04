@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { addExternalProjectAction } from '../actions/portfolio-actions';
 import { toast } from 'sonner';
-import { Label } from '@/components/ui/label';
 
 interface AddExternalProjectDrawerProps {
     open: boolean;
@@ -74,13 +74,13 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
-                <SheetHeader className="mb-6">
+            <SheetContent className="p-0 flex flex-col w-[400px] sm:w-[540px]">
+                <SheetHeader className="p-6 border-b shrink-0">
                     <SheetTitle>{t('title')}</SheetTitle>
                     <SheetDescription>{t('description')}</SheetDescription>
                 </SheetHeader>
 
-                <div className="grid gap-6">
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="title">{t('titleLabel')}</Label>
                         <Input
@@ -152,11 +152,11 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
                     </div>
 
                     <Button
-                        className="w-full mt-4"
+                        className="w-full"
                         onClick={handleSubmit}
                         disabled={isSubmitting || !title || !description}
                     >
-                        {isSubmitting ? '...' : t('submit')}
+                        {isSubmitting ? t('submitting') : t('submit')}
                     </Button>
                 </div>
             </SheetContent>

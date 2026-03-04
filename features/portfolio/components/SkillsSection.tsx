@@ -59,8 +59,8 @@ export function SkillsSection({ skills, catalog, isPublicView = false }: SkillsS
             )}
 
             {filteredSkills.length === 0 && skills.length > 0 && (
-                <div className="text-center py-8 text-muted-foreground">
-                    No skills match your search.
+                <div className="text-center py-8 text-muted-foreground font-mono text-sm">
+                    {t('noSearchMatch')}
                 </div>
             )}
 

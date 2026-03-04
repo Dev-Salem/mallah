@@ -35,7 +35,7 @@ export function SkillCard({ skill, isPublicView = false }: SkillCardProps) {
     const handleTogglePublic = async (checked: boolean) => {
         const result = await toggleSkillVisibilityAction(skill.skill_id, checked);
         if (result.success) {
-            toast.success(checked ? 'Skill is now public' : 'Skill is now private');
+            toast.success(checked ? t('visibilityPublic') : t('visibilityPrivate'));
         } else {
             toast.error(result.error);
         }
@@ -45,7 +45,7 @@ export function SkillCard({ skill, isPublicView = false }: SkillCardProps) {
         if (!confirm(t('deleteConfirmDesc'))) return;
         const result = await deleteManualSkillAction(skill.skill_id);
         if (result.success) {
-            toast.success('Skill removed');
+            toast.success(t('removed'));
         } else {
             toast.error(result.error);
         }
@@ -96,7 +96,7 @@ export function SkillCard({ skill, isPublicView = false }: SkillCardProps) {
             {/* Linked Projects Section */}
             {skill.linked_projects && skill.linked_projects.length > 0 && (
                 <div className="mt-4 pt-3 border-t border-primary/10">
-                    <p className="text-[10px] text-muted-foreground font-mono mb-2 uppercase">Earned in</p>
+                    <p className="text-[10px] text-muted-foreground font-mono mb-2 uppercase">{t('earnedIn')}</p>
                     <div className="flex flex-wrap gap-1">
                         {skill.linked_projects.map((proj: string, idx: number) => (
                             <span key={idx} className="text-xs text-foreground bg-primary/5 px-2 py-0.5 rounded-sm">

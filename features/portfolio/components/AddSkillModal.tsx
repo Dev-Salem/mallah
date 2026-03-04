@@ -85,7 +85,7 @@ export function AddSkillModal({ open, onOpenChange, catalog, existingIds }: AddS
 
                 <div className="flex justify-end pt-4">
                     <Button disabled={!selectedId || isSubmitting} onClick={handleSubmit}>
-                        {isSubmitting ? '...' : t('submit')}
+                        {isSubmitting ? t('submitting') : t('submit')}
                     </Button>
                 </div>
             </DialogContent>

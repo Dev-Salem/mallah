@@ -20,12 +20,12 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
     // Format completed date
     const completedDate = project.completed_at
         ? new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(project.completed_at))
-        : 'In Progress';
+        : t('statusInProgress');
 
     const handleTogglePublic = async (checked: boolean) => {
         const result = await toggleProjectVisibilityAction(project.project_id, checked);
         if (result.success) {
-            toast.success(checked ? 'Project is now public' : 'Project is now private');
+            toast.success(checked ? t('visibilityPublic') : t('visibilityPrivate'));
         } else {
             toast.error(result.error);
         }
@@ -47,7 +47,7 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
                     <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
                         <div className="bg-background/90 px-3 py-1.5 rounded-full flex items-center gap-2 border shadow-sm">
                             <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />
-                            <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground">Private</span>
+                            <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground">{t('privateBadge')}</span>
                         </div>
                     </div>
                 )}
@@ -75,7 +75,7 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
                 </div>
 
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2 min-h-[40px]">
-                    {project.description || project.personal_note || 'No description provided.'}
+                    {project.description || project.personal_note || t('noDescription')}
                 </p>
 
                 <div className="flex flex-wrap gap-1.5 mb-6">

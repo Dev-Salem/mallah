@@ -38,24 +38,26 @@ export function ChatPanel({
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
     // Vercel AI SDK useChat
-    const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages, append } = useChat({
+    const chat = useChat({
         api: '/api/chat',
-        body: {
-            sessionId,
-            context: {
-                topicTitle,
-                topicSummary,
-                learnerBackground,
-                readinessLevel,
-                aiLanguagePref,
-                aiDetailLevel
-            }
-        },
+    });
+    const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = chat;
+
+    console.log("[ChatPanel] useChat hooks keys:", Object.keys(chat));
+
+
+    console.log("[ChatPanel] Render State:", {
+        isInitializing,
+        isLoading,
+        initError,
+        sessionId,
+        hasInput: !!input?.trim()
     });
 
     // Initialize session on mount
     React.useEffect(() => {
         let isMounted = true;
+        console.log("[ChatPanel] initSession effect triggered for topicId:", topicId);
 
         async function initSession() {
             setIsInitializing(true);
@@ -63,6 +65,7 @@ export function ChatPanel({
 
             try {
                 const res = await getOrCreateChatSessionAction(topicId, 'topic_tutor');
+                console.log("[ChatPanel] getOrCreateChatSessionAction result:", res);
 
                 if (isMounted) {
                     if (res.success) {
@@ -102,12 +105,11 @@ export function ChatPanel({
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const [localInput, setLocalInput] = React.useState('');
-
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Chat Submit Triggered. Local Input:", localInput, "SessionId:", sessionId, "Loading:", isLoading);
-        if (!localInput.trim()) {
+        console.log("[ChatPanel] handleFormSubmit clicked", { input, sessionId, isLoading });
+
+        if (!input?.trim()) {
             toast.error("Please enter a question.");
             return;
         }
@@ -115,17 +117,10 @@ export function ChatPanel({
             toast.error("Session not initialized. Please refresh.");
             return;
         }
-        if (isLoading) {
-            toast.error("AI is currently typing...");
-            return;
-        }
+        if (isLoading) return;
 
         try {
-            // Use append directly to bypass buggy Vercel form state
-            append({
-                role: 'user',
-                content: localInput
-            }, {
+            handleSubmit(e, {
                 options: {
                     body: {
                         sessionId,
@@ -140,12 +135,12 @@ export function ChatPanel({
                     }
                 }
             });
-            setLocalInput('');
         } catch (error) {
-            console.error("error sending message:", error);
+            console.error("[ChatPanel] Error in handleSubmit:", error);
             toast.error("Error sending message. Check console.");
         }
     };
+
 
     return (
         <div className="w-full lg:w-96 rounded-2xl border bg-card flex flex-col h-[600px] lg:h-auto overflow-hidden self-start sticky top-8">
@@ -235,8 +230,8 @@ export function ChatPanel({
                 >
                     <input
                         type="text"
-                        value={localInput}
-                        onChange={(e) => setLocalInput(e.target.value)}
+                        value={input}
+                        onChange={handleInputChange}
                         placeholder={t('askQuestion')}
                         className="w-full border rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-muted/30 transition-shadow disabled:opacity-50"
                         disabled={isInitializing || isLoading || !!initError || !sessionId}
@@ -245,7 +240,7 @@ export function ChatPanel({
                         type="submit"
                         className={cn(
                             "absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full transition-all",
-                            !localInput.trim()
+                            !input?.trim()
                                 ? "bg-muted text-muted-foreground"
                                 : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                         )}

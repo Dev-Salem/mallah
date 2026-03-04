@@ -441,6 +441,7 @@
       "bioPlaceholder": "اكتب نبذة قصيرة عن نفسك...",
       "editBio": "تعديل النبذة",
       "saveBio": "حفظ النبذة",
+      "cancel": "إلغاء",
       "bioSaved": "تم تحديث النبذة بنجاح.",
       "projectsCompleted": "{count} مشاريع منجزة",
       "skillsMastered": "{count} مهارات مكتسبة",
@@ -456,6 +457,7 @@
       "addSkill": "إضافة مهارة",
       "searchSkills": "ابحث عن مهارات...",
       "noSkillsMessage": "لم تقم باكتساب أو إضافة أي مهارات بعد.",
+      "noSearchMatch": "لا توجد مهارات تطابق بحثك.",
       "levelBadge": {
         "beginner": "مبتدئ",
         "intermediate": "متوسط",
@@ -476,9 +478,14 @@
         "skillLabel": "المهارة",
         "levelLabel": "مستوى الإتقان",
         "submit": "إضافة المهارة",
+        "submitting": "جاري الإضافة...",
         "successMessage": "تمت إضافة المهارة يدوياً إلى ملفك.",
         "placeholder": "اختر مهارة..."
-      }
+      },
+      "visibilityPublic": "تم تفعيل الظهور للعامة",
+      "visibilityPrivate": "تم إخفاء المهارة من العامة",
+      "removed": "تمت إزالة المهارة",
+      "earnedIn": "تم اكتسابها في"
     },
     "projects": {
       "addExternal": "إضافة مشروع خارجي",
@@ -504,8 +511,14 @@
         "techStackLabel": "التقنيات المستخدمة (مفصولة بفاصلة)",
         "skillsLabel": "المهارات الموضحة (اختر متعدد)",
         "submit": "إضافة المشروع",
+        "submitting": "جاري الإضافة...",
         "successMessage": "تمت إضافة المشروع الخارجي بنجاح."
-      }
+      },
+      "statusInProgress": "قيد التنفيذ",
+      "visibilityPublic": "تم تفعيل الظهور للعامة",
+      "visibilityPrivate": "تم إخفاء المشروع من العامة",
+      "privateBadge": "خاص",
+      "noDescription": "لا يوجد وصف متوفر."
     }
   },
   "Common": {
