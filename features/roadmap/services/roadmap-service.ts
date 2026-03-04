@@ -9,7 +9,7 @@ export class RoadmapService {
         const { data: learner } = await supabase
             .from('learners')
             .select('current_path_id')
-            .eq('id', userId)
+            .eq('user_id', userId)
             .single();
 
         if (!learner?.current_path_id) return null;
@@ -23,7 +23,10 @@ export class RoadmapService {
                 *,
                 topics (
                     *,
-                    resources:topic_resources (*)
+                    resources:topic_resources (*),
+                    skills:topic_skills (
+                        skills (*)
+                    )
                 ),
                 projects (*)
             `)
@@ -58,14 +61,20 @@ export class RoadmapService {
 
             // Sort topics
             const sortedTopics = (stage.topics || [])
-                .sort((a: any, b: any) => a.order_index - b.order_index)
-                .map((topic: any) => {
+                .sort((a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index)
+                .map((topic: { resources?: { order_index: number }[], skills?: { skills: unknown }[], topic_id: string } & Record<string, unknown>) => {
                     // Sort resources
-                    const sortedResources = (topic.resources || []).sort((a: any, b: any) => a.order_index - b.order_index);
+                    const sortedResources = (topic.resources || []).sort((a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index);
+
+                    // Extract skills from nested topic_skills relation
+                    const mappedSkills = (topic.skills || [])
+                        .map((ts: { skills: unknown }) => ts.skills)
+                        .filter(Boolean); // Filter out any nulls
 
                     return {
                         ...topic,
                         resources: sortedResources,
+                        skills: mappedSkills,
                         user_status: topicProgressMap.get(topic.topic_id) || 'not_started'
                     } as Topic;
                 });
@@ -122,8 +131,8 @@ export class RoadmapService {
             return { success: false, error: 'Failed to fetch roadmap stages' };
         }
 
-        const topicProgressRows: any[] = [];
-        const projectProgressRows: any[] = [];
+        const topicProgressRows: Record<string, unknown>[] = [];
+        const projectProgressRows: Record<string, unknown>[] = [];
 
         for (const stage of stagesData) {
             if (stage.topics) {

@@ -1,5 +1,4 @@
-import { getTranslations } from "next-intl/server";
-import { getProjectAction } from "@/features/roadmap/actions/project-actions";
+import { getProjectAction, getProjectBreadcrumb } from "@/features/roadmap/actions/project-actions";
 import { ProjectViewerView } from "@/features/roadmap/components/ProjectViewerView";
 import { redirect } from "next/navigation";
 
@@ -13,7 +12,10 @@ interface ProjectPageProps {
 export default async function ProjectPage({ params }: ProjectPageProps) {
     const { projectId, locale } = await params;
 
-    const project = await getProjectAction(projectId);
+    const [project, breadcrumb] = await Promise.all([
+        getProjectAction(projectId),
+        getProjectBreadcrumb(projectId),
+    ]);
 
     if (!project) {
         redirect(`/${locale}/dashboard/roadmap`);
@@ -21,7 +23,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
     return (
         <div className="h-full w-full">
-            <ProjectViewerView project={project} />
+            <ProjectViewerView
+                project={project}
+                breadcrumb={breadcrumb}
+            />
         </div>
     );
 }

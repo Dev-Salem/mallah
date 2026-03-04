@@ -1,6 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
-import fs from "fs";
-import path from "path";
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export interface ParsedResource {
     type: "VIDEO" | "ARTICLE" | "INTERNAL_TEXT" | "CERT";
@@ -169,7 +167,7 @@ export class RoadmapParser {
         return { pathId, stages };
     }
 
-    static async syncToDatabase(pathId: string, stages: ParsedStage[], supabase: any) {
+    static async syncToDatabase(pathId: string, stages: ParsedStage[], supabase: SupabaseClient) {
         console.log(`[Sync] Starting sequential sync for path: ${pathId}`);
         for (const stage of stages) {
             console.log(`[Sync]   Syncing stage: ${stage.title}`);
@@ -202,7 +200,7 @@ export class RoadmapParser {
                         summary: topic.description,
                         topic_type: tType,
                         estimated_time_min: topic.estimatedTime,
-                        difficulty_level: topic.difficulty as any,
+                        difficulty_level: topic.difficulty as 'beginner' | 'intermediate' | 'advanced',
                         order_index: topic.orderIndex
                     }, { onConflict: "stage_id, order_index" })
                     .select()
@@ -247,7 +245,7 @@ export class RoadmapParser {
                         stage_id: stageRow.stage_id,
                         title: topic.title,
                         description: topic.practicalOutput || topic.description,
-                        difficulty_level: topic.difficulty as any
+                        difficulty_level: topic.difficulty as 'beginner' | 'intermediate' | 'advanced'
                     }, { onConflict: "stage_id, title" });
 
                     if (pErr && pErr.code !== "23505") {

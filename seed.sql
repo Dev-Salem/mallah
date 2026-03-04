@@ -1873,6 +1873,980 @@ BEGIN
   END;
 END $$;
 
+-- Stage: Foundations: Networking & Operating Systems
+DO $$
+DECLARE
+  stage_cybersecurity_1_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'Foundations: Networking & Operating Systems', 1, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_1_id;
+
+  DECLARE
+    topic_cybersecurity_1_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'How Networks Work: The OSI & TCP/IP Models', '', 'concept', 2, 'beginner', 1)
+    RETURNING topic_id INTO topic_cybersecurity_1_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_1_id, 'VIDEO', 'Networking Fundamentals', 'https://www.youtube.com/watch?v=0uflG0SemyM', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_1_id, 'ARTICLE', 'The OSI Model', 'https://www.comptia.org/content/guides/what-is-the-osi-model', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The OSI model isn''t just exam fodder — it''s a debugging framework. When something doesn''t work on a network, you work down from Layer 7 (is the application configured correctly?) to Layer 1 (is the cable plugged in?). When something is being attacked, you think about which layer the attack targets. SQL injection is a Layer 7 attack. ARP poisoning is Layer 2. SYN floods are Layer 4. This mental model makes every security concept you encounter make sense immediately.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('networking', 'Networking', 'fundamentals') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_1_id, 'networking') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_1_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Protocols That Matter for Security: HTTP, HTTPS, DNS, FTP, SSH, SMTP', '', 'concept', 2, 'beginner', 2)
+    RETURNING topic_id INTO topic_cybersecurity_1_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_2_id, 'VIDEO', 'HTTP Explained', 'https://www.youtube.com/watch?v=iYM2zFP3Zn0', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_2_id, 'ARTICLE', 'HTTP Overview', 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'HTTP headers are gold for an attacker: `Server: Apache/2.2.17` reveals a version from 2010 with known CVEs. `X-Powered-By: PHP/5.3.6` tells you the entire backend stack. Most headers that make a defender''s life easier (CSP, HSTS, X-Frame-Options) are absent on poorly configured sites. Understanding exactly what information HTTP exposes is the first step to understanding web application security — both attacking and hardening.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('networking', 'Networking', 'fundamentals') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_2_id, 'networking') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('http_basics', 'HTTP basics', 'fundamentals') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_2_id, 'http_basics') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_1_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Operating Systems: Windows & Linux Security Architecture', '', 'concept', 2, 'beginner', 3)
+    RETURNING topic_id INTO topic_cybersecurity_1_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_3_id, 'VIDEO', 'Linux for Hackers', 'https://www.youtube.com/watch?v=VbEx7B_PTOE', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_3_id, 'ARTICLE', 'Linux File Permissions', 'https://linuxcommand.org/lc3_lts0090.php', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Every professional penetration tester is fluent in both Windows and Linux because real-world networks run both. Windows dominates corporate environments (Active Directory, Exchange, IIS). Linux dominates servers, cloud infrastructure, and IoT. SUID binaries are a classic Linux privilege escalation vector — when a binary runs as root regardless of who executes it, a bug in that binary can be exploited to get a root shell. GTFOBins (gtfobins.github.io) is the reference for commonly abused SUID binaries.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('linux', 'Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_3_id, 'linux') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('windows', 'Windows', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_3_id, 'windows') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_1_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Virtualisation & Building Your Home Lab', '', 'lesson', 3, 'beginner', 4)
+    RETURNING topic_id INTO topic_cybersecurity_1_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_4_id, 'VIDEO', 'Build an Ethical Hacking Home Lab', 'https://www.youtube.com/watch?v=mvsiSHjbNvA', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_4_id, 'ARTICLE', 'Kali Linux Download & VM setup', 'https://www.kali.org/get-kali/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Your home lab is the most important investment in this path. Having your own attack-and-defend environment means you can experiment freely without fear of legal consequences or breaking anything real. The Metasploitable VM is intentionally full of vulnerabilities — it exists specifically for this purpose. Every technique you''ll learn in Stages 4–6 will be practised here first before you go to TryHackMe or HackTheBox challenges. Always restore from a snapshot before a new exercise — this gives you a clean target every time.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('virtualisation', 'Virtualisation', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_4_id, 'virtualisation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('kali_linux', 'Kali Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_4_id, 'kali_linux') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_1_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'The Ethical Hacking Framework: Methodology & Legal Foundations', '', 'concept', 1, 'beginner', 5)
+    RETURNING topic_id INTO topic_cybersecurity_1_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_5_id, 'VIDEO', 'Ethical Hacking Full Course Introduction', 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_5_id, 'ARTICLE', 'OWASP Testing Guide', 'https://owasp.org/www-project-web-security-testing-guide/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Methodology matters more than tools. A professional penetration tester follows a repeatable, documented process — not "run tools until something interesting happens." Every engagement starts with a written scope agreement that defines exactly what can and cannot be tested. Scanning a server not listed in scope — even accidentally — is a breach of contract and potentially illegal. Bug bounty programs are the closest thing to practicing legally on real production systems: companies explicitly invite researchers to find vulnerabilities in defined scopes.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('security_fundamentals', 'Security Fundamentals', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_5_id, 'security_fundamentals') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('ethical_hacking_methodology', 'Ethical Hacking Methodology', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_5_id, 'ethical_hacking_methodology') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_1_6_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Python & Bash for Security Scripting', '', 'lesson', 2, 'beginner', 6)
+    RETURNING topic_id INTO topic_cybersecurity_1_6_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_6_id, 'VIDEO', 'Python for Ethical Hacking', 'https://www.youtube.com/watch?v=XWuP5Yf5ILI', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_6_id, 'ARTICLE', 'Python socket module', 'https://docs.python.org/3/library/socket.html', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_6_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Security professionals who can script are 10x more effective than those who can''t. A port scanner that takes 3 minutes manually takes 3 seconds in a loop. A password wordlist that has 100,000 entries needs automation to process. More importantly, understanding how tools like Nmap work internally — they''re all built on the same socket connections you''ll write here — makes you a better user of those tools when something unexpected happens.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('python', 'Python', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_6_id, 'python') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('bash', 'Bash', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_6_id, 'bash') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('scripting', 'Scripting', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_6_id, 'scripting') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_1_7_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'PROJECT: Home Lab Setup & Documentation', '', 'project_milestone', 4, 'beginner', 7)
+    RETURNING topic_id INTO topic_cybersecurity_1_7_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_7_id, 'VIDEO', 'Complete Home Lab Tutorial', 'https://www.youtube.com/watch?v=LqRqvkGEiSA', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_1_7_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Your GitHub repo for this path should be **private** — not because the content is secret, but because public repositories documenting hacking techniques, even against lab environments, can be misinterpreted and attract the wrong attention. Keep lab notes, pentest reports, and tool configurations private. Your portfolio pieces for this path are CTF write-ups and bug bounty reports — those can be public, because they document findings on systems you were explicitly authorised to test.', 2);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('virtualisation', 'Virtualisation', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_7_id, 'virtualisation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('kali_linux', 'Kali Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_7_id, 'kali_linux') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('networking', 'Networking', 'fundamentals') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_7_id, 'networking') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('bash', 'Bash', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_1_7_id, 'bash') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_1_id, 'PROJECT: Home Lab Setup & Documentation', '', 'beginner') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: Linux & Command Line Mastery
+DO $$
+DECLARE
+  stage_cybersecurity_2_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'Linux & Command Line Mastery', 2, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_2_id;
+
+  DECLARE
+    topic_cybersecurity_2_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Linux Command Line Deep Dive', '', 'lesson', 2, 'beginner', 1)
+    RETURNING topic_id INTO topic_cybersecurity_2_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_1_id, 'VIDEO', 'Linux Command Line Tutorial', 'https://www.youtube.com/watch?v=ZtqBQ68cfJc', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_1_id, 'ARTICLE', 'The Linux Command Line (free book)', 'https://linuxcommand.org/tlcl.php', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The Linux command line is the primary interface for almost every security tool you''ll use. Burp Suite, Metasploit, Nmap, Wireshark — all configurable and automatable via the terminal. The pipeline (`|`) is the most powerful concept: connect tools so the output of one becomes the input of another. `nmap -p 80 10.0.0.0/24 | grep "open" | cut -d'' '' -f6` finds all machines with port 80 open and extracts just their IPs — useful for targeting web servers in a pentest.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('linux', 'Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_1_id, 'linux') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('bash', 'Bash', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_1_id, 'bash') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_2_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Linux File Permissions, Users & Privilege Escalation Concepts', '', 'lesson', 1, 'intermediate', 2)
+    RETURNING topic_id INTO topic_cybersecurity_2_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_2_id, 'VIDEO', 'Linux Privilege Escalation', 'https://www.youtube.com/watch?v=ZTsbGpDwCRQ', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_2_id, 'ARTICLE', 'GTFOBins', 'https://gtfobins.github.io/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Privilege escalation is the art of going from a limited user account to full root/administrator access. In real penetration tests, you almost never get direct root access — you get a foothold as a low-privilege user and then escalate. Understanding *why* each privesc vector works (SUID lets a binary run as its owner regardless of who executes it; a misconfigured sudo rule lets you run a program as root) makes you both a better attacker and a better defender who knows what to audit.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('linux', 'Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_2_id, 'linux') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('privilege_escalation', 'Privilege Escalation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_2_id, 'privilege_escalation') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_2_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Bash Scripting for Security Automation', '', 'lesson', 2, 'intermediate', 3)
+    RETURNING topic_id INTO topic_cybersecurity_2_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_3_id, 'VIDEO', 'Bash Scripting Tutorial', 'https://www.youtube.com/watch?v=SPwyp2NG-bE', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_3_id, 'ARTICLE', 'Bash Guide', 'https://tldp.org/LDP/Bash-Beginners-Guide/html/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Security automation is not just about saving time — it''s about reproducibility. A Bash script that runs the same enumeration steps every time is more reliable than a human remembering to run each tool manually. In real penetration tests, automated reconnaissance scripts run during the first phase to gather as much information as possible before a human starts making decisions. Learning to write them teaches you both what information matters and how to collect it systematically.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('bash', 'Bash', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_3_id, 'bash') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('scripting', 'Scripting', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_3_id, 'scripting') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_2_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Networking Tools: Netcat, SSH Tunnelling & Port Forwarding', '', 'lesson', 2, 'intermediate', 4)
+    RETURNING topic_id INTO topic_cybersecurity_2_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_4_id, 'VIDEO', 'Netcat Tutorial', 'https://www.youtube.com/watch?v=J9lwGDP7sqI', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_4_id, 'ARTICLE', 'SSH Tunneling Explained', 'https://www.ssh.com/academy/ssh/tunneling', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Netcat is 30 years old and still used in real penetration tests daily. Its simplicity is its power — it''s a raw TCP/UDP Swiss Army knife. A reverse shell is what you set up when a target machine can''t accept incoming connections (firewall blocks inbound) but can make outbound connections: the target connects back to your listener, giving you a shell. SSH tunnelling solves a different problem: accessing an internal service that''s only reachable from inside a network, by tunnelling through an SSH-accessible host.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_tools', 'Network Tools', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_4_id, 'network_tools') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('linux', 'Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_4_id, 'linux') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_2_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Python for Offensive Security', '', 'lesson', 2, 'intermediate', 5)
+    RETURNING topic_id INTO topic_cybersecurity_2_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_5_id, 'VIDEO', 'Python Hacking Tools', 'https://www.youtube.com/watch?v=Fd1Mq06xd0E', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_5_id, 'ARTICLE', 'Scapy Documentation', 'https://scapy.readthedocs.io/en/latest/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Understanding how tools like Gobuster, SQLMap, and Hydra work by building simplified versions yourself is the fastest way to master them. When you''ve built a directory brute-forcer yourself, you understand exactly what Gobuster is doing — and you understand why certain wordlists are more effective, why response codes matter, and what false positives look like. This understanding separates tool operators from security professionals.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('python', 'Python', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_5_id, 'python') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('scripting', 'Scripting', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_5_id, 'scripting') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_2_6_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'PROJECT: Bash Automation Toolkit', '', 'project_milestone', 6, 'intermediate', 6)
+    RETURNING topic_id INTO topic_cybersecurity_2_6_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_6_id, 'VIDEO', 'Build Hacking Tools with Python', 'https://www.youtube.com/watch?v=XWuP5Yf5ILI', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_2_6_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Your automation toolkit is a living asset — add to it throughout the path whenever you find yourself repeating a task. Security professionals maintain personal toolkits that evolve with their knowledge. The fact that you built these tools yourself means you understand exactly what they''re doing under the hood — which makes you a far more effective security professional than someone who only knows how to run pre-built tools.', 2);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('bash', 'Bash', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_6_id, 'bash') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('python', 'Python', 'language') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_6_id, 'python') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('scripting', 'Scripting', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_6_id, 'scripting') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('linux', 'Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_2_6_id, 'linux') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_2_id, 'PROJECT: Bash Automation Toolkit', '', 'intermediate') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: Security Fundamentals & Cryptography
+DO $$
+DECLARE
+  stage_cybersecurity_3_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'Security Fundamentals & Cryptography', 3, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_3_id;
+
+  DECLARE
+    topic_cybersecurity_3_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'The CIA Triad & Security Principles', '', 'concept', 1, 'beginner', 1)
+    RETURNING topic_id INTO topic_cybersecurity_3_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_1_id, 'VIDEO', 'CIA Triad Explained', 'https://www.youtube.com/watch?v=Y01jdl_5YGE', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_1_id, 'ARTICLE', 'NIST Cybersecurity Framework', 'https://www.nist.gov/cyberframework', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The CIA triad is the lens through which every security decision is made. A security control that protects Confidentiality might hurt Availability (encryption slows systems). A control that maximises Availability might weaken Integrity (no backups because "it slows deployment"). Security is always about tradeoffs — understanding the triad gives you the vocabulary to discuss those tradeoffs precisely. The NIST CSF is what enterprise security teams use to structure their entire security programme — knowing it sets you apart from candidates who only know tools.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('security_fundamentals', 'Security Fundamentals', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_1_id, 'security_fundamentals') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_3_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Cryptography: Encryption, Hashing & TLS', '', 'lesson', 2, 'intermediate', 2)
+    RETURNING topic_id INTO topic_cybersecurity_3_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_2_id, 'VIDEO', 'Cryptography Explained', 'https://www.youtube.com/watch?v=AQDCe585Lnc', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_2_id, 'ARTICLE', 'TLS 1.3 Explained', 'https://blog.cloudflare.com/rfc-8446-aka-tls-1-3/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Cryptography is the foundation of everything secure online. HTTPS, SSH, VPNs, password storage, digital signing — all rooted in the same mathematical principles. The most important practical points for security professionals: MD5 and SHA-1 are broken for security purposes (collision attacks exist). Passwords must never be hashed without salting — salts prevent rainbow table attacks. AES-GCM provides both encryption and integrity verification in one. TLS 1.3 removed all the weak cipher suites that made TLS 1.0/1.1/1.2 vulnerable — knowing *why* they were removed tells you what to look for when auditing servers.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('cryptography', 'Cryptography', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_2_id, 'cryptography') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('security_fundamentals', 'Security Fundamentals', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_2_id, 'security_fundamentals') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_3_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Common Attack Patterns: OWASP Top 10 Overview', '', 'concept', 2, 'intermediate', 3)
+    RETURNING topic_id INTO topic_cybersecurity_3_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_3_id, 'VIDEO', 'OWASP Top 10 Explained', 'https://www.youtube.com/watch?v=t0bFucmK9N0', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_3_id, 'ARTICLE', 'OWASP Top 10', 'https://owasp.org/Top10/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The OWASP Top 10 is the industry-standard list of the most critical web application security risks, updated every 3–4 years based on real-world breach data. It''s not just a list — it''s a checklist for every web application you''ll ever assess. "Broken Access Control" (now #1) means a user can access data or functions they shouldn''t be able to. This sounds obvious, but it''s the most common vulnerability found in real applications because developers rarely think adversarially when building access control logic.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('security_fundamentals', 'Security Fundamentals', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_3_id, 'security_fundamentals') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('ethical_hacking_methodology', 'Ethical Hacking Methodology', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_3_id, 'ethical_hacking_methodology') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_3_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Threat Modelling & Vulnerability Management', '', 'concept', 1, 'intermediate', 4)
+    RETURNING topic_id INTO topic_cybersecurity_3_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_4_id, 'VIDEO', 'Threat Modelling', 'https://www.youtube.com/watch?v=v3otnmkMGWo', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_4_id, 'ARTICLE', 'CVSS v3.1 Specification', 'https://www.first.org/cvss/specification-document', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Threat modelling is how security professionals think *before* building or testing a system. STRIDE forces you to consider every category of threat systematically — you can''t just focus on the obvious ones. Spoofing: can someone pretend to be another user? Tampering: can someone modify data in transit or at rest? Repudiation: can an attacker deny they performed an action because there are no logs? CVSS scores let you prioritise which vulnerabilities to fix first — a CVSS 9.8 RCE vulnerability (remote code execution, no authentication required) gets fixed before a CVSS 3.1 information disclosure.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('security_fundamentals', 'Security Fundamentals', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_4_id, 'security_fundamentals') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('ethical_hacking_methodology', 'Ethical Hacking Methodology', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_4_id, 'ethical_hacking_methodology') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_3_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Password Security: Hashing, Cracking & Best Practices', '', 'lesson_lab', 2, 'intermediate', 5)
+    RETURNING topic_id INTO topic_cybersecurity_3_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_5_id, 'VIDEO', 'Password Cracking', 'https://www.youtube.com/watch?v=JCPfMW9DQRY', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_5_id, 'ARTICLE', 'John the Ripper Documentation', 'https://www.openwall.com/john/doc/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Password cracking in a home lab teaches you something crucial: most users choose passwords from a small, predictable set. The `rockyou.txt` wordlist (14 million passwords from a 2009 breach) cracks a shocking percentage of MD5-hashed passwords in minutes. This is why password managers (which generate truly random passwords) are necessary — a random 16-character password won''t appear in any wordlist. As a defender, the lesson is clear: bcrypt with a work factor of 12+ takes hours or years to crack even with GPU acceleration. MD5 takes minutes.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('password_attacks', 'Password Attacks', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_5_id, 'password_attacks') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('cryptography', 'Cryptography', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_5_id, 'cryptography') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_3_6_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'PROJECT: Security Audit Report', '', 'project_milestone', 6, 'intermediate', 6)
+    RETURNING topic_id INTO topic_cybersecurity_3_6_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_6_id, 'ARTICLE', 'Sample pentest report format', 'http://www.pentest-standard.org/index.php/Reporting', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_3_6_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The ability to write a clear, professional security report is what separates a real penetration tester from someone who runs tools. Clients don''t read Nmap output — they read executive summaries. A finding without a clear risk rating, business impact, and remediation recommendation is nearly worthless. This report format — Executive Summary → Findings → Recommendations — is what professional pentest reports look like at every major security firm. Practice it now so it becomes natural.', 2);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('security_fundamentals', 'Security Fundamentals', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_6_id, 'security_fundamentals') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('ethical_hacking_methodology', 'Ethical Hacking Methodology', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_6_id, 'ethical_hacking_methodology') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('cryptography', 'Cryptography', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_3_6_id, 'cryptography') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_3_id, 'PROJECT: Security Audit Report', '', 'intermediate') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: Network Security & Traffic Analysis
+DO $$
+DECLARE
+  stage_cybersecurity_4_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'Network Security & Traffic Analysis', 4, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_4_id;
+
+  DECLARE
+    topic_cybersecurity_4_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Nmap: Network Scanning & Enumeration', '', 'lesson_lab', 2, 'intermediate', 1)
+    RETURNING topic_id INTO topic_cybersecurity_4_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_1_id, 'VIDEO', 'Nmap Tutorial', 'https://www.youtube.com/watch?v=4t4kBkMsDbQ', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_1_id, 'ARTICLE', 'Nmap Official Guide', 'https://nmap.org/book/man.html', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Nmap is the first tool a penetration tester runs against a target. The goal of scanning is to build a complete picture: what''s running, what versions, what OS. Every piece of version information is a potential CVE. Running `--script vuln` on Metasploitable is a revealing exercise — it will find known CVEs including MS08-067 (EternalBlue precursor), vsftpd backdoor, and UnrealIRCd backdoor — all intentionally included in Metasploitable for learning purposes.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('nmap', 'Nmap', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_1_id, 'nmap') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_reconnaissance', 'Network Reconnaissance', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_1_id, 'network_reconnaissance') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_4_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Wireshark: Packet Capture & Traffic Analysis', '', 'lesson_lab', 2, 'intermediate', 2)
+    RETURNING topic_id INTO topic_cybersecurity_4_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_2_id, 'VIDEO', 'Wireshark Tutorial', 'https://www.youtube.com/watch?v=lb1Dw0elw0Q', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_2_id, 'ARTICLE', 'Wireshark User Guide', 'https://www.wireshark.org/docs/wsug_html_chunked/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Wireshark teaches you what "plaintext protocol" really means: FTP sends your username and password as readable text — any device between you and the server can see them. This is why FTP should never be used over untrusted networks (use SFTP or SCP instead). Seeing a login captured in Wireshark as `USER admin PASS password123` makes the risk concrete in a way that reading about it never does. Traffic analysis skills are essential for both offense (understanding what traffic your tools generate) and defense (detecting attacker activity).', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('wireshark', 'Wireshark', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_2_id, 'wireshark') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_analysis', 'Network Analysis', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_2_id, 'network_analysis') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_4_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Enumeration: SMB, FTP, SSH, SMTP & Web Services', '', 'lesson_lab', 2, 'intermediate', 3)
+    RETURNING topic_id INTO topic_cybersecurity_4_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_3_id, 'VIDEO', 'Network Enumeration', 'https://www.youtube.com/watch?v=f1f2C7Ufn3s', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_3_id, 'ARTICLE', 'Penetration Testing Execution Standard (PTES)', 'http://www.pentest-standard.org/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Enumeration is the most important phase of a penetration test. You can''t exploit what you haven''t found. `enum4linux` against a Windows SMB share has revealed sensitive documents left in world-readable shares in real penetration tests. Anonymous FTP login finding a password file has compromised real companies. The rule: before you try a single exploit, enumerate everything. The path from nothing to full access almost always runs through information gathered during enumeration, not through a zero-day exploit.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_reconnaissance', 'Network Reconnaissance', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_3_id, 'network_reconnaissance') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('enumeration', 'Enumeration', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_3_id, 'enumeration') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_4_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Vulnerability Scanning with OpenVAS & Nikto', '', 'lesson_lab', 1, 'intermediate', 4)
+    RETURNING topic_id INTO topic_cybersecurity_4_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_4_id, 'VIDEO', 'OpenVAS Tutorial', 'https://www.youtube.com/watch?v=OkN1JFQr4xM', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_4_id, 'ARTICLE', 'Greenbone OpenVAS', 'https://www.greenbone.net/en/vulnerability-management/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Vulnerability scanners are a starting point, not an ending point. OpenVAS will flag known CVEs for the services Nmap discovered — but it will also produce false positives (things that look vulnerable but aren''t, due to patched versions reporting old banners) and miss context-dependent vulnerabilities (business logic flaws, access control issues). A real penetration test uses scanners to find low-hanging fruit quickly, then applies manual testing to find what the scanners missed. Never submit a scanner report to a client as a "penetration test."', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('vulnerability_assessment', 'Vulnerability Assessment', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_4_id, 'vulnerability_assessment') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('enumeration', 'Enumeration', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_4_id, 'enumeration') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_4_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Wireless Security Fundamentals', '', 'concept', 1, 'intermediate', 5)
+    RETURNING topic_id INTO topic_cybersecurity_4_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_5_id, 'VIDEO', 'WiFi Hacking Explained', 'https://www.youtube.com/watch?v=WfYxrLaqlN8', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_5_id, 'ARTICLE', 'WPA3 Security', 'https://www.wi-fi.org/discover-wi-fi/security', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'WiFi security is a cautionary tale about cryptographic design. WEP was broken within months of widespread deployment — the IV (Initialization Vector) was too short and reused, making the key recoverable after capturing enough traffic. WPA2 with a strong, random passphrase is practically uncrackable by dictionary attack. WPA2 with "home123" as a passphrase is cracked in seconds against the `rockyou.txt` wordlist. This is why the strength of the password matters as much as the strength of the protocol.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('wireless_security', 'Wireless Security', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_5_id, 'wireless_security') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_4_6_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'PROJECT: Network Recon Lab', '', 'project_milestone', 8, 'intermediate', 6)
+    RETURNING topic_id INTO topic_cybersecurity_4_6_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_6_id, 'VIDEO', 'Full Network Penetration Test', 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_4_6_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'This reconnaissance report is the first section of what will eventually become a full penetration test report. Professional pentest reports are built cumulatively: recon findings are summarised, then exploitation findings are added, then privilege escalation, then post-exploitation. Start building the habit now of documenting every command, every output, and every finding as you go — rebuilding a report from memory after the fact is painful and error-prone.', 2);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('nmap', 'Nmap', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_6_id, 'nmap') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('wireshark', 'Wireshark', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_6_id, 'wireshark') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_reconnaissance', 'Network Reconnaissance', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_6_id, 'network_reconnaissance') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('enumeration', 'Enumeration', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_6_id, 'enumeration') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('vulnerability_assessment', 'Vulnerability Assessment', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_4_6_id, 'vulnerability_assessment') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_4_id, 'PROJECT: Network Recon Lab', '', 'intermediate') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: Web Application Security (Offensive)
+DO $$
+DECLARE
+  stage_cybersecurity_5_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'Web Application Security (Offensive)', 5, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_5_id;
+
+  DECLARE
+    topic_cybersecurity_5_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'Burp Suite: Web Proxy & Interception', '', 'lesson_lab', 2, 'intermediate', 1)
+    RETURNING topic_id INTO topic_cybersecurity_5_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_1_id, 'VIDEO', 'Burp Suite for Beginners', 'https://www.youtube.com/watch?v=G3hpAeoZ4ek', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_1_id, 'ARTICLE', 'Burp Suite Documentation', 'https://portswigger.net/burp/documentation', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Burp Suite is the most important tool for web application security testing. The Proxy sits between your browser and the server, letting you see and modify every request and response in real time. The Repeater lets you resend a modified request instantly — perfect for testing if changing a parameter value changes what data you see. The Intruder automates sending a request with many different payloads — perfect for brute-forcing, fuzzing, and parameter enumeration. 90% of web security testing flows through these three tools.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('burp_suite', 'Burp Suite', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_1_id, 'burp_suite') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_1_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_5_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'SQL Injection: Detection, Exploitation & Defence', '', 'lesson_lab', 3, 'intermediate', 2)
+    RETURNING topic_id INTO topic_cybersecurity_5_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_2_id, 'VIDEO', 'SQL Injection', 'https://www.youtube.com/watch?v=1nJgupaUPEQ', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_2_id, 'ARTICLE', 'SQL Injection', 'https://portswigger.net/web-security/sql-injection', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'SQL injection has existed since 1998 and is still in OWASP''s Top 10 in 2021 — because developers keep building string concatenation queries. `SELECT * FROM users WHERE username = ''` + userInput + `''` is the vulnerability. Input `'' OR ''1''=''1` and the query becomes `WHERE username = '''' OR ''1''=''1''` — which is always true, returning all users. Parameterised queries fix this by treating user input as data, never as SQL syntax: `SELECT * FROM users WHERE username = ?` with the username passed separately. This is not a performance optimisation — it''s the only correct way to build SQL queries.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('sql_injection', 'SQL Injection', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_2_id, 'sql_injection') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_2_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('burp_suite', 'Burp Suite', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_2_id, 'burp_suite') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_5_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'Cross-Site Scripting (XSS): Reflected, Stored & DOM', '', 'lesson_lab', 2, 'intermediate', 3)
+    RETURNING topic_id INTO topic_cybersecurity_5_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_3_id, 'VIDEO', 'XSS Explained', 'https://www.youtube.com/watch?v=ns1LX6mEvyM', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_3_id, 'ARTICLE', 'Cross-site scripting', 'https://portswigger.net/web-security/cross-site-scripting', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Stored XSS is the most dangerous XSS type because it requires no action from the victim beyond visiting the page. An attacker stores a malicious script in a comment field — every user who loads the page executes it. In 2019, a stored XSS in a well-known platform was used to steal session tokens from thousands of users. Content Security Policy (CSP) is the main defence: it tells the browser which scripts are allowed to execute. `Content-Security-Policy: script-src ''self''` blocks all inline scripts and scripts from external domains. Understanding the attack is what makes you implement the defence correctly.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('xss', 'XSS', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_3_id, 'xss') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_3_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_5_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'Authentication & Session Attacks', '', 'lesson_lab', 2, 'intermediate', 4)
+    RETURNING topic_id INTO topic_cybersecurity_5_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_4_id, 'VIDEO', 'IDOR Explained', 'https://www.youtube.com/watch?v=rloqMGcPMkI', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_4_id, 'ARTICLE', 'Broken Access Control', 'https://portswigger.net/web-security/access-control', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'IDOR (Insecure Direct Object Reference) is the most common access control vulnerability and the #1 vulnerability class in bug bounty programs. The pattern: changing `/api/users/1234/profile` to `/api/users/1235/profile` and seeing someone else''s private data. It''s trivially easy to find and often reveals sensitive personal information. IDOR vulnerabilities persist because developers implement authentication (is the user logged in?) but forget authorisation (should this user be allowed to access this specific resource?). These are two completely different questions.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_4_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('authentication_attacks', 'Authentication Attacks', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_4_id, 'authentication_attacks') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_5_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'File Inclusion, Upload & Command Injection', '', 'lesson_lab', 2, 'intermediate', 5)
+    RETURNING topic_id INTO topic_cybersecurity_5_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_5_id, 'VIDEO', 'File Inclusion', 'https://www.youtube.com/watch?v=19pEAe39k9s', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_5_id, 'ARTICLE', 'File path traversal', 'https://portswigger.net/web-security/file-path-traversal', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'File upload vulnerabilities that lead to webshell execution are critically dangerous — they give an attacker code execution on the server. The bypass technique matters: if the server checks the file extension, rename `shell.php` to `shell.php.jpg`. If it checks the MIME type in the HTTP header, intercept the upload with Burp and change `image/jpeg` to `application/x-php`. If it checks for file magic bytes (the first few bytes of a file), prepend a valid JPEG header to your PHP script. Defence: never execute uploaded files, store them outside the web root, rename them to random strings, and validate both extension and content.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_5_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_exploitation', 'Web Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_5_id, 'web_exploitation') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_5_6_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'API Security Testing', '', 'lesson_lab', 2, 'advanced', 6)
+    RETURNING topic_id INTO topic_cybersecurity_5_6_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_6_id, 'VIDEO', 'API Hacking', 'https://www.youtube.com/watch?v=qC8NQFwVOR0', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_6_id, 'ARTICLE', 'OWASP API Security Top 10', 'https://owasp.org/API-Security/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_6_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'APIs are the fastest-growing attack surface in web security. Every mobile app, single-page application, and microservices architecture is essentially all API. The OWASP API Security Top 10 is different from the web Top 10 because APIs have unique vulnerabilities: BOLA (can a user access objects they don''t own?), mass assignment (can a user set properties they shouldn''t?), excessive data exposure (does the API return everything and let the client filter?). Bug bounty programs report that BOLA accounts for the majority of API-related findings.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('api_security_testing', 'API Security Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_6_id, 'api_security_testing') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_6_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_5_7_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'PROJECT: Web Pentest Report', '', 'project_milestone', 12, 'advanced', 7)
+    RETURNING topic_id INTO topic_cybersecurity_5_7_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_7_id, 'ARTICLE', 'OWASP Juice Shop', 'https://owasp.org/www-project-juice-shop/', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_7_id, 'VIDEO', 'OWASP Juice Shop Walkthrough', 'https://www.youtube.com/watch?v=0YSNRz0NytI', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_5_7_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'This is your first professional-grade pentest report. The format matters as much as the findings. Real pentest reports are what security professionals show to clients to justify the engagement cost and help development teams prioritise remediation. A finding described as "SQL injection in login form" is not useful. A finding described as "Unauthenticated SQL Injection in POST /api/login allows extraction of all user credentials (CVSS 9.8)" with reproduction steps, a screenshot, and remediation guidance — that is a finding.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('burp_suite', 'Burp Suite', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_7_id, 'burp_suite') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('sql_injection', 'SQL Injection', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_7_id, 'sql_injection') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('xss', 'XSS', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_7_id, 'xss') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_application_testing', 'Web Application Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_7_id, 'web_application_testing') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('web_exploitation', 'Web Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_7_id, 'web_exploitation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('api_security_testing', 'API Security Testing', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_5_7_id, 'api_security_testing') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_5_id, 'PROJECT: Web Pentest Report', '', 'advanced') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: System Exploitation & Post-Exploitation
+DO $$
+DECLARE
+  stage_cybersecurity_6_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'System Exploitation & Post-Exploitation', 6, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_6_id;
+
+  DECLARE
+    topic_cybersecurity_6_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Metasploit Framework', '', 'lesson_lab', 2, 'advanced', 1)
+    RETURNING topic_id INTO topic_cybersecurity_6_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_1_id, 'VIDEO', 'Metasploit Crash Course', 'https://www.youtube.com/watch?v=TzEfV3bFfNI', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_1_id, 'ARTICLE', 'Metasploit Documentation', 'https://docs.metasploit.com/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Metasploit is a double-edged sword — the same framework used by professional penetration testers is also abused by script kiddies. The difference is authorisation, documentation, and understanding. When you use Metasploit in a pentest, you understand every option you''re setting, you''ve verified the exploit is appropriate for the target version, and you''re documenting every action for your report. The vsftpd 2.3.4 backdoor was a deliberate sabotage of a production software release by an unknown party — an extraordinary event that reminds us why supply chain security matters.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('metasploit', 'Metasploit', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_1_id, 'metasploit') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('system_exploitation', 'System Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_1_id, 'system_exploitation') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_6_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Windows Privilege Escalation', '', 'lesson_lab', 2, 'advanced', 2)
+    RETURNING topic_id INTO topic_cybersecurity_6_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_2_id, 'VIDEO', 'Windows Privilege Escalation', 'https://www.youtube.com/watch?v=uTcrbNBcoxQ', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_2_id, 'ARTICLE', 'PayloadsAllTheThings', 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Privilege escalation is the phase between "I have a foothold" and "I have full control." In Windows environments, the most common paths are unquoted service paths (a service path with spaces and no quotes lets an attacker place a malicious binary in an intermediate directory) and token impersonation (a service account with SeImpersonatePrivilege can be exploited to impersonate SYSTEM). Mimikatz is a tool that extracts plaintext passwords and hashes from Windows memory — this is why "Credential Guard" exists in modern Windows to prevent this.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('privilege_escalation', 'Privilege Escalation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_2_id, 'privilege_escalation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('system_exploitation', 'System Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_2_id, 'system_exploitation') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_6_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Linux Privilege Escalation', '', 'lesson_lab', 2, 'advanced', 3)
+    RETURNING topic_id INTO topic_cybersecurity_6_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_3_id, 'VIDEO', 'Linux Privilege Escalation', 'https://www.youtube.com/watch?v=ZTsbGpDwCRQ', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_3_id, 'ARTICLE', 'GTFOBins', 'https://gtfobins.github.io/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Cron job abuse is one of the most elegant Linux privesc vectors: if a cron job runs as root and references a script in a world-writable directory, you can replace that script with your own malicious one. The next time cron runs the job, your script executes as root. PATH hijacking works similarly: if a root-owned script runs a command without a full path (e.g. `ping` instead of `/bin/ping`), and you can write to a directory earlier in PATH, you can create a malicious `ping` script that runs as root. The lesson for defenders: always use full paths in scripts, and never make scripts run by privileged cron jobs world-writable.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('privilege_escalation', 'Privilege Escalation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_3_id, 'privilege_escalation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('linux', 'Linux', 'platform_service') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_3_id, 'linux') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_6_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Active Directory Attacks (Introduction)', '', 'lesson_lab', 2, 'advanced', 4)
+    RETURNING topic_id INTO topic_cybersecurity_6_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_4_id, 'VIDEO', 'Active Directory Attacks', 'https://www.youtube.com/watch?v=pKtDQtsubio', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_4_id, 'ARTICLE', 'BloodHound Documentation', 'https://bloodhound.readthedocs.io/en/latest/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Active Directory is in 90%+ of corporate Windows environments. Compromising AD means compromising the entire organisation — every user account, every server, every workstation. This is why AD attacks are the focus of advanced penetration tests and red team exercises. Kerberoasting is particularly dangerous because it works with normal domain user credentials — any authenticated user can request service tickets for any SPN, and those tickets can be cracked offline. Service accounts with weak passwords and privileged access are the most valuable targets.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('active_directory', 'Active Directory', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_4_id, 'active_directory') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('system_exploitation', 'System Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_4_id, 'system_exploitation') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_6_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Post-Exploitation: Persistence, Pivoting & Covering Tracks', '', 'lesson_lab', 2, 'advanced', 5)
+    RETURNING topic_id INTO topic_cybersecurity_6_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_5_id, 'VIDEO', 'Post Exploitation', 'https://www.youtube.com/watch?v=s9d7k-3kXHk', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_5_id, 'ARTICLE', 'MITRE ATT&CK Framework', 'https://attack.mitre.org/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The MITRE ATT&CK Framework catalogues every known attacker tactic, technique, and procedure (TTP) based on real-world threat intelligence. It''s the Rosetta Stone between red team (attackers) and blue team (defenders): a red teamer says "I used T1053.005 (Scheduled Task persistence)" and a blue teamer can look up exactly which log events, EDR alerts, and SIEM rules would detect it. Learning ATT&CK TTPs makes you a better attacker (you know what''s realistic) and a better defender (you know what to look for).', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('post_exploitation', 'Post-Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_5_id, 'post_exploitation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('system_exploitation', 'System Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_5_id, 'system_exploitation') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_6_6_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'PROJECT: Full Pentest Simulation', '', 'project_milestone', 12, 'advanced', 6)
+    RETURNING topic_id INTO topic_cybersecurity_6_6_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_6_id, 'ARTICLE', 'TryHackMe', 'https://tryhackme.com/', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_6_id, 'ARTICLE', 'Hack The Box Starting Point', 'https://app.hackthebox.com/starting-point', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_6_6_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'This is your most significant portfolio piece so far. A documented, full-chain attack on an authorised platform, presented as a professional report, is exactly what employers in penetration testing look for. TryHackMe "Blue" is famous in the community — it''s the MS17-010 (EternalBlue) vulnerability, the same exploit used by WannaCry ransomware. Understanding how to exploit it, and understanding how to detect it (MS17-010 traffic has distinctive patterns Wireshark can identify), puts you ahead of most candidates.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('nmap', 'Nmap', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_6_id, 'nmap') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('metasploit', 'Metasploit', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_6_id, 'metasploit') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('burp_suite', 'Burp Suite', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_6_id, 'burp_suite') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('system_exploitation', 'System Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_6_id, 'system_exploitation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('privilege_escalation', 'Privilege Escalation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_6_id, 'privilege_escalation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('post_exploitation', 'Post-Exploitation', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_6_6_id, 'post_exploitation') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_6_id, 'PROJECT: Full Pentest Simulation', '', 'advanced') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: Blue Team: Defence, Detection & Response
+DO $$
+DECLARE
+  stage_cybersecurity_7_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'Blue Team: Defence, Detection & Response', 7, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_7_id;
+
+  DECLARE
+    topic_cybersecurity_7_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Security Operations & SIEM', '', 'lesson_lab', 2, 'advanced', 1)
+    RETURNING topic_id INTO topic_cybersecurity_7_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_1_id, 'VIDEO', 'Splunk for Beginners', 'https://www.youtube.com/watch?v=RcezOxHRxHg', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_1_id, 'ARTICLE', 'Elastic SIEM Guide', 'https://www.elastic.co/security/siem', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Having performed all the offensive techniques in Stages 4–6, you now know exactly what to look for in logs. A port scan looks like: many SYN packets to different ports from the same source IP in a short time window. Brute force looks like: many failed authentication events followed by a success. A reverse shell looks like: an outbound TCP connection to a non-standard port, followed by a long-lived session with interactive traffic. This is why the best security analysts have offensive security knowledge — they understand what they''re detecting.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('siem', 'SIEM', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_1_id, 'siem') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('blue_team', 'Blue Team', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_1_id, 'blue_team') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_7_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Incident Response', '', 'lesson_lab', 2, 'intermediate', 2)
+    RETURNING topic_id INTO topic_cybersecurity_7_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_2_id, 'VIDEO', 'Incident Response', 'https://www.youtube.com/watch?v=H-_VqVnFaCA', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_2_id, 'ARTICLE', 'NIST Incident Response Guide', 'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Incident response is the most stressful and consequential work in cybersecurity. When a breach is happening or has happened, the pressure is intense: data may still be exfiltrating, management wants answers, legal is asking about notification obligations, and every minute of delay costs money and reputation. The IR lifecycle is your framework for staying systematic under pressure. "Containment before eradication" is the most important rule — you need to understand the full scope of a compromise before you start remediating, or you''ll miss persistence mechanisms and the attacker will be back.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('incident_response', 'Incident Response', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_2_id, 'incident_response') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('blue_team', 'Blue Team', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_2_id, 'blue_team') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_7_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Defensive Hardening: Firewalls, IDS/IPS & Zero Trust', '', 'lesson', 2, 'intermediate', 3)
+    RETURNING topic_id INTO topic_cybersecurity_7_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_3_id, 'VIDEO', 'Suricata IDS Tutorial', 'https://www.youtube.com/watch?v=S0-vsjhPDN0', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_3_id, 'ARTICLE', 'CIS Benchmarks', 'https://www.cisecurity.org/cis-benchmarks', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Writing your own Snort/Suricata rules for attacks you''ve personally performed is the most effective defensive learning exercise in this path. When you write a rule to detect Nmap SYN scans, you understand exactly what network signature distinguishes a scan from normal traffic. CIS Benchmarks are the industry standard for secure configuration: they define the exact settings (registry keys, file permissions, service configurations) that make Windows or Linux hardened against common attack techniques. A CIS-hardened system is significantly harder to exploit than a default installation.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_defence', 'Network Defence', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_3_id, 'network_defence') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('blue_team', 'Blue Team', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_3_id, 'blue_team') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_7_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Threat Intelligence & the MITRE ATT&CK Framework', '', 'lesson', 1, 'intermediate', 4)
+    RETURNING topic_id INTO topic_cybersecurity_7_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_4_id, 'VIDEO', 'MITRE ATT&CK Explained', 'https://www.youtube.com/watch?v=FUlBamWOThk', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_4_id, 'ARTICLE', 'MITRE ATT&CK Navigator', 'https://mitre-attack.github.io/attack-navigator/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'The MITRE ATT&CK Framework is the most important reference in modern cybersecurity defence. When a threat intelligence report says "this APT group uses T1566.001 (Spearphishing Attachment) for initial access," your detection team can immediately look up which log sources and SIEM rules would catch it. The exercise of mapping your own offensive techniques to ATT&CK IDs makes abstract technique names concrete — you''ve done these things, you know what they look like in practice.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('threat_intelligence', 'Threat Intelligence', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_4_id, 'threat_intelligence') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('blue_team', 'Blue Team', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_4_id, 'blue_team') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_7_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'PROJECT: SOC Analyst Lab', '', 'project_milestone', 8, 'advanced', 5)
+    RETURNING topic_id INTO topic_cybersecurity_7_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_5_id, 'ARTICLE', 'TryHackMe SOC Level 1 Path', 'https://tryhackme.com/path/outline/soclevel1', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_7_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'This project bridges the two halves of this path: you performed the attack, now you detect it. The most effective security professionals in 2026 are those who understand both sides. When you write a Splunk query to detect Nmap scans, you''re drawing on your first-hand experience of what Nmap traffic looks like in Wireshark. When you write an incident report, you know what questions a penetration tester would ask about the compromised system. This dual perspective is rare and highly valued by employers.', 2);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('siem', 'SIEM', 'tool') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_5_id, 'siem') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('blue_team', 'Blue Team', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_5_id, 'blue_team') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('incident_response', 'Incident Response', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_5_id, 'incident_response') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('threat_intelligence', 'Threat Intelligence', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_5_id, 'threat_intelligence') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_defence', 'Network Defence', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_7_5_id, 'network_defence') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_7_id, 'PROJECT: SOC Analyst Lab', '', 'advanced') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
+-- Stage: CTF, Bug Bounty & Capstone
+DO $$
+DECLARE
+  stage_cybersecurity_8_id uuid;
+BEGIN
+  INSERT INTO public.stages (path_id, title, order_index, difficulty_level)
+  VALUES ('cybersecurity', 'CTF, Bug Bounty & Capstone', 8, 'beginner')
+  RETURNING stage_id INTO stage_cybersecurity_8_id;
+
+  DECLARE
+    topic_cybersecurity_8_1_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Capture the Flag (CTF) Competitions', '', 'lesson', 0, 'advanced', 1)
+    RETURNING topic_id INTO topic_cybersecurity_8_1_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_1_id, 'VIDEO', 'How to Start CTF', 'https://www.youtube.com/watch?v=Lus7aNf2xDg', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_1_id, 'ARTICLE', 'CTFtime', 'https://ctftime.org/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_1_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'CTF write-ups are the cybersecurity equivalent of a data science notebook — they show your thinking process, not just your result. A write-up that says "I ran SQLMap and got the flag" is worthless. A write-up that explains why you suspected SQL injection, how you tested it manually first, why the automated tool then worked, and what the vulnerability in the underlying code was — that write-up demonstrates real understanding. John Hammond''s YouTube channel is built almost entirely on CTF write-ups done live — watching his process teaches you how to think through an unknown challenge.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('ctf', 'CTF', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_8_1_id, 'ctf') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_8_2_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Bug Bounty Hunting: Getting Started', '', 'lesson', 2, 'advanced', 2)
+    RETURNING topic_id INTO topic_cybersecurity_8_2_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_2_id, 'VIDEO', 'Bug Bounty Hunting for Beginners', 'https://www.youtube.com/watch?v=lc7scxvKQOo', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_2_id, 'ARTICLE', 'HackerOne Getting Started', 'https://www.hackerone.com/hackers/get-started', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_2_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Bug bounty is the most legitimate way to practice ethical hacking on real production systems. The program''s policy is your written authorisation. Read it carefully before touching anything: it specifies what domains are in scope, what types of vulnerabilities qualify for rewards, and what''s explicitly out of scope. A common mistake: testing systems not listed in scope and submitting a report. This can get you banned from the platform and, in extreme cases, result in legal action. Scope discipline is non-negotiable.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('bug_bounty', 'Bug Bounty', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_8_2_id, 'bug_bounty') ON CONFLICT DO NOTHING;
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('network_reconnaissance', 'Network Reconnaissance', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_8_2_id, 'network_reconnaissance') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_8_3_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Reverse Engineering & Binary Exploitation Basics', '', 'lesson_lab', 2, 'advanced', 3)
+    RETURNING topic_id INTO topic_cybersecurity_8_3_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_3_id, 'VIDEO', 'Ghidra Tutorial', 'https://www.youtube.com/watch?v=fTGTnrgjuGA', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_3_id, 'ARTICLE', 'Ghidra', 'https://ghidra-sre.org/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_3_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Reverse engineering and binary exploitation are the deepest end of the security pool — they require understanding of assembly language, operating system internals, and memory management. You don''t need to master them for most security roles, but a working understanding opens doors to malware analysis, vulnerability research, and exploit development careers. Ghidra (released by the NSA as free open-source software) is the industry-standard free reverse engineering tool — it decompiles machine code back into readable C-like pseudocode.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('reverse_engineering', 'Reverse Engineering', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_8_3_id, 'reverse_engineering') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_8_4_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Cloud Security Fundamentals', '', 'lesson_lab', 2, 'intermediate', 4)
+    RETURNING topic_id INTO topic_cybersecurity_8_4_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_4_id, 'VIDEO', 'AWS Security Tutorial', 'https://www.youtube.com/watch?v=gLe9i3HaS4g', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_4_id, 'ARTICLE', 'AWS Security Best Practices', 'https://aws.amazon.com/security/security-resources/', NULL, 2);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_4_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Cloud security is the fastest-growing specialisation in cybersecurity. Almost every company has moved infrastructure to AWS, Azure, or GCP — and many have done so without fully understanding the shared responsibility model. The cloud provider secures the infrastructure; you are responsible for securing everything on top of it. S3 buckets containing sensitive data have been left publicly accessible at companies including Capital One, Twitch, and Toyota. The fix is one AWS policy change — the miss is a cultural and process failure, not a technical impossibility.', 3);
+    INSERT INTO public.skills (skill_id, name, category) VALUES ('cloud_security', 'Cloud Security', 'practice') ON CONFLICT (skill_id) DO UPDATE SET name = EXCLUDED.name, category = EXCLUDED.category;
+    INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_cybersecurity_8_4_id, 'cloud_security') ON CONFLICT DO NOTHING;
+  END;
+  DECLARE
+    topic_cybersecurity_8_5_id uuid;
+  BEGIN
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'PROJECT: Public CTF Write-Up + Bug Bounty Report', '', 'project_capstone', 0, 'advanced', 5)
+    RETURNING topic_id INTO topic_cybersecurity_8_5_id;
+
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_5_id, 'ARTICLE', 'How to write a bug bounty report', 'https://www.hackerone.com/vulnerability-and-security-testing/hacker101-learn-how-to-write-a-great-vulnerability-report', NULL, 1);
+    INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
+    VALUES (topic_cybersecurity_8_5_id, 'INTERNAL_TEXT', 'Mallah Context', NULL, 'Your public portfolio in cybersecurity is different from other paths. You don''t put pentest reports of real clients online. You put CTF write-ups (universally accepted in the community), TryHackMe and HackTheBox profile links (which show your room completion and ranking), and any hall-of-fame acknowledgements from bug bounty programs. Employers specifically look at TryHackMe top-x% rankings, HackTheBox "Pro Hacker" tier or above, and the quality of your write-ups. A blog with 10 detailed, well-written CTF write-ups outweighs a resume that just says "I know Burp Suite."', 2);
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_cybersecurity_8_id, 'PROJECT: Public CTF Write-Up + Bug Bounty Report', '', 'advanced') ON CONFLICT DO NOTHING;
+  END;
+END $$;
+
 -- Stage: Python for Data Science
 DO $$
 DECLARE

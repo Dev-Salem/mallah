@@ -1,4 +1,4 @@
-export type ResourceType = 'VIDEO' | 'ARTICLE' | 'INTERNAL_TEXT' | 'DOCUMENTATION';
+export type ResourceType = 'VIDEO' | 'ARTICLE' | 'INTERNAL_TEXT' | 'CERT' | 'DOCUMENTATION';
 
 export interface TopicResource {
     id: string;
@@ -41,6 +41,22 @@ export interface Project {
     thumbnail_url?: string | null;
     is_public_default: boolean;
     user_status?: 'available' | 'in_progress' | 'completed'; // Joined from user_projects
+}
+
+export interface UserProjectSubmission {
+    user_project_id?: string;
+    user_id?: string;
+    project_id?: string;
+    github_url?: string | null;
+    demo_url?: string | null;
+    personal_note?: string | null;
+    public_portfolio?: boolean;
+    thumbnail_url?: string | null;
+    tech_stack_tags?: string[] | null;
+    status: 'in_progress' | 'completed';
+    feedback?: string | null;
+    grade?: number | null;
+    updated_at?: string;
 }
 
 export interface Stage {

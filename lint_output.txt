@@ -1,0 +1,47 @@
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\actions\project-actions.ts
+  39:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  50:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\actions\topic-actions.ts
+   4:17  warning  'TopicResource' is defined but never used  @typescript-eslint/no-unused-vars
+  39:66  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  39:74  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  41:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\components\ProjectViewerView.tsx
+  7:113  warning  'Clock' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\components\RoadmapView.tsx
+   79:27  warning  'isActive' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   97:29  warning  'isRtl' is defined but never used              @typescript-eslint/no-unused-vars
+   97:91  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  178:61  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  247:67  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  285:57  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  285:65  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\components\TopicViewerView.tsx
+   94:67  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  251:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\services\roadmap-parser.ts
+    1:10  warning  'createClient' is defined but never used  @typescript-eslint/no-unused-vars
+    2:8   warning  'fs' is defined but never used            @typescript-eslint/no-unused-vars
+    3:8   warning  'path' is defined but never used          @typescript-eslint/no-unused-vars
+  172:82  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  205:63  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  250:63  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\roadmap\services\roadmap-service.ts
+   64:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   64:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   65:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   67:78  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   67:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  134:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 30 problems (22 errors, 8 warnings)
+

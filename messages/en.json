@@ -130,12 +130,17 @@
     "authorized": "Authorized Navigator",
     "sessionActive": "Session Active",
     "signOut": "Deauthorize Terminal",
-    "welcome": "Welcome back, Navigator",
+    "welcome": "Welcome back",
     "roadmap": "Roadmap",
-    "skillsHub": "Skills & Projects",
+    "skillsHub": "Portfolio Hub",
     "resumeBuilder": "Resume Builder",
     "opportunityAnalyzer": "Opportunity Analyzer",
     "settings": "Settings",
+    "StatusBadge": {
+      "onTrack": "On Track",
+      "slightlyBehind": "Slightly Behind",
+      "pathCompleted": "Path Completed"
+    },
     "Widgets": {
       "todayMission": "Today's Mission",
       "estMin": "Est. {time} min",
@@ -143,49 +148,56 @@
         "skillsUnlocked": "Skills Unlocked",
         "projectsCompleted": "Projects Completed",
         "resume": "Resume",
-        "portfolio": "Portfolio",
         "status": {
           "inProgress": "In Progress",
           "ready": "Ready",
           "notStarted": "Not Started",
-          "live": "Live",
-          "notPublic": "Not Public",
           "ats": "ATS: {score}/100"
+        },
+        "subLabels": {
+          "skillsBreakdown": "{roadmap} from roadmap · {manual} added manually",
+          "skillsEmpty": "Complete topics to unlock skills",
+          "projectsAvailable": "{count} available to start",
+          "resumeNotCreated": "Build yours to apply for jobs",
+          "resumeInProgress": "Last updated: {days} days ago",
+          "resumeReady": "Looking good — keep it updated"
         }
-      },
-      "Opportunity": {
-        "label": "Opportunity Analyzer",
-        "title": "See how ready you are for a real job",
-        "subtextRuns": "You've analyzed {count} job posting(s). Run another to track how your skills have grown.",
-        "subtextZero": "Paste a job description and we'll show you exactly which skills you have and which you still need.",
-        "analyze": "Analyze a Job Posting"
       },
       "Pace": {
         "label": "Pace & Momentum",
-        "streak": "{days} Day Streak",
-        "sessions": "{count}/{target} Sessions",
+        "streak": "{days} day streak",
+        "streakZero": "Start your streak today",
+        "thisWeek": "This week",
+        "sessions": "{count} of {target} sessions",
         "status": {
-          "ahead": "Ahead of Schedule",
-          "on_track": "On Track",
-          "slightly_behind": "Slightly Behind",
-          "behind": "Falling Behind"
+          "ahead": "Ahead of pace",
+          "onTrack": "On track",
+          "behind": "Behind pace"
         }
       },
-      "Forecast": {
-        "label": "Velocity Forecast",
-        "velocity": "Learning Velocity: {velocity}",
-        "velocityModes": {
-          "slow": "Thorough",
-          "normal": "Balanced",
-          "fast": "Accelerated"
-        }
+      "ProgressZone": {
+        "label": "Progress",
+        "pathProgress": "Path Progress",
+        "lessons": "{completed} of {total} lessons",
+        "topicsDone": "{completed} of {total} topics done",
+        "forecast": "At your current pace, you'll finish this stage in ~{days} days."
+      },
+      "AIMicroCoach": {
+        "label": "AI Coach"
       },
       "QuickNav": {
         "label": "Quick Navigation",
         "viewRoadmap": "View Full Roadmap",
         "portfolioHub": "Portfolio Hub",
         "resumeBuilder": "Resume Builder",
-        "analyzeJob": "Analyze Job Opportunity"
+        "analyzeJob": "Opportunity Analyzer"
+      },
+      "RecentActivity": {
+        "label": "Recent Activity",
+        "topicCompleted": "Completed: {title}",
+        "projectCompleted": "Completed project: {title}",
+        "resumeUpdated": "Updated resume",
+        "analysisSaved": "Saved job analysis"
       }
     },
     "Opportunities": {
@@ -245,11 +257,28 @@
     "aiTutor": "Mallah AI Tutor",
     "aiTutorSubtitle": "Your personal guide for this topic",
     "aiGreeting": "Hello! I am your AI assistant for {topic}. What would you like to explore?",
-    "askQuestion": "Ask a question..."
+    "askQuestion": "Ask a question...",
+    "topicPosition": "Topic {current} of {total}",
+    "nextTopic": "Next Topic",
+    "previousTopic": "Previous Topic",
+    "practicalOutput": "Practical Output"
   },
   "ProjectViewer": {
     "backToRoadmap": "Back to Roadmap",
     "projectMilestone": "Project Milestone",
+    "gatesNextStage": "Gates Next Stage",
+    "projectDescription": "Project Description",
+    "skillsDemonstrated": "Skills Demonstrated",
+    "projectExplanation": "Submit your completed project here. Provide links to your code and a live demo so we can review your work.",
+    "optional": "Optional",
+    "githubRepository": "GitHub Repository",
+    "liveDemo": "Live Demo",
+    "personalNote": "Personal Note",
+    "techStack": "Tech Stack",
+    "commaSeparatedTags": "Comma separated (e.g., React, Node, SQL)",
+    "nextStage": "Next Stage",
+    "updateProject": "Update Project",
+    "markComplete": "Submit Project",
     "completed": "Completed",
     "overview": "Overview",
     "yourSubmission": "Your Submission",

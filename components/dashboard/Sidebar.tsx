@@ -1,196 +1,277 @@
 'use client';
 
-import { usePathname } from '@/lib/i18n/routing';
-import { Link } from '@/lib/i18n/routing';
+import { usePathname, Link } from '@/lib/i18n/routing';
 import { useTranslations, useLocale } from 'next-intl';
 import {
-  LayoutDashboard,
+  Home,
   Map,
-  Cpu,
+  Layers,
   FileText,
-  Radar,
-  LogOut,
+  Briefcase,
+  Settings,
   ChevronRight,
-  Hexagon,
-  Settings
+  Menu,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/logo';
+import { useSidebarData } from '@/features/dashboard/components/SidebarContext';
+import { useState } from 'react';
+
+// ─── Progress Ring SVG ───
+function ProgressRing({ percent, size = 32 }: { percent: number; size?: number }) {
+  const strokeWidth = 3;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percent / 100) * circumference;
+
+  return (
+    <svg width={size} height={size} className="transform -rotate-90">
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        className="text-white/10"
+      />
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeDasharray={circumference}
+        strokeDashoffset={offset}
+        strokeLinecap="round"
+        className="text-primary transition-all duration-700"
+      />
+      <text
+        x={size / 2}
+        y={size / 2}
+        textAnchor="middle"
+        dominantBaseline="central"
+        className="fill-white text-[8px] font-mono font-bold transform rotate-90"
+        style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
+      >
+        {percent}%
+      </text>
+    </svg>
+  );
+}
 
 export function Sidebar() {
   const t = useTranslations('Dashboard');
   const pathname = usePathname();
   const locale = useLocale();
   const isArabic = locale === 'ar';
+  const sidebarData = useSidebarData();
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
 
   const menuItems = [
+    { key: 'dashboard', href: '/dashboard', icon: Home, label: t('title') },
+    { key: 'roadmap', href: '/dashboard/roadmap', icon: Map, label: t('roadmap') },
+    { key: 'skillsHub', href: '/dashboard/skills', icon: Layers, label: t('skillsHub') },
     {
-      key: 'dashboard',
-      href: '/dashboard',
-      icon: LayoutDashboard,
-      label: t('title') // Or just "Dashboard" if we add aspecific key
+      key: 'resumeBuilder', href: '/dashboard/resume', icon: FileText, label: t('resumeBuilder'),
+      showDot: sidebarData
+        ? sidebarData.resumeStatus === 'not_created' && sidebarData.unlockedSkillsCount >= 5
+        : false
     },
-    {
-      key: 'roadmap',
-      href: '/dashboard/roadmap',
-      icon: Map,
-      label: t('roadmap')
-    },
-    {
-      key: 'skillsHub',
-      href: '/dashboard/skills',
-      icon: Cpu,
-      label: t('skillsHub')
-    },
-    {
-      key: 'resumeBuilder',
-      href: '/dashboard/resume',
-      icon: FileText,
-      label: t('resumeBuilder')
-    },
-    {
-      key: 'opportunityAnalyzer',
-      href: '/dashboard/opportunities',
-      icon: Radar,
-      label: t('opportunityAnalyzer')
-    }
+    { key: 'opportunityAnalyzer', href: '/dashboard/opportunities', icon: Briefcase, label: t('opportunityAnalyzer') },
+  ];
+
+  const mobileTabItems = [
+    { key: 'dashboard', href: '/dashboard', icon: Home, label: 'Dashboard' },
+    { key: 'roadmap', href: '/dashboard/roadmap', icon: Map, label: 'Roadmap' },
+    { key: 'skillsHub', href: '/dashboard/skills', icon: Layers, label: 'Portfolio' },
+    { key: 'resumeBuilder', href: '/dashboard/resume', icon: FileText, label: 'Resume' },
+    { key: 'more', href: '#', icon: Menu, label: 'More' },
   ];
 
   return (
-    <aside className="fixed top-0 bottom-0 start-0 z-50 w-72 bg-black/90 border-e border-white/5 backdrop-blur-xl hidden lg:flex flex-col">
-      {/* Tactical Grid Background */}
-      <div className="absolute inset-0 hud-grid opacity-[0.15] pointer-events-none" />
-
-      {/* Header / Logo Area */}
-      <div className="h-24 flex items-center px-8 border-b border-white/5 bg-white/5 relative">
-        <div className="absolute top-0 right-0 p-2 opacity-20 rtl:left-0 rtl:right-auto">
-          <Hexagon className="w-12 h-12 text-primary stroke-[1]" />
-        </div>
-        <div className="flex items-center gap-3 relative z-10">
-          <Logo size={32} className="text-primary" />
-          <div className="flex flex-col">
+    <>
+      {/* ─── Desktop Sidebar ─── */}
+      <aside className="fixed top-0 bottom-0 start-0 z-50 w-60 bg-black/90 border-e border-white/5 backdrop-blur-xl hidden lg:flex flex-col">
+        {/* Header / Logo */}
+        <div className="h-16 flex items-center px-6 border-b border-white/5 bg-white/[0.03]">
+          <Link href="/dashboard" className="flex items-center gap-2.5">
+            <Logo size={24} className="text-primary" />
             <span className={cn(
-              "text-lg font-black tracking-tighter text-white uppercase leading-none",
+              "text-base font-black text-white uppercase leading-none",
               !isArabic && "tracking-tighter"
             )}>
               Mallah
             </span>
-            <span className={cn(
-              "text-[9px] text-primary/60 font-mono uppercase tracking-widest",
-              !isArabic && "tracking-[0.2em]"
-            )}>
-              Terminal_v1.0
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
-        <div className="px-4 mb-6">
-          <span className={cn(
-            "text-[9px] text-muted-foreground/40 font-mono uppercase font-bold flex items-center gap-2",
-            !isArabic && "tracking-[0.3em]"
-          )}>
-            <div className="w-1 h-1 bg-primary rounded-full" />
-            Navigation
-          </span>
+          </Link>
         </div>
 
-        {menuItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.key}
-              href={item.href}
-              className={cn(
-                "group relative flex items-center gap-4 px-4 py-3 rounded-none transition-all duration-300 border-s-2",
-                isActive
-                  ? "bg-primary/10 border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-white hover:bg-white/5 hover:border-white/10"
-              )}
-            >
-              <item.icon className={cn(
-                "w-4 h-4 transition-colors",
-                isActive ? "text-primary" : "text-muted-foreground group-hover:text-white"
-              )} />
-
-              <span className={cn(
-                "text-[11px] font-mono uppercase font-bold tracking-wide flex-1",
-                !isArabic && "tracking-[0.15em]"
-              )}>
-                {item.label}
-              </span>
-
-              {isActive && (
-                <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
-              )}
-
-              {!isActive && (
-                <ChevronRight className={cn(
-                  "w-3 h-3 opacity-0 -translate-x-2 transition-all duration-300 rtl:rotate-180",
-                  "group-hover:opacity-50 group-hover:translate-x-0"
+        {/* Navigation */}
+        <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                className={cn(
+                  "group relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200 border-s-2",
+                  isActive
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-white hover:bg-white/5"
+                )}
+              >
+                <item.icon className={cn(
+                  "w-4 h-4 shrink-0 transition-colors",
+                  isActive ? "text-primary" : "text-muted-foreground group-hover:text-white"
                 )} />
-              )}
-            </Link>
-          );
-        })}
-      </nav>
 
-      {/* Settings Link */}
-      <div className="px-4 pb-4">
-        <Link
-          href="/settings"
-          className={cn(
-            "group relative flex items-center gap-4 px-4 py-3 rounded-none transition-all duration-300 border-s-2",
-            pathname === '/settings'
-              ? "bg-primary/10 border-primary text-primary"
-              : "border-transparent text-muted-foreground hover:text-white hover:bg-white/5 hover:border-white/10"
-          )}
-        >
-          <Settings className={cn(
-            "w-4 h-4 transition-colors",
-            pathname === '/settings' ? "text-primary" : "text-muted-foreground group-hover:text-white"
-          )} />
-          <span className={cn(
-            "text-[11px] font-mono uppercase font-bold tracking-wide flex-1",
-            !isArabic && "tracking-[0.15em]"
-          )}>
-            {t('settings')}
-          </span>
-          {pathname === '/settings' && (
-            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
-          )}
-          {pathname !== '/settings' && (
-            <ChevronRight className={cn(
-              "w-3 h-3 opacity-0 -translate-x-2 transition-all duration-300 rtl:rotate-180",
-              "group-hover:opacity-50 group-hover:translate-x-0"
-            )} />
-          )}
-        </Link>
-      </div>
+                <span className={cn(
+                  "text-[11px] font-mono uppercase font-bold flex-1",
+                  !isArabic && "tracking-[0.1em]"
+                )}>
+                  {item.label}
+                </span>
 
-      {/* Footer / Status */}
-      <div className="p-6 border-t border-white/5 bg-black/20">
-        <div className="border border-white/10 bg-white/5 p-4 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-primary/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className={cn(
-                "text-[9px] text-muted-foreground uppercase font-mono mb-1",
-                !isArabic && "tracking-widest"
-              )}>
-                System Status
-              </span>
-              <span className="text-[10px] text-green-500 font-mono font-bold flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                ONLINE
+                {/* Amber dot indicator */}
+                {'showDot' in item && item.showDot && (
+                  <div className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                )}
+
+                {isActive && (
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
+                )}
+                {!isActive && (
+                  <ChevronRight className={cn(
+                    "w-3 h-3 opacity-0 transition-all duration-200 rtl:rotate-180",
+                    "group-hover:opacity-40"
+                  )} />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Path Mini-Status */}
+        {sidebarData && (
+          <div className="px-4 py-4 border-t border-white/5">
+            <div className="flex items-center gap-3">
+              <ProgressRing percent={sidebarData.pathCompletionPercent} size={36} />
+              <div className="flex flex-col min-w-0">
+                <span className={cn(
+                  "text-[10px] font-mono font-bold text-white uppercase truncate",
+                  !isArabic && "tracking-wide"
+                )}>
+                  {sidebarData.pathDisplayName.split(' ')[0]} Dev
+                </span>
+                <span className="text-[9px] font-mono text-muted-foreground/50">
+                  Stage {sidebarData.currentStageNumber} of {sidebarData.totalStages}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Settings + Avatar */}
+        <div className="px-3 pb-3 space-y-1">
+          <Link
+            href="/settings"
+            className={cn(
+              "group flex items-center gap-3 px-3 py-2.5 transition-all duration-200 border-s-2",
+              pathname === '/settings'
+                ? "bg-primary/10 border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-white hover:bg-white/5"
+            )}
+          >
+            <Settings className="w-4 h-4 shrink-0" />
+            <span className={cn(
+              "text-[11px] font-mono uppercase font-bold",
+              !isArabic && "tracking-[0.1em]"
+            )}>
+              {t('settings')}
+            </span>
+          </Link>
+
+          {sidebarData && (
+            <div className="px-3 py-2">
+              <span className="text-[10px] font-mono text-muted-foreground/40 truncate block">
+                {sidebarData.firstName}
               </span>
             </div>
-            <Cpu className="w-4 h-4 text-white/20" />
+          )}
+        </div>
+      </aside>
+
+      {/* ─── Mobile Bottom Tab Bar ─── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/95 border-t border-white/10 backdrop-blur-xl lg:hidden">
+        <div className="flex items-center justify-around h-16 px-2">
+          {mobileTabItems.map((item) => {
+            const isActive = item.key !== 'more' && pathname === item.href;
+            const isMore = item.key === 'more';
+
+            if (isMore) {
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
+                  className="flex flex-col items-center justify-center gap-1 text-muted-foreground"
+                >
+                  {mobileSheetOpen ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
+                  <span className="text-[9px] font-mono uppercase">{item.label}</span>
+                </button>
+              );
+            }
+
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 transition-colors",
+                  isActive ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="text-[9px] font-mono uppercase">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* ─── Mobile "More" Bottom Sheet ─── */}
+      {mobileSheetOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setMobileSheetOpen(false)}>
+          <div className="absolute inset-0 bg-black/60" />
+          <div
+            className="absolute bottom-16 left-0 right-0 bg-black/95 border-t border-white/10 p-4 space-y-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Link
+              href="/dashboard/opportunities"
+              className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-white transition-colors"
+              onClick={() => setMobileSheetOpen(false)}
+            >
+              <Briefcase className="w-4 h-4" />
+              <span className="text-xs font-mono uppercase">{t('opportunityAnalyzer')}</span>
+            </Link>
+            <Link
+              href="/settings"
+              className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-white transition-colors"
+              onClick={() => setMobileSheetOpen(false)}
+            >
+              <Settings className="w-4 h-4" />
+              <span className="text-xs font-mono uppercase">{t('settings')}</span>
+            </Link>
           </div>
         </div>
-      </div>
-    </aside>
+      )}
+    </>
   );
 }

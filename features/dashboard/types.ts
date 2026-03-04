@@ -1,5 +1,5 @@
 // ─── Dashboard Summary Types ───
-// Matches the API contract from dashboard spec Section 14
+// Matches the API contract from dashboard spec v3 Section 15
 
 export interface DashboardSummary {
     learner: DashboardLearner;
@@ -9,7 +9,6 @@ export interface DashboardSummary {
     mission: DashboardMission;
     readiness: DashboardReadiness;
     pace: DashboardPace;
-    opportunity_analyzer: OpportunityAnalyzer;
     onboarding_banner: OnboardingBanner;
     ai_tip: string | null;
 }
@@ -33,6 +32,8 @@ export interface DashboardPath {
 export interface DashboardStage {
     current_stage_id: string | null;
     current_stage_title: string;
+    current_stage_number: number;
+    total_stages: number;
     stage_completion_percent: number;
     stage_completed_topics: number;
     stage_total_topics: number;
@@ -44,16 +45,16 @@ export interface DashboardTopics {
     next_topic_id: string | null;
     next_topic_title: string;
     next_topic_estimated_time_min: number | null;
+    remaining_topics_in_stage: number;
 }
 
 export type MissionType =
-    | "continue_learning"
-    | "finish_stage"
-    | "get_back_on_track"
-    | "start_first_project"
-    | "start_available_project"
-    | "choose_new_path"
-    | "complete_onboarding";
+    | "ContinueLearning"
+    | "FinishStage"
+    | "GetBackOnTrack"
+    | "StartFirstProject"
+    | "ChooseNewPath"
+    | "CompleteOnboarding";
 
 export interface DashboardMission {
     type: MissionType;
@@ -61,35 +62,40 @@ export interface DashboardMission {
     description: string;
     cta_label: string;
     cta_target: string;
+    context_line: string | null;
 }
 
 export interface DashboardReadiness {
     unlocked_skills_count: number;
+    roadmap_skills_count: number;
+    manual_skills_count: number;
     completed_projects_count: number;
     available_projects_count: number;
     resume_status: "not_created" | "in_progress" | "ready";
+    resume_last_updated_days_ago: number | null;
     ats_score: number | null;
-    portfolio_has_public_items: boolean;
-    portfolio_slug: string | null;
 }
 
 export interface DashboardPace {
     streak_days: number;
     sessions_this_week: number;
     target_sessions_per_week: number;
-    pace_status: "ahead" | "on_track" | "slightly_behind" | "behind";
-}
-
-export interface OpportunityAnalyzer {
-    show_prompt: boolean;
-    analyses_count: number;
+    pace_status: "Ahead" | "On Track" | "Behind";
+    active_days_this_week: number[];
 }
 
 export interface OnboardingBanner {
     show: boolean;
-    match_score: number;
-    match_reasons: string[];
-    first_milestone_project_title: string;
+    plan_2_weeks: string[];
+    first_milestone: string;
+}
+
+// ─── Recent Activity ───
+
+export interface RecentActivityItem {
+    type: "topic_completed" | "project_completed" | "resume_updated" | "analysis_saved";
+    title: string;
+    timestamp: string;
 }
 
 // ─── Display mappings ───
@@ -98,7 +104,7 @@ export const GOAL_LABELS: Record<string, string> = {
     job: "Get a Full-Time Job",
     freelance: "Freelance",
     startup: "Build My Own Project",
-    exploring: "Explore & Learn",
+    exploring: "Exploring",
 };
 
 export const PATH_DISPLAY_NAMES: Record<string, string> = {

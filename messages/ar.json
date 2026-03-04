@@ -130,12 +130,17 @@
     "authorized": "ملاح معتمد",
     "sessionActive": "الجلسة نشطة",
     "signOut": "إنهاء الجلسة",
-    "welcome": "مرحباً بك مجدداً، أيها الملاح",
+    "welcome": "مرحباً بك مجدداً",
     "roadmap": "خارطة الطريق",
-    "skillsHub": "المهارات والمشاريع",
+    "skillsHub": "مركز الأعمال",
     "resumeBuilder": "بناء السيرة",
     "opportunityAnalyzer": "محلل الفرص",
     "settings": "الإعدادات",
+    "StatusBadge": {
+      "onTrack": "على المسار",
+      "slightlyBehind": "متأخر قليلاً",
+      "pathCompleted": "المسار مكتمل"
+    },
     "Widgets": {
       "todayMission": "مهمة اليوم",
       "estMin": "الوقت المتوقع: {time} دقيقة",
@@ -143,49 +148,56 @@
         "skillsUnlocked": "المهارات المكتسبة",
         "projectsCompleted": "المشاريع المنجزة",
         "resume": "السيرة الذاتية",
-        "portfolio": "معرض الأعمال",
         "status": {
           "inProgress": "قيد التنفيذ",
           "ready": "جاهز",
           "notStarted": "لم يبدأ",
-          "live": "منشور",
-          "notPublic": "غير عام",
           "ats": "ATS: {score}/100"
+        },
+        "subLabels": {
+          "skillsBreakdown": "{roadmap} من المسار · {manual} أضيفت يدوياً",
+          "skillsEmpty": "أكمل الدروس لفتح المهارات",
+          "projectsAvailable": "{count} متاح للبدء",
+          "resumeNotCreated": "ابنِ سيرتك للتقديم على الوظائف",
+          "resumeInProgress": "آخر تحديث: قبل {days} يوم",
+          "resumeReady": "ممتاز — حافظ على تحديثها"
         }
-      },
-      "Opportunity": {
-        "label": "محلل الفرص",
-        "title": "اكتشف مدى جاهزيتك لسوق العمل",
-        "subtextRuns": "لقد قمت بتحليل {count} وظيفة. جرب وظيفة أخرى لتتبع تطور مهاراتك.",
-        "subtextZero": "ضع وصف الوظيفة هنا وسنعرض لك المهارات التي تمتلكها وما ينقصك منها.",
-        "analyze": "تحليل متطلبات وظيفة"
       },
       "Pace": {
         "label": "الوتيرة والزخم",
         "streak": "سلسلة من {days} أيام",
-        "sessions": "{count}/{target} جلسات",
+        "streakZero": "ابدأ سلسلتك اليوم",
+        "thisWeek": "هذا الأسبوع",
+        "sessions": "{count} من {target} جلسات",
         "status": {
-          "ahead": "متفوق على الخطة",
-          "on_track": "على المسار الصحيح",
-          "slightly_behind": "متأخر قليلاً",
-          "behind": "متأخر عن الخطة"
+          "ahead": "متفوق على الوتيرة",
+          "onTrack": "على المسار",
+          "behind": "متأخر عن الوتيرة"
         }
       },
-      "Forecast": {
-        "label": "توقع الإنجاز",
-        "velocity": "سرعة التعلم: {velocity}",
-        "velocityModes": {
-          "slow": "متأنق وكثيف",
-          "normal": "متوازن",
-          "fast": "سريع"
-        }
+      "ProgressZone": {
+        "label": "التقدم",
+        "pathProgress": "تقدم المسار",
+        "lessons": "{completed} من {total} درس",
+        "topicsDone": "{completed} من {total} موضوع مكتمل",
+        "forecast": "بوتيرتك الحالية، ستنهي هذه المرحلة خلال ~{days} يوم."
+      },
+      "AIMicroCoach": {
+        "label": "المساعد الذكي"
       },
       "QuickNav": {
         "label": "تنقل سريع",
         "viewRoadmap": "عرض الخارطة كاملة",
         "portfolioHub": "مركز الأعمال",
         "resumeBuilder": "بناء السيرة",
-        "analyzeJob": "تحليل فرصة وظيفية"
+        "analyzeJob": "محلل الفرص"
+      },
+      "RecentActivity": {
+        "label": "النشاط الأخير",
+        "topicCompleted": "مكتمل: {title}",
+        "projectCompleted": "مشروع مكتمل: {title}",
+        "resumeUpdated": "تحديث السيرة الذاتية",
+        "analysisSaved": "تحليل وظيفي محفوظ"
       }
     },
     "Opportunities": {
@@ -245,11 +257,28 @@
     "aiTutor": "مساعد ملاح الذكي",
     "aiTutorSubtitle": "دليلك الشخصي خطوة بخطوة",
     "aiGreeting": "أهلاً! أنا المساعد الذكي الخاص بك لموضوع {topic}. ما الذي تود استكشافه؟",
-    "askQuestion": "اطرح سؤالاً..."
+    "askQuestion": "اطرح سؤالاً...",
+    "topicPosition": "الموضوع {current} من {total}",
+    "nextTopic": "الموضوع التالي",
+    "previousTopic": "الموضوع السابق",
+    "practicalOutput": "المخرجات العملية"
   },
   "ProjectViewer": {
     "backToRoadmap": "العودة للخارطة",
     "projectMilestone": "مشروع مرحلي",
+    "gatesNextStage": "يفتح المرحلة التالية",
+    "projectDescription": "وصف المشروع",
+    "skillsDemonstrated": "المهارات المكتسبة",
+    "projectExplanation": "قم بتقديم مشروعك المكتمل هنا. قدم روابط للكود الخاص بك وعرض حي حتى نتمكن من مراجعة عملك.",
+    "optional": "اختياري",
+    "githubRepository": "مستودع GitHub",
+    "liveDemo": "رابط العرض (Live Demo)",
+    "personalNote": "ملاحظة شخصية",
+    "techStack": "التقنيات المستخدمة",
+    "commaSeparatedTags": "مفصولة بفواصل (مثل: React, Node)",
+    "nextStage": "المرحلة التالية",
+    "updateProject": "تحديث المشروع",
+    "markComplete": "إكمال وتسليم",
     "completed": "مكتمل",
     "overview": "نظرة عامة",
     "yourSubmission": "تسليمك",

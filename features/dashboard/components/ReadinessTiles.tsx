@@ -1,7 +1,7 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { Cpu, FolderKanban, FileText, Globe } from 'lucide-react';
+import { useLocale } from 'next-intl';
+import { Cpu, FolderKanban, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/lib/i18n/routing';
 import type { DashboardReadiness } from '../types';
@@ -13,90 +13,105 @@ interface ReadinessTilesProps {
 export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
-    const t = useTranslations('Dashboard.Widgets.Tiles');
 
-    const resumeDisplay = (() => {
-        if (readiness.ats_score !== null) return t('status.ats', { score: readiness.ats_score });
+    // Resume primary value and sub-label
+    const resumeValue = (() => {
+        if (readiness.ats_score !== null) return `ATS: ${readiness.ats_score}/100`;
         switch (readiness.resume_status) {
-            case 'in_progress': return t('status.inProgress');
-            case 'ready': return t('status.ready');
-            default: return t('status.notStarted');
+            case 'in_progress': return 'In Progress';
+            case 'ready': return 'Ready';
+            default: return 'Not Started';
         }
     })();
 
-    const portfolioDisplay = readiness.portfolio_has_public_items ? t('status.live') : t('status.notPublic');
+    const resumeSubLabel = (() => {
+        if (readiness.ats_score !== null) {
+            return readiness.ats_score >= 75 ? 'Great score' : readiness.ats_score >= 50 ? 'Room to improve' : 'Needs work';
+        }
+        switch (readiness.resume_status) {
+            case 'in_progress':
+                return readiness.resume_last_updated_days_ago !== null
+                    ? `Last updated: ${readiness.resume_last_updated_days_ago} days ago`
+                    : 'Keep building it';
+            case 'ready': return 'Looking good — keep it updated';
+            default: return 'Build yours to apply for jobs';
+        }
+    })();
 
     const tiles = [
         {
-            label: t('skillsUnlocked'),
+            label: 'Skills Unlocked',
             value: String(readiness.unlocked_skills_count),
+            subLabel: readiness.roadmap_skills_count > 0 || readiness.manual_skills_count > 0
+                ? `${readiness.roadmap_skills_count} from roadmap · ${readiness.manual_skills_count} added manually`
+                : 'Complete topics to unlock skills',
             icon: Cpu,
             href: '/dashboard/skills',
             warning: false,
         },
         {
-            label: t('projectsCompleted'),
+            label: 'Projects Completed',
             value: String(readiness.completed_projects_count),
+            subLabel: `${readiness.available_projects_count} available to start`,
             icon: FolderKanban,
-            href: '/dashboard/roadmap', // Fixed from skills to roadmap (projects are in roadmap)
+            href: '/dashboard/skills',
             warning: readiness.completed_projects_count === 0,
         },
         {
-            label: t('resume'),
-            value: resumeDisplay,
+            label: 'Resume',
+            value: resumeValue,
+            subLabel: resumeSubLabel,
             icon: FileText,
             href: '/dashboard/resume',
-            warning: readiness.resume_status === 'not_created',
-        },
-        {
-            label: t('portfolio'),
-            value: portfolioDisplay,
-            icon: Globe,
-            href: readiness.portfolio_has_public_items && readiness.portfolio_slug
-                ? `/portfolio/${readiness.portfolio_slug}`
-                : '/dashboard/skills',
-            warning: !readiness.portfolio_has_public_items,
-            external: readiness.portfolio_has_public_items,
+            warning: false,
         },
     ];
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="space-y-3">
             {tiles.map((tile) => (
                 <Link
                     key={tile.label}
                     href={tile.href}
                     className={cn(
-                        "relative border p-5 transition-all duration-300 group hover:bg-white/5",
+                        "block relative border p-4 transition-all duration-300 group hover:bg-white/5",
                         tile.warning
-                            ? "border-amber-500/20 bg-amber-500/5"
+                            ? "border-amber-500/20 bg-amber-500/5 border-s-2 border-s-amber-500/40"
                             : "border-white/10 bg-white/[0.02]"
                     )}
                 >
-                    {/* Icon */}
-                    <tile.icon className={cn(
-                        "w-4 h-4 mb-3 transition-colors",
-                        tile.warning ? "text-amber-500/60" : "text-primary/40 group-hover:text-primary"
-                    )} />
+                    <div className="flex items-start gap-3">
+                        <tile.icon className={cn(
+                            "w-4 h-4 shrink-0 mt-0.5 transition-colors",
+                            tile.warning ? "text-amber-500/60" : "text-primary/40 group-hover:text-primary"
+                        )} />
 
-                    {/* Value */}
-                    <div className={cn(
-                        "text-lg font-black text-white uppercase mb-1",
-                        !isArabic && "tracking-tight"
-                    )}>
-                        {tile.value}
-                    </div>
+                        <div className="min-w-0 flex-1">
+                            {/* Label */}
+                            <div className={cn(
+                                "text-[9px] font-mono text-muted-foreground/50 uppercase mb-1",
+                                !isArabic && "tracking-[0.15em]"
+                            )}>
+                                {tile.label}
+                            </div>
 
-                    {/* Label */}
-                    <div className={cn(
-                        "text-[9px] font-mono text-muted-foreground/60 uppercase",
-                        !isArabic && "tracking-[0.2em]"
-                    )}>
-                        {tile.label}
+                            {/* Value */}
+                            <div className={cn(
+                                "text-base font-black text-white uppercase mb-0.5",
+                                !isArabic && "tracking-tight"
+                            )}>
+                                {tile.value}
+                            </div>
+
+                            {/* Sub-label */}
+                            <div className="text-[10px] text-muted-foreground/40 leading-relaxed">
+                                {tile.subLabel}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Hover indicator */}
-                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-500" />
+                    <div className="absolute bottom-0 start-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-500" />
                 </Link>
             ))}
         </div>

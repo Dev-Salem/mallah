@@ -3,56 +3,77 @@
 import type { DashboardSummary } from '../types';
 import { GreetingBar } from './GreetingBar';
 import { OnboardingBanner } from './OnboardingBanner';
-import { PaceMomentumStrip } from './PaceMomentumStrip';
 import { MissionCard } from './MissionCard';
-import { ForecastLine } from './ForecastLine';
+import { AIMicroCoach } from './AIMicroCoach';
 import { ReadinessTiles } from './ReadinessTiles';
-import { OpportunityPrompt } from './OpportunityPrompt';
+import { PaceMomentumStrip } from './PaceMomentumStrip';
+import { ProgressZone } from './ProgressZone';
 import { QuickNav } from './QuickNav';
+import { RecentActivity } from './RecentActivity';
+import type { RecentActivityItem } from '../types';
 
 interface DashboardViewProps {
     summary: DashboardSummary;
+    recentActivity: RecentActivityItem[];
 }
 
-export function DashboardView({ summary }: DashboardViewProps) {
+export function DashboardView({ summary, recentActivity }: DashboardViewProps) {
+    const isFirstSession = summary.onboarding_banner.show;
+
     return (
-        <div className="space-y-2">
-            {/* 1. Greeting & Context Bar */}
+        <div className="space-y-6">
+            {/* 1. Greeting & Context Bar — full width */}
             <GreetingBar
                 learner={summary.learner}
                 path={summary.path}
                 stage={summary.stage}
+                paceStatus={summary.pace.pace_status}
             />
 
-            {/* 2. Onboarding Banner (new users only) */}
-            <OnboardingBanner
-                banner={summary.onboarding_banner}
-                pathDisplayName={summary.path.path_display_name}
-            />
+            {/* 2–6. Two-column layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                {/* Left column (60%) */}
+                <div className="lg:col-span-3 space-y-6">
+                    {/* 2. Onboarding Banner (new users only) */}
+                    <OnboardingBanner banner={summary.onboarding_banner} />
 
-            {/* 3. Pace & Momentum Strip */}
-            <PaceMomentumStrip pace={summary.pace} />
+                    {/* 3. Mission Card (primary) */}
+                    <MissionCard
+                        mission={summary.mission}
+                        estimatedTime={summary.topics.next_topic_estimated_time_min}
+                    />
 
-            {/* 4. Mission Card (primary section) */}
-            <MissionCard
-                mission={summary.mission}
-                estimatedTime={summary.topics.next_topic_estimated_time_min}
-            />
+                    {/* 4. AI Micro-Coach */}
+                    <AIMicroCoach tip={summary.ai_tip} />
+                </div>
 
-            {/* 5. Forecast Line */}
-            <ForecastLine
+                {/* Right column (40%) */}
+                <div className="lg:col-span-2 space-y-6">
+                    {/* 5. Readiness Tiles */}
+                    <ReadinessTiles readiness={summary.readiness} />
+
+                    {/* 6. Pace & Momentum Strip */}
+                    {!isFirstSession && (
+                        <PaceMomentumStrip pace={summary.pace} />
+                    )}
+                </div>
+            </div>
+
+            {/* 7. Progress Zone — full width */}
+            <ProgressZone
+                path={summary.path}
+                stage={summary.stage}
+                topics={summary.topics}
                 velocity={summary.learner.learning_velocity}
-                completionPercent={summary.path.completion_percent}
             />
 
-            {/* 6. Readiness Tiles */}
-            <ReadinessTiles readiness={summary.readiness} />
+            {/* 8. Quick Navigation — full width */}
+            <QuickNav readiness={summary.readiness} />
 
-            {/* 7. Opportunity Analyzer Prompt (contextual) */}
-            <OpportunityPrompt analyzer={summary.opportunity_analyzer} />
-
-            {/* 8. Quick Navigation */}
-            <QuickNav />
+            {/* 9. Recent Activity — full width, optional */}
+            {!isFirstSession && (
+                <RecentActivity items={recentActivity} />
+            )}
         </div>
     );
 }

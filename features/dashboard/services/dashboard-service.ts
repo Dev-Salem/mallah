@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import type { DashboardSummary } from "../types";
+import type { DashboardSummary, DashboardMission, RecentActivityItem } from "../types";
 import { PATH_DISPLAY_NAMES } from "../types";
 import { RoadmapService } from "@/features/roadmap/services/roadmap-service";
 
 /**
  * Fetches and assembles the full dashboard summary for a given user.
+ * Implements v3 spec (dashboard.md) — mission priority, real data queries.
  */
 export async function getDashboardSummary(
     userId: string
@@ -15,7 +16,7 @@ export async function getDashboardSummary(
     const { data: learner } = await supabase
         .from("learners")
         .select(
-            "first_name, primary_goal, learning_velocity, weekly_hours_category, ai_language_pref, ai_detail_level, current_path_id, portfolio_slug, opportunity_analyses_count"
+            "first_name, primary_goal, learning_velocity, weekly_hours_category, ai_language_pref, ai_detail_level, current_path_id"
         )
         .eq("user_id", userId)
         .single();
@@ -44,7 +45,7 @@ export async function getDashboardSummary(
     // ── Fetch AI recommendation for onboarding banner ──
     const { data: aiRec } = await supabase
         .from("ai_recommendations")
-        .select("confidence_score, reasons, accepted_path_id")
+        .select("plan_2_weeks, first_milestone")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(1)
@@ -56,6 +57,8 @@ export async function getDashboardSummary(
     let stageData = {
         current_stage_id: null as string | null,
         current_stage_title: "Stage 1",
+        current_stage_number: 1,
+        total_stages: 0,
         stage_completion_percent: 0,
         stage_completed_topics: 0,
         stage_total_topics: 0,
@@ -67,19 +70,25 @@ export async function getDashboardSummary(
         next_topic_id: null as string | null,
         next_topic_title: "Your first lesson",
         next_topic_estimated_time_min: null as number | null,
+        remaining_topics_in_stage: 0,
     };
 
     let projectsCount = 0;
     let completedProjects = 0;
+    let availableProjects = 0;
     let pathCompletionPercent = 0;
 
-    let currentStage = null;
-    let nextTopic = null;
-    let nextProject = null;
+    let currentStage: any = null;
+    let currentStageIndex = 0;
+    let nextTopic: any = null;
+    let nextProject: any = null;
+    let hasPassedStage1 = false;
 
     if (roadmap && roadmap.stages.length > 0) {
-        // Find the active stage (first unlocked stage that has uncompleted items)
-        for (const stg of roadmap.stages) {
+        stageData.total_stages = roadmap.stages.length;
+
+        for (let i = 0; i < roadmap.stages.length; i++) {
+            const stg = roadmap.stages[i];
             if (!stg.is_unlocked) continue;
 
             const tComp = stg.topics.filter(t => t.user_status === 'completed').length;
@@ -92,33 +101,44 @@ export async function getDashboardSummary(
             if (stg.project) {
                 projectsCount++;
                 if (pComp) completedProjects++;
+                if (stg.project.user_status === 'available') availableProjects++;
             }
 
-            // If this stage is not fully completed, it's our current stage
+            // Track if stage 1 is completed (for StartFirstProject mission)
+            if (i === 0 && (tComp + pComp) >= totalStageItems) {
+                hasPassedStage1 = true;
+            }
+
+            // First incomplete stage = current stage
             if ((tComp + pComp) < totalStageItems && !currentStage) {
                 currentStage = stg;
+                currentStageIndex = i;
                 stageData.current_stage_id = stg.stage_id;
                 stageData.current_stage_title = stg.title;
+                stageData.current_stage_number = i + 1;
                 stageData.stage_completed_topics = tComp + pComp;
                 stageData.stage_total_topics = totalStageItems;
                 stageData.stage_completion_percent = totalStageItems > 0
                     ? Math.round(((tComp + pComp) / totalStageItems) * 100)
                     : 0;
+                topicsData.remaining_topics_in_stage = totalStageItems - (tComp + pComp);
 
-                // Find next topic or project in this stage
+                // Find next uncompleted topic
                 const uncompletedTopic = stg.topics.find(t => t.user_status !== 'completed');
                 if (uncompletedTopic) {
                     nextTopic = uncompletedTopic;
                 } else if (stg.project && stg.project.user_status !== 'completed') {
                     nextProject = stg.project;
                 }
-            } else if ((tComp + pComp) === totalStageItems) {
-                // If it is fully completed, keep accumulating path progress
             }
         }
 
-        // If all unlocked stages are completed, maybe the whole path is completed or waiting for next lock
-        // (Handled by the loop continuing)
+        // Also count topics from locked stages for total
+        for (const stg of roadmap.stages) {
+            if (stg.is_unlocked) continue;
+            topicsData.total_mandatory_topics += stg.topics.length;
+            if (stg.project) projectsCount++;
+        }
 
         // Path completion
         const totalPathItems = topicsData.total_mandatory_topics + projectsCount;
@@ -133,30 +153,62 @@ export async function getDashboardSummary(
             topicsData.next_topic_title = nextTopic.title;
             topicsData.next_topic_estimated_time_min = nextTopic.estimated_time_min;
         } else if (nextProject) {
-            topicsData.next_topic_id = nextProject.project_id; // Using topic_id slot for routing
+            topicsData.next_topic_id = nextProject.project_id;
             topicsData.next_topic_title = nextProject.title;
         } else {
             topicsData.next_topic_title = "All Caught Up!";
         }
     }
 
-    // ── Compute mission ──
-    const mission = computeMission(learner, pathDisplayName, roadmap, nextTopic, nextProject);
+    // ── Fetch real skill counts from user_skills ──
+    const { count: totalSkills } = await supabase
+        .from("user_skills")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+    const { count: roadmapSkills } = await supabase
+        .from("user_skills")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .in("source", ["roadmap", "project"]);
+
+    const { count: manualSkills } = await supabase
+        .from("user_skills")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("source", "manual");
+
+    // ── Compute pace & streak from user_progress.last_accessed_at ──
+    const paceData = await computePaceData(userId, learner.weekly_hours_category);
+
+    // ── Compute mission (6-priority chain) ──
+    const mission = computeMission(
+        learner,
+        pathDisplayName,
+        roadmap,
+        nextTopic,
+        nextProject,
+        pathCompletionPercent,
+        completedProjects,
+        hasPassedStage1,
+        stageData,
+        topicsData,
+        paceData.daysSinceLastActive
+    );
 
     // ── Compute onboarding banner ──
-    const showBanner = !!aiRec && pathCompletionPercent === 0;
-    const matchReasons: string[] = [];
-    if (aiRec?.reasons) {
-        const reasons = aiRec.reasons as string[];
-        matchReasons.push(...reasons.slice(0, 2));
+    const showBanner = topicsData.completed_topics === 0 && !!aiRec;
+    const plan2Weeks: string[] = [];
+    if (aiRec?.plan_2_weeks) {
+        const plan = aiRec.plan_2_weeks as string[];
+        plan2Weeks.push(...plan);
     }
 
-    // ── Compute opportunity analyzer visibility ──
-    const showOpportunityPrompt =
-        learner.primary_goal === "job" || learner.primary_goal === "freelance";
-
-    // ── Compute target sessions from weekly_hours_category ──
+    // ── Compute target sessions ──
     const targetSessions = getTargetSessions(learner.weekly_hours_category);
+
+    // ── Build AI tip (rule-based fallback) ──
+    const aiTip = buildAiTip(stageData, topicsData, pathCompletionPercent);
 
     return {
         learner: {
@@ -177,94 +229,322 @@ export async function getDashboardSummary(
         topics: topicsData,
         mission,
         readiness: {
-            unlocked_skills_count: Math.floor(topicsData.completed_topics * 1.5), // Mock for now until we join skills
+            unlocked_skills_count: totalSkills ?? 0,
+            roadmap_skills_count: roadmapSkills ?? 0,
+            manual_skills_count: manualSkills ?? 0,
             completed_projects_count: completedProjects,
-            available_projects_count: projectsCount - completedProjects,
+            available_projects_count: availableProjects,
             resume_status: "not_created",
+            resume_last_updated_days_ago: null,
             ats_score: null,
-            portfolio_has_public_items: completedProjects > 0,
-            portfolio_slug: learner.portfolio_slug,
         },
         pace: {
-            streak_days: 0, // Requires event tracking
-            sessions_this_week: 0,
+            streak_days: paceData.streakDays,
+            sessions_this_week: paceData.sessionsThisWeek,
             target_sessions_per_week: targetSessions,
-            pace_status: "on_track",
-        },
-        opportunity_analyzer: {
-            show_prompt: showOpportunityPrompt,
-            analyses_count: learner.opportunity_analyses_count || 0,
+            pace_status: computePaceStatus(paceData.sessionsThisWeek, targetSessions),
+            active_days_this_week: paceData.activeDaysThisWeek,
         },
         onboarding_banner: {
             show: showBanner,
-            match_score: aiRec?.confidence_score ?? 0,
-            match_reasons: matchReasons,
-            first_milestone_project_title: roadmap?.stages?.[0]?.project?.title || "Your First Project",
+            plan_2_weeks: plan2Weeks,
+            first_milestone: aiRec?.first_milestone ?? "Your First Project",
         },
-        ai_tip: null,
+        ai_tip: aiTip,
     };
 }
 
-// ── Mission computation ──
+/**
+ * Fetches recent activity items for the dashboard.
+ */
+export async function getRecentActivity(userId: string): Promise<RecentActivityItem[]> {
+    const supabase = await createClient();
+    const items: RecentActivityItem[] = [];
+
+    // Completed topics
+    const { data: topicActivity } = await supabase
+        .from("user_progress")
+        .select("completed_at, topic_id, topics(title)")
+        .eq("user_id", userId)
+        .eq("status", "completed")
+        .not("completed_at", "is", null)
+        .order("completed_at", { ascending: false })
+        .limit(5);
+
+    if (topicActivity) {
+        for (const row of topicActivity) {
+            const topicTitle = (row as any).topics?.title || "a topic";
+            items.push({
+                type: "topic_completed",
+                title: `Completed: ${topicTitle}`,
+                timestamp: row.completed_at!,
+            });
+        }
+    }
+
+    // Completed projects
+    const { data: projectActivity } = await supabase
+        .from("user_projects")
+        .select("completed_at, project_id, projects(title)")
+        .eq("user_id", userId)
+        .eq("status", "completed")
+        .not("completed_at", "is", null)
+        .order("completed_at", { ascending: false })
+        .limit(5);
+
+    if (projectActivity) {
+        for (const row of projectActivity) {
+            const projectTitle = (row as any).projects?.title || "a project";
+            items.push({
+                type: "project_completed",
+                title: `Completed project: ${projectTitle}`,
+                timestamp: row.completed_at!,
+            });
+        }
+    }
+
+    // Sort by timestamp descending, take top 5
+    items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return items.slice(0, 5);
+}
+
+// ── Mission computation (6-priority chain per spec §7.1) ──
 function computeMission(
     learner: { current_path_id: string | null },
     pathDisplayName: string,
     roadmap: any,
     nextTopic: any,
-    nextProject: any
-): DashboardSummary["mission"] {
+    nextProject: any,
+    pathCompletionPercent: number,
+    completedProjects: number,
+    hasPassedStage1: boolean,
+    stageData: DashboardSummary["stage"],
+    topicsData: DashboardSummary["topics"],
+    daysSinceLastActive: number | null
+): DashboardMission {
+    // Priority 1: Onboarding not completed (safety — page.tsx already redirects)
     if (!learner.current_path_id) {
         return {
-            type: "complete_onboarding",
+            type: "CompleteOnboarding",
             title: "Let's Finish Setting Up Your Path",
             description: "Answer a few quick questions to get your personalized learning roadmap.",
             cta_label: "Complete Setup",
             cta_target: "/onboarding",
+            context_line: null,
         };
     }
 
+    // Priority 2: Path fully completed
+    if (pathCompletionPercent >= 100) {
+        return {
+            type: "ChooseNewPath",
+            title: "You've Completed Your Path — What's Next?",
+            description: "Explore a new path to keep growing.",
+            cta_label: "Explore Paths",
+            cta_target: "/dashboard/roadmap",
+            context_line: null,
+        };
+    }
+
+    // Priority 3: 0 projects completed AND learner has passed Stage 1
+    if (completedProjects === 0 && hasPassedStage1) {
+        return {
+            type: "StartFirstProject",
+            title: "Time to Build Something Real",
+            description: "You've learned the theory. Projects are what make your skills visible to employers and clients.",
+            cta_label: "Start Your First Project",
+            cta_target: "/dashboard/skills",
+            context_line: null,
+        };
+    }
+
+    // Priority 4: Inactive for ≥ 7 days
+    if (daysSinceLastActive !== null && daysSinceLastActive >= 7 && nextTopic) {
+        const timeNote = nextTopic.estimated_time_min
+            ? ` It only takes ${nextTopic.estimated_time_min} minutes.`
+            : "";
+        return {
+            type: "GetBackOnTrack",
+            title: "Ready to Pick Up Where You Left Off?",
+            description: `You were working on ${nextTopic.title}.${timeNote}`,
+            cta_label: "Resume Learning",
+            cta_target: `/dashboard/topic/${nextTopic.topic_id}`,
+            context_line: `Last active: ${daysSinceLastActive} days ago`,
+        };
+    }
+
+    // Priority 5: Current stage ≥ 80% complete
+    if (stageData.stage_completion_percent >= 80 && nextTopic) {
+        const nextStageTitle = roadmap?.stages?.[stageData.current_stage_number]?.title || "the next stage";
+        return {
+            type: "FinishStage",
+            title: `Finish Stage ${stageData.current_stage_number} — You're Almost There`,
+            description: `Complete ${nextTopic.title} to unlock ${nextStageTitle}.`,
+            cta_label: "Complete the Stage",
+            cta_target: `/dashboard/topic/${nextTopic.topic_id}`,
+            context_line: `${topicsData.remaining_topics_in_stage} topic(s) left in this stage`,
+        };
+    }
+
+    // Priority 6: Default — ContinueLearning
     if (nextProject) {
         return {
-            type: "start_available_project",
+            type: "ContinueLearning",
             title: "Project Milestone Available",
             description: `You are ready for the ${nextProject.title} project. Show what you've learned!`,
             cta_label: "Start Project",
             cta_target: `/dashboard/project/${nextProject.project_id}`,
+            context_line: `Stage ${stageData.current_stage_number} · ${topicsData.remaining_topics_in_stage} topics remaining`,
         };
     }
 
     if (nextTopic) {
         return {
-            type: "continue_learning",
+            type: "ContinueLearning",
             title: "Continue Your Learning",
-            description: `Up next: ${nextTopic.title}. Let's dive back in!`,
-            cta_label: "Go to Lesson",
+            description: `Next up: ${nextTopic.title} in ${stageData.current_stage_title}`,
+            cta_label: "Continue",
             cta_target: `/dashboard/topic/${nextTopic.topic_id}`,
+            context_line: `Stage ${stageData.current_stage_number} · ${topicsData.remaining_topics_in_stage} topics remaining`,
         };
     }
 
-    // Default: continue_learning
+    // Fallback
     return {
-        type: "continue_learning",
+        type: "ContinueLearning",
         title: "Continue Your Learning",
         description: `Explore your ${pathDisplayName} roadmap.`,
         cta_label: "Go to Roadmap",
         cta_target: "/dashboard/roadmap",
+        context_line: null,
     };
+}
+
+// ── Pace data computation from user_progress.last_accessed_at ──
+interface PaceResult {
+    streakDays: number;
+    sessionsThisWeek: number;
+    activeDaysThisWeek: number[];
+    daysSinceLastActive: number | null;
+}
+
+async function computePaceData(userId: string, weeklyHoursCategory: string | null): Promise<PaceResult> {
+    const supabase = await createClient();
+
+    // Get all distinct dates where user had activity (last_accessed_at)
+    const { data: progressRows } = await supabase
+        .from("user_progress")
+        .select("last_accessed_at")
+        .eq("user_id", userId)
+        .not("last_accessed_at", "is", null)
+        .order("last_accessed_at", { ascending: false });
+
+    if (!progressRows || progressRows.length === 0) {
+        return { streakDays: 0, sessionsThisWeek: 0, activeDaysThisWeek: [], daysSinceLastActive: null };
+    }
+
+    // Build set of unique active dates (YYYY-MM-DD)
+    const activeDateSet = new Set<string>();
+    for (const row of progressRows) {
+        if (row.last_accessed_at) {
+            const d = new Date(row.last_accessed_at);
+            activeDateSet.add(d.toISOString().split("T")[0]);
+        }
+    }
+
+    const sortedDates = Array.from(activeDateSet).sort().reverse();
+    const today = new Date();
+    const todayStr = today.toISOString().split("T")[0];
+
+    // Days since last active
+    const lastActiveDate = sortedDates[0];
+    const daysSinceLastActive = lastActiveDate
+        ? Math.floor((today.getTime() - new Date(lastActiveDate).getTime()) / (1000 * 60 * 60 * 24))
+        : null;
+
+    // Streak: consecutive days counting back from today (or yesterday)
+    let streakDays = 0;
+    const checkDate = new Date(today);
+    // If not active today, check if active yesterday to start the streak
+    if (!activeDateSet.has(todayStr)) {
+        checkDate.setDate(checkDate.getDate() - 1);
+        if (!activeDateSet.has(checkDate.toISOString().split("T")[0])) {
+            // No activity today or yesterday — streak is 0
+            streakDays = 0;
+        } else {
+            // Start counting from yesterday
+            while (activeDateSet.has(checkDate.toISOString().split("T")[0])) {
+                streakDays++;
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+        }
+    } else {
+        // Active today — count backwards
+        while (activeDateSet.has(checkDate.toISOString().split("T")[0])) {
+            streakDays++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        }
+    }
+
+    // This week's sessions (Mon=0 ... Sun=6)
+    // Find start of current week (Monday)
+    const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon ... 6=Sat
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - mondayOffset);
+    monday.setHours(0, 0, 0, 0);
+
+    const activeDaysThisWeek: number[] = [];
+    let sessionsThisWeek = 0;
+
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const dStr = d.toISOString().split("T")[0];
+        if (activeDateSet.has(dStr)) {
+            activeDaysThisWeek.push(i); // 0=Mon...6=Sun
+            sessionsThisWeek++;
+        }
+    }
+
+    return { streakDays, sessionsThisWeek, activeDaysThisWeek, daysSinceLastActive };
+}
+
+// ── Pace status computation ──
+function computePaceStatus(sessionsThisWeek: number, targetSessions: number): "Ahead" | "On Track" | "Behind" {
+    if (sessionsThisWeek > targetSessions) return "Ahead";
+    if (sessionsThisWeek >= targetSessions) return "On Track";
+    return "Behind";
 }
 
 // ── Target sessions from weekly_hours_category ──
 function getTargetSessions(category: string | null): number {
     switch (category) {
-        case "0-3":
-            return 2;
-        case "4-7":
-            return 3;
-        case "8-12":
-            return 5;
-        case "13+":
-            return 7;
-        default:
-            return 3;
+        case "0-3": return 2;
+        case "4-7": return 3;
+        case "8-12": return 5;
+        case "13+": return 7;
+        default: return 3;
     }
+}
+
+// ── Rule-based AI tip fallback ──
+function buildAiTip(
+    stageData: DashboardSummary["stage"],
+    topicsData: DashboardSummary["topics"],
+    pathCompletionPercent: number
+): string | null {
+    // No tip for brand new users
+    if (topicsData.completed_topics === 0) return null;
+
+    const remaining = topicsData.remaining_topics_in_stage;
+    if (remaining > 0 && remaining <= 3) {
+        return `You're ${remaining} lesson${remaining === 1 ? '' : 's'} away from completing ${stageData.current_stage_title}. Finishing it unlocks your next stage milestone.`;
+    }
+
+    if (pathCompletionPercent > 0 && pathCompletionPercent < 100) {
+        return `Keep going — ${remaining} topic(s) left in ${stageData.current_stage_title}.`;
+    }
+
+    return null;
 }
