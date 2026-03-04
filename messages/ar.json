@@ -427,6 +427,87 @@
       "backToRecommendation": "→ العودة لتوصية الذكاء الاصطناعي"
     }
   },
+  "PortfolioHub": {
+    "title": "مركز الأعمال",
+    "subtitle": "استعرض مهاراتك، مشاريعك، ورحلة تعلمك.",
+    "shareProfile": "مشاركة الملف",
+    "publicProfileTooltip": "هذا هو رابط ملفك العام لمشاركته مع أصحاب العمل.",
+    "tabs": {
+      "projects": "المشاريع",
+      "skills": "فهرس المهارات"
+    },
+    "profile": {
+      "path": "مسار {pathName}",
+      "bioPlaceholder": "اكتب نبذة قصيرة عن نفسك...",
+      "editBio": "تعديل النبذة",
+      "saveBio": "حفظ النبذة",
+      "bioSaved": "تم تحديث النبذة بنجاح.",
+      "projectsCompleted": "{count} مشاريع منجزة",
+      "skillsMastered": "{count} مهارات مكتسبة",
+      "goalLabel": "الهدف الأساسي:",
+      "goals": {
+        "job": "الحصول على وظيفة بدوام كامل",
+        "freelance": "العمل الحر",
+        "startup": "بناء مشروعي الخاص",
+        "exploring": "استكشاف فقط"
+      }
+    },
+    "skills": {
+      "addSkill": "إضافة مهارة",
+      "searchSkills": "ابحث عن مهارات...",
+      "noSkillsMessage": "لم تقم باكتساب أو إضافة أي مهارات بعد.",
+      "levelBadge": {
+        "beginner": "مبتدئ",
+        "intermediate": "متوسط",
+        "advanced": "متقدم"
+      },
+      "sourceBadge": {
+        "roadmap": "موثقة (من المسار)",
+        "project": "مكتسبة عبر مشروع",
+        "manual": "أضيفت يدوياً"
+      },
+      "visibilityToggle": "إظهار للعامة",
+      "deleteSkill": "إزالة المهارة",
+      "deleteConfirmDesc": "هل أنت متأكد أنك تريد إزالة هذه المهارة المضافة يدوياً؟",
+      "deleteConfirmCheck": "نعم، أزل المهارة",
+      "addModal": {
+        "title": "إضافة مهارة يدوياً",
+        "description": "اختر مهارة اكتسبتها خارج مسار ملاح.",
+        "skillLabel": "المهارة",
+        "levelLabel": "مستوى الإتقان",
+        "submit": "إضافة المهارة",
+        "successMessage": "تمت إضافة المهارة يدوياً إلى ملفك.",
+        "placeholder": "اختر مهارة..."
+      }
+    },
+    "projects": {
+      "addExternal": "إضافة مشروع خارجي",
+      "noProjectsMessage": "لم تقم بإنجاز أي مشاريع بعد.",
+      "visibilityToggle": "إظهار للعامة",
+      "sourceBadge": {
+        "roadmap": "مسار ملاح",
+        "user_custom": "مشروع خارجي"
+      },
+      "viewCode": "عرض الكود",
+      "viewDemo": "عرض حي",
+      "privateNotice": "هذا المشروع مخفي حالياً عن ملفك العام.",
+      "addDrawer": {
+        "title": "إضافة مشروع خارجي",
+        "description": "اعرض مشروعاً جانبياً أو شيئاً بنيته خارج مسارنا.",
+        "titleLabel": "عنوان المشروع",
+        "titlePlaceholder": "مثال: مدونة شخصية",
+        "descLabel": "الوصف",
+        "descPlaceholder": "ماذا يفعل هذا المشروع؟",
+        "difficultyLabel": "مستوى الصعوبة",
+        "githubLabel": "رابط مستودع GitHub (اختياري)",
+        "demoLabel": "رابط العرض الحي (اختياري)",
+        "techStackLabel": "التقنيات المستخدمة (مفصولة بفاصلة)",
+        "skillsLabel": "المهارات الموضحة (اختر متعدد)",
+        "submit": "إضافة المشروع",
+        "successMessage": "تمت إضافة المشروع الخارجي بنجاح."
+      }
+    }
+  },
   "Common": {
     "logo": "ملاح"
   }

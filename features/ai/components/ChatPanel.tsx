@@ -8,6 +8,7 @@ import { Send, Sparkles, Loader2, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getOrCreateChatSessionAction } from '../actions/chat-actions';
 import type { ChatMessage } from '../types';
+import { toast } from 'sonner';
 
 interface ChatPanelProps {
     topicId: string;
@@ -33,10 +34,11 @@ export function ChatPanel({
 
     const [sessionId, setSessionId] = React.useState<string | null>(null);
     const [isInitializing, setIsInitializing] = React.useState(true);
+    const [initError, setInitError] = React.useState<string | null>(null);
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
     // Vercel AI SDK useChat
-    const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
+    const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages, append } = useChat({
         api: '/api/chat',
         body: {
             sessionId,
@@ -57,37 +59,92 @@ export function ChatPanel({
 
         async function initSession() {
             setIsInitializing(true);
-            const res = await getOrCreateChatSessionAction(topicId, 'topic_tutor');
+            setInitError(null);
 
-            if (isMounted && res.success) {
-                setSessionId(res.sessionId!);
+            try {
+                const res = await getOrCreateChatSessionAction(topicId, 'topic_tutor');
 
-                // Hydrate messages - ensuring the format matches Vercel AI SDK expects
-                if (res.messages && res.messages.length > 0) {
-                    setMessages(res.messages.map((m: ChatMessage) => ({
-                        id: m.id,
-                        role: m.role as "user" | "assistant" | "system",
-                        content: m.content
-                    })));
+                if (isMounted) {
+                    if (res.success) {
+                        setSessionId(res.sessionId!);
+
+                        // Hydrate messages - ensuring the format matches Vercel AI SDK expects
+                        if (res.messages && res.messages.length > 0) {
+                            setMessages(res.messages.map((m: ChatMessage) => ({
+                                id: m.id,
+                                role: m.role as "user" | "assistant" | "system",
+                                content: m.content
+                            })));
+                        }
+                    } else {
+                        console.error('Failed to init session:', res.error);
+                        setInitError(res.error || 'Failed to initialize session');
+                    }
+                    setIsInitializing(false);
+                }
+            } catch (err: any) {
+                if (isMounted) {
+                    console.error('Exception init session:', err);
+                    setInitError(err.message || 'Error occurred');
+                    setIsInitializing(false);
                 }
             }
-            if (isMounted) setIsInitializing(false);
         }
 
         initSession();
 
         return () => { isMounted = false; };
-    }, [topicId, setMessages]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [topicId]); // Removed setMessages to avoid infinite loops
 
     // Auto-scroll to bottom of chat
     React.useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
+    const [localInput, setLocalInput] = React.useState('');
+
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!input?.trim() || !sessionId || isLoading) return;
-        handleSubmit(e);
+        console.log("Chat Submit Triggered. Local Input:", localInput, "SessionId:", sessionId, "Loading:", isLoading);
+        if (!localInput.trim()) {
+            toast.error("Please enter a question.");
+            return;
+        }
+        if (!sessionId) {
+            toast.error("Session not initialized. Please refresh.");
+            return;
+        }
+        if (isLoading) {
+            toast.error("AI is currently typing...");
+            return;
+        }
+
+        try {
+            // Use append directly to bypass buggy Vercel form state
+            append({
+                role: 'user',
+                content: localInput
+            }, {
+                options: {
+                    body: {
+                        sessionId,
+                        context: {
+                            topicTitle,
+                            topicSummary,
+                            learnerBackground,
+                            readinessLevel,
+                            aiLanguagePref,
+                            aiDetailLevel
+                        }
+                    }
+                }
+            });
+            setLocalInput('');
+        } catch (error) {
+            console.error("error sending message:", error);
+            toast.error("Error sending message. Check console.");
+        }
     };
 
     return (
@@ -95,7 +152,7 @@ export function ChatPanel({
             <div className="p-4 border-b bg-muted/30 relative">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 to-primary/20" />
                 <h3 className="font-bold flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <div className={cn("w-2 h-2 rounded-full", initError ? "bg-destructive" : "bg-green-500 animate-pulse")}></div>
                     {t('aiTutor')}
                 </h3>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -107,6 +164,12 @@ export function ChatPanel({
                 {isInitializing ? (
                     <div className="flex items-center justify-center h-full text-muted-foreground">
                         <Loader2 className="w-5 h-5 animate-spin" />
+                    </div>
+                ) : initError ? (
+                    <div className="flex flex-col items-center justify-center h-full text-destructive p-4 text-center gap-2">
+                        <Bot className="w-8 h-8 opacity-50" />
+                        <p className="text-sm font-bold">AI Tutor Unavailable</p>
+                        <p className="text-xs text-muted-foreground">{initError}. Please try refreshing.</p>
                     </div>
                 ) : (
                     <>
@@ -172,16 +235,20 @@ export function ChatPanel({
                 >
                     <input
                         type="text"
-                        value={input}
-                        onChange={handleInputChange}
+                        value={localInput}
+                        onChange={(e) => setLocalInput(e.target.value)}
                         placeholder={t('askQuestion')}
-                        className="w-full border rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-muted/30 transition-shadow"
-                        disabled={isInitializing || isLoading}
+                        className="w-full border rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 bg-muted/30 transition-shadow disabled:opacity-50"
+                        disabled={isInitializing || isLoading || !!initError || !sessionId}
                     />
                     <button
                         type="submit"
-                        disabled={!input?.trim() || isInitializing || isLoading}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:bg-primary/90"
+                        className={cn(
+                            "absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full transition-all",
+                            !localInput.trim()
+                                ? "bg-muted text-muted-foreground"
+                                : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
+                        )}
                     >
                         <Send className="w-4 h-4 rtl:-scale-x-100" />
                     </button>

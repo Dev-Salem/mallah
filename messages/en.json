@@ -427,6 +427,87 @@
       "backToRecommendation": "← Back to AI Recommendation"
     }
   },
+  "PortfolioHub": {
+    "title": "Portfolio Hub",
+    "subtitle": "Showcase your skills, projects, and learning journey.",
+    "shareProfile": "Share Profile",
+    "publicProfileTooltip": "This is your public portfolio URL to share with employers.",
+    "tabs": {
+      "projects": "Projects",
+      "skills": "Skills Catalog"
+    },
+    "profile": {
+      "path": "{pathName} Track",
+      "bioPlaceholder": "Write a short bio about yourself...",
+      "editBio": "Edit Bio",
+      "saveBio": "Save Bio",
+      "bioSaved": "Bio updated successfully.",
+      "projectsCompleted": "{count} Projects Completed",
+      "skillsMastered": "{count} Skills Mastered",
+      "goalLabel": "Primary Goal:",
+      "goals": {
+        "job": "Get a Full-Time Job",
+        "freelance": "Freelance",
+        "startup": "Build My Own Project",
+        "exploring": "Just Exploring"
+      }
+    },
+    "skills": {
+      "addSkill": "Add Skill",
+      "searchSkills": "Search skills...",
+      "noSkillsMessage": "You haven't unlocked or added any skills yet.",
+      "levelBadge": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "sourceBadge": {
+        "roadmap": "Verified (Roadmap)",
+        "project": "Earned via Project",
+        "manual": "Manually Added"
+      },
+      "visibilityToggle": "Public Visibility",
+      "deleteSkill": "Remove Skill",
+      "deleteConfirmDesc": "Are you sure you want to remove this manually added skill?",
+      "deleteConfirmCheck": "Yes, remove skill",
+      "addModal": {
+        "title": "Add Skill Manually",
+        "description": "Select a skill you have acquired outside the Mallah roadmap.",
+        "skillLabel": "Skill",
+        "levelLabel": "Proficiency Level",
+        "submit": "Add Skill",
+        "successMessage": "Skill added manually to your portfolio.",
+        "placeholder": "Select a skill..."
+      }
+    },
+    "projects": {
+      "addExternal": "Add External Project",
+      "noProjectsMessage": "You haven't completed any projects yet.",
+      "visibilityToggle": "Public Visibility",
+      "sourceBadge": {
+        "roadmap": "Mallah Roadmap",
+        "user_custom": "External Project"
+      },
+      "viewCode": "View Code",
+      "viewDemo": "Live Demo",
+      "privateNotice": "This project is currently hidden from your public portfolio.",
+      "addDrawer": {
+        "title": "Add External Project",
+        "description": "Showcase a side project or something you built outside our roadmap.",
+        "titleLabel": "Project Title",
+        "titlePlaceholder": "e.g., Personal Blog",
+        "descLabel": "Description",
+        "descPlaceholder": "What does this project do?",
+        "difficultyLabel": "Difficulty Level",
+        "githubLabel": "GitHub Repository URL (Optional)",
+        "demoLabel": "Live Demo URL (Optional)",
+        "techStackLabel": "Tech Stack (Comma Separated)",
+        "skillsLabel": "Skills Demonstrated (Select multiple)",
+        "submit": "Add Project",
+        "successMessage": "External project added successfully."
+      }
+    }
+  },
   "Common": {
     "logo": "MALLAH"
   }
