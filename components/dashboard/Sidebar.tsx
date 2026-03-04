@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/logo';
 import { useSidebarData } from '@/features/dashboard/components/SidebarContext';
 import { useState } from 'react';
+import { ThemeToggle } from '@/components/shared/theme-toggle';
 
 // ─── Progress Ring SVG ───
 function ProgressRing({ percent, size = 32 }: { percent: number; size?: number }) {
@@ -34,7 +35,7 @@ function ProgressRing({ percent, size = 32 }: { percent: number; size?: number }
         fill="none"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        className="text-white/10"
+        className="text-muted"
       />
       <circle
         cx={size / 2}
@@ -53,7 +54,7 @@ function ProgressRing({ percent, size = 32 }: { percent: number; size?: number }
         y={size / 2}
         textAnchor="middle"
         dominantBaseline="central"
-        className="fill-white text-[8px] font-mono font-bold transform rotate-90"
+        className="fill-foreground text-[8px] font-mono font-bold transform rotate-90"
         style={{ transformOrigin: `${size / 2}px ${size / 2}px` }}
       >
         {percent}%
@@ -94,18 +95,21 @@ export function Sidebar() {
   return (
     <>
       {/* ─── Desktop Sidebar ─── */}
-      <aside className="fixed top-0 bottom-0 start-0 z-50 w-60 bg-black/90 border-e border-white/5 backdrop-blur-xl hidden lg:flex flex-col">
+      <aside className="fixed top-0 bottom-0 start-0 z-50 w-60 bg-background/80 lg:bg-background border-e border-primary/10 backdrop-blur-xl hidden lg:flex flex-col">
         {/* Header / Logo */}
-        <div className="h-16 flex items-center px-6 border-b border-white/5 bg-white/[0.03]">
+        <div className="h-16 flex items-center justify-between px-6 border-b border-primary/10 bg-primary/5">
           <Link href="/dashboard" className="flex items-center gap-2.5">
             <Logo size={24} className="text-primary" />
             <span className={cn(
-              "text-base font-black text-white uppercase leading-none",
+              "text-base font-black text-foreground uppercase leading-none",
               !isArabic && "tracking-tighter"
             )}>
               Mallah
             </span>
           </Link>
+          <div className="shrink-0 scale-90">
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Navigation */}
@@ -120,12 +124,12 @@ export function Sidebar() {
                   "group relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200 border-s-2",
                   isActive
                     ? "bg-primary/10 border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-white hover:bg-white/5"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-primary/5"
                 )}
               >
                 <item.icon className={cn(
                   "w-4 h-4 shrink-0 transition-colors",
-                  isActive ? "text-primary" : "text-muted-foreground group-hover:text-white"
+                  isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                 )} />
 
                 <span className={cn(
@@ -156,12 +160,12 @@ export function Sidebar() {
 
         {/* Path Mini-Status */}
         {sidebarData && (
-          <div className="px-4 py-4 border-t border-white/5">
+          <div className="px-4 py-4 border-t border-primary/10">
             <div className="flex items-center gap-3">
               <ProgressRing percent={sidebarData.pathCompletionPercent} size={36} />
               <div className="flex flex-col min-w-0">
                 <span className={cn(
-                  "text-[10px] font-mono font-bold text-white uppercase truncate",
+                  "text-[10px] font-mono font-bold text-foreground uppercase truncate",
                   !isArabic && "tracking-wide"
                 )}>
                   {sidebarData.pathDisplayName.split(' ')[0]} Dev
@@ -182,7 +186,7 @@ export function Sidebar() {
               "group flex items-center gap-3 px-3 py-2.5 transition-all duration-200 border-s-2",
               pathname === '/settings'
                 ? "bg-primary/10 border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-white hover:bg-white/5"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-primary/5"
             )}
           >
             <Settings className="w-4 h-4 shrink-0" />
@@ -205,7 +209,7 @@ export function Sidebar() {
       </aside>
 
       {/* ─── Mobile Bottom Tab Bar ─── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/95 border-t border-white/10 backdrop-blur-xl lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 border-t border-primary/10 backdrop-blur-xl lg:hidden">
         <div className="flex items-center justify-around h-16 px-2">
           {mobileTabItems.map((item) => {
             const isActive = item.key !== 'more' && pathname === item.href;
@@ -248,14 +252,14 @@ export function Sidebar() {
       {/* ─── Mobile "More" Bottom Sheet ─── */}
       {mobileSheetOpen && (
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setMobileSheetOpen(false)}>
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-background/60" />
           <div
-            className="absolute bottom-16 left-0 right-0 bg-black/95 border-t border-white/10 p-4 space-y-2"
+            className="absolute bottom-16 left-0 right-0 bg-background border-t border-primary/10 p-4 space-y-2"
             onClick={(e) => e.stopPropagation()}
           >
             <Link
               href="/dashboard/opportunities"
-              className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-white transition-colors"
+              className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-foreground transition-colors"
               onClick={() => setMobileSheetOpen(false)}
             >
               <Briefcase className="w-4 h-4" />
@@ -263,7 +267,7 @@ export function Sidebar() {
             </Link>
             <Link
               href="/settings"
-              className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-white transition-colors"
+              className="flex items-center gap-3 px-4 py-3 text-muted-foreground hover:text-foreground transition-colors"
               onClick={() => setMobileSheetOpen(false)}
             >
               <Settings className="w-4 h-4" />

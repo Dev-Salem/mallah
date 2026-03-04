@@ -93,9 +93,9 @@ export function TopicViewerView({ topic, adjacentTopics, breadcrumb }: TopicView
                                     <Badge variant="secondary" className="bg-secondary/50 font-semibold">{t(`types.${topic.topic_type}`)}</Badge>
                                     <span>•</span>
                                     <span className={cn(
-                                        topic.difficulty_level === 'beginner' && "text-green-600 dark:text-green-400",
-                                        topic.difficulty_level === 'intermediate' && "text-amber-600 dark:text-amber-400",
-                                        topic.difficulty_level === 'advanced' && "text-red-600 dark:text-red-400"
+                                        topic.difficulty_level === 'beginner' && "text-success",
+                                        topic.difficulty_level === 'intermediate' && "text-warning",
+                                        topic.difficulty_level === 'advanced' && "text-destructive"
                                     )}>
                                         {t('difficulty', { level: topic.difficulty_level })}
                                     </span>
@@ -192,7 +192,7 @@ export function TopicViewerView({ topic, adjacentTopics, breadcrumb }: TopicView
                                 {/* Certifications Section */}
                                 {certs.length > 0 && (
                                     <div className="space-y-4 pt-4 border-t border-dashed">
-                                        <h3 className="text-sm font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider flex items-center gap-2">
+                                        <h3 className="text-sm font-bold text-warning uppercase tracking-wider flex items-center gap-2">
                                             <FileBadge className="w-4 h-4" /> {t('suggestedCertificates')}
                                         </h3>
                                         <div className="grid grid-cols-1 gap-3">
@@ -234,7 +234,7 @@ export function TopicViewerView({ topic, adjacentTopics, breadcrumb }: TopicView
                             className={cn(
                                 "px-8 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-sm",
                                 status === 'completed'
-                                    ? "bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 cursor-default"
+                                    ? "bg-success/10 text-success border border-success/20 cursor-default"
                                     : "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-md hover:-translate-y-0.5"
                             )}
                         >
@@ -300,7 +300,7 @@ function ResourceVideoCard({ resource }: { resource: TopicResource }) {
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors">
                             <div className="w-12 h-12 rounded-full bg-black/70 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform">
-                                <PlayCircle className="w-6 h-6 text-white ml-1" />
+                                <PlayCircle className="w-6 h-6 text-primary-foreground ml-1" />
                             </div>
                         </div>
                     </div>
@@ -350,21 +350,21 @@ function ResourceArticleCard({ resource }: { resource: TopicResource }) {
 function ResourceCertCard({ resource }: { resource: TopicResource }) {
     return (
         <a href={resource.url || '#'} target="_blank" rel="noopener noreferrer" className="block group">
-            <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 sm:p-5 hover:border-amber-500/40 hover:shadow-md transition-all flex items-center justify-between gap-4">
+            <div className="bg-info/5 border border-info/20 rounded-xl p-4 sm:p-5 hover:border-info/40 hover:shadow-md transition-all flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="p-2.5 bg-amber-500/10 text-amber-600 dark:text-amber-500 rounded-lg shrink-0">
+                    <div className="p-2.5 bg-info/10 text-info rounded-lg shrink-0">
                         <FileBadge className="w-6 h-6" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-amber-900 dark:text-amber-100 mb-1 group-hover:underline underline-offset-2 truncate">
+                        <h4 className="font-bold text-foreground mb-1 group-hover:underline underline-offset-2 truncate">
                             {resource.title}
                         </h4>
-                        <div className="flex items-center gap-2 text-xs font-medium text-amber-700/70 dark:text-amber-400/70 uppercase tracking-wider">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                             <span>{resource.provider || 'Certification'}</span>
                         </div>
                     </div>
                 </div>
-                <div className="shrink-0 text-amber-600/50 group-hover:text-amber-600 dark:text-amber-500/50 dark:group-hover:text-amber-500 transition-colors">
+                <div className="shrink-0 text-muted-foreground group-hover:text-primary transition-colors">
                     <ExternalLink className="w-5 h-5" />
                 </div>
             </div>

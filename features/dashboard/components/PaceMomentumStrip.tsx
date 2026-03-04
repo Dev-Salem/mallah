@@ -20,9 +20,9 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
     // Pace badge styling
     const paceColor = (() => {
         switch (pace.pace_status) {
-            case 'Ahead': return 'bg-green-500/15 text-green-400 border-green-500/30';
-            case 'On Track': return 'bg-sky-500/15 text-sky-400 border-sky-500/30';
-            case 'Behind': return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
+            case 'Ahead': return 'bg-success/15 text-success border-success/30';
+            case 'On Track': return 'bg-info/15 text-info border-info/30';
+            case 'Behind': return 'bg-warning/15 text-warning border-warning/30';
         }
     })();
 
@@ -35,18 +35,18 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
     })();
 
     return (
-        <div className="border border-white/10 bg-white/[0.02] p-4 space-y-5">
+        <div className="border border-primary/20 bg-primary/5 p-4 space-y-5">
             {/* Streak Counter */}
             <div className="flex items-center gap-3">
                 <Flame className={cn(
                     "w-7 h-7 shrink-0 transition-colors",
-                    isStreakActive ? "text-orange-400" : "text-white/10"
+                    isStreakActive ? "text-warning" : "text-muted/20"
                 )} />
                 <div>
                     {isStreakActive ? (
                         <>
                             <span className={cn(
-                                "text-xl font-black text-white",
+                                "text-xl font-black text-foreground",
                                 !isArabic && "tracking-tight"
                             )}>
                                 {pace.streak_days}
@@ -88,7 +88,7 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
                                     "w-4 h-4 rounded-full transition-all duration-500",
                                     isActive
                                         ? "bg-primary shadow-[0_0_6px_var(--primary)]"
-                                        : "bg-white/5 border border-white/10"
+                                        : "bg-muted/20 border border-muted"
                                 )} />
                                 <span className="text-[7px] font-mono text-muted-foreground/30 uppercase">
                                     {label}

@@ -220,13 +220,33 @@
   "Roadmap": {
     "title": "خارطة طريقك",
     "subtitle": "اتبع التسلسل لبناء خبرتك. المشاريع تفتح المراحل القادمة.",
+    "overall_progress": "التقدم الإجمالي",
+    "stages_completed": "مراحل مكتملة",
+    "topics_completed": "مواضيع مكتملة",
     "modules": "وحدات",
-    "difficulty": "مستوى {level}",
-    "start": "ابدأ المهمة",
-    "continue": "متابعة",
-    "review": "مراجعة",
-    "start_project": "ابدأ المشروع",
-    "view_submission": "عرض التسليم",
+    "minutes": "دقيقة",
+    "current_stage": "المرحلة الحالية",
+    "completed": "مكتمل",
+    "locked": "مغلق",
+    "difficulty_label": "المستوى",
+    "difficulty": {
+      "beginner": "مبتدئ",
+      "intermediate": "متوسط",
+      "advanced": "متقدم"
+    },
+    "status": {
+      "completed": "مكتمل",
+      "in_progress": "قيد التنفيذ",
+      "not_started": "لم يبدأ"
+    },
+    "actions": {
+      "start": "ابدأ المهمة",
+      "continue": "متابعة",
+      "review": "مراجعة",
+      "start_project": "ابدأ المشروع",
+      "continue_project": "متابعة المشروع",
+      "view_submission": "عرض التسليم"
+    },
     "milestone_project": "مشروع رئيسي",
     "types": {
       "lesson": "درس",
@@ -254,6 +274,10 @@
     "resources": "المصادر",
     "noSummary": "لم يتم توفير ملخص لهذا الدرس.",
     "noResources": "لا توجد مصادر إضافية مرفقة.",
+    "learningMaterials": "المصادر التعليمية",
+    "videoResources": "شروحات الفيديو",
+    "readingMaterials": "مصادر القراءة",
+    "suggestedCertificates": "شهادات مقترحة",
     "aiTutor": "مساعد ملاح الذكي",
     "aiTutorSubtitle": "دليلك الشخصي خطوة بخطوة",
     "aiGreeting": "أهلاً! أنا المساعد الذكي الخاص بك لموضوع {topic}. ما الذي تود استكشافه؟",

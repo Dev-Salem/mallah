@@ -220,13 +220,33 @@
   "Roadmap": {
     "title": "Your Navigational Roadmap",
     "subtitle": "Follow the sequence to build your expertise. Milestones unlock subsequent stages.",
+    "overall_progress": "Overall Progress",
+    "stages_completed": "Stages Completed",
+    "topics_completed": "Topics Completed",
     "modules": "Modules",
-    "difficulty": "{level} Level",
-    "start": "Start Mission",
-    "continue": "Resume",
-    "review": "Review",
-    "start_project": "Start Project",
-    "view_submission": "View Submission",
+    "minutes": "min",
+    "current_stage": "Current Stage",
+    "completed": "Completed",
+    "locked": "Locked",
+    "difficulty_label": "Difficulty",
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "status": {
+      "completed": "Completed",
+      "in_progress": "In Progress",
+      "not_started": "Not Started"
+    },
+    "actions": {
+      "start": "Start Mission",
+      "continue": "Resume",
+      "review": "Review",
+      "start_project": "Start Project",
+      "continue_project": "Continue Project",
+      "view_submission": "View Submission"
+    },
     "milestone_project": "Milestone Project",
     "types": {
       "lesson": "Lesson",
@@ -254,6 +274,10 @@
     "resources": "Resources",
     "noSummary": "No overview provided for this topic.",
     "noResources": "No extra resources attached.",
+    "learningMaterials": "Learning Materials",
+    "videoResources": "Video Resources",
+    "readingMaterials": "Reading Materials",
+    "suggestedCertificates": "Suggested Certificates",
     "aiTutor": "Mallah AI Tutor",
     "aiTutorSubtitle": "Your personal guide for this topic",
     "aiGreeting": "Hello! I am your AI assistant for {topic}. What would you like to explore?",

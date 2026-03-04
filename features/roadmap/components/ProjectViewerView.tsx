@@ -91,9 +91,9 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                     <Badge variant="default" className="font-semibold">{t('projectMilestone')}</Badge>
                                     <span>•</span>
                                     <span className={cn(
-                                        project.difficulty_level === 'beginner' && "text-green-600 dark:text-green-400",
-                                        project.difficulty_level === 'intermediate' && "text-amber-600 dark:text-amber-400",
-                                        project.difficulty_level === 'advanced' && "text-red-600 dark:text-red-400"
+                                        project.difficulty_level === 'beginner' && "text-success",
+                                        project.difficulty_level === 'intermediate' && "text-warning",
+                                        project.difficulty_level === 'advanced' && "text-destructive"
                                     )}>
                                         {t('difficulty', { level: project.difficulty_level })}
                                     </span>
@@ -104,7 +104,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
 
                             <div className="flex flex-wrap items-center gap-4 text-muted-foreground font-medium mb-2">
                                 {!isCompleted && (
-                                    <div className="flex items-center gap-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-500 px-3 py-1.5 rounded-lg border border-amber-500/20 text-sm font-bold">
+                                    <div className="flex items-center gap-1.5 bg-warning/10 text-warning px-3 py-1.5 rounded-lg border border-warning/20 text-sm font-bold">
                                         <AlertCircle className="w-4 h-4" />
                                         <span>{t('gatesNextStage')}</span>
                                     </div>
@@ -128,13 +128,13 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                     </div>
 
                     {project.skills && project.skills.length > 0 && (
-                        <div className="border-t pt-6 bg-muted/5 -mx-6 sm:-mx-8 px-6 sm:px-8 -mb-6 sm:-mb-8 pb-6 sm:pb-8">
-                            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                        <div className="border-t pt-6 bg-secondary/30 -mx-6 sm:-mx-8 px-6 sm:px-8 -mb-6 sm:-mb-8 pb-6 sm:pb-8">
+                            <h3 className="text-sm font-bold text-foreground uppercase tracking-wider mb-4">
                                 {t('skillsDemonstrated')}
                             </h3>
                             <div className="flex flex-wrap items-center gap-2">
                                 {project.skills.map((skill) => (
-                                    <Badge key={skill.skill_id} variant="secondary" className="px-3 py-1 text-sm bg-background border">
+                                    <Badge key={skill.skill_id} variant="secondary" className="px-3 py-1 text-sm border border-primary/20 text-secondary-foreground">
                                         {skill.name}
                                     </Badge>
                                 ))}
@@ -154,7 +154,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                     {!isEditing && project.submission ? (
                         <div className="space-y-6 flex-1">
                             {/* Read-only state */}
-                            <div className="bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400 p-4 rounded-xl flex items-start gap-3 mb-6">
+                            <div className="bg-success/10 border border-success/20 text-success p-4 rounded-xl flex items-start gap-3 mb-6">
                                 <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                                 <div>
                                     <div className="font-bold mb-1">{t('completed')}</div>
@@ -215,10 +215,10 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
 
                                 {project.submission.feedback && (
                                     <div className="pt-4 mt-6 border-t border-dashed">
-                                        <h4 className="text-sm font-bold text-amber-600 dark:text-amber-500 mb-2 uppercase tracking-wider">
+                                        <h4 className="text-sm font-bold text-warning mb-2 uppercase tracking-wider">
                                             {t('instructorFeedback')}
                                         </h4>
-                                        <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl text-sm text-amber-900 dark:text-amber-200 whitespace-pre-wrap">
+                                        <div className="bg-warning/10 border border-warning/20 p-4 rounded-xl text-sm text-warning whitespace-pre-wrap">
                                             {project.submission.feedback}
                                         </div>
                                     </div>

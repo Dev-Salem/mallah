@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/lib/i18n/routing";
-import { 
-  ArrowRight, 
+import {
+  ArrowRight,
 } from "lucide-react";
 import { Logo, LogoText } from "@/components/ui/logo";
 import { getTranslations, getLocale } from 'next-intl/server';
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export default async function LandingPage() {
   const supabase = await createClient();
@@ -29,7 +30,7 @@ export default async function LandingPage() {
       <div className="fixed inset-0 noise z-[100] mix-blend-overlay pointer-events-none" />
       <div className="fixed inset-0 hud-grid opacity-[0.4] pointer-events-none" />
       <div className="fixed inset-0 scanline z-[101] pointer-events-none" />
-      
+
       {/* Navigation */}
       <header className="fixed top-0 z-50 w-full border-b border-primary/10 glass">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-12">
@@ -37,9 +38,9 @@ export default async function LandingPage() {
           <div className="flex items-center gap-8">
             <nav className="hidden lg:flex items-center gap-8">
               {navItems.map((item) => (
-                <a 
-                  key={item.key} 
-                  href={`#${item.id}`} 
+                <a
+                  key={item.key}
+                  href={`#${item.id}`}
                   className={`text-[10px] uppercase ${!isArabic ? 'tracking-[0.2em]' : ''} font-mono font-medium text-muted-foreground hover:text-primary transition-all duration-300`}
                 >
                   <span className="text-primary/40 mr-1 text-[8px]">0{navItems.indexOf(item) + 1}</span>
@@ -49,6 +50,7 @@ export default async function LandingPage() {
             </nav>
             <div className="h-4 w-px bg-white/10 hidden lg:block" />
             <div className="flex items-center gap-4">
+              <ThemeToggle />
               <LanguageSwitcher />
               {user ? (
                 <Link href="/dashboard">
@@ -106,7 +108,7 @@ export default async function LandingPage() {
                 <div className="relative scale-125 opacity-20 filter grayscale contrast-150">
                   <Logo size={320} />
                 </div>
-                
+
                 {/* HUD Overlays */}
                 <div className="absolute top-4 left-4 text-[8px] font-mono text-primary flex flex-col gap-1">
                   <div className="flex items-center gap-2">
@@ -118,14 +120,14 @@ export default async function LandingPage() {
                     <span className="font-bold">55.2744° E</span>
                   </div>
                 </div>
-                
+
                 <div className="absolute bottom-4 right-4 text-[8px] font-mono text-primary/40 uppercase tracking-[0.3em]">
                   Mallah-Interface_v4.0
                 </div>
 
                 <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20" />
                 <div className="absolute inset-y-0 left-1/2 w-px bg-primary/20" />
-                
+
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-primary/40 rounded-full animate-ping opacity-20" />
               </div>
             </div>
@@ -143,7 +145,7 @@ export default async function LandingPage() {
                 {t('Problem.subtitle')}
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-1px bg-white/5 border border-white/5">
               {[
                 { label: "SYS_ERR_01", key: "item1" },
@@ -176,7 +178,7 @@ export default async function LandingPage() {
                 <p className="text-xs text-muted-foreground font-mono leading-relaxed italic max-w-xs">{t('Process.quote')}</p>
               </div>
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 border border-white/5">
               {[
                 { key: "step1" },

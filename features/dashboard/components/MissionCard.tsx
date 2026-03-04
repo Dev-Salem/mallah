@@ -41,7 +41,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
 
                 {/* Title */}
                 <h2 className={cn(
-                    "text-xl lg:text-2xl font-black text-white uppercase mb-2",
+                    "text-xl lg:text-2xl font-black text-foreground uppercase mb-2",
                     !isArabic && "tracking-tight"
                 )}>
                     {mission.title}

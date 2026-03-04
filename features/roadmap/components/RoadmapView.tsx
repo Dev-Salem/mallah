@@ -130,9 +130,9 @@ function StageCard({ stage, t, locale, state }: { stage: Stage; t: ReturnType<ty
                             <div className="flex items-center gap-2 text-sm text-muted-foreground capitalize flex-wrap">
                                 <span className={cn(
                                     "font-medium",
-                                    stage.difficulty_level === 'beginner' && "text-green-600 dark:text-green-400",
-                                    stage.difficulty_level === 'intermediate' && "text-amber-600 dark:text-amber-400",
-                                    stage.difficulty_level === 'advanced' && "text-red-600 dark:text-red-400"
+                                    stage.difficulty_level === 'beginner' && "text-success",
+                                    stage.difficulty_level === 'intermediate' && "text-warning",
+                                    stage.difficulty_level === 'advanced' && "text-destructive"
                                 )}>
                                     {t(`difficulty.${stage.difficulty_level}`, { fallback: stage.difficulty_level })}
                                 </span>
@@ -200,13 +200,13 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
             <div className={cn(
                 "absolute left-0 top-0 bottom-0 w-1",
                 topic.user_status === 'completed' ? "bg-primary/50" :
-                    topic.user_status === 'in_progress' ? "bg-blue-500" : "bg-transparent group-hover:bg-primary/20"
+                    topic.user_status === 'in_progress' ? "bg-info" : "bg-transparent group-hover:bg-primary/20"
             )} />
 
             <div className={cn(
                 "flex-shrink-0 flex items-center gap-3",
                 topic.user_status === 'completed' ? "text-primary" :
-                    topic.user_status === 'in_progress' ? "text-blue-500" : "text-muted-foreground"
+                    topic.user_status === 'in_progress' ? "text-info" : "text-muted-foreground"
             )}>
                 {getIcon()}
             </div>
@@ -222,7 +222,7 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                         {topic.user_status === 'completed' ? (
                             <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 uppercase text-[10px] tracking-wider">{t('status.completed')}</Badge>
                         ) : topic.user_status === 'in_progress' ? (
-                            <Badge variant="secondary" className="text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 uppercase text-[10px] tracking-wider">{t('status.in_progress')}</Badge>
+                            <Badge variant="secondary" className="text-info bg-info/15 uppercase text-[10px] tracking-wider">{t('status.in_progress')}</Badge>
                         ) : (
                             <Badge variant="outline" className="text-muted-foreground uppercase text-[10px] tracking-wider">{t('status.not_started')}</Badge>
                         )}
@@ -258,7 +258,7 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                     {topic.user_status === 'completed' ? (
                         <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 uppercase text-[10px] tracking-wider">{t('status.completed')}</Badge>
                     ) : topic.user_status === 'in_progress' ? (
-                        <Badge variant="secondary" className="text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 uppercase text-[10px] tracking-wider">{t('status.in_progress')}</Badge>
+                        <Badge variant="secondary" className="text-info bg-info/15 uppercase text-[10px] tracking-wider">{t('status.in_progress')}</Badge>
                     ) : null}
                 </div>
 
@@ -309,7 +309,7 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                             </Badge>
                         )}
                         {project.user_status === 'in_progress' && (
-                            <Badge variant="secondary" className="text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 uppercase text-[10px] tracking-wider">
+                            <Badge variant="secondary" className="text-info bg-info/15 uppercase text-[10px] tracking-wider">
                                 {t('status.in_progress')}
                             </Badge>
                         )}
@@ -327,9 +327,9 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                             </span>
                             <span className={cn(
                                 "capitalize font-semibold",
-                                project.difficulty_level === 'beginner' && "text-green-600 dark:text-green-400",
-                                project.difficulty_level === 'intermediate' && "text-amber-600 dark:text-amber-400",
-                                project.difficulty_level === 'advanced' && "text-red-600 dark:text-red-400"
+                                project.difficulty_level === 'beginner' && "text-success",
+                                project.difficulty_level === 'intermediate' && "text-warning",
+                                project.difficulty_level === 'advanced' && "text-destructive"
                             )}>
                                 {t(`difficulty.${project.difficulty_level}`, { fallback: project.difficulty_level || '' })}
                             </span>

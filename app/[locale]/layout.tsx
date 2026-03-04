@@ -25,6 +25,8 @@ export const metadata = {
   description: "Bridge the gap between graduation and employment with mission-critical roadmaps.",
 };
 
+import { ThemeProvider } from "@/components/shared/theme-provider";
+
 export default async function RootLayout({
   children,
   params,
@@ -37,10 +39,17 @@ export default async function RootLayout({
   const isArabic = locale.startsWith('ar');
 
   return (
-    <html lang={locale} className={`dark ${inter.variable} ${mono.variable} ${ibmPlexArabic.variable}`} dir={isArabic ? 'rtl' : 'ltr'}>
+    <html lang={locale} className={`${inter.variable} ${mono.variable} ${ibmPlexArabic.variable}`} dir={isArabic ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body className="antialiased bg-background text-foreground">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -86,7 +86,7 @@ export function ChatPanel({
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!input.trim() || !sessionId || isLoading) return;
+        if (!input?.trim() || !sessionId || isLoading) return;
         handleSubmit(e);
     };
 
@@ -180,7 +180,7 @@ export function ChatPanel({
                     />
                     <button
                         type="submit"
-                        disabled={!input.trim() || isInitializing || isLoading}
+                        disabled={!input?.trim() || isInitializing || isLoading}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:bg-primary/90"
                     >
                         <Send className="w-4 h-4 rtl:-scale-x-100" />
