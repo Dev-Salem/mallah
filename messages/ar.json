@@ -285,7 +285,9 @@
     "topicPosition": "الموضوع {current} من {total}",
     "nextTopic": "الموضوع التالي",
     "previousTopic": "الموضوع السابق",
-    "practicalOutput": "المخرجات العملية"
+    "practicalOutput": "المخرجات العملية",
+    "aiTutorUnavailable": "المساعد الذكي غير متاح",
+    "aiTutorUnavailableDesc": "الرجاء تحديث الصفحة."
   },
   "ProjectViewer": {
     "backToRoadmap": "العودة للخارطة",

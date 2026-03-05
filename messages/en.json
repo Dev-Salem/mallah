@@ -285,7 +285,9 @@
     "topicPosition": "Topic {current} of {total}",
     "nextTopic": "Next Topic",
     "previousTopic": "Previous Topic",
-    "practicalOutput": "Practical Output"
+    "practicalOutput": "Practical Output",
+    "aiTutorUnavailable": "AI Tutor Unavailable",
+    "aiTutorUnavailableDesc": "Please try refreshing the page."
   },
   "ProjectViewer": {
     "backToRoadmap": "Back to Roadmap",
