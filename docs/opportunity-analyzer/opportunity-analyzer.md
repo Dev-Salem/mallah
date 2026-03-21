@@ -39,7 +39,7 @@ This is not a resume optimizer. It is a **learning direction engine** built arou
 **Entry points:**
 - Dashboard → Quick Navigation → "Opportunity Analyzer"
 - Sidebar navigation → "Opportunity Analyzer"
-- Resume Builder → "Check against a job" (v2)
+- Resume Builder → Cards Grid → `🎯 Job-Based Resume` (uses saved analysis as JD source)
 
 **Depends on:**
 - `opportunity_analyses`
@@ -322,7 +322,9 @@ A numbered list of concrete steps. Each step is a `Card` row with:
 - Maximum 7 steps. More becomes overwhelming.
 - Every `learn_topic` step must include a deep link to the Topic Viewer.
 - Every `build_project` step must link to the Portfolio Hub.
-- Every `update_resume` step must link to the Resume Builder.
+- Every `update_resume` step must link to the Resume Builder — specifically:
+  - If the learner has a job-based resume whose `source_jd.analysis_id` matches this saved analysis → link directly to that resume in the editor.
+  - If no matching job-based resume exists → link to the Resume Builder Cards Grid, where the learner can create a job-based resume for this role.
 - Steps ordered: learn → build → apply/polish.
 - Respects `ai_language_pref` and `ai_detail_level`.
 - If `ai_detail_level = short` → reason omitted, steps are one line each.
@@ -545,5 +547,5 @@ This is the loop that makes the platform coherent:
 
 - **Roadmap** — Tags topics linked to missing skills with "From Opportunity Analyzer" badge when an analysis is saved. CV-unverified skills with roadmap topics are also tagged. Completing a tagged topic upgrades a CV skill to roadmap-verified.
 - **Portfolio Hub** — "Projects to Build" suggestions can be added directly to `user_projects` with `status = 'available'`.
-- **Resume Builder** — Action plan steps deep-link to the Resume Builder for resume-specific improvements. In v2, a saved JD feeds directly into the Resume Builder's ATS scorer for job-specific keyword matching.
+- **Resume Builder** — Action plan `update_resume` steps deep-link directly to the learner's job-based resume for this role if one exists, or to the Resume Builder Cards Grid to create one. The Job-Based Resume feature uses the saved analysis (`analysis_id`) as its source JD — creating a tailored resume copy pre-configured around this job's requirements. This connection is live in v1.
 - **Dashboard** — Quick Navigation links here. `opportunity_analyses.created_at` feeds the Dashboard Recent Activity section.
