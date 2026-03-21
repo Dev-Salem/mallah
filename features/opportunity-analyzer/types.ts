@@ -64,6 +64,7 @@ export interface OpportunityAnalysisResult {
     action_plan: ActionPlanStep[];
     cv_skills_contributed: number;
     is_saved: boolean;
+    matchingResumeId?: string | null;
     created_at?: string;
     last_reanalyzed_at?: string;
 }

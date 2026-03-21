@@ -35,6 +35,7 @@ export function ResultsScreen({ result, onNewAnalysis, onViewAnalysis }: Results
                     {result.seniority_level && <p className="text-muted-foreground">{result.seniority_level} Level</p>}
                 </div>
                 <div className="flex gap-4">
+                    <Button onClick={() => window.print()} variant="outline" className="hidden sm:inline-flex">Export as PDF</Button>
                     <Button onClick={onNewAnalysis} variant="ghost" className="hidden sm:inline-flex">New Analysis</Button>
                     <Button onClick={handleSave} variant="default">Save Analysis</Button>
                 </div>

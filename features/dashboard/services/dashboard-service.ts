@@ -178,6 +178,35 @@ export async function getDashboardSummary(
         .eq("user_id", userId)
         .eq("source", "manual");
 
+    // ── Fetch aggregate resume data ──
+    const { data: userResumes } = await supabase
+        .from('resumes')
+        .select('status, ats_score, last_updated_at')
+        .eq('user_id', userId);
+
+    let aggResumeStatus: "not_created" | "in_progress" | "ready" = "not_created";
+    let aggAtsScore: number | null = null;
+    let aggResumeDaysAgo: number | null = null;
+
+    if (userResumes && userResumes.length > 0) {
+        if (userResumes.some((r: any) => r.status === 'ready')) {
+            aggResumeStatus = 'ready';
+        } else if (userResumes.some((r: any) => r.status === 'in_progress')) {
+            aggResumeStatus = 'in_progress';
+        }
+
+        const scores = userResumes.map((r: any) => r.ats_score).filter((s): s is number => s !== null);
+        if (scores.length > 0) {
+            aggAtsScore = Math.max(...scores);
+        }
+
+        const timestamps = userResumes.map((r: any) => new Date(r.last_updated_at).getTime()).filter(t => !isNaN(t));
+        if (timestamps.length > 0) {
+            const mostRecentMs = Math.max(...timestamps);
+            aggResumeDaysAgo = Math.floor((new Date().getTime() - mostRecentMs) / (1000 * 60 * 60 * 24));
+        }
+    }
+
     // ── Compute pace & streak from user_progress.last_accessed_at ──
     const paceData = await computePaceData(userId, learner.weekly_hours_category);
 
@@ -234,9 +263,9 @@ export async function getDashboardSummary(
             manual_skills_count: manualSkills ?? 0,
             completed_projects_count: completedProjects,
             available_projects_count: availableProjects,
-            resume_status: "not_created",
-            resume_last_updated_days_ago: null,
-            ats_score: null,
+            resume_status: aggResumeStatus,
+            resume_last_updated_days_ago: aggResumeDaysAgo,
+            ats_score: aggAtsScore,
         },
         pace: {
             streak_days: paceData.streakDays,
@@ -301,6 +330,22 @@ export async function getRecentActivity(userId: string): Promise<RecentActivityI
                 timestamp: row.completed_at!,
             });
         }
+    }
+
+    // Updated resume
+    const { data: resumeActivity } = await supabase
+        .from("resumes")
+        .select("last_updated_at")
+        .eq("user_id", userId)
+        .order("last_updated_at", { ascending: false })
+        .limit(1);
+
+    if (resumeActivity && resumeActivity.length > 0 && resumeActivity[0].last_updated_at) {
+        items.push({
+            type: "resume_updated",
+            title: "Updated resume",
+            timestamp: resumeActivity[0].last_updated_at,
+        });
     }
 
     // Sort by timestamp descending, take top 5

@@ -24,7 +24,7 @@ export const analyzerService = {
         if (error) throw error;
         return data;
     },
-    
+
     getCvUpload: async () => {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
@@ -87,11 +87,11 @@ export const analyzerService = {
                 .single();
             if (error) throw error;
             result = data;
-            
+
             // Increment the counter only on insert
             await supabase.rpc('increment_opportunity_analyses_count', { user_uuid: user.id });
         }
-        
+
         return result;
     },
 
@@ -124,7 +124,21 @@ export const analyzerService = {
             .single();
 
         if (error && error.code !== 'PGRST116') throw error;
-        return data;
+
+        let matchingResumeId: string | null = null;
+        if (data) {
+            const { data: resumeData } = await supabase
+                .from('resumes')
+                .select('resume_id')
+                .eq('user_id', user.id)
+                .eq('resume_type', 'job_based')
+                .contains('source_jd', { analysis_id: analysisId })
+                .maybeSingle();
+
+            if (resumeData) matchingResumeId = resumeData.resume_id;
+        }
+
+        return data ? { ...data, matchingResumeId } : null;
     },
 
     deleteAnalysis: async (analysisId: string) => {

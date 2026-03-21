@@ -62,7 +62,7 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
             value: resumeValue,
             subLabel: resumeSubLabel,
             icon: FileText,
-            href: '/dashboard/resume',
+            href: '/dashboard/resume-builder',
             warning: false,
         },
     ];

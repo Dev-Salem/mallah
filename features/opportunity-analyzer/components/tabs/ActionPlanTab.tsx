@@ -46,9 +46,14 @@ export function ActionPlanTab({ result }: { result: OpportunityAnalysisResult })
                                 {step.reason && (
                                     <p className="text-sm text-muted-foreground">{step.reason}</p>
                                 )}
-                                {step.link_target && (
+                                {step.link_target && step.step_type !== 'update_resume' && (
                                     <a href={step.link_target} target="_blank" rel="noopener noreferrer" className="mt-2 text-sm text-primary hover:underline font-medium inline-flex items-center gap-1">
                                         View Resource &rarr;
+                                    </a>
+                                )}
+                                {step.step_type === 'update_resume' && (
+                                    <a href={result.matchingResumeId ? `/dashboard/resume-builder/${result.matchingResumeId}` : `/dashboard/resume-builder`} className="mt-2 text-sm text-primary hover:underline font-medium inline-flex items-center gap-1">
+                                        Open Resume Builder &rarr;
                                     </a>
                                 )}
                             </CardContent>
