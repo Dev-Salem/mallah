@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { fetchResumes, createResume, upsertResumeSections, updateResumeStatus, fetchResumeById } from "../services/resume-service";
+import { fetchResumes, createResume, upsertResumeSections, updateResumeStatus, fetchResumeById, deleteResume } from "../services/resume-service";
 import { parseJobDescription, improveResumeText } from "../services/ai-service";
 import { calculateATSScore, PATH_BASELINES } from "../services/ats-service";
 
@@ -58,4 +58,9 @@ export async function saveResumeAction(resumeId: string, sections: any[], pathId
 
 export async function aiImproveAction(text: string, sectionType: string, pathId: string, primaryGoal: string) {
     return await improveResumeText({ text, sectionType, pathId, primaryGoal, languagePref: 'en' });
+}
+
+export async function deleteResumeAction(resumeId: string) {
+    await deleteResume(resumeId);
+    revalidatePath("/dashboard/resume-builder");
 }

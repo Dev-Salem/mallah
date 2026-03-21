@@ -1,0 +1,8 @@
+.next/dev/types/validator.ts(234,31): error TS2344: Type 'typeof import("C:/Users/3z0r1/OneDrive/\u0633\u0637\u062D \u0627\u0644\u0645\u0643\u062A\u0628/Mallah Project/mallah/app/api/resume/[id]/export/route")' does not satisfy the constraint 'RouteHandlerConfig<"/api/resume/[id]/export">'.
+  Types of property 'GET' are incompatible.
+    Type '(request: Request, { params }: { params: { id: string; }; }) => Promise<NextResponse<unknown>>' is not assignable to type '(request: NextRequest, context: { params: Promise<{ id: string; }>; }) => void | Response | Promise<void | Response>'.
+      Types of parameters '__1' and 'context' are incompatible.
+        Type '{ params: Promise<{ id: string; }>; }' is not assignable to type '{ params: { id: string; }; }'.
+          Types of property 'params' are incompatible.
+            Property 'id' is missing in type 'Promise<{ id: string; }>' but required in type '{ id: string; }'.
+.next/types/validator.ts(98,39): error TS2307: Cannot find module '../../app/[locale]/dashboard/resume/page.js' or its corresponding type declarations.

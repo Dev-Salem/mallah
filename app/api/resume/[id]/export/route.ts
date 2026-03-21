@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { fetchResumeById } from '@/features/resume-builder/services/resume-service';
 import { generateResumePdfStream } from '@/features/resume-builder/services/pdf-service';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const resume = await fetchResumeById(params.id);
         if (!resume) {
