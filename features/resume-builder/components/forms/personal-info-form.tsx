@@ -3,7 +3,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { personalInfoSchema, PersonalInfoForm as PersonalInfoFormType } from "@/features/resume-builder/types";
+import {
+  personalInfoSchema,
+  PersonalInfoForm as PersonalInfoFormType,
+} from "@/features/resume-builder/types";
 import {
   Form,
   FormControl,
@@ -11,6 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -24,6 +28,7 @@ export default function PersonalInfoForm({ initialData, onChange, t }: Props) {
   const form = useForm<PersonalInfoFormType>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
+      full_name: initialData?.full_name || "",
       phone: initialData?.phone || "",
       linkedin: initialData?.linkedin || "",
       github: initialData?.github || "",
@@ -43,6 +48,22 @@ export default function PersonalInfoForm({ initialData, onChange, t }: Props) {
   return (
     <Form {...form}>
       <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="full_name"
+          render={({ field }) => (
+            <FormItem className="sm:col-span-2">
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., Salem Al-Rashidi" {...field} />
+              </FormControl>
+              <FormDescription className="text-xs">
+                This will appear as the header on your resume and PDF.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="phone"

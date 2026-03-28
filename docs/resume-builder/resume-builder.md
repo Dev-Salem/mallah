@@ -1,4 +1,4 @@
-# Mallah – Resume Builder 
+# Mallah – Resume Builder v3
 
 ## 1. Purpose
 
@@ -16,7 +16,8 @@ looks professional to human recruiters.
 
 ## 2. Core Design Principles
 
-- **Guided from the start.** First-time users go through a wizard that walks them through only the sections that need their input — Summary, Experience, Education. Sections already pre-filled by Mallah (Skills, Projects, Personal Info) are skipped. The learner always knows exactly what to do next. The wizard is always skippable — it's guidance, not a gate.
+- **Wizard-style with clear navigation.** A narrow left nav shows all sections with completion status. The right editing area shows one section at a time — focused, never overwhelming. First-time users are guided through the sections that need input in order. Returning users jump directly to any section. A Preview toggle shows the full resume on demand without leaving the editor.
+- **Guided from the start.** The wizard runs within the editor layout — no separate wizard screen. Sections needing human input are highlighted with a "→ Fill this" indicator. The learner always knows exactly what to do next. The wizard is always skippable.
 - **Pre-filled by default.** Skills, projects, and personal info are populated automatically from Mallah data. The resume has real content before the learner types a single word.
 - **Single-column PDF only.** Multi-column, tables, and graphics break ATS parsers. The preview and export are both single-column, no exceptions.
 - **Standard section headings.** ATS systems recognize: Summary, Skills, Projects, Experience, Education, Certifications. No creative substitutions.
@@ -89,107 +90,37 @@ The Resume Builder opens to a **Resume Cards Grid** — a visual dashboard of al
 
 ## 5. Guided Wizard (First-Time Setup Only)
 
-The wizard runs **only when a new resume is created for the first time.** Returning users who click "Edit" on an existing resume go directly to the full editor — no wizard, ever.
+The wizard runs **within the editor layout** — not as a separate screen. When a new resume is opened for the first time, the learner lands directly in the editor (Section 6) with wizard guidance active. Returning users who click "Edit" on an existing resume get the editor with no wizard guidance at all.
 
-The wizard is **always skippable.** "Skip to editor →" is visible at every step. Skipping takes the learner directly to the full editor with whatever they've filled so far.
+The wizard is **always skippable.** A "Skip to editor" `Button` (ghost) is visible at the bottom of every section form during the wizard. Skipping exits guided mode and lets the learner edit freely.
 
 ### 5.1 What the Wizard Covers
 
-Only the sections that need human input. Pre-filled sections are skipped entirely.
+Only sections needing human input. Pre-filled sections are skipped.
 
 | Section | In wizard? | Reason |
 |---|---|---|
-| Personal Info | No | Auto-filled from profile |
-| Skills | No | Auto-populated from `user_skills` |
-| Projects | No | Auto-populated from `user_projects` |
+| Personal Info | No | Auto-filled |
+| Skills | No | Auto-populated |
+| Projects | No | Auto-populated |
 | Summary | **Yes** | Cannot be auto-generated |
 | Experience | **Yes** | Manual only |
 | Education | **Yes** | Manual only |
 | Certifications | **Yes** (optional) | Not available elsewhere |
 
-**Total wizard steps: 4** (Summary → Experience → Education → Certifications)
+### 5.2 Wizard Behavior in the Editor
 
-### 5.2 Wizard Shell Layout
+**Left nav during wizard:** sections needing input show a subtle "→" indicator next to their name. Completed sections show a green dot. Active section highlighted as normal.
 
-Single-column centered layout. Replaces the editor entirely during the wizard.
+**Right editing area during wizard:** identical to normal editing, with two additions at the bottom of each section form:
+- Progress indicator: "Step 1 of 4 — Summary" (muted, small)
+- Navigation: `[Skip this section]` (outline) and `[Continue →]` (default/primary)
 
-```
-┌────────────────────────────────────────────────────────────┐
-│  Step 2 of 4 — Experience          [Skip to editor →]     │
-│  ████████████░░░░░░░░░░  50%                               │
-├────────────────────────────────────────────────────────────┤
-│                                                            │
-│  [Step heading]                                            │
-│  [Step description / guidance note]                        │
-│                                                            │
-│  [Step-specific form fields]                               │
-│                                                            │
-│  ▼ Preview  (collapsible — shows resume so far)            │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │  [A4 paper card — live, updates as learner types]  │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                            │
-│  [← Back]     [Skip this step]     [Continue →]           │
-└────────────────────────────────────────────────────────────┘
-```
+The learner fills the section, clicks "Continue →", and the nav automatically advances to the next required section. They can also click any nav section directly to jump freely at any time.
 
-**Components:**
-- Step label: "Step N of 4 — [Section name]" (`text-sm`, muted)
-- `Progress` bar showing % complete
-- "Skip to editor →" `Button` (ghost) — top right, always present
-- Collapsible live preview panel at bottom (A4 paper card, collapsed by default, learner can expand to check how the resume looks)
-- Navigation row: `← Back` (ghost), `Skip this step` (outline), `Continue →` (default/primary)
-- On final step: `Continue →` becomes `Finish & open editor →`
+**"Continue →" on the last step** shows "Finish →" instead — exits wizard mode with a `Sonner` toast: "Your resume is ready — review and refine using the sections on the left."
 
-### 5.3 Step 1 — Summary
-
-Heading: "Write your professional summary"
-Guidance: "2–4 sentences. Lead with your role and top skills. State what you're looking for."
-
-- `Textarea` (min 3 rows, auto-expands)
-- Word counter below: "32 / 80 words" — amber when approaching limit
-- `AI Improve` `Button` (outline, `Sparkles` icon) — inline diff panel behavior (Section 9)
-
-Skipping leaves Summary empty — ATS sidebar will flag it in the editor.
-
-### 5.4 Step 2 — Experience
-
-Heading: "Your work experience"
-Guidance: "Add jobs, internships, freelance work, or open source contributions. No experience yet? That's fine — skip this step."
-
-- "Add experience entry" `Button` opens an inline entry form (same fields as Section 8.5)
-- Multiple entries can be added
-- Each saved entry collapses to a compact summary row with edit/remove buttons
-
-Skipping leaves Experience empty — completion dot will be grey in the editor.
-
-### 5.5 Step 3 — Education
-
-Heading: "Your education"
-Guidance: "Add degrees, bootcamps, or courses."
-
-- `Alert` (info, muted): "No formal degree? Your Projects and Skills carry more weight for tech roles."
-- "Add education entry" `Button` — same pattern as Experience step
-
-### 5.6 Step 4 — Certifications (Optional)
-
-Heading: "Certifications & courses"
-Guidance: "Add certifications like CompTIA, freeCodeCamp, or Google certificates. Skip if you don't have any yet."
-
-- "Add certification" `Button`
-- CTA changes to `Finish & open editor →`
-
-### 5.7 Wizard Completion
-
-On "Finish & open editor →" or "Skip to editor":
-1. All wizard content saved to `resume_sections`
-2. `resumes.status` set to `'in_progress'`
-3. Learner lands in the **full editor** (Section 6) with ATS sidebar active, all sections populated, live preview showing the complete resume
-4. One-time `Sonner` toast: "Your resume is ready — review and refine it below."
-
-**The wizard never runs again for this resume.** All subsequent edits go directly to the full editor.
-
----
+**The wizard never activates again** for this resume after completion or skip.
 
 ## 5B. Job-Based Resume Setup
 
@@ -269,7 +200,7 @@ When the learner clicks "Build Job Resume →":
    - For this resume, ATS Keyword Coverage uses the JD's extracted required/preferred skills instead of the path keyword baseline
    - All other ATS factors remain the same
 
-6. Open the **full editor** (Section 6) — no wizard. The resume is already configured. A one-time `Alert` (info) at the top of the form panel: "This resume is tailored for [Job Title]. Skills and projects have been pre-selected based on the job requirements."
+6. Open the **full editor** (Section 6) — no wizard. The resume is already configured. A one-time `Alert` (info) at the top of the Skills section form: "This resume is tailored for [Job Title]. Skills and projects have been pre-selected based on the job requirements. Your general resume is unchanged."
 
 ### 5B.4 Job-Based Resume in the Editor
 
@@ -296,135 +227,172 @@ Two new fields on the `resumes` table:
 
 ## 6. Editor Layout
 
-The editor is the core building experience. It has three zones:
+The editor uses a **two-zone layout** — a narrow left navigation and a full-width right editing area. Clean, focused, no clutter.
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│  HEADER BAR                                                          │
-│  ← My Resumes  |  [Title]  |  [Save]  [Export PDF ↓]               │
-├──────────────────┬────────────────────────────┬──────────────────────┤
-│  LEFT            │  CENTER                    │  RIGHT               │
-│  ATS SCORE       │  FORM PANEL                │  LIVE PREVIEW        │
-│  SIDEBAR         │  (~50% width)              │  (~30% width)        │
-│  (~20% width)    │  Scrollable                │  Sticky              │
-│  Sticky          │                            │  A4 paper card       │
-│                  │  Section form fields       │  on grey background  │
-│  Score ring      │  with completion dots      │                      │
-│  Score breakdown │                            │  Updates 300ms       │
-│  Hints           │                            │  after each change   │
-│  [Recalculate]   │                            │                      │
-└──────────────────┴────────────────────────────┴──────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│  HEADER                                                         │
+│  ← My Resumes | [Title] [🎯] | [ATS: 74]  [Save]  [Export ↓]  │
+├──────────────────────┬──────────────────────────────────────────┤
+│  LEFT NAV (~200px)   │  RIGHT — EDITING AREA                   │
+│                      │                                         │
+│  ● Personal Info     │  [Active section form — full width]     │
+│  ◉ Summary  ←active  │                                         │
+│  ● Skills            │  Focused on one section at a time.      │
+│  ● Projects          │  Clean, no scrolling past content       │
+│  ● Experience        │  that isn't relevant right now.         │
+│  ● Education         │                                         │
+│  ○ Certifications    │            [Edit | Preview] toggle      │
+│                      │                                         │
+│                      │  When Preview is active:                │
+│                      │  Full A4 resume replaces the form.      │
+│                      │  White paper card on grey background.   │
+└──────────────────────┴──────────────────────────────────────────┘
 ```
 
 ### 6.1 Header Bar
 
 | Element | Component | Notes |
 |---|---|---|
-| Back link | `Button` (ghost) + `ChevronLeft` icon | "← My Resumes" — returns to cards grid |
-| Resume title | Inline editable `Input` | Click to rename. Saves on blur. |
-| Resume type badge | `Badge` | "🎯 Job-Based" shown only on job-based resumes, always visible in the header |
-| Save button | `Button` (outline) | `Spinner` while saving. "Saved ✓" via `Sonner` toast for 2s on success. |
-| Export PDF | `Button` (default) | Primary CTA. `Loader` icon while generating. |
+| Back link | `Button` (ghost) + `ChevronLeft` | "← My Resumes" |
+| Resume title | Inline editable `Input` | Click to rename, saves on blur |
+| Resume type badge | `Badge` | "🎯 Job-Based" — shown only on job-based resumes |
+| ATS score badge | `Badge` (color-coded) | "ATS: 74" always visible. Click opens ATS Detail Overlay (Section 6.4). |
+| Save | `Button` (outline) | `Spinner` while saving. "Saved ✓" `Sonner` toast on success. |
+| Export PDF | `Button` (default) | Primary CTA. |
 
-### 6.2 Left Sidebar — ATS Score Panel (Persistent)
+### 6.2 Left — Section Navigation
 
-The ATS score sidebar is always visible while the learner edits. It is the "coach looking over your shoulder" — always there, never intrusive.
+Narrow vertical list (~200px). Always visible. The learner's map of their resume and their progress.
 
-**Top of sidebar — Score ring:**
+Each nav item shows:
+- Section name
+- Completion dot: green (complete) / amber (partial) / grey (empty)
+- Active state: filled background + left accent border
 
-A circular progress ring (64px) with the score number in the center. Color matches the threshold:
+**Completion dot rules:**
 
-| Score | Color |
-|---|---|
-| 0–49 | Red |
-| 50–74 | Amber |
-| 75–89 | Green |
-| 90–100 | Blue/Teal |
-
-Below the ring: the label ("Needs Work" / "Getting There" / "Good" / "Excellent") and a small "Recalculate" `Button` (ghost, small).
-
-**Score breakdown — 5 compact rows:**
-
-Each factor shown as a mini `Progress` bar + percentage:
-
-```
-Keyword coverage    ████████░░  78%
-Section complete    ██████████ 100%
-Summary quality     █████░░░░░  52%
-Project descs       ████░░░░░░  40%
-Formatting          ██████████ 100%
-```
-
-**Hints — 2–4 cards:**
-
-Each hint is a compact card with:
-- Short issue label (bold, 1 line)
-- One sentence description
-- `Button` (ghost, xs) "Fix →" — scrolls to the relevant form section
-
-Example:
-```
-┌──────────────────────────┐
-│ Summary too short        │
-│ Add 2–3 more sentences   │
-│ with action verbs.  Fix →│
-└──────────────────────────┘
-```
-
-**"Before first save" state:** Ring shows grey, score shows "—", text below: "Save to calculate your ATS score."
-
-**Job-Based Resume — JD context card:**
-
-For job-based resumes, a compact `Card` appears at the top of the ATS sidebar above the score ring:
-
-```
-┌─────────────────────────────┐
-│ 🎯 Targeting                │
-│ Frontend Dev @ Noon         │
-│ Match: 74%                  │
-│ [Create another version →]  │
-└─────────────────────────────┘
-```
-
-- Shows the job this resume is tailored for
-- Shows the Opportunity Analyzer match score if the resume was created from a saved analysis (from `source_jd.analysis_id`). Hidden if created from a pasted JD.
-- "Create another version →" `Button` (ghost, small) — returns the learner to the Cards Grid where they can create a new job-based resume for a different role. This resume is never modified from within the editor.
-
-### 6.3 Center Panel — Form
-
-Scrollable. Each section is a shadcn `Card` with `CardHeader` and `CardContent`. The `CardHeader` shows:
-- Section title
-- Completion dot (green / amber / grey)
-- Section-level action buttons ("Add entry", visibility toggle)
-
-**Section completion dot rules:**
-
-| Section | Green (complete) | Amber (partial) | Grey (empty) |
+| Section | Green | Amber | Grey |
 |---|---|---|---|
 | Personal Info | Always green (auto-filled) | — | — |
 | Summary | ≥ 20 words | 1–19 words | Empty |
-| Skills | ≥ 1 included | Skills exist but all excluded | No skills available |
-| Projects | ≥ 1 included | Projects exist but all excluded | No completed projects |
+| Skills | ≥ 1 included | All excluded | None available |
+| Projects | ≥ 1 included | All excluded | No completed projects |
 | Experience | ≥ 1 entry with bullets | Entry exists, no bullets | No entries |
-| Education | ≥ 1 entry complete | Entry started, not finished | No entries |
+| Education | ≥ 1 entry complete | Entry started, unfinished | No entries |
 | Certifications | ≥ 1 entry OR hidden | — | Visible but empty |
 
-### 6.4 Right Panel — Live Preview
+Clicking any section immediately loads its form in the editing area. Instant — no loading state.
 
-A white A4-proportioned card (shadow, rounded corners, grey background behind it) that renders exactly what the PDF will look like. Updates 300ms after every keystroke (debounced).
+**First-time wizard mode:** when a new resume is opened for the first time, the wizard runs within this same layout. Sections needing input (Summary, Experience, Education) show a subtle "→ Fill this" indicator in the nav. The editor auto-navigates to Summary first. At the bottom of each form, "Next →" advances to the next required section. "Skip to editor" exits wizard guidance at any point. See Section 5 for full wizard details.
 
-**Typography (matches PDF output exactly):**
-- Learner name: 18px bold
-- Contact line: 11px, pipe-separated, single line
-- Section headings: 11px, bold, uppercase, with a thin `Separator` below
+### 6.3 Right — Editing Area
+
+Full-width. Shows one section at a time based on nav selection.
+
+**Edit / Preview toggle:** a `Tabs` component (`Edit` | `Preview`) pinned to the top-right of the editing area.
+
+- **Edit** (default) — shows the active section's form fields
+- **Preview** — replaces the entire editing area with the full A4 resume preview (Section 6.6). The left nav remains visible. Clicking any nav item switches back to Edit for that section.
+
+Default active section on first load: Summary.
+
+### 6.4 ATS Detail Overlay
+
+Clicking the ATS badge in the header opens a **centered modal overlay** that dims the editor.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  Your ATS Score                                    [×]   │
+│                                                          │
+│            ╭──────╮                                      │
+│           ( 74    )   Getting There                      │
+│            ╰──────╯                                      │
+│                                                          │
+│  Keyword coverage    ████████░░  78%  (40% weight)       │
+│  Section complete    ██████████ 100%  (25% weight)       │
+│  Summary quality     █████░░░░░  52%  (15% weight)       │
+│  Project descs       ████░░░░░░  40%  (10% weight)       │
+│  Formatting          ██████████ 100%  (10% weight)       │
+│                                                          │
+│  What to fix:                                            │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │ Summary too short — add 2–3 sentences   [Fix →]   │  │
+│  └────────────────────────────────────────────────────┘  │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │ Project descriptions lack action verbs  [Fix →]   │  │
+│  └────────────────────────────────────────────────────┘  │
+│                                                          │
+│  [Recalculate]                            [Close]        │
+└──────────────────────────────────────────────────────────┘
+```
+
+- Each "Fix →" closes the overlay and navigates to that section in the left nav
+- "Before first save" state: score "—", text: "Save to calculate your ATS score"
+- **Job-based resume:** "🎯 Targeting: [Job Title]" shown below the score ring
+
+### 6.5 Right-Side Drawer — Structured Entry Editor
+
+For Experience, Education, and Certifications entries: clicking "Edit" on an existing entry or "+ Add" opens a **right-side drawer** (~380px) that slides over the editing area.
+
+```
+┌────────────────────────────────────────┐
+│  Add Experience                  [×]   │
+│                                        │
+│  Job title *                           │
+│  [________________________]            │
+│                                        │
+│  Company *                             │
+│  [________________________]            │
+│                                        │
+│  Location                              │
+│  [________________________]            │
+│                                        │
+│  Start          End                    │
+│  [MM/YYYY]   [MM/YYYY]  ☐ Current     │
+│                                        │
+│  Responsibilities & achievements       │
+│  • [________________________] [AI ✨]  │
+│  • [________________________] [AI ✨]  │
+│  [+ Add bullet]                        │
+│                                        │
+│  Tip: Start with an action verb.       │
+│  Add a result if possible.             │
+│                                        │
+│  [Delete]            [Save & close]    │
+└────────────────────────────────────────┘
+```
+
+- "Save & close" → writes to `resume_sections`, closes drawer, section list updates
+- "Delete" → inline confirmation, no separate dialog
+- `AI Improve` per bullet — inline diff panel (Section 8)
+- `react-hook-form` + Zod, validated on "Save & close" only
+
+Education and Certifications drawers follow the same pattern.
+
+### 6.6 Preview State
+
+When the learner clicks "Preview":
+
+- The editing area is fully replaced by a scrollable A4 paper card on a grey background
+- Single column, plain typography — exactly what the PDF outputs
+- Left nav remains visible. Clicking any section switches back to Edit for that section.
+- A `← Edit` `Button` (outline, small) floats at the top-right of the preview for quick return
+
+**Typography (matches PDF exactly):**
+- Name: 18px bold
+- Contact line: 11px, pipe-separated
+- Section headings: 11px, bold, uppercase, thin separator below
 - Body text: 10px
-- Bullet points: `•` character
+- Bullets: `•` character
 
-**Empty state:** when a section has no content yet, the preview shows muted grey placeholder text where that section would appear ("Summary will appear here…", "Skills will appear here…"). Never a blank white card.
+**Empty sections** show muted grey placeholder text — never blank.
 
-**Mobile (< 768px):** sticky `Tabs` at top: "Edit" and "Preview." Default on mobile is "Edit." ATS sidebar collapses into a floating score badge at top-right corner of the edit view — tapping opens a `Sheet` with the full score breakdown.
+### 6.7 Mobile Layout (< 768px)
 
----
+Left nav collapses to a horizontal scrollable row at the top. Editing area fills the rest of the screen. Edit/Preview toggle moves to the header next to the ATS badge.
+
+Drawer becomes a full-screen bottom sheet. ATS overlay becomes a full-screen bottom sheet.
 
 ## 7. Resume Sections
 
@@ -449,21 +417,21 @@ Auto-filled from `users` and `learners`. Overrides stored in `resume_sections` �
 | Full name | `first_name + last_name` | `Input` |
 | Email | `users.email` | `Input` |
 | Phone | Manual | `Input` type="tel" |
-| LinkedIn URL | Manual | `Input` placeholder: "linkedin.com/in/yourname" |
-| GitHub URL | Manual | `Input` placeholder: "github.com/yourname" |
+| LinkedIn URL | Manual | `Input` |
+| GitHub URL | Manual | `Input` |
 | Portfolio URL | Auto: `mallah.app/portfolio/{slug}` | `Input` read-only + copy `Button` |
 | Location | Manual, city/country only | `Input` placeholder: "Riyadh, Saudi Arabia" |
 
-**Portfolio link is always included.** Connects the resume to the learner's live Mallah portfolio, giving recruiters direct access to verified projects and skills.
+**Portfolio link is always included.** Links the resume to the learner's live Mallah portfolio, giving recruiters direct access to verified projects and skills.
 
 ---
 
 ### 7.2 Summary
 
-`Textarea` (min 3 rows, auto-expands to content). Max 80 words — enforced with a live counter shown below.
+`Textarea` (min 3 rows, auto-expands). Max 80 words — live counter shown below.
 
 - Placeholder: "Write 2–4 sentences. Lead with your role and top skills. State what you're looking for."
-- Word counter: "32 / 80 words" — turns amber when approaching limit
+- Word counter: "32 / 80 words" — amber when approaching limit
 - `AI Improve` `Button` (outline, `Sparkles` icon) — see Section 8
 
 ---
@@ -477,17 +445,19 @@ Rendered as a **checkbox grid** grouped by `skills.category`:
 ```
 Technical Skills
   ☑ React          ☑ TypeScript      ☑ Node.js
-  ☑ PostgreSQL      ☐ Docker          ☑ REST API
+  ☑ PostgreSQL      ☐ Docker
 
 Tools & Platforms
   ☑ Git            ☑ VS Code         ☐ Figma
 ```
 
-- `Checkbox` per skill to include/exclude from this resume
-- "Add skill" `Button` (ghost, small) → inline `Input` that appends to `manual_skills` in `resume_sections`. Does not write to `user_skills`.
-- Manual skills show a muted "Manual" `Badge` and a remove `Button`
+- `Checkbox` per skill — include/exclude from this resume
+- "Add skill" `Button` (ghost, small) → inline `Input` appends to `manual_skills` in `resume_sections`. Does not write to `user_skills`.
+- Manual skills show a muted "Manual" `Badge` and remove button
 
 **In the live preview:** rendered as plain grouped comma-separated text. ATS reads plain text reliably.
+
+**For job-based resumes:** JD-matched skills are shown first in the grid, separated from unmatched skills by a thin divider line with the label "Also available."
 
 ---
 
@@ -495,58 +465,46 @@ Tools & Platforms
 
 Auto-populated from `user_projects` where `status = 'completed'`.
 
-Each project renders as a collapsible `Card`:
+Each project is a compact row with a `Switch` toggle (include/exclude) and an "Edit" `Button`:
 
-- `Switch` toggle: include/exclude from this resume
-- Title (read-only, from `projects.title`)
-- Description `Textarea`: pre-filled from `user_projects.personal_note` → falls back to `projects.description`. Override stored in `resume_sections`, does not touch `user_projects`.
-- Skills chip list (read-only, from `project_skills`)
-- GitHub URL (read-only if set in `user_projects`, editable `Input` if not)
-- Demo URL (same logic)
-- `AI Improve` `Button` on description
+- Toggle to include/exclude from this resume
+- "Edit" opens a small popover or inline expansion with:
+  - Description `Textarea` (pre-filled from `user_projects.personal_note` → falls back to `projects.description`). Override stored in `resume_sections`.
+  - GitHub URL (read-only if set in `user_projects`, editable if not)
+  - Demo URL (same logic)
+  - `AI Improve` on the description
 
-"Add External Project" `Button` at bottom: opens an inline form for projects built outside Mallah. Stored in `resume_sections` only.
+"Add External Project" `Button` at bottom — opens an inline form for projects built outside Mallah.
+
+**For job-based resumes:** projects reordered — most JD-relevant shown first, separated from less relevant ones with a divider.
 
 ---
 
 ### 7.5 Experience
 
-Manual entries. Each entry is a `Card` (collapsible once saved).
+Manual entries. The section form shows a list of all entries. Each entry shows as a compact summary row (Job title @ Company, date range) with an "Edit" `Button` that opens the Drawer (Section 6.6).
 
-Fields:
-- Job title (`Input`, required)
-- Company name (`Input`, required)
-- Location (`Input`, optional)
-- Start date (`Input`, type="month")
-- End date (`Input`, type="month") OR `Checkbox` "Currently here" → shows "Present"
-- Bullets: dynamic list of `Textarea` fields
-  - "Add bullet" `Button` adds a row
-  - Each bullet has remove `Button` and individual `AI Improve` `Button`
-  - Inline guidance below first bullet: "Start with an action verb. Add a result. Example: 'Built a checkout flow that cut abandonment by 15%.'"
+"+ Add Experience" `Button` opens the Drawer for a new entry.
 
-"Add Experience" `Button` at bottom.
+Empty state: "No experience added yet. Add jobs, internships, or freelance work."
 
 ---
 
 ### 7.6 Education
 
-Manual entries. Each entry is a `Card`.
+Manual entries. Same pattern as Experience — compact list with "Edit" per entry opening the Drawer, and "+ Add Education" button.
 
-Fields: Degree / Certificate name, Institution, Field of study, Graduation year OR `Checkbox` "In Progress."
-
-"Add Education" `Button` at bottom.
-
-**No degree note:** `Alert` (info) above the section: "No degree? Your Projects and Skills carry more weight for tech roles."
+**No degree note:** `Alert` (info, muted) at top of section: "No degree? Your Projects and Skills carry more weight for tech roles."
 
 ---
 
 ### 7.7 Certifications & Courses (Optional)
 
-Hidden by default. Enabled via "Show Certifications" toggle in the section header.
+Hidden by default. Enabled via a toggle at the top of the section form.
 
-Each entry: Certificate name, Issuing organization, Year — compact row.
+Same list + Drawer pattern as Experience and Education. Each entry: Certificate name, Issuing org, Year.
 
-Placeholder guidance: "e.g. CompTIA Security+, freeCodeCamp, Google UX Design Certificate"
+Placeholder guidance shown when empty: "e.g. CompTIA Security+, freeCodeCamp, Google UX Design Certificate"
 
 ---
 
@@ -555,9 +513,9 @@ Placeholder guidance: "e.g. CompTIA Security+, freeCodeCamp, Google UX Design Ce
 ### 8.1 Where It Appears
 
 `AI Improve` `Button` (outline, small, `Sparkles` icon) on:
-- Summary `Textarea`
-- Each project description `Textarea`
-- Each experience bullet `Textarea`
+- Summary `Textarea` (Section 7.2)
+- Each project description `Textarea` (Section 7.4)
+- Each experience bullet in the Drawer (Section 6.6)
 
 ### 8.2 The Flow
 
@@ -565,7 +523,7 @@ Placeholder guidance: "e.g. CompTIA Security+, freeCodeCamp, Google UX Design Ce
 2. Button → loading state: `Spinner` + "Improving…"
 3. Backend builds prompt: current text + section type + `current_path_id` + `primary_goal` + instruction to use action verbs, be concise, ATS-keyword-aware
 4. AI returns improved version
-5. An **inline diff panel** appears directly below the `Textarea` — no modal:
+5. An **inline diff panel** appears directly below the active `Textarea`:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -580,14 +538,14 @@ Placeholder guidance: "e.g. CompTIA Security+, freeCodeCamp, Google UX Design Ce
 └──────────────────────────────────────────────────────────┘
 ```
 
-6. **Use this** → replaces textarea, collapses panel, preview updates
+6. **Use this** → replaces textarea content, collapses panel, live preview updates
 7. **Keep original** → collapses panel, textarea unchanged
 8. **Try again** → re-runs with a varied prompt
 
 ### 8.3 Rules
 
 - Respects `ai_language_pref` — Arabic or Mix → AI writes in that language
-- If AI is unavailable → all `AI Improve` buttons hidden. `Alert` (info) at top of form: "AI features are unavailable right now. The rest of the builder works normally."
+- If AI is unavailable → all `AI Improve` buttons hidden. `Alert` (info) shown at the top of the active section form: "AI features are unavailable right now."
 - Panel dismissable via Escape or clicking outside
 
 ---
@@ -822,11 +780,11 @@ Process is identical to 11.7. Each new job-based resume appears as its own card 
 
 | Scenario | Behavior |
 |---|---|
-| No skills in `user_skills` | Skills section shows `Alert` (info): "Complete roadmap topics to auto-fill your skills." Manual add still works. Completion dot is grey. |
-| No completed projects | Projects section shows `Alert` (info): "Finish a roadmap project to add it here." Manual external add still works. |
-| AI unavailable | All `AI Improve` buttons hidden. `Alert` (info) at top of form. ATS score still calculates (rule-based). Job-Based Resume tailoring still works for skills/projects reordering — only the pre-drafted summary falls back to empty (flagged by ATS sidebar). |
-| Resume has no Summary | Completion dot amber. ATS sidebar hint: "Add a Summary." Fix → scrolls to Summary. |
-| Export attempted with empty Summary or no skills | `Alert` (destructive): "Add a Summary and at least one Skill before exporting." Export blocked. |
+| No skills in `user_skills` | Skills section form shows `Alert` (info): "Complete roadmap topics to auto-fill your skills." Manual add still works. Completion dot is grey. |
+| No completed projects | Projects section form shows `Alert` (info): "Finish a roadmap project to add it here." Manual external add still works. |
+| AI unavailable | All `AI Improve` buttons hidden. `Alert` (info) shown at top of active section form. ATS score still calculates (rule-based). Job-Based Resume tailoring still works for skills/projects reordering — only the pre-drafted summary falls back to empty (flagged in ATS overlay). |
+| Resume has no Summary | Summary completion dot amber. ATS overlay hint: "Add a Summary" → Fix → navigates to Summary in section nav. |
+| Export attempted with empty Summary or no skills | `Alert` (destructive) at top of editor: "Add a Summary and at least one Skill before exporting." Export blocked. |
 | 3 resume limit reached | Both creation buttons disabled with `Tooltip`. The limit applies to general + job-based combined. |
 | `ready` resume has Summary cleared | On next save: `status` downgrades to `in_progress`. Dashboard tile updates. |
 | Skill removed from `user_skills` after being included in a resume | Skill remains `included` in `resume_sections` but is reclassified as a manual skill for that resume. Not removed automatically. |

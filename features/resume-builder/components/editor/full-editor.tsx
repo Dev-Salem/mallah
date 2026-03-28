@@ -1,29 +1,65 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import AtsSidebar from "./ats-sidebar";
-import EditorFormPanel from "./editor-form-panel";
-import PreviewCard from "../live-preview/preview-card";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { saveResumeAction } from "@/features/resume-builder/actions/resume-actions";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, Download, Save, ArrowLeft } from "lucide-react";
+import {
+  Loader2,
+  Download,
+  Save,
+  ArrowLeft,
+  BarChart3,
+} from "lucide-react";
 import Link from "next/link";
+
+import SectionNav, {
+  buildSectionNavItems,
+  type SectionType,
+} from "./section-nav";
+import EditorFormPanel from "./editor-form-panel";
+import ATSModal, { type ATSBreakdown, type ATSHint } from "./ats-modal";
+import PreviewCard from "../live-preview/preview-card";
+import { saveResumeAction } from "@/features/resume-builder/actions/resume-actions";
+import { cn } from "@/lib/utils";
+
+/* -------------------------------------------------------------------------- */
+/*  Component                                                                 */
+/* -------------------------------------------------------------------------- */
 
 export default function FullEditor({ resume }: { resume: any }) {
   const t = useTranslations("ResumeBuilder");
+
+  /* ── State ────────────────────────────────────────────────────────────────── */
   const [isSaving, setIsSaving] = useState(false);
   const [sections, setSections] = useState<any[]>(resume.resume_sections || []);
-  const [atsScore, setAtsScore] = useState(resume.ats_score);
-  const [hints, setHints] = useState<any[]>([]);
+  const [atsScore, setAtsScore] = useState<number | null>(resume.ats_score);
+  const [hints, setHints] = useState<ATSHint[]>([]);
+  const [atsBreakdown, setAtsBreakdown] = useState<ATSBreakdown>({
+    keywordCoverage: 0,
+    sectionCompleteness: 0,
+    summaryQuality: 0,
+    projectDescriptions: 0,
+    formatting: 0,
+  });
+  const [activeSection, setActiveSection] = useState<SectionType>("PERSONAL_INFO");
+  const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
+  const [atsModalOpen, setAtsModalOpen] = useState(false);
 
+  const isJobBased = resume.resume_type === "job_based";
+  const jobTitle = isJobBased ? resume.source_jd?.job_title : undefined;
+
+  /* ── Handlers ─────────────────────────────────────────────────────────────── */
   const handleSave = async () => {
     setIsSaving(true);
     try {
       const atsResult = await saveResumeAction(resume.resume_id, sections);
       setAtsScore(atsResult.score);
       setHints(atsResult.hints || []);
+      if (atsResult.breakdown) {
+        setAtsBreakdown(atsResult.breakdown);
+      }
       toast.success(t("SaveSuccess"));
     } catch {
       toast.error(t("SaveFailed"));
@@ -32,9 +68,31 @@ export default function FullEditor({ resume }: { resume: any }) {
     }
   };
 
+  const handleFixNavigation = useCallback(
+    (section: SectionType) => {
+      setActiveSection(section);
+      setActiveTab("edit");
+    },
+    []
+  );
+
+  /* ── Derived ──────────────────────────────────────────────────────────────── */
+  const navItems = buildSectionNavItems(sections, t);
+
+  const scoreColor =
+    atsScore === null
+      ? "text-muted-foreground"
+      : atsScore >= 75
+        ? "text-green-600"
+        : atsScore >= 50
+          ? "text-amber-500"
+          : "text-red-500";
+
+  /* ── Render ───────────────────────────────────────────────────────────────── */
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-muted/20">
-      <header className="flex items-center justify-between p-4 border-b bg-background z-10 shrink-0 shadow-sm">
+      {/* ── Header ──────────────────────────────────────────────────────────── */}
+      <header className="flex items-center justify-between px-4 py-3 border-b bg-background z-10 shrink-0 shadow-sm">
         <div className="flex items-center space-x-4">
           <Link
             href="/dashboard/resume-builder"
@@ -42,50 +100,108 @@ export default function FullEditor({ resume }: { resume: any }) {
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-bold truncate max-w-sm">
+          <h1 className="text-lg font-bold truncate max-w-sm">
             {resume.title || t("UntitledResume")}
           </h1>
-          <span className="text-sm text-primary font-medium bg-primary/10 px-2 py-1 rounded-md">
-            {resume.resume_type === "job_based"
-              ? t("JobBased")
-              : t("GeneralResume")}
+          <span className="text-xs text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-md">
+            {isJobBased ? t("JobBased") : t("GeneralResume")}
           </span>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleSave} disabled={isSaving}>
+
+        <div className="flex items-center space-x-3">
+          {/* ATS Badge */}
+          <button
+            type="button"
+            onClick={() => setAtsModalOpen(true)}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm font-semibold transition-colors hover:bg-muted/60",
+              scoreColor
+            )}
+          >
+            <BarChart3 className="w-4 h-4" />
+            {t("ATSScore")}:{" "}
+            {atsScore !== null ? `${atsScore}/100` : "—"}
+          </button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSave}
+            disabled={isSaving}
+          >
             {isSaving ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
             ) : (
-              <Save className="w-4 h-4 mr-2" />
+              <Save className="w-4 h-4 mr-1.5" />
             )}
             {t("SaveChanges")}
           </Button>
-          <Button asChild>
+
+          <Button size="sm" asChild>
             <a
               href={`/api/resume/${resume.resume_id}/export`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4 mr-1.5" />
               {t("DownloadPDF")}
             </a>
           </Button>
         </div>
       </header>
 
+      {/* ── Main ────────────────────────────────────────────────────────────── */}
       <main className="flex-1 flex overflow-hidden">
-        <AtsSidebar
-          score={atsScore}
-          hints={hints}
-          isJobBased={resume.resume_type === "job_based"}
+        {/* Left Nav */}
+        <SectionNav
+          sections={navItems}
+          activeSection={activeSection}
+          onSectionChange={(section) => {
+            setActiveSection(section);
+            setActiveTab("edit");
+          }}
         />
-        <EditorFormPanel
-          initialSections={sections}
-          resumeId={resume.resume_id}
-          onUpdate={(newSections: any[]) => setSections(newSections)}
-        />
-        <PreviewCard sections={sections} resumeInfo={resume} />
+
+        {/* Right Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Edit / Preview Tabs */}
+          <div className="px-6 pt-4 pb-2 bg-background border-b shrink-0">
+            <Tabs
+              value={activeTab}
+              onValueChange={(val) => setActiveTab(val as "edit" | "preview")}
+            >
+              <TabsList className="grid w-[200px] grid-cols-2">
+                <TabsTrigger value="edit">{t("Edit")}</TabsTrigger>
+                <TabsTrigger value="preview">{t("Preview")}</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          {/* Content */}
+          {activeTab === "edit" ? (
+            <EditorFormPanel
+              initialSections={sections}
+              resumeId={resume.resume_id}
+              activeSection={activeSection}
+              onUpdate={(newSections: any[]) => setSections(newSections)}
+            />
+          ) : (
+            <PreviewCard sections={sections} resumeInfo={resume} />
+          )}
+        </div>
       </main>
+
+      {/* ATS Modal */}
+      <ATSModal
+        open={atsModalOpen}
+        onOpenChange={setAtsModalOpen}
+        score={atsScore}
+        breakdown={atsBreakdown}
+        hints={hints}
+        isJobBased={isJobBased}
+        jobTitle={jobTitle}
+        onFixNavigation={handleFixNavigation}
+      />
     </div>
   );
 }

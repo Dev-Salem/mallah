@@ -1,10 +1,9 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { z } from "zod";
-import { certificationsSchema } from "@/features/resume-builder/types";
+import { useEffect, useState } from "react";
+import { certificationEntrySchema, CertificationEntryForm as CertificationEntryFormType } from "@/features/resume-builder/types";
 import {
   Form,
   FormControl,
@@ -15,11 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
-
-const formSchema = z.object({
-  entries: certificationsSchema,
-});
+import { Plus, Trash2, Edit2 } from "lucide-react";
+import EntryDrawer from "../editor/entry-drawer";
 
 interface Props {
   initialData: any;
@@ -28,104 +24,187 @@ interface Props {
 }
 
 export default function CertificationsForm({ initialData, onChange, t }: Props) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      entries: Array.isArray(initialData) ? initialData : [],
-    },
-    mode: "onChange",
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "entries",
-  });
+  const [entries, setEntries] = useState<any[]>(Array.isArray(initialData) ? initialData : []);
+  
+  // Drawer state
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const subscription = form.watch((value) => {
-      onChange(value.entries || []);
-    });
-    return () => subscription.unsubscribe();
-  }, [form.watch, onChange]);
+    onChange(entries);
+  }, [entries, onChange]);
+
+  const handleAdd = () => {
+    setEditingIndex(null);
+    setIsDrawerOpen(true);
+  };
+
+  const handleEdit = (idx: number) => {
+    setEditingIndex(idx);
+    setIsDrawerOpen(true);
+  };
+
+  const handleDelete = (idx: number) => {
+    const next = [...entries];
+    next.splice(idx, 1);
+    setEntries(next);
+  };
+
+  const handleSaveEntry = (data: any) => {
+    const next = [...entries];
+    if (editingIndex !== null) {
+      next[editingIndex] = data;
+    } else {
+      next.push({ ...data, id: crypto.randomUUID() });
+    }
+    setEntries(next);
+    setIsDrawerOpen(false);
+  };
 
   return (
-    <Form {...form}>
-      <form className="space-y-4">
-        {fields.map((field, idx) => (
+    <div className="space-y-4">
+      {/* ── List View ────────────────────────────────────────────── */}
+      <div className="space-y-3">
+        {entries.map((entry, idx) => (
           <div
-            key={field.id}
-            className="border rounded-lg p-4 space-y-3 bg-muted/20"
+            key={entry.id || idx}
+            className="flex items-center justify-between border rounded-md p-3 bg-muted/20 hover:bg-muted/40 transition-colors"
           >
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-medium text-muted-foreground">
-                {t("CertificationEntry")} #{idx + 1}
-              </span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-7 text-destructive hover:text-destructive"
-                onClick={() => remove(idx)}
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
+            <div>
+              <h4 className="font-semibold text-sm">{entry.name || "Untitled Certification"}</h4>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {entry.issuer || "Issuer"} • {entry.year}
+              </p>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <FormField
-                control={form.control}
-                name={`entries.${idx}.name`}
-                render={({ field: inputField }) => (
-                  <FormItem className="sm:col-span-2">
-                    <FormLabel>{t("CertificationName")}</FormLabel>
-                    <FormControl>
-                      <Input placeholder={t("CertificationPlaceholder")} {...inputField} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`entries.${idx}.issuer`}
-                render={({ field: inputField }) => (
-                  <FormItem>
-                    <FormLabel>{t("Issuer")}</FormLabel>
-                    <FormControl>
-                      <Input placeholder={t("IssuerPlaceholder")} {...inputField} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`entries.${idx}.year`}
-                render={({ field: inputField }) => (
-                  <FormItem>
-                    <FormLabel>{t("Year")}</FormLabel>
-                    <FormControl>
-                      <Input placeholder="2023" {...inputField} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground"
+                onClick={() => handleEdit(idx)}
+              >
+                <Edit2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-destructive hover:text-destructive"
+                onClick={() => handleDelete(idx)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         ))}
-        
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full gap-2"
-          onClick={() => append({ id: crypto.randomUUID(), name: "", issuer: "", year: "" })}
-        >
-          <Plus className="w-4 h-4" />
-          {t("AddCertification")}
-        </Button>
+
+        {entries.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-4 border border-dashed rounded-md">
+            No certifications yet. Add your first certificate.
+          </p>
+        )}
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full gap-2"
+        onClick={handleAdd}
+      >
+        <Plus className="w-4 h-4" />
+        {t("AddCertification")}
+      </Button>
+
+      {/* ── Drawer ────────────────────────────────────────────────── */}
+      <EntryDrawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        title={editingIndex !== null ? "Edit Certification" : "Add Certification"}
+      >
+        <CertificationSubForm
+          initialData={editingIndex !== null ? entries[editingIndex] : null}
+          onSave={handleSaveEntry}
+          onCancel={() => setIsDrawerOpen(false)}
+          t={t}
+        />
+      </EntryDrawer>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Sub-Form for Drawer                                                       */
+/* -------------------------------------------------------------------------- */
+
+function CertificationSubForm({ initialData, onSave, onCancel, t }: { initialData: any, onSave: (data: any) => void, onCancel: () => void, t: any }) {
+  const form = useForm<CertificationEntryFormType>({
+    resolver: zodResolver(certificationEntrySchema),
+    defaultValues: {
+      id: initialData?.id || "",
+      name: initialData?.name || "",
+      issuer: initialData?.issuer || "",
+      year: initialData?.year || "",
+    },
+  });
+
+  const onSubmit = (values: CertificationEntryFormType) => {
+    onSave(values);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="sm:col-span-2">
+                <FormLabel>{t("CertificationName")}</FormLabel>
+                <FormControl>
+                  <Input placeholder={t("CertificationPlaceholder")} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="issuer"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("Issuer")}</FormLabel>
+                <FormControl>
+                  <Input placeholder={t("IssuerPlaceholder")} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="year"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("Year")}</FormLabel>
+                <FormControl>
+                  <Input placeholder="2023" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex gap-2 justify-end pt-6 border-t mt-6">
+          <Button type="button" variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit">
+            Save & Close
+          </Button>
+        </div>
       </form>
     </Form>
   );

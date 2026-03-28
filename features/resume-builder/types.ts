@@ -11,6 +11,7 @@ export interface SourceJDShape {
 }
 
 export const personalInfoSchema = z.object({
+  full_name: z.string(),
   phone: z.string(),
   linkedin: z.string(),
   github: z.string(),

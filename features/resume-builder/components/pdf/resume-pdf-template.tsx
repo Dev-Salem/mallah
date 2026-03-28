@@ -75,6 +75,8 @@ export const ResumePDFTemplate = ({
 }) => {
   const personalInfo =
     sections.find((s) => s.section_type === "PERSONAL_INFO")?.content || {};
+  const displayName =
+    personalInfo.full_name || resumeInfo.title || "Your Name";
   const summary =
     sections.find((s) => s.section_type === "SUMMARY")?.content?.text || "";
   const skills =
@@ -113,7 +115,7 @@ export const ResumePDFTemplate = ({
         {/* ── Header ───────────────────────────── */}
         <View style={styles.header}>
           <Text style={styles.name}>
-            {resumeInfo.title || "Your Name"}
+            {displayName}
           </Text>
           {contactParts.length > 0 && (
             <Text style={styles.contact}>

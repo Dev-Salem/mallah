@@ -1,0 +1,14 @@
+features/resume-builder/components/job-setup-modal.tsx(20,28): error TS2307: Cannot find module '@/components/ui/scroll-area' or its corresponding type declarations.
+features/resume-builder/components/job-setup-modal.tsx(50,19): error TS2339: Property 'success' does not exist on type 'any[]'.
+features/resume-builder/components/job-setup-modal.tsx(50,34): error TS2339: Property 'data' does not exist on type 'any[]'.
+features/resume-builder/components/job-setup-modal.tsx(51,34): error TS2339: Property 'data' does not exist on type 'any[]'.
+features/resume-builder/components/job-setup-modal.tsx(69,23): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(73,34): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(89,27): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(91,16): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(152,33): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(155,42): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(170,33): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(172,47): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(181,24): error TS2872: This kind of expression is always truthy.
+features/resume-builder/components/job-setup-modal.tsx(185,24): error TS2872: This kind of expression is always truthy.
