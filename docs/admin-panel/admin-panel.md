@@ -194,7 +194,7 @@ Table of all paths (active and inactive):
   > "412 learners are currently enrolled in this path. Deactivating prevents new enrollments
   > but does not remove existing learner progress. Type the path name to confirm."
 - `+ New Path` button → side drawer: name, description, `path_id` slug (auto-generated from
-  name, editable before first save), `is_active` (default `true`).
+  name, editable before first save), `is_active` (default true).
 
 **Note on path slugs:** The four current path slugs (`frontend`, `fullstack`, `cybersecurity`,
 `datascience`) are referenced throughout the system. Do not rename them after learners have
@@ -248,25 +248,39 @@ A right-side drawer that slides in without leaving the topics list.
 - Summary (textarea, max 500 chars)
 - Estimated time in minutes
 - Difficulty: Beginner / Intermediate / Advanced
+- Topic Type (required dropdown):
+
+| Value | Label shown to admin | Notes |
+|---|---|---|
+| `lesson` | Lesson | Standard learning topic |
+| `lesson_practice` | Lesson + Practice | Lesson with embedded hands-on exercise |
+| `lesson_lab` | Lesson + Lab | Cybersecurity path — produces a private write-up |
+| `concept` | Concept | Theory/conceptual, no hands-on |
+| `concept_practice` | Concept + Practice | Concept with short exercise |
+| `project_milestone` | Project (Milestone) | Gates next stage. Triggers `user_projects` write on completion. |
+| `project_capstone` | Project (Capstone) | Final graduation project. Same as milestone but also unlocks graduate badge. |
+
 - Is Mandatory (toggle — non-mandatory topics don't count toward stage completion %)
 - Order index (auto-managed, adjustable)
 
 **Resources sub-section (inside the same drawer):**
 
-Ordered list of this topic's learning assets:
+Ordered list of this topic's learning assets. Four resource types are supported: `INTERNAL_TEXT`, `VIDEO`, `ARTICLE`, `CERT`.
 
 | Order | Type            | Title                          | Preview                     | Actions        |
 |-------|-----------------|--------------------------------|-----------------------------|----------------|
 | 1     | INTERNAL_TEXT   | Introduction to Variables      | "In JavaScript, variables…" | Edit · Delete  |
 | 2     | VIDEO           | Fireship – JS Variables        | youtube.com/...             | Edit · Delete  |
 | 3     | ARTICLE         | MDN – var, let, const          | developer.mozilla.org/...   | Edit · Delete  |
+| 4     | CERT            | CompTIA Security+              | comptia.org/... · Paid      | Edit · Delete  |
 
-- Resources are drag-to-reorder within the topic.
+- Resources are drag-to-reorder within the topic. **Exception: CERT resources always render last in the Topic Viewer regardless of their `order_index` here.**
 - `+ Add Resource` → inline form below the list:
-  - Type: `INTERNAL_TEXT` / `VIDEO` / `ARTICLE`
+  - Type: `INTERNAL_TEXT` / `VIDEO` / `ARTICLE` / `CERT`
   - Title
-  - URL (for VIDEO / ARTICLE) or Content textarea (for INTERNAL_TEXT)
-  - Order (auto-appended)
+  - URL (for VIDEO / ARTICLE / CERT) or Content textarea (for INTERNAL_TEXT)
+  - **CERT-only additional fields:** Provider (e.g. "CompTIA", "Google"), Cost Type (`free` / `paid` / `discounted`), Cost Note (free text, e.g. "~$330 — voucher available via path completion")
+  - Order (auto-appended, CERT resources always render last in the Topic Viewer regardless of order_index)
 - `Edit` → inline in the same row.
 - `Delete` → single confirmation. Resources are not individually progress-tracked so
   deletion is always safe.
@@ -277,8 +291,10 @@ Controls which skills are unlocked when this topic is completed, and which topic
 Opportunity Analyzer links to for missing skills.
 
 - Multi-select from `skills` catalog (verified skills only, searchable dropdown)
-- Displayed as a tag list showing skill name + category: `React [framework_library] ×` `JavaScript [language] ×` `DOM API [fundamentals] ×`
-- No per-link importance or coverage field — the skill's `category` on the `skills` table carries all classification meaning
+- Set `importance_level` per skill: Low / Medium / High
+- `importance_level = High` → Opportunity Analyzer prioritizes this topic when that skill
+  is missing from a learner's profile
+- Displayed as a tag list: `React [High] ×` `JavaScript [High] ×` `DOM API [Medium] ×`
 
 ---
 
@@ -288,10 +304,10 @@ Opportunity Analyzer links to for missing skills.
 
 | Skill Name         | Category               | Verified     | In Topics | In Projects | Actions           |
 |--------------------|------------------------|--------------|-----------|-------------|-------------------|
-| React              | Framework & Library    | ✅ Verified   | 4         | 3           | Edit              |
-| PostgreSQL         | Platform & Service     | ✅ Verified   | 3         | 2           | Edit              |
-| Burp Suite         | Tool                   | ✅ Verified   | 2         | 1           | Edit              |
-| My Custom Skill    | Other                  | ⏳ Pending    | 0         | 0           | Verify · Reject   |
+| React              | framework_library      | ✅ Verified   | 4         | 3           | Edit              |
+| PostgreSQL         | tool                   | ✅ Verified   | 3         | 2           | Edit              |
+| Burp Suite         | tool                   | ✅ Verified   | 2         | 1           | Edit              |
+| My Custom Skill    | other                  | ⏳ Pending    | 0         | 0           | Verify · Reject   |
 
 - "In Topics" / "In Projects" are usage counts — clicking opens a filtered view showing
   which records reference this skill. Useful before renaming or deleting.
@@ -304,11 +320,11 @@ Opportunity Analyzer links to for missing skills.
 - Select multiple → "Verify Selected" or "Reject Selected"
 
 **Filters:**
-- Category: All / Fundamentals / Language / Framework & Library / Tool / Platform & Service / Practice / Other
+- Category: All / `fundamentals` / `language` / `framework_library` / `tool` / `platform_service` / `practice` / `other`
 - Status: All / Verified / Pending
 
 **`+ Add Skill` button:**
-- Side drawer: name, category (dropdown: Fundamentals / Language / Framework & Library / Tool / Platform & Service / Practice / Other), description (optional)
+- Side drawer: name, category (dropdown: `fundamentals` / `language` / `framework_library` / `tool` / `platform_service` / `practice` / `other`), description (optional)
 - `is_verified = true` by default for admin-created skills
 
 ---
@@ -326,10 +342,10 @@ appear in learner roadmaps.
 | REST API Blog Backend        | Intermediate | Full-Stack / Stage 3    | Yes    | 5      | Edit · Deactivate   |
 | Network Recon Lab            | Beginner     | Cybersecurity / Stage 1 | Yes    | 4      | Edit · Deactivate   |
 
-**Filters:** Path · Difficulty · Active status · Source (platform / user_custom)
+**Filters:** Path · Difficulty · Active status · Source (Platform / UserCustom)
 
-- `Source = platform` → admin-created, appears in learner roadmaps.
-- `Source = user_custom` → learner-created. Visible as read-only rows for admin awareness.
+- `Source = Platform` → admin-created, appears in learner roadmaps.
+- `Source = UserCustom` → learner-created. Visible as read-only rows for admin awareness.
   Cannot be edited by admins.
 - `Deactivate` → removes project from future roadmap appearances. Learners who already
   completed it keep their record.
@@ -343,11 +359,11 @@ appear in learner roadmaps.
 - Linked Path (dropdown)
 - Linked Stage (dropdown, filtered by selected path)
 - `is_active` toggle
+- **Portfolio visibility default** (`is_public_default` toggle, default ON): Controls whether completed projects appear publicly on the learner's Portfolio Hub by default. Turn OFF for cybersecurity lab/pentest projects — learners' security write-ups should be private by default. Learners can always change their own visibility after completion.
 
 **Skills section:**
 - Multi-select from verified skills catalog
-- Displayed as tags showing skill name + category
-- No per-link importance field — skill category is defined on the skill itself
+- Set `importance_level` per skill (Low / Medium / High)
 - Saves to `project_skills`
 - These skills are unlocked in `user_skills` when a learner completes this project
 
@@ -414,7 +430,7 @@ no admin, including super, can edit or delete entries.
 | `topic_deleted`         | Admin sara deleted Topic: Old HTML Basics                                    |
 | `resource_added`        | Admin sara added VIDEO resource to Topic: React Hooks                        |
 | `resource_deleted`      | Admin omar deleted ARTICLE resource from Topic: Git Basics                   |
-| `skill_created`         | Admin omar created skill: LangChain (Framework & Library)                    |
+| `skill_created`         | Admin omar created skill: LangChain (framework_library)                      |
 | `skill_verified`        | Admin sara verified learner-submitted skill: Tailwind CSS                    |
 | `skill_rejected`        | Admin omar rejected learner-submitted skill: "Cooding"                       |
 | `project_created`       | Admin sara created Project: REST API Blog Backend (Full-Stack / Stage 3)     |
@@ -500,7 +516,7 @@ Cascade deletions must be explicit in the confirmation modal:
 | Admin creates duplicate skill name               | Backend rejects: "A skill named [X] already exists."                                   |
 | Reorder fails mid-save (network error)           | Show error. Revert to previous order visually. Do not apply partial reorders.          |
 | All super admins are deactivated                 | Prevented by the "cannot deactivate last super admin" rule.                            |
-| Admin tries to edit a `user_custom` project       | Edit controls are hidden. Row is read-only with a label: "Learner-created project."    |
+| Admin tries to edit a `UserCustom` project       | Edit controls are hidden. Row is read-only with a label: "Learner-created project."    |
 
 ---
 
@@ -587,7 +603,8 @@ required `admin_level` server-side on every request — never trusted from the t
   learners' next page load.
 - **Portfolio Hub** — learner-submitted skills (`is_verified = false`) surface in the
   Skills Catalog for admin review. Verified skills become available in all learner dropdowns.
-- **Opportunity Analyzer** — `skills.category` is used to prioritize which topics to recommend when a learner is missing a skill. Foundational skill gaps are surfaced before tool or framework gaps.
+- **Opportunity Analyzer** — `topic_skills.importance_level` set by admins directly controls
+  which topics the Opportunity Analyzer prioritizes when a learner is missing a skill.
 - **Resume Builder** — `project_skills` set by admins feeds into the Resume Builder's
   path-specific ATS keyword scoring system.
 - **Dashboard (learner)** — the admin dashboard aggregates from the same `user_progress`,

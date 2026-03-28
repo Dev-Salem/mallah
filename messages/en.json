@@ -631,5 +631,185 @@
     "DeleteDescription3": "to confirm.",
     "TypeDeleteToConfirm": "Type 'Delete' here...",
     "DeleteResume": "Delete Resume"
+  },
+  "Admin": {
+    "Sidebar": {
+      "title": "Mallah Admin",
+      "dashboard": "Dashboard",
+      "content": "Content",
+      "paths": "Paths & Stages",
+      "topics": "Topics & Resources",
+      "skills": "Skills Catalog",
+      "projects": "Projects",
+      "learners": "Learners",
+      "auditLog": "Audit Log",
+      "settings": "Settings",
+      "signOut": "Deauthorize"
+    },
+    "Login": {
+      "title": "Secure Administrative Access",
+      "email": "Email Identifier",
+      "password": "Access Key",
+      "signIn": "Authorize Access",
+      "signingIn": "Verifying...",
+      "error": "Invalid administrative credentials."
+    },
+    "Dashboard": {
+      "title": "Command Center",
+      "subtitle": "Platform health & navigator activity",
+      "Stats": {
+        "totalLearners": "Total Navigators",
+        "activeThisWeek": "Active (7d)",
+        "topicsCompleted": "Topics Done (30d)",
+        "pendingSkills": "Pending Skills"
+      },
+      "QuickActions": {
+        "label": "Quick Operations",
+        "addTopic": "New Topic",
+        "addSkill": "New Skill",
+        "reviewSkills": "Review Skills",
+        "viewAudit": "Audit Log"
+      },
+      "PathOverview": {
+        "title": "Path Trajectory",
+        "subtitle": "Overview of curriculum performance",
+        "name": "Path Name",
+        "learners": "Navigators",
+        "avgCompletion": "Avg. Completion"
+      },
+      "RecentActivity": "Recent Admin Access",
+      "HealthWarnings": "System Alerts",
+      "noRecentActivity": "No recent security events",
+      "noPaths": "No curriculum paths defined"
+    },
+    "Content": {
+      "Paths": {
+        "title": "Navigational Paths",
+        "subtitle": "Core curricula for different engineering roles.",
+        "add": "Create Path",
+        "edit": "Edit Path",
+        "delete": "Archive Path",
+        "name": "Path Name",
+        "slug": "Slug",
+        "description_label": "Description",
+        "status": "Status",
+        "published": "Published",
+        "draft": "Draft",
+        "learners": "Navigators",
+        "stages": "Stages"
+      },
+      "Stages": {
+        "title": "Stages",
+        "subtitle": "Manage stages within the selected path",
+        "add": "Add Stage",
+        "order": "Order",
+        "name": "Stage Name"
+      },
+      "Topics": {
+        "title": "Topics & Resources",
+        "subtitle": "Select a path and stage to manage topics and educational resources",
+        "add": "Create Topic",
+        "edit": "Edit Topic",
+        "name": "Topic Title",
+        "type": "Type",
+        "difficulty": "Difficulty",
+        "estimated_time": "Est. Time (min)",
+        "resources": "Resources",
+        "add_resource": "Add Resource",
+        "selectPath": "Select Path...",
+        "selectStage": "Select Stage...",
+        "mandatory": "Mandatory",
+        "yes": "Yes",
+        "no": "No",
+        "noTopics": "No topics defined in this stage."
+      }
+    },
+    "Skills": {
+      "title": "Skills Catalog",
+      "subtitle": "Define and review platform-wide skill certifications",
+      "add": "New Skill Definition",
+      "name": "Skill Name",
+      "category": "Category",
+      "categories": {
+        "fundamentals": "Fundamentals",
+        "language": "Programming Languages",
+        "framework_library": "Frameworks & Libraries",
+        "tool": "Development Tools",
+        "platform_service": "Platforms & Services",
+        "practice": "Engineering Practices",
+        "other": "Other"
+      },
+      "verified": "Verified",
+      "pending": "Pending",
+      "verify": "Verify",
+      "reject": "Reject"
+    },
+    "Projects": {
+      "title": "Portfolio Projects",
+      "subtitle": "Review and manage learner projects and roadmap-linked assignments",
+      "add": "New Project",
+      "edit": "Edit Project",
+      "name": "Project Name",
+      "difficulty": "Difficulty",
+      "description": "Description",
+      "active": "Active",
+      "hidden": "Hidden",
+      "public": "Public Default",
+      "save": "Save Project",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "roadmapLinked": "Roadmap Linked",
+      "standalone": "Standalone"
+    },
+    "Learners": {
+      "title": "Navigator Base",
+      "subtitle": "Monitor learner progress and manage account status",
+      "name": "Full Name",
+      "email": "Email Address",
+      "path": "Learning Path",
+      "joined": "Joined",
+      "status": "Status",
+      "active": "Active",
+      "blocked": "Blocked",
+      "block": "Block Access",
+      "unblock": "Restore Access",
+      "confirmBlock": "Are you sure you want to block this user? They will lose all access to their dashboard.",
+      "noLearners": "No learners found matching criteria."
+    },
+    "Audit": {
+      "title": "Administrative Ledger",
+      "subtitle": "Timestamped record of all platform modifications (Super Admin Only)",
+      "timestamp": "Timestamp",
+      "event": "Operation",
+      "details": "Details",
+      "target": "Target",
+      "admin": "Administrator"
+    },
+    "Settings": {
+      "title": "Administrative Controls",
+      "subtitle": "Configure system-wide parameters and manage administrative personnel",
+      "admins": "Access Permissions",
+      "addAdmin": "Authorize New Admin",
+      "displayName": "Full Name",
+      "level": "Authorization Level",
+      "created": "Granted On",
+      "deactivate": "Revoke Access",
+      "confirmDeactivate": "Are you sure you want to deactivate this administrator? They will lose all access to the admin panel.",
+      "noAdmins": "No administrative accounts found.",
+      "super": "Super",
+      "normal": "Normal"
+    },
+    "Common": {
+      "save": "Save Changes",
+      "saving": "Processing...",
+      "cancel": "Cancel",
+      "actions": "Actions",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "delete": "Remove",
+      "confirm": "Confirm"
+    }
   }
 }
