@@ -43,7 +43,8 @@ export default function PersonalInfoForm({ initialData, onChange, t }: Props) {
       onChange(value);
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch]);
 
   return (
     <Form {...form}>

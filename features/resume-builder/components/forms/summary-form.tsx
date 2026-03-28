@@ -53,7 +53,8 @@ export default function SummaryForm({ initialData, onChange, t }: Props) {
       onChange(value);
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch]);
 
   const handleAIImprove = async () => {
     if (!textValue?.trim()) return;

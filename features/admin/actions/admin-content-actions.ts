@@ -17,6 +17,7 @@ import type {
   AdminAuditLogEntry,
   PathOverview,
   ContentWarning,
+  AdminUser,
 } from '../types'
 
 const ADMIN_BASE = process.env.ADMIN_PANEL_PATH || ''
@@ -633,11 +634,35 @@ export async function getAdminLearners() {
 
   const { data } = await db
     .from('learners')
-    .select('user_id, first_name, last_name, current_path_id, onboarding_completed, status, created_at')
+    .select(`
+      user_id,
+      first_name,
+      last_name,
+      email,
+      current_path_id,
+      onboarding_completed,
+      status,
+      created_at,
+      paths ( name )
+    `)
     .eq('role', 'learner')
     .order('created_at', { ascending: false })
 
-  return data || []
+  if (!data) return []
+
+  return data.map((d: any) => ({
+    user_id: d.user_id,
+    first_name: d.first_name || '',
+    last_name: d.last_name || '',
+    email: d.email || '',
+    current_path_id: d.current_path_id || null,
+    path_name: d.paths?.name || null,
+    onboarding_completed: !!d.onboarding_completed,
+    status: d.status || 'unknown',
+    created_at: d.created_at,
+    progress_percent: 0,
+    last_active: null,
+  })) as AdminLearner[]
 }
 
 export async function blockLearner(userId: string): Promise<AdminActionResult> {
@@ -693,7 +718,16 @@ export async function getAdminAccounts() {
     .select('user_id, display_name, admin_level, created_at')
     .order('created_at')
 
-  return data || []
+  if (!data) return []
+
+  return data.map((d: any) => ({
+    user_id: d.user_id,
+    display_name: d.display_name || '',
+    admin_level: d.admin_level,
+    email: '', // Add email
+    status: 'active', // Add status
+    created_at: d.created_at,
+  })) as AdminUser[]
 }
 
 export async function deactivateAdmin(targetUserId: string): Promise<AdminActionResult> {

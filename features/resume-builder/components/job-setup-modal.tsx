@@ -109,9 +109,9 @@ export default function JobSetupModal({ isOpen, onClose }: { isOpen: boolean, on
             ) : (
               <div className="h-[250px] overflow-y-auto border rounded-md">
                 <div className="p-3 flex flex-col gap-2">
-                  {savedAnalyses.map((analysis) => (
+                  {savedAnalyses.map((analysis, index) => (
                     <button
-                      key={analysis.id}
+                      key={analysis.id || analysis.analysis_id || index}
                       type="button"
                       onClick={() => handleSelectAnalysis(analysis)}
                       className="flex items-start text-left gap-3 p-3 rounded-md hover:bg-muted/50 border bg-background transition-colors"

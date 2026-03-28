@@ -14,29 +14,40 @@ const publicRoutes = ['/', '/login', '/register', '/register/check-email', '/for
 function isPublicRoute(pathname: string): boolean {
   // Strip locale prefix (e.g. /en/login → /login, /login → /login)
   const withoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
-  
+
   // Standard learner public routes
   if (publicRoutes.includes(withoutLocale)) return true;
-  
+
   // Admin obfuscated login
   if (ADMIN_PANEL_PATH && withoutLocale === `/${ADMIN_PANEL_PATH}/login`) return true;
-  
+
   return false;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   try {
     const pathname = request.nextUrl.pathname;
 
     // ─── SECURITY: Block common admin path scanners ───
     if (pathname === '/admin' || pathname.startsWith('/admin/') ||
-        pathname === '/administrator' || pathname.startsWith('/administrator/')) {
+      pathname === '/administrator' || pathname.startsWith('/administrator/')) {
       return new NextResponse('Not Found', { status: 404 });
     }
 
     // ─── STANDARD LEARNER ROUTING (unchanged) ───
+    const isLocalized = pathname.startsWith('/en') || pathname.startsWith('/ar');
+    const isImplicitAdmin = pathname.startsWith(`/${ADMIN_PANEL_PATH}`);
 
-    // Skip intl middleware for technical routes
+    if (process.env.NODE_ENV === 'development' && isImplicitAdmin) {
+      console.log(`[Middleware] Admin Path Detected: "${pathname}", Localized: ${isLocalized}, key: "${ADMIN_PANEL_PATH}"`);
+    }
+
+    // FORCE locale for admin paths if missing immediately at the top
+    if (isImplicitAdmin && !isLocalized && ADMIN_PANEL_PATH) {
+      const locale = 'en'; // Default
+      const localizedUrl = new URL(`/${locale}${pathname}`, request.url);
+      return NextResponse.redirect(localizedUrl);
+    }
     if (pathname.startsWith('/auth/') || pathname === '/auth' || pathname.startsWith('/api/') || pathname === '/api') {
       const { response } = await updateSession(request);
       return response;

@@ -33,7 +33,8 @@ export default function EducationForm({ initialData, onChange, t }: Props) {
 
   useEffect(() => {
     onChange(entries);
-  }, [entries, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entries]);
 
   const handleAdd = () => {
     setEditingIndex(null);

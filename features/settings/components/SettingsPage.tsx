@@ -7,6 +7,7 @@ import { ProfileSection } from './ProfileSection';
 import { LearningPrefsSection } from './LearningPrefsSection';
 import { AIPrefsSection } from './AIPrefsSection';
 import { SecuritySection } from './SecuritySection';
+import { LogoutSection } from './LogoutSection';
 import { DangerZoneSection } from './DangerZoneSection';
 
 interface SettingsPageProps {
@@ -47,6 +48,7 @@ export function SettingsPage({ profile }: SettingsPageProps) {
                     currentDetail={profile.learner.ai_detail_level}
                 />
                 <SecuritySection />
+                <LogoutSection />
                 <DangerZoneSection userEmail={profile.user.email} />
             </div>
         </div>

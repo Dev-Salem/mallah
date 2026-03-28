@@ -48,7 +48,8 @@ export default function ProjectsForm({ initialData, onChange, t }: Props) {
       onChange(value.entries || []);
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch]);
 
   return (
     <Form {...form}>

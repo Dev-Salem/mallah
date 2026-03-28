@@ -73,7 +73,8 @@ export default function SkillsForm({
       });
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch]);
 
   /* ── Checkbox grid grouped by category ──────────────────────────────────── */
   const groupedSkills = useMemo(() => {
