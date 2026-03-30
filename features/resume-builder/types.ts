@@ -38,11 +38,18 @@ export type SkillsForm = z.infer<typeof skillsSchema>;
 export type ManualSkillGroup = z.infer<typeof manualSkillGroupSchema>;
 
 export const projectEntrySchema = z.object({
-  project_id: z.string(),
+  id: z.string().optional(),
+  project_id: z.string().optional(),
   included: z.boolean(),
-  description_override: z.string(),
-  github_override: z.string(),
-  demo_override: z.string(),
+  title: z.string().min(1, "Project name is required"),
+  description: z.string().optional(),
+  github: z.string().optional(),
+  demo: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  current: z.boolean().optional(),
+  bullets: z.array(z.string()).default([]),
+  technologies: z.array(z.string()).default([]),
 });
 export const projectsSchema = z.array(projectEntrySchema);
 export type ProjectsForm = z.infer<typeof projectsSchema>;

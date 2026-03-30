@@ -65,7 +65,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
     // 3. Projects
     const { data: userProjectsRaw } = await supabase
         .from('user_projects')
-        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at')
+        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at, started_at, bullets')
         .eq('user_id', user.id);
 
     const projectIds = (userProjectsRaw ?? []).map(p => p.project_id);
@@ -113,6 +113,8 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
             thumbnail_url: up.thumbnail_url ?? template?.thumbnail_url ?? null,
             tech_stack: up.tech_stack ?? [],
             completed_at: up.completed_at,
+            started_at: up.started_at,
+            bullets: up.bullets ?? [],
             skills: projectSkillsGrouped[up.project_id] ?? [],
         };
     });
@@ -199,7 +201,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     // 3. Projects (only public + completed)
     const { data: userProjectsRaw } = await supabase
         .from('user_projects')
-        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at')
+        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at, started_at, bullets')
         .eq('user_id', learner.user_id)
         .eq('is_public', true)
         .eq('status', 'completed');
@@ -253,6 +255,8 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
             thumbnail_url: up.thumbnail_url ?? template?.thumbnail_url ?? null,
             tech_stack: up.tech_stack ?? [],
             completed_at: up.completed_at,
+            started_at: up.started_at,
+            bullets: up.bullets ?? [],
             skills: projectSkillsGrouped[up.project_id] ?? [],
         };
     });

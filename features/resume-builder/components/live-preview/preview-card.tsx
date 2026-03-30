@@ -49,16 +49,29 @@ export default function PreviewCard({
             {displayName}
           </h1>
 
-          {contactParts.length > 0 && (
-            <div className="text-center text-[10px] text-slate-500 mb-5 space-x-2">
-              {contactParts.map((part, i) => (
-                <span key={i}>
-                  {i > 0 && <span className="mx-1">•</span>}
-                  {part}
-                </span>
-              ))}
-            </div>
-          )}
+          <div className="text-center text-[10px] text-slate-500 mb-5 flex flex-wrap justify-center gap-x-2">
+            {personalInfo.phone && <span>{personalInfo.phone}</span>}
+            {personalInfo.phone && personalInfo.location && <span>•</span>}
+            {personalInfo.location && <span>{personalInfo.location}</span>}
+            {personalInfo.location && personalInfo.linkedin && <span>•</span>}
+            {personalInfo.linkedin && (
+              <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                LinkedIn
+              </a>
+            )}
+            {personalInfo.linkedin && personalInfo.github && <span>•</span>}
+            {personalInfo.github && (
+              <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                GitHub
+              </a>
+            )}
+            {personalInfo.github && personalInfo.portfolio && <span>•</span>}
+            {personalInfo.portfolio && (
+              <a href={personalInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                Portfolio
+              </a>
+            )}
+          </div>
 
           {/* ── Summary ─────────────────────────────────── */}
           {summary && (
@@ -143,18 +156,58 @@ export default function PreviewCard({
                 Projects
               </h2>
               {projectEntries.map((proj: any, i: number) => (
-                <div key={i} className="mb-2">
-                  {proj.description_override && (
-                    <p className="text-[11px] text-slate-700">
-                      {proj.description_override}
-                    </p>
-                  )}
-                  <div className="text-[10px] text-slate-500 space-x-2">
-                    {proj.github_override && (
-                      <span>{proj.github_override}</span>
+                <div key={i} className="mb-3">
+                  <div className="text-[11px] leading-tight">
+                    {proj.demo || proj.demo_override ? (
+                      <a 
+                        href={proj.demo || proj.demo_override} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="font-semibold text-blue-600 hover:underline"
+                      >
+                        {proj.title || "Untitled Project"}
+                      </a>
+                    ) : (
+                      <span className="font-semibold">
+                        {proj.title || "Untitled Project"}
+                      </span>
                     )}
-                    {proj.demo_override && <span>{proj.demo_override}</span>}
+                    {(proj.technologies?.length > 0) && (
+                      <span className="text-slate-500">
+                        {" | "}
+                        {proj.technologies.join(", ")}
+                      </span>
+                    )}
                   </div>
+                  
+                  {(proj.github || proj.github_override) && (
+                    <div className="text-[10px] text-blue-600 mt-0.5">
+                      <a 
+                        href={proj.github || proj.github_override} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        GitHub Codebase
+                      </a>
+                    </div>
+                  )}
+
+                  {proj.description || proj.description_override ? (
+                    <p className="text-[10px] text-slate-700 mt-1">
+                      {proj.description || proj.description_override}
+                    </p>
+                  ) : null}
+
+                  {proj.bullets?.filter(Boolean).length > 0 && (
+                    <ul className="list-disc list-inside text-[10px] text-slate-700 mt-1 space-y-0.5 pl-1">
+                      {proj.bullets
+                        .filter(Boolean)
+                        .map((b: string, bIdx: number) => (
+                          <li key={bIdx}>{b}</li>
+                        ))}
+                    </ul>
+                  )}
                 </div>
               ))}
             </div>

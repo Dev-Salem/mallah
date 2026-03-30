@@ -17,10 +17,18 @@ interface ProjectCardProps {
 export function ProjectCard({ project, isPublicView = false }: ProjectCardProps) {
     const t = useTranslations('PortfolioHub.projects');
 
-    // Format completed date
-    const completedDate = project.completed_at
-        ? new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(project.completed_at))
-        : t('statusInProgress');
+    // Format dates
+    const formatDate = (dateStr: string | null) => {
+        if (!dateStr) return null;
+        try {
+            return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(dateStr));
+        } catch {
+            return dateStr;
+        }
+    };
+
+    const startDate = formatDate(project.started_at);
+    const completedDate = formatDate(project.completed_at) || t('statusInProgress');
 
     const handleTogglePublic = async (checked: boolean) => {
         const result = await toggleProjectVisibilityAction(project.project_id, checked);
@@ -32,85 +40,98 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
     };
 
     return (
-        <div className={`flex flex-col rounded-xl overflow-hidden border transition-all ${isPublicView ? 'bg-card' : 'bg-card hover:border-primary/30'}`}>
-
-            {/* Thumbnail area */}
-            <div className="h-40 bg-muted/30 relative flex items-center justify-center border-b border-border/50 overflow-hidden">
+        <div className={`group relative flex gap-6 p-6 rounded-2xl border transition-all ${isPublicView ? 'bg-card' : 'bg-card hover:border-primary/30 hover:shadow-md'}`}>
+            
+            {/* Left: Thumbnail/Icon element */}
+            <div className={`hidden sm:flex shrink-0 w-24 h-24 rounded-xl border border-border/50 bg-muted/20 items-center justify-center overflow-hidden relative ${!isPublicView && !project.is_public ? 'opacity-50' : ''}`}>
                 {project.thumbnail_url ? (
                     <img src={project.thumbnail_url} alt={project.title} className="w-full h-full object-cover" />
                 ) : (
-                    <LayoutTemplate className="w-10 h-10 text-muted-foreground/20" />
+                    <LayoutTemplate className="w-8 h-8 text-muted-foreground/30" />
                 )}
-
-                {/* Visibility Overlay */}
-                {!isPublicView && !project.is_public && (
-                    <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
-                        <div className="bg-background/90 px-3 py-1.5 rounded-full flex items-center gap-2 border shadow-sm">
-                            <EyeOff className="w-3.5 h-3.5 text-muted-foreground" />
-                            <span className="text-[10px] uppercase tracking-wider font-mono text-muted-foreground">{t('privateBadge')}</span>
-                        </div>
-                    </div>
-                )}
-
-                {/* Source Badge */}
-                <Badge variant="secondary" className="absolute top-3 left-3 bg-background/90 backdrop-blur text-[10px] font-mono shadow-sm">
+                
+                {/* Source Label */}
+                <div className="absolute bottom-0 left-0 right-0 bg-background/80 backdrop-blur-[2px] py-1 text-[8px] font-mono text-center border-t border-border/40 uppercase tracking-tighter text-muted-foreground">
                     {t(`sourceBadge.${project.source_type}` as any)}
-                </Badge>
+                </div>
             </div>
 
-            <div className="p-5 flex flex-col flex-1">
-                <div className="flex justify-between items-start gap-4 mb-2">
-                    <h3 className="font-bold text-lg text-foreground line-clamp-1">{project.title}</h3>
-
-                    {!isPublicView && (
-                        <div className="flex items-center gap-1.5 shrink-0" title={t('visibilityToggle')}>
-                            {project.is_public ? <Eye className="w-3 h-3 text-muted-foreground" /> : <EyeOff className="w-3 h-3 text-muted-foreground/50" />}
-                            <Switch
-                                checked={project.is_public}
-                                onCheckedChange={handleTogglePublic}
-                                className="scale-75"
-                            />
+            {/* Right: Content element */}
+            <div className="flex-1 flex flex-col min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
+                    <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="font-bold text-xl text-foreground leading-tight">{project.title}</h3>
+                            {!isPublicView && !project.is_public && (
+                                <Badge variant="secondary" className="bg-muted text-[10px] uppercase font-mono h-5">
+                                    {t('privateBadge')}
+                                </Badge>
+                            )}
                         </div>
+                        <div className="text-xs font-medium text-muted-foreground/80 mt-1 uppercase font-mono">
+                            {startDate ? `${startDate} — ` : ''}{completedDate}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0 self-end sm:self-start">
+                        {!isPublicView && (
+                            <div className="flex items-center gap-2 group/switch bg-muted/30 px-2 py-1 rounded-full border border-transparent hover:border-border/50 transition-colors">
+                                {project.is_public ? <Eye className="w-3.5 h-3.5 text-muted-foreground" /> : <EyeOff className="w-3.5 h-3.5 text-muted-foreground/50" />}
+                                <Switch
+                                    checked={project.is_public}
+                                    onCheckedChange={handleTogglePublic}
+                                    className="scale-75 origin-right"
+                                />
+                            </div>
+                        )}
+                        <div className="flex gap-1.5 pt-0.5">
+                            {project.github_url && (
+                                <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full bg-primary/5 hover:bg-primary/10 text-primary border border-primary/5 hover:border-primary/20" asChild>
+                                    <a href={project.github_url} target="_blank" rel="noopener noreferrer" title={t('viewCode')}>
+                                        <Github className="w-4 h-4" />
+                                    </a>
+                                </Button>
+                            )}
+                            {project.demo_url && (
+                                <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full bg-primary/5 hover:bg-primary/10 text-primary border border-primary/5 hover:border-primary/20" asChild>
+                                    <a href={project.demo_url} target="_blank" rel="noopener noreferrer" title={t('viewDemo')}>
+                                        <Globe className="w-4 h-4" />
+                                    </a>
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bullets/Description */}
+                <div className="mb-4">
+                    {project.bullets && project.bullets.length > 0 ? (
+                        <ul className="space-y-2">
+                            {project.bullets.map((bullet, idx) => (
+                                <li key={idx} className="text-sm text-muted-foreground flex gap-2">
+                                    <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-primary/30 mt-1.5" />
+                                    <span>{bullet}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-sm text-muted-foreground/80 leading-relaxed">
+                            {project.description || project.personal_note || t('noDescription')}
+                        </p>
                     )}
                 </div>
 
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2 min-h-[40px]">
-                    {project.description || project.personal_note || t('noDescription')}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5 mb-6">
-                    {project.tech_stack.slice(0, 4).map((tech: string, i: number) => (
-                        <Badge key={i} variant="outline" className="text-[10px] text-muted-foreground border-border/50 bg-background">
+                {/* Tech Chips */}
+                <div className="flex flex-wrap gap-2 mt-auto">
+                    {project.tech_stack.map((tech: string, i: number) => (
+                        <Badge 
+                            key={i} 
+                            variant="secondary" 
+                            className="bg-primary/5 hover:bg-primary/10 text-primary/80 border-primary/10 text-[10px] font-medium py-0.5 px-2.5 rounded-md"
+                        >
                             {tech}
                         </Badge>
                     ))}
-                    {project.tech_stack.length > 4 && (
-                        <Badge variant="outline" className="text-[10px] text-muted-foreground border-border/50 bg-background">
-                            +{project.tech_stack.length - 4}
-                        </Badge>
-                    )}
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-border/50 flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground/70 font-mono">
-                        {completedDate}
-                    </span>
-                    <div className="flex gap-2">
-                        {project.github_url && (
-                            <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full bg-primary/5 hover:bg-primary/10 text-primary" asChild>
-                                <a href={project.github_url} target="_blank" rel="noopener noreferrer" title={t('viewCode')}>
-                                    <Github className="w-4 h-4" />
-                                </a>
-                            </Button>
-                        )}
-                        {project.demo_url && (
-                            <Button size="icon" variant="ghost" className="w-8 h-8 rounded-full bg-primary/5 hover:bg-primary/10 text-primary" asChild>
-                                <a href={project.demo_url} target="_blank" rel="noopener noreferrer" title={t('viewDemo')}>
-                                    <Globe className="w-4 h-4" />
-                                </a>
-                            </Button>
-                        )}
-                    </div>
                 </div>
             </div>
         </div>

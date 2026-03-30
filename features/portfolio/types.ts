@@ -26,6 +26,8 @@ export interface PortfolioProject {
     thumbnail_url: string | null; // resolved: user override → project default → null
     tech_stack: string[];
     completed_at: string | null;
+    started_at: string | null;
+    bullets: string[];
     skills: { skill_id: string; name: string; category: string }[];
 }
 
@@ -67,6 +69,8 @@ export const addExternalProjectSchema = z.object({
     tech_stack: z.array(z.string()).optional(),
     skill_ids: z.array(z.string()).optional(),
     status: z.enum(['in_progress', 'completed']),
+    started_at: z.string().optional(),
+    bullets: z.array(z.string()).optional(),
 });
 
 export type AddExternalProjectInput = z.infer<typeof addExternalProjectSchema>;

@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Link } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: {
@@ -61,6 +61,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     marginBottom: 1,
   },
+  link: {
+    color: "#3b82f6",
+    textDecoration: "none",
+  },
   skillsText: {
     fontSize: 10,
   },
@@ -117,11 +121,27 @@ export const ResumePDFTemplate = ({
           <Text style={styles.name}>
             {displayName}
           </Text>
-          {contactParts.length > 0 && (
-            <Text style={styles.contact}>
-              {contactParts.join(" • ")}
-            </Text>
-          )}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
+            {personalInfo.phone && <Text style={styles.contact}>{personalInfo.phone}</Text>}
+            {personalInfo.phone && (personalInfo.location || personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text style={styles.contact}>•</Text>}
+            
+            {personalInfo.location && <Text style={styles.contact}>{personalInfo.location}</Text>}
+            {personalInfo.location && (personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text style={styles.contact}>•</Text>}
+
+            {personalInfo.linkedin && (
+              <Link src={personalInfo.linkedin} style={{ ...styles.contact, ...styles.link }}>LinkedIn</Link>
+            )}
+            {personalInfo.linkedin && (personalInfo.github || personalInfo.portfolio) && <Text style={styles.contact}>•</Text>}
+
+            {personalInfo.github && (
+              <Link src={personalInfo.github} style={{ ...styles.contact, ...styles.link }}>GitHub</Link>
+            )}
+            {personalInfo.github && personalInfo.portfolio && <Text style={styles.contact}>•</Text>}
+
+            {personalInfo.portfolio && (
+              <Link src={personalInfo.portfolio} style={{ ...styles.contact, ...styles.link }}>Portfolio</Link>
+            )}
+          </View>
         </View>
 
         {/* ── Summary ──────────────────────────── */}
@@ -185,17 +205,48 @@ export const ResumePDFTemplate = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Projects</Text>
             {projectEntries.map((proj: any, i: number) => (
-              <View key={i} style={{ marginBottom: 6 }}>
-                {proj.description_override ? (
-                  <Text style={styles.text}>{proj.description_override}</Text>
-                ) : null}
-                {(proj.github_override || proj.demo_override) && (
-                  <Text style={styles.small}>
-                    {[proj.github_override, proj.demo_override]
-                      .filter(Boolean)
-                      .join(" | ")}
-                  </Text>
+              <View key={i} style={{ marginBottom: 8 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {proj.demo || proj.demo_override ? (
+                    <Link
+                      src={proj.demo || proj.demo_override}
+                      style={{ ...styles.bold, ...styles.link }}
+                    >
+                      {proj.title || "Untitled Project"}
+                    </Link>
+                  ) : (
+                    <Text style={styles.bold}>
+                      {proj.title || "Untitled Project"}
+                    </Text>
+                  )}
+                  {proj.technologies?.length > 0 && (
+                    <Text style={{ fontSize: 9, color: "#555" }}>
+                      {" | "}
+                      {proj.technologies.join(", ")}
+                    </Text>
+                  )}
+                </View>
+
+                {(proj.github || proj.github_override) && (
+                  <Link
+                    src={proj.github || proj.github_override}
+                    style={{ ...styles.small, ...styles.link, marginTop: 1 }}
+                  >
+                    GitHub Codebase
+                  </Link>
                 )}
+
+                {proj.description || proj.description_override ? (
+                  <Text style={{ ...styles.text, marginTop: 2 }}>{proj.description || proj.description_override}</Text>
+                ) : null}
+
+                {proj.bullets
+                  ?.filter(Boolean)
+                  .map((b: string, bIdx: number) => (
+                    <Text key={bIdx} style={{ ...styles.bullet, marginTop: 1 }}>
+                      • {b}
+                    </Text>
+                  ))}
               </View>
             ))}
           </View>

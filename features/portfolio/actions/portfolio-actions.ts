@@ -151,6 +151,8 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
             demo_url: data.demo_url || null,
             tech_stack: data.tech_stack ?? [],
             completed_at: data.status === 'completed' ? new Date().toISOString() : null,
+            started_at: data.started_at || null,
+            bullets: data.bullets ?? [],
         });
 
     if (upErr) return { success: false, error: upErr.message };

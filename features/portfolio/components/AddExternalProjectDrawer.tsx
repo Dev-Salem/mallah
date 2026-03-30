@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Plus, Trash2 } from 'lucide-react';
 import { addExternalProjectAction } from '../actions/portfolio-actions';
 import { toast } from 'sonner';
 
@@ -31,7 +32,25 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
     const [demoUrl, setDemoUrl] = useState('');
     const [techStackStr, setTechStackStr] = useState('');
     const [difficultyLevel, setDifficultyLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+    const [startedAt, setStartedAt] = useState('');
+    const [bullets, setBullets] = useState<string[]>(['']);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const addBullet = () => setBullets([...bullets, '']);
+    const updateBullet = (idx: number, val: string) => {
+        const next = [...bullets];
+        next[idx] = val;
+        setBullets(next);
+    };
+    const removeBullet = (idx: number) => {
+        if (bullets.length <= 1) {
+            setBullets(['']);
+            return;
+        }
+        const next = [...bullets];
+        next.splice(idx, 1);
+        setBullets(next);
+    };
 
     // We could add a multiple select here. For simplicity in this version, we will limit external projects
     // to just tech_stack (which is an array of strings) and leave skill linking manual or for V2.
@@ -53,6 +72,8 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
             demo_url: demoUrl || undefined,
             tech_stack: techStackArray,
             status: 'completed', // External added projects default to completed
+            started_at: startedAt || undefined,
+            bullets: bullets.filter(b => b.trim() !== ''),
         });
 
         setIsSubmitting(false);
@@ -67,6 +88,8 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
             setDemoUrl('');
             setTechStackStr('');
             setDifficultyLevel('beginner');
+            setStartedAt('');
+            setBullets(['']);
         } else {
             toast.error(result.error);
         }
@@ -139,6 +162,53 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
                             value={demoUrl}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDemoUrl(e.target.value)}
                         />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="startedAt">{t('startLabel')}</Label>
+                        <Input
+                            id="startedAt"
+                            placeholder={t('startPlaceholder')}
+                            value={startedAt}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStartedAt(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <Label>{t('bulletsLabel')}</Label>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={addBullet}
+                                className="h-7 px-2 text-xs gap-1"
+                            >
+                                <Plus className="w-3 h-3" />
+                                {t('addBullet')}
+                            </Button>
+                        </div>
+                        <div className="space-y-2">
+                            {bullets.map((bullet, idx) => (
+                                <div key={idx} className="flex gap-2">
+                                    <Input
+                                        value={bullet}
+                                        onChange={(e) => updateBullet(idx, e.target.value)}
+                                        placeholder={t('bulletsPlaceholder')}
+                                        className="flex-1"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeBullet(idx)}
+                                        className="h-9 w-9 shrink-0 text-muted-foreground hover:text-destructive"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="space-y-2">

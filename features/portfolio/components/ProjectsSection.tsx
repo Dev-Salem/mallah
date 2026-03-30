@@ -45,7 +45,7 @@ export function ProjectsSection({ projects, catalog, isPublicView = false }: Pro
                     <p className="text-muted-foreground">{t('noProjectsMessage')}</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="space-y-4">
                     {filterProjects.map(project => (
                         <ProjectCard key={project.project_id} project={project} isPublicView={isPublicView} />
                     ))}
