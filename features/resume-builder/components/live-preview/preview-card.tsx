@@ -78,9 +78,23 @@ export default function PreviewCard({
               <h2 className="text-xs font-bold uppercase tracking-widest text-slate-800 border-b border-slate-300 pb-1 mb-2">
                 Skills
               </h2>
-              <p className="text-[11px] leading-relaxed text-slate-700">
-                {skills.join(" • ")}
-              </p>
+              <div className="space-y-1">
+                {skills.map((item: any, i: number) => (
+                  <p
+                    key={i}
+                    className="text-[11px] leading-relaxed text-slate-700"
+                  >
+                    {typeof item === "string" ? (
+                      item
+                    ) : (
+                      <>
+                        <span className="font-semibold">{item.name}:</span>{" "}
+                        {item.skills.join(", ")}
+                      </>
+                    )}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
 

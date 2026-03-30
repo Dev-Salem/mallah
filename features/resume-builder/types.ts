@@ -25,11 +25,17 @@ export const summarySchema = z.object({
 });
 export type SummaryForm = z.infer<typeof summarySchema>;
 
+export const manualSkillGroupSchema = z.object({
+  name: z.string(),
+  skills: z.array(z.string()),
+});
+
 export const skillsSchema = z.object({
   included_skill_ids: z.array(z.string()),
-  manual_skills: z.array(z.string()),
+  manual_skills: z.array(z.union([z.string(), manualSkillGroupSchema])),
 });
 export type SkillsForm = z.infer<typeof skillsSchema>;
+export type ManualSkillGroup = z.infer<typeof manualSkillGroupSchema>;
 
 export const projectEntrySchema = z.object({
   project_id: z.string(),

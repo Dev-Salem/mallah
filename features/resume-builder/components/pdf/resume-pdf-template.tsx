@@ -136,7 +136,15 @@ export const ResumePDFTemplate = ({
         {skills.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Skills</Text>
-            <Text style={styles.skillsText}>{skills.join(" • ")}</Text>
+            <Text style={styles.skillsText}>
+              {skills
+                .map((item: any) =>
+                  typeof item === "string"
+                    ? item
+                    : `${item.name}: ${item.skills.join(", ")}`
+                )
+                .join(" • ")}
+            </Text>
           </View>
         ) : null}
 

@@ -6,6 +6,7 @@ import { useEffect, useState, useMemo } from "react";
 import {
   skillsSchema,
   SkillsForm as SkillsFormType,
+  ManualSkillGroup,
 } from "@/features/resume-builder/types";
 import {
   Form,
@@ -62,6 +63,7 @@ export default function SkillsForm({
   });
 
   const [input, setInput] = useState("");
+  const [group, setGroup] = useState("");
   const manualSkills = form.watch("manual_skills");
   const includedIds = form.watch("included_skill_ids");
 
@@ -104,20 +106,74 @@ export default function SkillsForm({
 
   /* ── Manual skills ─────────────────────────────────────────────────────── */
   const addSkill = () => {
-    const trimmed = input.trim();
-    if (!trimmed || manualSkills.includes(trimmed)) return;
-    form.setValue("manual_skills", [...manualSkills, trimmed], {
-      shouldValidate: true,
-    });
+    const trimmedInput = input.trim();
+    const trimmedGroup = group.trim();
+    if (!trimmedInput) return;
+
+    const currentManual = form.getValues("manual_skills");
+
+    if (trimmedGroup) {
+      const existingGroupIdx = currentManual.findIndex(
+        (s) =>
+          typeof s === "object" &&
+          s.name.toLowerCase() === trimmedGroup.toLowerCase()
+      );
+
+      if (existingGroupIdx > -1) {
+        const existingGroup = currentManual[
+          existingGroupIdx
+        ] as ManualSkillGroup;
+        if (!existingGroup.skills.includes(trimmedInput)) {
+          const updatedManual = [...currentManual];
+          updatedManual[existingGroupIdx] = {
+            ...existingGroup,
+            skills: [...existingGroup.skills, trimmedInput],
+          };
+          form.setValue("manual_skills", updatedManual, {
+            shouldValidate: true,
+          });
+        }
+      } else {
+        form.setValue(
+          "manual_skills",
+          [...currentManual, { name: trimmedGroup, skills: [trimmedInput] }],
+          {
+            shouldValidate: true,
+          }
+        );
+      }
+    } else {
+      if (!currentManual.some((s) => s === trimmedInput)) {
+        form.setValue("manual_skills", [...currentManual, trimmedInput], {
+          shouldValidate: true,
+        });
+      }
+    }
     setInput("");
   };
 
-  const removeSkill = (skillToRemove: string) => {
+  const removeItem = (index: number) => {
+    const current = form.getValues("manual_skills");
     form.setValue(
       "manual_skills",
-      manualSkills.filter((s) => s !== skillToRemove),
+      current.filter((_, i) => i !== index),
       { shouldValidate: true }
     );
+  };
+
+  const removeSkillFromGroup = (groupIdx: number, skillName: string) => {
+    const current = form.getValues("manual_skills");
+    const target = current[groupIdx];
+    if (typeof target === "object") {
+      const updatedSkills = target.skills.filter((s) => s !== skillName);
+      const updatedManual = [...current];
+      if (updatedSkills.length === 0) {
+        updatedManual.splice(groupIdx, 1);
+      } else {
+        updatedManual[groupIdx] = { ...target, skills: updatedSkills };
+      }
+      form.setValue("manual_skills", updatedManual, { shouldValidate: true });
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -173,51 +229,101 @@ export default function SkillsForm({
             render={() => (
               <FormItem>
                 <FormLabel>{t("AddSkills")}</FormLabel>
-                <div className="flex gap-2">
-                  <FormControl>
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
                     <Input
-                      placeholder={t("SkillPlaceholder")}
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      className="flex-1"
+                      placeholder="Category (e.g. Frameworks)"
+                      value={group}
+                      onChange={(e) => setGroup(e.target.value)}
+                      className="w-1/3"
                     />
-                  </FormControl>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={addSkill}
-                    disabled={!input.trim()}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                    <FormControl>
+                      <Input
+                        placeholder={t("SkillPlaceholder")}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="flex-1"
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addSkill}
+                      disabled={!input.trim()}
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
                 <FormMessage />
               </FormItem>
             )}
           />
           {manualSkills.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {manualSkills.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="secondary"
-                  className="gap-1 pr-1 text-sm"
-                >
-                  {skill}
-                  <span className="text-[10px] text-muted-foreground ml-0.5">
-                    Manual
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="ml-1 rounded-full p-0.5 hover:bg-destructive/20 transition-colors"
+            <div className="flex flex-col gap-3 pt-1">
+              {manualSkills.map((item, idx) => {
+                if (typeof item === "string") {
+                  return (
+                    <Badge
+                      key={idx}
+                      variant="secondary"
+                      className="gap-1 pr-1 text-sm self-start"
+                    >
+                      {item}
+                      <span className="text-[10px] text-muted-foreground ml-0.5">
+                        Manual
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeItem(idx)}
+                        className="ml-1 rounded-full p-0.5 hover:bg-destructive/20 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </Badge>
+                  );
+                }
+
+                return (
+                  <div
+                    key={idx}
+                    className="border rounded-md p-3 bg-muted/20 relative group"
                   >
-                    <X className="w-3 h-3" />
-                  </button>
-                </Badge>
-              ))}
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        {item.name}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeItem(idx)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-destructive/10 rounded"
+                      >
+                        <X className="w-3 h-3 text-destructive" />
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {item.skills.map((skill) => (
+                        <Badge
+                          key={skill}
+                          variant="secondary"
+                          className="gap-1 pr-1 text-xs"
+                        >
+                          {skill}
+                          <button
+                            type="button"
+                            onClick={() => removeSkillFromGroup(idx, skill)}
+                            className="ml-1 rounded-full p-0.5 hover:bg-destructive/20 transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
           {manualSkills.length === 0 &&
