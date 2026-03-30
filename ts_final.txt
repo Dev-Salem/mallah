@@ -1,0 +1,2 @@
+app/[locale]/(admin-panel)/[adminPath]/(protected)/settings/page.tsx(25,29): error TS2322: Type '{ user_id: any; display_name: any; admin_level: any; created_at: any; }[]' is not assignable to type 'AdminUser[]'.
+  Type '{ user_id: any; display_name: any; admin_level: any; created_at: any; }' is missing the following properties from type 'AdminUser': email, status

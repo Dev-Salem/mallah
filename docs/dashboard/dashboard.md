@@ -321,7 +321,14 @@ Three tiles stacked vertically in the right column. Each has a **primary value**
 | `ready` | "Ready" | "Looking good — keep it updated" |
 | ATS score exists | "ATS: {score}/100" | Score color: green ≥ 75, amber 50–74, red < 50 |
 
-- **Link:** → Resume Builder
+**Multi-resume logic:** the learner may have more than one resume (general + one or more job-based). The tile always reflects the most favorable state across all resumes:
+- `resume_status` = the highest status across all resumes (`ready` > `in_progress` > `not_created`)
+- `ats_score` = the highest ATS score across all resumes
+- `resume_last_updated_days_ago` = days since the most recently updated resume (`MIN` of `last_updated_at` across all `resumes` rows)
+
+This means if the learner has a general resume at 74 and a job-based resume at 91, the tile shows "ATS: 91/100."
+
+- **Link:** → Resume Builder (Cards Grid)
 
 ---
 
@@ -434,7 +441,7 @@ Last 3–5 learner actions.
 |---|---|
 | Completed a topic | `user_progress.completed_at` |
 | Completed a project | `user_projects.completed_at` |
-| Updated resume | `resumes.last_updated_at` |
+| Updated resume | Most recent `resumes.last_updated_at` across all of the learner's resumes |
 | Saved a job analysis | `opportunity_analyses.created_at` |
 
 **Fallback:** Do not show the section — no empty state, no placeholder — if all timestamps are null or if the Onboarding Banner is active (first session).
@@ -532,8 +539,10 @@ Response shape:
 - `readiness.roadmap_skills_count` — skills earned via roadmap. Feeds Skills tile sub-label.
 - `readiness.manual_skills_count` — skills added manually. Feeds Skills tile sub-label.
 - `readiness.available_projects_count` — projects with `user_projects.status = 'available'`. Feeds Projects tile sub-label.
-- `readiness.resume_last_updated_days_ago` — integer days since `resumes.last_updated_at`. Feeds Resume tile sub-label.
+- `readiness.resume_last_updated_days_ago` — integer days since the most recently updated resume across all of the learner's `resumes` rows. Feeds Resume tile sub-label.
 - `pace.active_days_this_week` — array of day indices (0 = Monday … 6 = Sunday) where a `user_progress.last_accessed_at` update occurred this calendar week. Feeds the weekly dots visual.
+
+**Resume readiness aggregation:** `resume_status` and `ats_score` in the readiness object reflect the most favorable values across all the learner's resumes (general + job-based). The backend queries all `resumes` rows for this `user_id` and returns the highest `status` and highest `ats_score`. This means a high-scoring job-based resume surfaces on the Dashboard tile even if the general resume has a lower score.
 
 **Rules:**
 - `ai_tip` is always last — must never delay the rest of the response.

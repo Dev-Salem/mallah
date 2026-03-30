@@ -76,7 +76,7 @@ export function Sidebar() {
     { key: 'roadmap', href: '/dashboard/roadmap', icon: Map, label: t('roadmap') },
     { key: 'skillsHub', href: '/dashboard/portfolio', icon: Layers, label: t('skillsHub') },
     {
-      key: 'resumeBuilder', href: '/dashboard/resume', icon: FileText, label: t('resumeBuilder'),
+      key: 'resumeBuilder', href: '/dashboard/resume-builder', icon: FileText, label: t('resumeBuilder'),
       showDot: sidebarData
         ? sidebarData.resumeStatus === 'not_created' && sidebarData.unlockedSkillsCount >= 5
         : false
@@ -88,7 +88,7 @@ export function Sidebar() {
     { key: 'dashboard', href: '/dashboard', icon: Home, label: 'Dashboard' },
     { key: 'roadmap', href: '/dashboard/roadmap', icon: Map, label: 'Roadmap' },
     { key: 'skillsHub', href: '/dashboard/portfolio', icon: Layers, label: 'Portfolio' },
-    { key: 'resumeBuilder', href: '/dashboard/resume', icon: FileText, label: 'Resume' },
+    { key: 'resumeBuilder', href: '/dashboard/resume-builder', icon: FileText, label: 'Resume' },
     { key: 'more', href: '#', icon: Menu, label: 'More' },
   ];
 

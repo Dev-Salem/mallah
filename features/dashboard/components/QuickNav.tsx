@@ -18,7 +18,7 @@ export function QuickNav({ readiness }: QuickNavProps) {
     const links = [
         { label: 'View Full Roadmap', icon: Map, href: '/dashboard/roadmap', dot: false },
         { label: 'Portfolio Hub', icon: Layers, href: '/dashboard/skills', dot: false },
-        { label: 'Resume Builder', icon: FileText, href: '/dashboard/resume', dot: showResumeDot },
+        { label: 'Resume Builder', icon: FileText, href: '/dashboard/resume-builder', dot: showResumeDot },
         { label: 'Opportunity Analyzer', icon: Briefcase, href: '/dashboard/opportunities', dot: false },
     ];
 

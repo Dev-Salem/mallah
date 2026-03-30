@@ -13,6 +13,7 @@
     "@ai-sdk/react": "^3.0.108",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-toast": "^1.2.15",
+    "@react-pdf/renderer": "^4.3.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "ai": "^6.0.106",

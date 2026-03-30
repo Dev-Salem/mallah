@@ -1,0 +1,1 @@
+features/resume-builder/components/job-setup-modal.tsx(16,69): error TS2307: Cannot find module '@/components/ui/form' or its corresponding type declarations.

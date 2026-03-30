@@ -1,0 +1,174 @@
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\ai-improve-panel.tsx
+  3:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\editor\editor-form-panel.tsx
+  22:12  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:12  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:3   warning  'resumeId' is defined but never used      @typescript-eslint/no-unused-vars
+  80:29  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\editor\full-editor.tsx
+   31:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   36:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  186:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\editor\section-nav.tsx
+  125:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  152:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  161:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\certifications-form.tsx
+   21:16   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:20   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   23:6    error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   27:42   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   53:34   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:84   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:104  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  138:143  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\education-form.tsx
+   22:16   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+   23:20   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+   24:6    error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+   28:42   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+   54:34   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  139:80   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  139:100  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  139:139  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  152:22   warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\education-form.tsx:152:22
+  150 |   });
+  151 |
+> 152 |   const inProgress = form.watch("in_progress");
+      |                      ^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  153 |
+  154 |   const onSubmit = (values: EducationEntryFormType) => {
+  155 |     onSave(values);  react-hooks/incompatible-library
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\experience-form.tsx
+   22:16   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+   23:20   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+   24:6    error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+   28:42   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+   54:34   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  139:81   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  139:101  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  139:140  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  154:21   warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\experience-form.tsx:154:21
+  152 |   });
+  153 |
+> 154 |   const isCurrent = form.watch("current");
+      |                     ^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  155 |   const bullets = form.watch("bullets") || [""];
+  156 |
+  157 |   const updateBullet = (idx: number, val: string) => {  react-hooks/incompatible-library
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\personal-info-form.tsx
+  22:16  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  23:20  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  24:6   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  42:26  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\personal-info-form.tsx:42:26
+  40 |
+  41 |   useEffect(() => {
+> 42 |     const subscription = form.watch((value) => {
+     |                          ^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  43 |       onChange(value);
+  44 |     });
+  45 |     return () => subscription.unsubscribe();  react-hooks/incompatible-library
+  46:6   warning  React Hook useEffect has a missing dependency: 'form'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\projects-form.tsx
+  27:16  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  28:20  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  29:6   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  47:26  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\projects-form.tsx:47:26
+  45 |
+  46 |   useEffect(() => {
+> 47 |     const subscription = form.watch((value) => {
+     |                          ^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  48 |       onChange(value.entries || []);
+  49 |     });
+  50 |     return () => subscription.unsubscribe();  react-hooks/incompatible-library
+  51:6   warning  React Hook useEffect has a missing dependency: 'form'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\skills-form.tsx
+  39:16  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  40:20  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  41:6   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  69:26  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\skills-form.tsx:69:26
+  67 |
+  68 |   useEffect(() => {
+> 69 |     const subscription = form.watch((value) => {
+     |                          ^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  70 |       onChange({
+  71 |         included_skill_ids: value.included_skill_ids || [],
+  72 |         manual_skills: value.manual_skills || [],  react-hooks/incompatible-library
+  76:6   warning  React Hook useEffect has a missing dependency: 'form'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\forms\summary-form.tsx
+   5:31  warning  'useRef' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+  25:16  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  26:20  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  27:6   error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  56:6   warning  React Hook useEffect has a missing dependency: 'form'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\job-setup-modal.tsx
+  32:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  71:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  78:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\live-preview\preview-card.tsx
+    5:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+    6:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   25:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  155:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\pdf\resume-pdf-template.tsx
+   73:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   74:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   93:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  179:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  221:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\resume-cards-grid.tsx
+  32:78  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\3z0r1\OneDrive\سطح المكتب\Mallah Project\mallah\features\resume-builder\components\wizard\guided-wizard.tsx
+  24:60  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  26:9   warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  32:69  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  34:39  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  49:62  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  75:19  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+✖ 84 problems (71 errors, 13 warnings)
+
