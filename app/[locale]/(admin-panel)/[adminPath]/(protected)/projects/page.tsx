@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getAdminProjects } from '../../../../../../features/admin/actions/admin-content-actions'
 import { ProjectsTable } from '../../../../../../features/admin/components/projects/projects-table'
 
 export default async function AdminProjectsPage() {
-  const t = useTranslations('Admin.Projects')
+  const t = await getTranslations('Admin.Projects')
   const projects = await getAdminProjects()
 
   return (

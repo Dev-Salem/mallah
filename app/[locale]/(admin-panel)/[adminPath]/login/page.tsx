@@ -15,7 +15,7 @@ export default function AdminLoginPage() {
   const router = useRouter()
 
   const adminBasePath = typeof window !== 'undefined'
-    ? window.location.pathname.split('/')[2] // [empty, locale, adminBasePath, login]
+    ? window.location.pathname.replace(/^\/(en|ar)\//, '/').split('/')[1]
     : ''
 
   async function handleSubmit(e: React.FormEvent) {

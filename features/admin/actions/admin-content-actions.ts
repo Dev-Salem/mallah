@@ -77,28 +77,28 @@ export async function getPathOverviews(): Promise<PathOverview[]> {
   const admin = await requireAdmin()
   const db = getSupabaseAdmin()
 
+  // 1. Fetch paths
   const { data: paths } = await db.from('paths').select('path_id, name')
   if (!paths) return []
 
+  // 2. Fetch all learner counts in bulk if possible, or parallelize
+  // For simplicity and maximum compatibility, we'll use Promise.all which is already better than sequential
+  // but we'll optimize the query to use head: true for speed.
   const overviews = await Promise.all(
     paths.map(async (p) => {
-      const { count: learners } = await db
-        .from('learners')
-        .select('*', { count: 'exact', head: true })
-        .eq('current_path_id', p.path_id)
-
-      const { count: active } = await db
-        .from('learners')
-        .select('*', { count: 'exact', head: true })
-        .eq('current_path_id', p.path_id)
-        .gte('last_active_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      const [learnersResult, activeResult] = await Promise.all([
+        db.from('learners').select('*', { count: 'exact', head: true }).eq('current_path_id', p.path_id),
+        db.from('learners').select('*', { count: 'exact', head: true })
+          .eq('current_path_id', p.path_id)
+          .gte('last_active_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      ])
 
       return {
         path_id: p.path_id,
         name: p.name,
-        learner_count: learners || 0,
-        avg_completion: 0, // Simplified for now
-        active_this_week: active || 0,
+        learner_count: learnersResult.count || 0,
+        avg_completion: 0,
+        active_this_week: activeResult.count || 0,
       } as PathOverview
     })
   )
@@ -111,11 +111,24 @@ export async function getContentWarnings(): Promise<ContentWarning[]> {
   const db = getSupabaseAdmin()
   const warnings: ContentWarning[] = []
 
-  // 1. Paths with no stages
-  const { data: paths } = await db.from('paths').select('path_id, name')
+  // Optimize: Use bulk fetching to avoid N+1 queries
+  // 1. Fetch all parent-child relationships in bulk
+  const [
+    { data: paths },
+    { data: allStages },
+    { data: allTopics },
+    { data: allResources }
+  ] = await Promise.all([
+    db.from('paths').select('path_id, name'),
+    db.from('stages').select('stage_id, path_id, title'),
+    db.from('topics').select('topic_id, stage_id, title'),
+    db.from('resources').select('resource_id, topic_id')
+  ])
+
+  // 2. Identify missing stages for paths
+  const pathIdsWithStages = new Set(allStages?.map(s => s.path_id) || [])
   for (const path of paths || []) {
-    const { count } = await db.from('stages').select('*', { count: 'exact', head: true }).eq('path_id', path.path_id)
-    if (count === 0) {
+    if (!pathIdsWithStages.has(path.path_id)) {
       warnings.push({
         type: 'path_no_stages',
         message: `Path "${path.name}" has no stages.`,
@@ -125,11 +138,10 @@ export async function getContentWarnings(): Promise<ContentWarning[]> {
     }
   }
 
-  // 2. Stages with no topics
-  const { data: stages } = await db.from('stages').select('stage_id, title')
-  for (const stage of stages || []) {
-    const { count } = await db.from('topics').select('*', { count: 'exact', head: true }).eq('stage_id', stage.stage_id)
-    if (count === 0) {
+  // 3. Identify missing topics for stages
+  const stageIdsWithTopics = new Set(allTopics?.map(t => t.stage_id) || [])
+  for (const stage of allStages || []) {
+    if (!stageIdsWithTopics.has(stage.stage_id)) {
       warnings.push({
         type: 'stage_no_topics',
         message: `Stage "${stage.title}" has no topics.`,
@@ -139,11 +151,10 @@ export async function getContentWarnings(): Promise<ContentWarning[]> {
     }
   }
 
-  // 3. Topics with no resources
-  const { data: topics } = await db.from('topics').select('topic_id, title')
-  for (const topic of topics || []) {
-    const { count } = await db.from('resources').select('*', { count: 'exact', head: true }).eq('topic_id', topic.topic_id)
-    if (count === 0) {
+  // 4. Identify missing resources for topics
+  const topicIdsWithResources = new Set(allResources?.map(r => r.topic_id) || [])
+  for (const topic of allTopics || []) {
+    if (!topicIdsWithResources.has(topic.topic_id)) {
       warnings.push({
         type: 'topic_no_resources',
         message: `Topic "${topic.title}" has no resources.`,
