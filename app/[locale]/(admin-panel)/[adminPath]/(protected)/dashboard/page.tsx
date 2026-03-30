@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import {
   getDashboardStats,
   getPathOverviews,
@@ -13,7 +13,7 @@ import { RecentActivity } from '../../../../../../features/admin/components/dash
 import { QuickActions } from '../../../../../../features/admin/components/dashboard/quick-actions'
 
 export default async function AdminDashboardPage() {
-  const t = useTranslations('Admin.Dashboard')
+  const t = await getTranslations('Admin.Dashboard')
   
   const [stats, pathOverviews, warnings, recentActivity, admin] = await Promise.all([
     getDashboardStats(),

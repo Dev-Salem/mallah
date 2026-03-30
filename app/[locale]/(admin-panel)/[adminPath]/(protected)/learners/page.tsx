@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getAdminLearners } from '../../../../../../features/admin/actions/admin-content-actions'
 import { LearnersTable } from '../../../../../../features/admin/components/learners/learners-table'
 
 export default async function AdminLearnersPage() {
-  const t = useTranslations('Admin.Learners')
+  const t = await getTranslations('Admin.Learners')
   const learners = await getAdminLearners()
 
   return (

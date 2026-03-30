@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getAdminPaths } from '../../../../../../../features/admin/actions/admin-content-actions'
 import { PathsTable } from '../../../../../../../features/admin/components/content/paths-table'
 
 export default async function AdminPathsPage() {
-  const t = useTranslations('Admin.Content.Paths')
+  const t = await getTranslations('Admin.Content.Paths')
   const paths = await getAdminPaths()
 
   return (

@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getAdminAccounts } from '../../../../../../features/admin/actions/admin-content-actions'
 import { AdminAccountsTable } from '../../../../../../features/admin/components/settings/admin-accounts-table'
 
 export default async function AdminSettingsPage() {
-  const t = useTranslations('Admin.Settings')
+  const t = await getTranslations('Admin.Settings')
   const admins = await getAdminAccounts()
 
   return (

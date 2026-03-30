@@ -661,6 +661,8 @@
   "Admin": {
     "Sidebar": {
       "title": "Mallah Admin",
+      "clearance": "Clearance",
+      "super": "Super",
       "dashboard": "Dashboard",
       "content": "Content",
       "paths": "Paths & Stages",
@@ -701,12 +703,13 @@
         "subtitle": "Overview of curriculum performance",
         "name": "Path Name",
         "learners": "Navigators",
-        "avgCompletion": "Avg. Completion"
+        "avgCompletion": "Avg. Completion",
+        "active": "Active (7d)",
+        "noPaths": "No curriculum paths defined"
       },
       "RecentActivity": "Recent Admin Access",
       "HealthWarnings": "System Alerts",
-      "noRecentActivity": "No recent security events",
-      "noPaths": "No curriculum paths defined"
+      "noRecentActivity": "No recent security events"
     },
     "Content": {
       "Paths": {
@@ -722,7 +725,10 @@
         "published": "Published",
         "draft": "Draft",
         "learners": "Navigators",
-        "stages": "Stages"
+        "stages": "Stages",
+        "deactivateConfirm": "{count} navigators are currently enrolled in this path. Deactivating prevents new enrollments but does not remove existing progress. Continue?",
+        "slugPlaceholder": "auto-generated-slug",
+        "visibleToAll": "Visible to all navigators"
       },
       "Stages": {
         "title": "Stages",
@@ -834,8 +840,11 @@
       "status": "Status",
       "active": "Active",
       "inactive": "Inactive",
+      "edit": "Edit",
       "delete": "Remove",
-      "confirm": "Confirm"
+      "deactivate": "Deactivate",
+      "confirm": "Confirm",
+      "error": "An error occurred"
     }
   }
 }

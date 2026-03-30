@@ -65,16 +65,14 @@ export function PathsTable({ initialPaths }: PathsTableProps) {
         else setShowDrawer(false)
       }
     } catch {
-      setError('An error occurred')
+      setError(tc('error'))
     } finally {
       setSaving(false)
     }
   }
 
   const handleDeactivate = async (path: AdminPath) => {
-    const confirmed = window.confirm(
-      `${path.learner_count} learners are currently enrolled in this path. Deactivating prevents new enrollments but does not remove existing learner progress. Continue?`
-    )
+    const confirmed = window.confirm(t('deactivateConfirm', { count: path.learner_count }))
     if (!confirmed) return
 
     await updatePath(path.path_id, { is_active: false })
@@ -204,14 +202,14 @@ export function PathsTable({ initialPaths }: PathsTableProps) {
                     onChange={(e) => setFormData({ ...formData, path_id: e.target.value })}
                     disabled={!!editingPath}
                     className="w-full px-5 py-4 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all font-mono"
-                    placeholder="auto-generated-slug"
+                    placeholder={t('slugPlaceholder')}
                   />
                 </div>
 
                 <div className="flex items-center justify-between p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
                   <div className="space-y-0.5">
                     <label className="text-xs font-black text-zinc-200 uppercase tracking-widest">{tc('active')}</label>
-                    <p className="text-[10px] text-zinc-600 italic tracking-wider uppercase">Visible to all navigators</p>
+                    <p className="text-[10px] text-zinc-600 italic tracking-wider uppercase">{t('visibleToAll')}</p>
                   </div>
                   <button
                     onClick={() => setFormData({ ...formData, is_active: !formData.is_active })}

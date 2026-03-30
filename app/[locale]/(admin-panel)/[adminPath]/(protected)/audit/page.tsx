@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getAuditLog } from '../../../../../../features/admin/actions/admin-content-actions'
 import { AuditLogTable } from '../../../../../../features/admin/components/audit/audit-log-table'
 
@@ -7,7 +7,7 @@ export default async function AdminAuditLogPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const t = useTranslations('Admin.Audit')
+  const t = await getTranslations('Admin.Audit')
   const page = parseInt(searchParams.page || '1')
   const { entries, total } = await getAuditLog(page)
 

@@ -1,9 +1,9 @@
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getAdminSkills } from '../../../../../../../features/admin/actions/admin-content-actions'
 import { SkillsTable } from '../../../../../../../features/admin/components/content/skills-table'
 
 export default async function AdminSkillsPage() {
-  const t = useTranslations('Admin.Skills')
+  const t = await getTranslations('Admin.Skills')
   const skills = await getAdminSkills()
 
   return (

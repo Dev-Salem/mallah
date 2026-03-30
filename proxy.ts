@@ -29,8 +29,14 @@ export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     // ─── SECURITY: Block common admin path scanners ───
-    if (pathname === '/admin' || pathname.startsWith('/admin/') ||
-      pathname === '/administrator' || pathname.startsWith('/administrator/')) {
+    const withoutLocaleCheck = pathname.replace(/^\/(en|ar)/, '') || '/';
+    if (withoutLocaleCheck === '/admin' || withoutLocaleCheck.startsWith('/admin/') ||
+      withoutLocaleCheck === '/administrator' || withoutLocaleCheck.startsWith('/administrator/')) {
+      if (process.env.NODE_ENV === 'development') {
+        const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
+        const adminLoginUrl = new URL(`/${locale}/${ADMIN_PANEL_PATH}/login`, request.url);
+        return NextResponse.redirect(adminLoginUrl);
+      }
       return new NextResponse('Not Found', { status: 404 });
     }
 
@@ -42,12 +48,7 @@ export async function proxy(request: NextRequest) {
       console.log(`[Middleware] Admin Path Detected: "${pathname}", Localized: ${isLocalized}, key: "${ADMIN_PANEL_PATH}"`);
     }
 
-    // FORCE locale for admin paths if missing immediately at the top
-    if (isImplicitAdmin && !isLocalized && ADMIN_PANEL_PATH) {
-      const locale = 'en'; // Default
-      const localizedUrl = new URL(`/${locale}${pathname}`, request.url);
-      return NextResponse.redirect(localizedUrl);
-    }
+    // FORCE locale block removed to prevent infinite redirect loop with next-intl 'as-needed' mode.
     if (pathname.startsWith('/auth/') || pathname === '/auth' || pathname.startsWith('/api/') || pathname === '/api') {
       const { response } = await updateSession(request);
       return response;
@@ -129,11 +130,11 @@ export async function proxy(request: NextRequest) {
       }
 
       // 4. Onboarding Guard: Redirect to /onboarding if not completed
-      const isDashboard = pathname.includes('/dashboard');
-      const isSettings = pathname.includes('/settings');
-      const isOnboarding = pathname.includes('/onboarding');
+      const isLearnerDashboard = /^\/(en|ar)\/dashboard/.test(pathname);
+      const isLearnerSettings = /^\/(en|ar)\/settings/.test(pathname);
+      const isOnboarding = /^\/(en|ar)\/onboarding/.test(pathname);
 
-      if (learner && !learner.onboarding_completed && (isDashboard || isSettings) && !isOnboarding) {
+      if (!isAdminPath && learner && !learner.onboarding_completed && (isLearnerDashboard || isLearnerSettings) && !isOnboarding) {
         const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
         return NextResponse.redirect(onboardingUrl);
       }
