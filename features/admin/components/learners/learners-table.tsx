@@ -4,6 +4,16 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { blockLearner, unblockLearner } from '../../actions/admin-content-actions'
 import type { AdminLearner } from '../../types'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 interface LearnersTableProps {
   initialLearners: AdminLearner[]
@@ -25,7 +35,6 @@ export function LearnersTable({ initialLearners }: LearnersTableProps) {
     if (result.success) {
       setLearners(prev => prev.map(l => l.user_id === userId ? { ...l, status: 'blocked' } : l))
     }
-    setLoadingId(userId === null ? null : null) // Force re-render if needed, but actually just set null
     setLoadingId(null)
   }
 
@@ -39,72 +48,76 @@ export function LearnersTable({ initialLearners }: LearnersTableProps) {
   }
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-2xl">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-zinc-800 bg-zinc-900/50">
-              <th className="text-left px-5 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('name')}</th>
-              <th className="text-left px-5 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('email')}</th>
-              <th className="text-left px-5 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('path')}</th>
-              <th className="text-left px-5 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('status')}</th>
-              <th className="text-right px-5 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">{t('joined')}</th>
-              <th className="text-right px-5 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">{tc('actions')}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800/50 text-zinc-300">
-            {learners.map((learner) => (
-              <tr key={learner.user_id} className="hover:bg-zinc-800/30 transition-all duration-200 group">
-                <td className="px-5 py-4 font-semibold text-zinc-200 group-hover:text-blue-400 transition-colors">
-                  {learner.first_name} {learner.last_name}
-                </td>
-                <td className="px-5 py-4 text-zinc-400 font-mono text-xs">{learner.email}</td>
-                <td className="px-5 py-4">
-                  <span className="text-zinc-500 italic text-xs">{learner.path_name || '—'}</span>
-                </td>
-                <td className="px-5 py-4">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 text-[10px] uppercase font-bold rounded tracking-tight border ${
-                      learner.status === 'active' 
-                        ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' 
-                        : 'bg-red-500/5 text-red-400 border-red-500/20'
-                    }`}
+    <div className="border border-border rounded-lg overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{t('name')}</TableHead>
+            <TableHead>{t('email')}</TableHead>
+            <TableHead>{t('path')}</TableHead>
+            <TableHead>{t('status')}</TableHead>
+            <TableHead className="text-right">{t('joined')}</TableHead>
+            <TableHead className="text-right">{tc('actions')}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {learners.map((learner) => (
+            <TableRow key={learner.user_id}>
+              <TableCell className="font-medium text-foreground">
+                {learner.first_name} {learner.last_name}
+              </TableCell>
+              <TableCell className="text-muted-foreground font-mono text-xs">{learner.email}</TableCell>
+              <TableCell>
+                <span className="text-muted-foreground text-xs">{learner.path_name || '—'}</span>
+              </TableCell>
+              <TableCell>
+                <Badge
+                  variant={learner.status === 'active' ? 'default' : 'destructive'}
+                  className={learner.status === 'active'
+                    ? 'bg-success/10 text-success border-success/20'
+                    : 'bg-destructive/10 text-destructive border-destructive/20'
+                  }
+                >
+                  {t(learner.status as any)}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right text-muted-foreground font-mono text-xs">
+                {new Date(learner.created_at).toLocaleDateString()}
+              </TableCell>
+              <TableCell className="text-right">
+                {learner.status === 'active' ? (
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => handleBlock(learner.user_id)}
+                    disabled={loadingId === learner.user_id}
+                    className="text-destructive hover:text-destructive"
                   >
-                    {t(learner.status as any)}
-                  </span>
-                </td>
-                <td className="px-5 py-4 text-zinc-500 text-right font-mono text-xs">
-                  {new Date(learner.created_at).toLocaleDateString()}
-                </td>
-                <td className="px-5 py-4 text-right">
-                  {learner.status === 'active' ? (
-                    <button
-                      onClick={() => handleBlock(learner.user_id)}
-                      disabled={loadingId === learner.user_id}
-                      className="text-[10px] uppercase font-bold text-red-500/70 hover:text-red-400 transition-colors disabled:opacity-50 tracking-tighter"
-                    >
-                      {t('block')}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleUnblock(learner.user_id)}
-                      disabled={loadingId === learner.user_id}
-                      className="text-[10px] uppercase font-bold text-emerald-500/70 hover:text-emerald-400 transition-colors disabled:opacity-50 tracking-tighter"
-                    >
-                      {t('unblock')}
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {learners.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-5 py-12 text-center text-zinc-500 italic">{t('noLearners')}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                    {t('block')}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => handleUnblock(learner.user_id)}
+                    disabled={loadingId === learner.user_id}
+                    className="text-success hover:text-success"
+                  >
+                    {t('unblock')}
+                  </Button>
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+          {learners.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center py-12 text-sm text-muted-foreground">
+                {t('noLearners')}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   )
 }

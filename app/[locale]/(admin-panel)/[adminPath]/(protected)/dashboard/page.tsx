@@ -26,16 +26,15 @@ export default async function AdminDashboardPage() {
   const adminBasePath = process.env.ADMIN_PANEL_PATH || ''
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-1.5">
-        <h1 className="text-4xl font-black text-white tracking-tightest uppercase italic">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">
           {t('title')}
         </h1>
-        <p className="text-sm text-zinc-500 font-medium max-w-2xl">
+        <p className="text-sm text-muted-foreground">
           {t('subtitle')}
         </p>
-        <div className="h-1 w-16 bg-blue-600/50 rounded-full mt-2" />
       </div>
 
       {/* Stats Cards */}
@@ -47,8 +46,8 @@ export default async function AdminDashboardPage() {
         isSuperAdmin={admin?.adminLevel === 'super'}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-6">
           {/* Content Warnings */}
           {warnings.length > 0 && <ContentWarnings warnings={warnings} />}
           
@@ -56,7 +55,7 @@ export default async function AdminDashboardPage() {
           <PathOverviewTable paths={pathOverviews} />
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Recent Activity */}
           <RecentActivity entries={recentActivity} />
         </div>

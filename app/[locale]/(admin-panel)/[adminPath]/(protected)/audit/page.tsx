@@ -12,15 +12,14 @@ export default async function AdminAuditLogPage({
   const { entries, total } = await getAuditLog(page)
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col gap-1.5">
-        <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">
           {t('title')}
         </h1>
-        <p className="text-sm text-zinc-500 font-medium max-w-2xl">
+        <p className="text-sm text-muted-foreground">
           {t('subtitle')}
         </p>
-        <div className="h-1 w-12 bg-blue-600/50 rounded-full mt-2" />
       </div>
 
       <AuditLogTable initialEntries={entries} totalCount={total} currentPage={page} />

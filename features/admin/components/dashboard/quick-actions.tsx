@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { PlusCircle, Search, ShieldCheck, History } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface QuickActionsProps {
   adminBasePath: string
@@ -42,14 +43,12 @@ export function QuickActions({ adminBasePath, isSuperAdmin }: QuickActionsProps)
   return (
     <div className="flex flex-wrap gap-2">
       {actions.map((action) => (
-        <Link
-          key={action.label}
-          href={action.href}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100 transition-colors"
-        >
-          <action.icon className="h-3.5 w-3.5" />
-          <span>{action.label}</span>
-        </Link>
+        <Button key={action.label} variant="outline" size="sm" asChild>
+          <Link href={action.href}>
+            <action.icon className="h-3.5 w-3.5" />
+            {action.label}
+          </Link>
+        </Button>
       ))}
     </div>
   )

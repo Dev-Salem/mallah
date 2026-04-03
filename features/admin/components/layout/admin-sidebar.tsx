@@ -16,8 +16,14 @@ import {
   Route,
   Layers,
   Sparkles,
+  Sun,
+  Moon,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useTheme } from 'next-themes'
+import { Logo } from '@/components/ui/logo'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import type { AdminLevel } from '../../types'
 
 interface AdminSidebarProps {
@@ -40,6 +46,12 @@ export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSi
   const locale = useLocale()
   const pathname = usePathname()
   const [contentOpen, setContentOpen] = useState(true)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const base = `/${locale}/${adminBasePath}`
 
@@ -96,21 +108,21 @@ export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSi
   const handleLogout = async () => {
     const { adminLogoutAction } = await import('../../actions/admin-auth-actions')
     await adminLogoutAction()
-    // Manual redirect after server action to ensure absolute path works with localized routing
     window.location.href = `${base}/login`
   }
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-950 border-r border-zinc-800 flex flex-col">
-      {/* Header */}
-      <div className="h-16 flex items-center px-6 border-b border-zinc-800">
-        <span className="text-sm font-bold text-zinc-200 tracking-tight uppercase">
+    <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
+      {/* Header with Logo */}
+      <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border">
+        <Logo size={28} />
+        <span className="text-sm font-semibold text-sidebar-foreground tracking-tight">
           {t('title')}
         </span>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1.5">
+      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
         {navItems.map((item) => {
           if (item.superOnly && adminLevel !== 'super') return null
 
@@ -119,9 +131,9 @@ export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSi
               <div key={item.id}>
                 <button
                   onClick={() => setContentOpen(!contentOpen)}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 rounded-lg transition-colors group"
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent rounded-md transition-colors cursor-pointer"
                 >
-                  <item.icon className="h-4 w-4 shrink-0 transition-colors group-hover:text-blue-400" />
+                  <item.icon className="h-4 w-4 shrink-0" />
                   <span className="flex-1 text-left">{t(item.labelKey)}</span>
                   {contentOpen ? (
                     <ChevronDown className="h-3.5 w-3.5 opacity-50" />
@@ -130,15 +142,15 @@ export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSi
                   )}
                 </button>
                 {contentOpen && (
-                  <div className="ml-4 mt-1.5 space-y-1 border-l border-zinc-800/50 pl-4">
+                  <div className="ml-4 mt-1 space-y-0.5 border-l border-sidebar-border pl-3">
                     {item.children.map((child) => (
                       <Link
                         key={child.id}
                         href={child.href}
-                        className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all ${
+                        className={`flex items-center gap-3 px-3 py-1.5 text-sm rounded-md transition-colors ${
                           isActive(child.href)
-                            ? 'bg-zinc-800/50 text-blue-400 font-medium'
-                            : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900'
+                            ? 'bg-sidebar-accent text-sidebar-primary font-medium'
+                            : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                         }`}
                       >
                         <child.icon className="h-3.5 w-3.5 shrink-0" />
@@ -155,34 +167,50 @@ export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSi
             <Link
               key={item.id}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all group ${
+              className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 isActive(item.href)
-                  ? 'bg-zinc-900 text-blue-400 border border-zinc-800/50'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900'
+                  ? 'bg-sidebar-accent text-sidebar-primary'
+                  : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
               }`}
             >
-              <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive(item.href) ? 'text-blue-400' : 'group-hover:text-blue-400'}`} />
+              <item.icon className={`h-4 w-4 shrink-0 ${isActive(item.href) ? 'text-sidebar-primary' : ''}`} />
               <span>{t(item.labelKey)}</span>
             </Link>
           )
         })}
       </nav>
 
-      {/* Footer: Admin info + Sign Out */}
-      <div className="border-t border-zinc-800 p-5 space-y-4">
-        <div className="px-1">
-          <p className="text-sm font-semibold text-zinc-200 truncate">{displayName}</p>
-          <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
-            {t('clearance', { level: t(adminLevel as any) })}
-          </p>
+      <Separator className="bg-sidebar-border" />
+
+      {/* Footer: Admin info + Theme Toggle + Sign Out */}
+      <div className="p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="overflow-hidden pr-2">
+            <p className="text-sm font-medium text-sidebar-foreground truncate">{displayName}</p>
+            <p className="text-xs text-sidebar-foreground/50 capitalize">
+              {t(adminLevel as any)}
+            </p>
+          </div>
+          {mounted && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="shrink-0 text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+          )}
         </div>
-        <button
+        <Button
+          variant="ghost"
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-bold text-red-400/80 hover:text-red-400 hover:bg-red-500/5 border border-red-500/10 rounded-lg transition-all uppercase tracking-wider"
+          className="w-full justify-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
         >
           <LogOut className="h-3.5 w-3.5" />
-          <span>{t('signOut')}</span>
-        </button>
+          <span className="text-xs font-medium">{t('signOut')}</span>
+        </Button>
       </div>
     </aside>
   )
