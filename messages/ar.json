@@ -656,7 +656,8 @@
     "DeleteDescription2": "الرجاء كتابة",
     "DeleteDescription3": "للتأكيد.",
     "TypeDeleteToConfirm": "اكتب 'Delete' هنا...",
-    "DeleteResume": "حذف السيرة"
+    "DeleteResume": "حذف السيرة",
+    "ResumeDeletedSuccess": "تم حذف السيرة بنجاح"
   },
   "Admin": {
     "Login": {

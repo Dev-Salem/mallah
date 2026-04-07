@@ -231,20 +231,22 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("DeleteTitle")}</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3">
-              <p>
-                {t("DeleteDescription1")}
-              </p>
-              <p className="text-foreground font-medium">
-                {t("DeleteDescription2")} <span className="font-bold text-red-600">Delete</span> {t("DeleteDescription3")}
-              </p>
-              <Input 
-                value={deleteConfirmationText}
-                onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                placeholder={t("TypeDeleteToConfirm")}
-                disabled={isDeleting}
-                className="mt-2"
-              />
+            <AlertDialogDescription className="space-y-3" asChild>
+              <div>
+                <p>
+                  {t("DeleteDescription1")}
+                </p>
+                <p className="text-foreground font-medium">
+                  {t("DeleteDescription2")} <span className="font-bold text-red-600">Delete</span> {t("DeleteDescription3")}
+                </p>
+                <Input 
+                  value={deleteConfirmationText}
+                  onChange={(e) => setDeleteConfirmationText(e.target.value)}
+                  placeholder={t("TypeDeleteToConfirm")}
+                  disabled={isDeleting}
+                  className="mt-2"
+                />
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -656,7 +656,8 @@
     "DeleteDescription2": "Please type",
     "DeleteDescription3": "to confirm.",
     "TypeDeleteToConfirm": "Type 'Delete' here...",
-    "DeleteResume": "Delete Resume"
+    "DeleteResume": "Delete Resume",
+    "ResumeDeletedSuccess": "Resume deleted successfully"
   },
   "Admin": {
     "Sidebar": {
