@@ -1,0 +1,5 @@
+features/resume-builder/components/editor/full-editor.tsx(85,14): error TS2339: Property 'id' does not exist on type 'SectionNavItem'.
+features/resume-builder/components/editor/full-editor.tsx(87,17): error TS2367: This comparison appears to be unintentional because the types 'CompletionStatus' and '"complete"' have no overlap.
+features/resume-builder/components/editor/full-editor.tsx(88,38): error TS2339: Property 'id' does not exist on type 'SectionNavItem'.
+features/resume-builder/components/forms/summary-form.tsx(22,28): error TS2307: Cannot find module '../ai-improve-panel' or its corresponding type declarations.
+features/resume-builder/components/resume-cards-grid.tsx(10,27): error TS2307: Cannot find module './job-setup-modal' or its corresponding type declarations.

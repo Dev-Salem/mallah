@@ -31,15 +31,15 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
         : null;
 
     return (
-        <div className="border border-white/10 bg-white/[0.02] p-5 lg:p-6 space-y-5">
+        <div className="border border-primary/10 bg-dashboard-card-bg p-5 lg:p-6 space-y-6 shadow-sm">
             {/* Section header */}
             <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-primary/40" />
+                <TrendingUp className="w-4 h-4 text-primary" />
                 <span className={cn(
-                    "text-[9px] font-mono text-muted-foreground/50 uppercase font-bold",
+                    "text-[9px] font-mono text-muted-foreground uppercase font-black",
                     !isArabic && "tracking-[0.2em]"
                 )}>
-                    Progress
+                    Performance Analysis
                 </span>
             </div>
 
@@ -47,34 +47,34 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
             <div>
                 <div className="flex items-center justify-between mb-2">
                     <span className={cn(
-                        "text-[10px] font-mono text-white/70 uppercase",
+                        "text-[10px] font-mono text-foreground uppercase font-bold",
                         !isArabic && "tracking-wide"
                     )}>
-                        Path Progress
+                        Overall Path
                     </span>
-                    <span className="text-[10px] font-mono text-muted-foreground/50">
-                        {topics.completed_topics} of {topics.total_mandatory_topics} lessons
+                    <span className="text-[10px] font-mono text-muted-foreground font-bold">
+                        {topics.completed_topics} / {topics.total_mandatory_topics} <span className="opacity-50">LESSONS</span>
                     </span>
                 </div>
-                <div className="h-2 bg-white/5 overflow-hidden">
+                <div className="h-2 bg-muted/30 overflow-hidden border border-primary/5">
                     <div
-                        className="h-full bg-primary transition-all duration-1000 ease-out"
+                        className="h-full bg-primary transition-all duration-1000 ease-out shadow-[0_0_8px_var(--primary)] shadow-primary/20"
                         style={{ width: `${Math.max(path.completion_percent, 1)}%` }}
                     />
                 </div>
             </div>
 
             {/* Stage Progress Bar */}
-            <div>
+            <div className="pt-2 border-t border-primary/5">
                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono text-white/50">
-                        {stage.current_stage_title}
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase font-bold">
+                        Current: <span className="text-foreground">{stage.current_stage_title}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-muted-foreground/40">
-                        {stage.stage_completed_topics} of {stage.stage_total_topics} topics done
+                    <span className="text-[10px] font-mono text-muted-foreground opacity-60">
+                        {stage.stage_completed_topics} / {stage.stage_total_topics} topics
                     </span>
                 </div>
-                <div className="h-1.5 bg-white/5 overflow-hidden">
+                <div className="h-1.5 bg-muted/30 overflow-hidden border border-primary/5">
                     <div
                         className="h-full bg-primary/60 transition-all duration-1000 ease-out"
                         style={{ width: `${Math.max(stage.stage_completion_percent, 1)}%` }}
@@ -84,9 +84,12 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
 
             {/* Forecast Line */}
             {estimatedDays && estimatedDays > 0 && (
-                <p className="text-[10px] text-muted-foreground/40 text-end">
-                    At your current pace, you&apos;ll finish this stage in ~{estimatedDays} days.
-                </p>
+                <div className="flex items-center gap-2 pt-2 text-[10px] text-muted-foreground font-medium">
+                    <div className="w-1 h-1 rounded-full bg-primary/40" />
+                    <p>
+                        Completion Estimate: <span className="text-foreground font-bold">{estimatedDays} days</span> at current velocity.
+                    </p>
+                </div>
             )}
         </div>
     );

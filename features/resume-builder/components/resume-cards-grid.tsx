@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Target, Plus, Loader2, MoreVertical, FileText, Trash2, Download, LayoutTemplate } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import JobSetupModal from "./job-setup-modal";
 import { createGeneralResumeAction, deleteResumeAction } from "@/features/resume-builder/actions/resume-actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -109,7 +108,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
 
           <Button 
             disabled={isAtLimit}
-            onClick={() => setIsJobModalOpen(true)}
+            onClick={() => toast.info(t("CreateGeneralFirst", { fallback: "Create a General Resume first, then Personalize it from the Editor." }))}
             className="shadow-sm"
           >
             <Target className="w-4 h-4 mr-2" />
@@ -134,7 +133,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
                   </CardContent>
               </Card>
 
-              <Card className="border-dashed bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group" onClick={() => setIsJobModalOpen(true)}>
+              <Card className="border-dashed bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group" onClick={() => toast.info(t("CreateGeneralFirst", { fallback: "Create a General Resume first, then Personalize it from the Editor." }))}>
                   <CardContent className="p-8 text-center flex flex-col items-center justify-center min-h-[260px]">
                       <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                           <Target className="w-6 h-6 text-primary" />
@@ -223,9 +222,6 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
           </div>
       )}
 
-      {isJobModalOpen && (
-          <JobSetupModal isOpen={isJobModalOpen} onClose={() => setIsJobModalOpen(false)} />
-      )}
 
       <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && closeDeleteDialog()}>
         <AlertDialogContent>

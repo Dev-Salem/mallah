@@ -24,45 +24,50 @@ export function GreetingBar({ learner, path, stage, paceStatus }: GreetingBarPro
         : paceStatus === 'Behind'
             ? 'Slightly Behind'
             : 'On Track';
+    
+    // Improved contrast for Light Mode status badges
     const badgeColor = isPathCompleted
-        ? 'bg-green-500/15 text-green-400 border-green-500/30'
+        ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20'
         : paceStatus === 'Behind'
-            ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
-            : 'bg-primary/15 text-primary border-primary/30';
+            ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20'
+            : 'bg-primary/10 text-primary border-primary/20';
 
     return (
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-2">
             <div>
                 {/* Welcome line */}
                 <h1 className={cn(
-                    "text-2xl lg:text-4xl font-black text-white uppercase mb-2",
+                    "text-2xl lg:text-4xl font-black text-foreground uppercase mb-2",
                     !isArabic && "tracking-tighter"
                 )}>
                     Welcome back, <span className="text-primary">{learner.first_name}</span>
                 </h1>
 
-                {/* Context strip */}
+                {/* Context strip - Tactical Breadcrumbs */}
                 <div className={cn(
                     "flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-mono text-muted-foreground uppercase",
                     !isArabic && "tracking-[0.12em]"
                 )}>
-                    <span>
-                        Path: <span className="text-white/70">{path.path_display_name}</span>
-                    </span>
-                    <span className="text-white/10">·</span>
-                    <span>
-                        Stage: <span className="text-white/70">{stage.current_stage_title}</span>
-                    </span>
-                    <span className="text-white/10">·</span>
-                    <span>
-                        Goal: <span className="text-white/70">{goalLabel}</span>
-                    </span>
+                    <div className="flex items-center gap-1.5 font-bold">
+                        <span className="opacity-50">Path:</span>
+                        <span className="text-foreground">{path.path_display_name}</span>
+                    </div>
+                    <span className="opacity-20">·</span>
+                    <div className="flex items-center gap-1.5 font-bold">
+                        <span className="opacity-50">Stage:</span>
+                        <span className="text-foreground">{stage.current_stage_title}</span>
+                    </div>
+                    <span className="opacity-20">·</span>
+                    <div className="flex items-center gap-1.5 font-bold">
+                        <span className="opacity-50">Goal:</span>
+                        <span className="text-foreground">{goalLabel}</span>
+                    </div>
                 </div>
             </div>
 
             {/* Status badge */}
             <div className={cn(
-                "text-[10px] font-mono uppercase font-bold px-3 py-1.5 border shrink-0 self-start",
+                "text-[10px] font-mono uppercase font-black px-3 py-1.5 border shrink-0 self-start shadow-sm",
                 badgeColor,
                 !isArabic && "tracking-widest"
             )}>

@@ -145,6 +145,56 @@ export async function fetchUserSkillsForResume(userId: string) {
 /*  Mutations                                                                 */
 /* -------------------------------------------------------------------------- */
 
+export async function cloneResume(baseResumeId: string, cloneTitle: string) {
+  const supabase = await createClient();
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData.user) throw new Error("Unauthorized");
+
+  // 1. Fetch base resume and its sections
+  const { data: baseResume, error: fetchError } = await supabase
+    .from("resumes")
+    .select("*, resume_sections(*)")
+    .eq("resume_id", baseResumeId)
+    .single();
+
+  if (fetchError || !baseResume) throw new Error("Could not find base resume to clone");
+
+  // 2. Create cloned resume row
+  const { data: clonedResume, error: cloneError } = await supabase
+    .from("resumes")
+    .insert({
+      user_id: userData.user.id,
+      title: cloneTitle,
+      resume_type: "general", // Spec says clones start as "general"
+      source_jd: null,
+      status: "in_progress",
+    })
+    .select()
+    .single();
+
+  if (cloneError) throw new Error(cloneError.message);
+
+  // 3. Duplicate sections
+  if (baseResume.resume_sections && baseResume.resume_sections.length > 0) {
+    const clonedSections = baseResume.resume_sections.map((sec: any) => {
+      const { section_id, created_at, updated_at, ...rest } = sec;
+      return {
+        ...rest,
+        resume_id: clonedResume.resume_id,
+      };
+    });
+
+    const { error: secError } = await supabase
+      .from("resume_sections")
+      .insert(clonedSections);
+
+    if (secError) console.error("Error duplicating sections:", secError);
+  }
+
+  return clonedResume;
+}
+
 export async function updateResumeStatus(
   id: string,
   atsScore: number | null,
@@ -156,6 +206,26 @@ export async function updateResumeStatus(
     .update({
       ats_score: atsScore,
       status,
+      last_updated_at: new Date().toISOString(),
+    })
+    .eq("resume_id", id);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function updateResumeTypeAndJD(
+  id: string,
+  title: string,
+  sourceJd: SourceJDShape,
+  resumeType: ResumeType = "job_based"
+) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("resumes")
+    .update({
+      title,
+      source_jd: sourceJd,
+      resume_type: resumeType,
       last_updated_at: new Date().toISOString(),
     })
     .eq("resume_id", id);

@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Loader2 } from "lucide-react";
-import AIImprovePanel from "../ai-improve-panel";
+import { InlineDiffPanel } from "../editor/inline-diff-panel";
 
 interface Props {
   initialData: any;
@@ -91,13 +90,12 @@ export default function SummaryForm({ initialData, onChange, t }: Props) {
   return (
     <div className="space-y-4">
       {showAIPanel && (
-        <AIImprovePanel
+        <InlineDiffPanel
           originalText={originalText}
           suggestedText={suggestedText}
-          onAccept={handleAcceptSuggestion}
+          onAccept={() => handleAcceptSuggestion(suggestedText)}
           onReject={handleRejectSuggestion}
-          onRetry={handleAIImprove}
-          isRetrying={isImproving}
+          isLoading={isImproving}
         />
       )}
 

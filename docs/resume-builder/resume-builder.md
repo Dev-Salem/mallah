@@ -1,24 +1,18 @@
-# Mallah – Resume Builder v3
+# Mallah – Resume Builder
 
 ## 1. Purpose
 
-The Resume Builder is where everything the learner has built on Mallah becomes a career asset.
-Skills earned through the roadmap, projects completed in the Portfolio Hub, and the learner's
-personal profile all flow in automatically. The learner is then guided through only the sections
-that need their input — Summary, Experience, Education — one at a time, so they always know
-exactly what to do next. Pre-filled sections are handled automatically; the wizard only surfaces
-the gaps.
+The Resume Builder is where everything the learner has built on Mallah becomes a career asset. Skills earned through the roadmap, projects completed in the Portfolio Hub, and the learner's personal profile all flow in automatically. The learner opens the editor and their resume already has real content — they fill in the human parts (summary, experience, education) and make editorial decisions.
 
-The output is a clean, single-column, ATS-optimized PDF that passes automated screening and
-looks professional to human recruiters.
+The output is a clean, single-column, ATS-optimized PDF that passes automated screening and looks professional to human recruiters.
 
 ---
 
 ## 2. Core Design Principles
 
-- **Wizard-style with clear navigation.** A narrow left nav shows all sections with completion status. The right editing area shows one section at a time — focused, never overwhelming. First-time users are guided through the sections that need input in order. Returning users jump directly to any section. A Preview toggle shows the full resume on demand without leaving the editor.
-- **Guided from the start.** The wizard runs within the editor layout — no separate wizard screen. Sections needing human input are highlighted with a "→ Fill this" indicator. The learner always knows exactly what to do next. The wizard is always skippable.
+- **Two genuinely different resume types.** General and job-based resumes are functionally distinct. The job-based editor has three exclusive features the general editor doesn't: a persistent JD keyword strip, a live keyword match panel, and relevance indicators on skills and projects. Opening a job-based resume feels like a different tool built for a specific purpose.
 - **Pre-filled by default.** Skills, projects, and personal info are populated automatically from Mallah data. The resume has real content before the learner types a single word.
+- **Section-by-section editing.** A narrow left nav shows all sections with completion status. The right editing area shows one section at a time — focused, never overwhelming. A Preview toggle shows the full resume on demand.
 - **Single-column PDF only.** Multi-column, tables, and graphics break ATS parsers. The preview and export are both single-column, no exceptions.
 - **Standard section headings.** ATS systems recognize: Summary, Skills, Projects, Experience, Education, Certifications. No creative substitutions.
 - **Exact skill terminology.** "React" not "ReactJS ecosystem." Keywords must match job description language.
@@ -46,188 +40,207 @@ looks professional to human recruiters.
 
 ## 4. Entry — Resume Cards Grid
 
-The Resume Builder opens to a **Resume Cards Grid** — a visual dashboard of all the learner's resumes. There are two types of resume a learner can create, represented by two creation buttons in the header.
+The Resume Builder opens to a **Resume Cards Grid**. All resumes start as general resumes. Job-based resumes are created by cloning a general resume and then personalizing it for a specific job.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  My Resumes            [+ General Resume]  [🎯 Job-Based Resume] │
+│  My Resumes                                  [+ New Resume]      │
 ├──────────────────┬──────────────────┬───────────────────────────┤
 │  ┌────────────┐  │  ┌────────────┐  │  ┌──────────────────────┐ │
 │  │ [preview]  │  │  │ [preview]  │  │  │        +             │ │
-│  │ thumbnail  │  │  │ thumbnail  │  │  │   General Resume     │ │
+│  │ thumbnail  │  │  │ thumbnail  │  │  │    New Resume        │ │
 │  │            │  │  │            │  │  │                      │ │
 │  ├────────────┤  │  ├────────────┤  │  └──────────────────────┘ │
-│  │Frontend    │  │  │React Dev   │  │                           │
-│  │Resume      │  │  │@ Noon      │  │                           │
-│  │ATS: 82/100 │  │  │🎯 Job-Based│  │                           │
-│  │Updated 2d  │  │  │ATS: 91/100 │  │                           │
-│  │[Edit] [↓]  │  │  │[Edit] [↓]  │  │                           │
+│  │Frontend    │  │  │🎯 React Dev│  │                           │
+│  │Resume      │  │  │  @ Noon    │  │                           │
+│  │ATS: 82/100 │  │  │ATS: 91/100 │  │                           │
+│  │Updated 2d  │  │  │Match: 74%  │  │                           │
+│  │[Edit][↓][⋯]│  │  │[Edit][↓][⋯]│  │                           │
 └──────────────────┴──────────────────┴───────────────────────────┘
 ```
 
-**Each resume card shows:**
-- A small live thumbnail preview (miniature A4 paper card render)
-- Resume title (editable inline)
-- ATS score `Badge` (color-coded)
-- Resume type indicator: a subtle `🎯 Job-Based` tag on tailored resumes, nothing on general ones
-- Last updated timestamp
-- `Edit` → opens the full editor directly (no wizard for existing resumes)
-- `↓` → exports PDF immediately without opening the editor
-- On hover: `Delete` option with confirmation `Dialog`
+**General resume card:**
+- Standard card styling
+- Shows: title, ATS score badge, last updated timestamp
+- Dropdown `⋯` menu: `Edit` · `Download` · `Clone` · `Delete`
 
-**Two creation buttons in the header:**
+**Job-based resume card:**
+- `🎯` icon + job title and company as the card headline (e.g. "React Dev @ Noon")
+- Shows: ATS score badge AND match score (if personalized from a saved analysis)
+- `Job-Based` badge on the card
+- Dropdown `⋯` menu: `Edit` · `Download` · `Delete` (no Clone option on job-based resumes)
 
-| Button | Label | Flow |
-|---|---|---|
-| `Button` (outline) | `+ General Resume` | Creates a standard resume → opens Guided Wizard (Section 5) |
-| `Button` (default, with target icon) | `🎯 Job-Based Resume` | Opens the Job-Based Resume setup (Section 5B) |
+**One creation button in the header:** `+ New Resume` — creates a general resume, editor opens directly. No job-based creation from the grid header.
 
-**First-time user (no resumes yet):** the grid shows two empty-state cards — one for General Resume, one for Job-Based Resume — each with a one-line description. General: "A full resume built from your Mallah profile." Job-Based: "A resume tailored to a specific job you want to apply for."
+**First-time user (no resumes yet):** the grid shows only the New Resume empty-state card with the message: "Build your resume from your Mallah profile — your skills and projects are already here."
 
-**Limit:** 3 resumes total per learner in v1 (general + job-based combined). When at the limit, both creation buttons are disabled with `Tooltip`: "Delete a resume to create a new one."
+**Limit:** 3 resumes total per learner (general + job-based combined). When at the limit, `+ New Resume` and `Clone` are both disabled with `Tooltip`: "Delete a resume to create a new one."
 
 ---
 
-## 5. Guided Wizard (First-Time Setup Only)
+## 5. Resume Creation
 
-The wizard runs **within the editor layout** — not as a separate screen. When a new resume is opened for the first time, the learner lands directly in the editor (Section 6) with wizard guidance active. Returning users who click "Edit" on an existing resume get the editor with no wizard guidance at all.
+### 5.1 New General Resume
 
-The wizard is **always skippable.** A "Skip to editor" `Button` (ghost) is visible at the bottom of every section form during the wizard. Skipping exits guided mode and lets the learner edit freely.
+Clicking `+ New Resume` on the Cards Grid creates a general resume and opens the editor immediately — no wizard, no guided steps. The resume is pre-populated with the learner's skills, projects, and personal info from Mallah. They land on the Summary section and can edit freely.
 
-### 5.1 What the Wizard Covers
+### 5.2 Clone
 
-Only sections needing human input. Pre-filled sections are skipped.
+The `Clone` option in a general resume card's `⋯` dropdown creates a **complete independent copy** of that resume. The clone:
 
-| Section | In wizard? | Reason |
-|---|---|---|
-| Personal Info | No | Auto-filled |
-| Skills | No | Auto-populated |
-| Projects | No | Auto-populated |
-| Summary | **Yes** | Cannot be auto-generated |
-| Experience | **Yes** | Manual only |
-| Education | **Yes** | Manual only |
-| Certifications | **Yes** (optional) | Not available elsewhere |
+- Gets the title "Copy of [Original Title]" (editable inline on the card)
+- Copies all `resume_sections` content exactly — same summary, same skills, same projects, same experience
+- Starts as `resume_type = 'general'`
+- Is completely independent — the original is never modified, and future edits to either resume have no effect on the other
+- Counts toward the 3-resume limit
 
-### 5.2 Wizard Behavior in the Editor
+The clone opens on the Cards Grid as a new card. The learner can edit it freely as a general resume, or personalize it for a specific job (Section 5B).
 
-**Left nav during wizard:** sections needing input show a subtle "→" indicator next to their name. Completed sections show a green dot. Active section highlighted as normal.
+**Clone is only available on general resumes.** Job-based resumes cannot be cloned.
 
-**Right editing area during wizard:** identical to normal editing, with two additions at the bottom of each section form:
-- Progress indicator: "Step 1 of 4 — Summary" (muted, small)
-- Navigation: `[Skip this section]` (outline) and `[Continue →]` (default/primary)
+---
 
-The learner fills the section, clicks "Continue →", and the nav automatically advances to the next required section. They can also click any nav section directly to jump freely at any time.
+## 5B. Job-Based Personalization
 
-**"Continue →" on the last step** shows "Finish →" instead — exits wizard mode with a `Sonner` toast: "Your resume is ready — review and refine using the sections on the left."
+A job-based resume is created by cloning a general resume and then personalizing the clone for a specific job. The AI rewrites the content — bullets, summary, skill ordering — to better match the pasted JD without changing any core facts.
 
-**The wizard never activates again** for this resume after completion or skip.
+### 5B.1 Entry Point — "Personalize for a Job" Button
 
-## 5B. Job-Based Resume Setup
+In the editor header, a `Personalize for a Job` `Button` (outline) is visible **only on general resumes**. It disappears once the resume has been personalized (i.e. becomes job-based).
 
-A Job-Based Resume is a **separate resume copy** built and optimized for a specific job. It preserves the learner's general resume(s) untouched and creates a new tailored version with content pre-configured around the target role's requirements.
+Clicking it opens the **Personalization Modal** (Section 5B.2).
 
-### 5B.1 Entry Point
+### 5B.2 Personalization Modal
 
-**One entry point only — the Cards Grid.**
-
-The `🎯 Job-Based Resume` button in the Cards Grid header opens the Job Setup screen. There is no "Tailor for a Job" action inside the editor — all job-based resume creation starts from the grid.
-
-This keeps the editor focused on editing and prevents the learner from accidentally affecting their general resume while working on a tailored version.
-
-### 5B.2 Job Setup Screen
-
-A focused single-screen modal or page (before the editor opens). The learner chooses their JD source:
+A centered `Dialog` that appears over the editor.
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│  Which job are you targeting?                                │
-│                                                              │
-│  ○  Pick from saved analyses                                 │
-│     ┌──────────────────────────────────────────────────┐    │
-│     │  Frontend Developer @ Noon   · 68% match         │    │
-│     │  React Engineer @ STC        · 74% match         │    │
-│     │  UI Developer @ Jarir        · 51% match         │    │
-│     └──────────────────────────────────────────────────┘    │
-│                                                              │
-│  ○  Paste a new job description                              │
-│     ┌──────────────────────────────────────────────────┐    │
-│     │  [Textarea — paste JD here]                      │    │
-│     └──────────────────────────────────────────────────┘    │
-│                                                              │
-│  Resume title (auto-filled, editable):                       │
-│  [Frontend Developer @ Noon]                                 │
-│                                                              │
-│  [Cancel]                    [Build Job Resume →]            │
-└──────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  Personalize this resume for a job                 [×]   │
+│                                                          │
+│  Paste the job description                               │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │                                                    │  │
+│  │  [Textarea — paste the full JD here]               │  │
+│  │                                                    │  │
+│  └────────────────────────────────────────────────────┘  │
+│  Minimum 100 characters                                  │
+│                                                          │
+│  Resume title (auto-filled from JD, editable)            │
+│  [Frontend Developer @ Noon]                             │
+│                                                          │
+│  [Cancel]              [Personalize →]                   │
+└──────────────────────────────────────────────────────────┘
 ```
 
-**Option A — Pick from saved analyses:**
-- Lists all `opportunity_analyses` where `is_saved = true`, sorted by most recent
-- Each row shows: job title, company, match score `Badge`
-- Selecting one pre-fills the JD title field
-- If no saved analyses exist: this option is greyed out with a note "No saved analyses yet — use the Opportunity Analyzer to save one, or paste a JD below."
+- `Textarea` — min 100 characters to proceed, validated on submit
+- Resume title auto-filled as "{Job Title} @ {Company}" once AI parses the JD — editable before confirming
+- `Personalize →` triggers the personalization logic (Section 5B.3)
 
-**Option B — Paste a new JD:**
-- `Textarea` (min 100 characters to proceed, validated on submit)
-- AI parses the JD on submission (same Step 1 backend flow as the Opportunity Analyzer)
-- Parsed result is used for tailoring — not saved to `opportunity_analyses` automatically (learner can save it separately from the Opportunity Analyzer)
+### 5B.3 Personalization Logic (Backend)
 
-**Resume title:** auto-filled as "{Job Title} @ {Company}" — editable before proceeding.
+When the learner clicks `Personalize →`:
 
-**The general resume is never touched.** Every job-based resume is a new independent resume, created as a copy of the learner's most recent general resume and then tailored. The learner can have multiple job-based resumes — one per role they're targeting — all living independently on the grid alongside their general resume.
+1. **Parse the JD** — AI extracts `job_title`, `company_name`, `required_skills[]`, `preferred_skills[]`. Same extraction logic as the Opportunity Analyzer.
 
-### 5B.3 Tailoring Logic (Backend)
+2. **Rewrite Summary** — AI rewrites the existing summary to incorporate JD keywords and emphasize relevant experience. Core facts are preserved — no invented credentials or experience. The rewrite is stored back into `resume_sections.SUMMARY`.
 
-When the learner clicks "Build Job Resume →":
+3. **Rewrite Experience bullets** — AI rewrites each bullet to better highlight achievements relevant to the JD. Action verb + result structure enforced. Original meaning preserved, language optimized for the role.
 
-1. **Create a new independent resume** copied from the learner's most recent general resume (`resume_type = 'general'`). New `resumes` row with `resume_type = 'job_based'`, `source_jd` JSONB field storing the JD data, title set to the entered title. The general resume is never modified — it remains exactly as it was.
+4. **Reorder Skills** — Skills matching JD required keywords move to the top of the included skills list. Skills matching preferred keywords come next. Unmatched skills remain included but move to the bottom.
 
-2. **Pre-configure Skills section:**
-   - Skills from `user_skills` that match JD required/preferred skills → pre-checked and **moved to the top** of the skills list
-   - Skills with no JD relevance → pre-unchecked (still available to re-enable)
-   - Skills only in the learner's CV (from Opportunity Analyzer CV data) → included with "From CV" label if they match
+5. **Reorder Projects** — Projects with the highest overlap with JD required skills (via `project_skills`) move to the top of the included projects list.
 
-3. **Pre-configure Projects section:**
-   - Projects reordered so the most JD-relevant ones (highest overlap with JD required skills via `project_skills`) appear first and are pre-included
-   - Projects with no relevance to the JD → pre-unchecked (still available to re-enable)
+6. **Store JD data** — `resumes.resume_type` flips to `'job_based'`. `resumes.source_jd` is populated with `{ job_title, company_name, required_skills[], preferred_skills[], analysis_id: null }`. Resume title is updated to the entered title.
 
-4. **Pre-draft Summary:**
-   - AI generates a job-specific summary using: learner's background, JD requirements, matched skills, and `primary_goal`
-   - Stored as `summary.text` in the new resume's `resume_sections`
-   - Learner can edit or AI Improve it in the editor
+7. **Reconfigure ATS scoring** — ATS Keyword Coverage now scores against JD required/preferred skills instead of the path keyword baseline.
 
-5. **ATS scoring reconfigured:**
-   - For this resume, ATS Keyword Coverage uses the JD's extracted required/preferred skills instead of the path keyword baseline
-   - All other ATS factors remain the same
+8. Modal closes. Editor reloads with:
+   - `Personalize for a Job` button replaced by `🎯 Job-Based` badge in the header
+   - JD keyword strip appears at the top of the editing area
+   - Relevance indicators activate in Skills and Projects sections
+   - One-time `Sonner` toast: "Your resume has been personalized for [Job Title]. Review the changes below."
 
-6. Open the **full editor** (Section 6) — no wizard. The resume is already configured. A one-time `Alert` (info) at the top of the Skills section form: "This resume is tailored for [Job Title]. Skills and projects have been pre-selected based on the job requirements. Your general resume is unchanged."
+**Processing state:** while AI is working, the modal shows a loading state: spinner + "Personalizing your resume…". The `Personalize →` button is disabled. If AI fails: `Alert` (destructive) in the modal: "Personalization failed. Try again or paste a more detailed job description."
 
 ### 5B.4 Job-Based Resume in the Editor
 
-The editor for a Job-Based Resume is identical to the regular editor with two differences:
+Once personalized, the editor gains three exclusive features:
 
-**Header indicator:** A `Badge` ("🎯 Job-Based") appears next to the resume title in the header, always visible.
+#### JD Keyword Strip
 
-**ATS sidebar — JD context:** Below the score ring, a small `Card` shows the job this resume is targeting: "Targeting: [Job Title] @ [Company]" with a `Button` (ghost, small) "Change job" — opens the Job Setup screen to re-tailor to a different JD (creates no new resume, just re-runs the tailoring on this one).
+A fixed compact strip at the top of the editing area, always visible above the section form.
 
-**"Tailor for a Job" button is hidden** on job-based resumes (already tailored).
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  🎯 React Engineer @ Noon  ·  React ✓  TypeScript ✓  Node.js ✗  REST API ✓  ·  Match: 74%  [↓] │
+└──────────────────────────────────────────────────────────────────────┘
+```
 
-### 5B.5 Data Model Additions
+- Job title and company
+- Top 4–5 required skills with live `✓` (included) / `✗` (missing) status
+- Live match percentage
+- `[↓]` expands the full keyword match panel
 
-Two new fields on the `resumes` table:
+#### Live Keyword Match Panel
 
-| Field | Type | Notes |
-|---|---|---|
-| `resume_type` | ENUM | `general` (default) / `job_based` |
-| `source_jd` | JSONB | Stores the parsed JD data used for tailoring. NULL for general resumes. Shape: `{ job_title, company_name, required_skills[], preferred_skills[], analysis_id (nullable) }` |
+Expands below the strip on `[↓]`, pushes the editing area down. Collapsible.
 
-`analysis_id` is set if the learner picked a saved Opportunity Analyzer result. NULL if they pasted a new JD. This allows the editor to show the match score from the saved analysis if available.
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  🎯 React Engineer @ Noon                                  [↑ Close] │
+│                                                                      │
+│  Required skills                    Preferred skills                 │
+│  ✓ React              covered       ✓ GraphQL          covered       │
+│  ✓ TypeScript         covered       ✗ Docker           missing       │
+│  ✗ Node.js            missing       ✗ AWS              missing       │
+│  ✓ REST API           covered                                        │
+│  ✗ PostgreSQL         missing                                        │
+│                                                                      │
+│  Match: 74%   Required: 3/5 covered   Preferred: 1/3 covered        │
+│  Missing: Node.js · PostgreSQL  →  Go to Skills                      │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+- `✓` / `✗` updates live as skills are included/excluded — debounced 300ms, no save needed
+- "→ Go to Skills" navigates the left nav to the Skills section
+
+#### Relevance Indicators in Section Forms
+
+**Skills section:**
+- JD required skills → shown first, `Required` badge
+- JD preferred skills → shown second, `Preferred` badge (outline)
+- Unmatched skills → shown last, muted
+- "Missing keywords" row at the bottom: skills the JD requires that aren't in the learner's profile at all — with note: "Add manually if you have experience with these."
+
+**Projects section:**
+- JD-relevant projects (overlap with JD required skills) → shown first, `Relevant to this job` tag
+- Less relevant projects → shown last, muted but still includable
+
+### 5B.5 Data Model
+
+`resumes.resume_type` flips from `'general'` to `'job_based'` on personalization.
+
+`resumes.source_jd` JSONB shape:
+```json
+{
+  "job_title": "React Engineer",
+  "company_name": "Noon",
+  "required_skills": ["React", "TypeScript", "Node.js", "REST API", "PostgreSQL"],
+  "preferred_skills": ["GraphQL", "Docker", "AWS"],
+  "analysis_id": null
+}
+```
+
+`analysis_id` is null when pasted directly. Reserved for future Opportunity Analyzer integration.
 
 ---
 
 ## 6. Editor Layout
 
 The editor uses a **two-zone layout** — a narrow left navigation and a full-width right editing area. Clean, focused, no clutter.
+
+The job-based editor is identical in layout and styling to the general editor, with the addition of the JD keyword strip at the top of the editing area (Section 5B.4).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -284,8 +297,6 @@ Each nav item shows:
 
 Clicking any section immediately loads its form in the editing area. Instant — no loading state.
 
-**First-time wizard mode:** when a new resume is opened for the first time, the wizard runs within this same layout. Sections needing input (Summary, Experience, Education) show a subtle "→ Fill this" indicator in the nav. The editor auto-navigates to Summary first. At the bottom of each form, "Next →" advances to the next required section. "Skip to editor" exits wizard guidance at any point. See Section 5 for full wizard details.
-
 ### 6.3 Right — Editing Area
 
 Full-width. Shows one section at a time based on nav selection.
@@ -329,7 +340,7 @@ Clicking the ATS badge in the header opens a **centered modal overlay** that dim
 
 - Each "Fix →" closes the overlay and navigates to that section in the left nav
 - "Before first save" state: score "—", text: "Save to calculate your ATS score"
-- **Job-based resume:** "🎯 Targeting: [Job Title]" shown below the score ring
+- **Job-based resume:** "🎯 Targeting: [Job Title] @ [Company]" shown below the score ring. Also shows required vs preferred skill breakdown and the match % consistent with the JD strip.
 
 ### 6.5 Right-Side Drawer — Structured Entry Editor
 
@@ -379,12 +390,15 @@ When the learner clicks "Preview":
 - Left nav remains visible. Clicking any section switches back to Edit for that section.
 - A `← Edit` `Button` (outline, small) floats at the top-right of the preview for quick return
 
-**Typography (matches PDF exactly):**
-- Name: 18px bold
-- Contact line: 11px, pipe-separated
-- Section headings: 11px, bold, uppercase, thin separator below
-- Body text: 10px
-- Bullets: `•` character
+**Typography (matches PDF output exactly):**
+- Name: 24pt, Inter Bold
+- Contact line: 9.5pt, `·` separator, no icons
+- Section headings: 10pt, Inter Bold, uppercase, letter-spacing 0.08em, 0.5pt rule below
+- Entry titles: 10.5pt, Inter SemiBold
+- Entry subtitles / dates: 9.5pt, Inter Normal
+- Bullet text: 9.5pt, Inter Normal, line height 1.3
+- Skills labels: 9.5pt, Inter SemiBold
+- Page margins: 36pt all sides
 
 **Empty sections** show muted grey placeholder text — never blank.
 
@@ -552,32 +566,198 @@ Placeholder guidance shown when empty: "e.g. CompTIA Security+, freeCodeCamp, Go
 
 ## 9. ATS Score
 
-### 9.1 Calculation
+### 9.1 What the Score Represents
 
-Server-side. Runs on every save. Returns score (0–100) + hints.
+The ATS Score (0–100) is Mallah's simulation of how an Applicant Tracking System would evaluate this resume. It is not a guarantee of passing any specific company's ATS — each company's ATS is different — but it is calibrated against real ATS behavior patterns to give the learner actionable, accurate feedback.
 
-| Factor | Weight | What it checks |
+The score runs server-side on every save. It returns a number, a breakdown by factor, and 2–4 specific hints.
+
+### 9.2 Scoring Factors and Weights
+
+| Factor | Weight | Description |
 |---|---|---|
-| Keyword coverage | 40% | Path-relevant skills/terms appearing in resume |
-| Section completeness | 25% | Critical sections present and non-empty |
-| Summary quality | 15% | ≥ 20 words, contains action verbs, role-relevant keywords |
-| Project descriptions | 10% | Action verbs and concrete outcomes present |
-| Formatting compliance | 10% | Single column, standard headings, no problematic structure |
+| Keyword Coverage | 35% | How many path/JD keywords appear in the resume |
+| Summary Quality | 20% | How well-written and targeted the summary is |
+| Project Descriptions | 15% | Quality of project bullets |
+| Section Completeness | 20% | Critical sections present and non-empty |
+| Formatting Compliance | 10% | Single column, standard headings, parseable structure |
 
-### 9.2 Path Keyword Baselines (v1)
+**Why these weights:** Research consistently shows keyword coverage is the primary ATS filter, but summary and project quality are what determine whether a human recruiter acts after the ATS passes the resume. Summary and projects combined (35%) reflect that both machines and humans are judging this document.
 
-| Path | Key terms |
+---
+
+### 9.3 Factor Definitions
+
+#### Factor 1 — Keyword Coverage (35%)
+
+Checks how many keywords from the learner's path baseline (or JD for job-based resumes) appear anywhere in the resume text.
+
+**Matching tiers — applied in order:**
+
+| Tier | Method | Score weight |
+|---|---|---|
+| Exact match | Literal string match, case-insensitive | Full credit |
+| Fuzzy match | Handles plurals, minor variations (e.g. "APIs" matches "API") | 0.8× credit |
+| Semantic match | Known aliases (e.g. "JS" matches "JavaScript", "Postgres" matches "PostgreSQL") | 0.6× credit |
+
+**Placement bonus:** keywords found in the Summary or Skills section receive a 1.2× multiplier. Keywords only found buried in bullet text receive no bonus. This reflects how real ATS systems weight high-visibility sections.
+
+**Formula:**
+```
+coverage_score = Σ(matched_keyword_weight × placement_multiplier) / total_possible_score
+keyword_factor = coverage_score × 100
+```
+
+**Threshold:** a keyword must appear at least once to count. Repetition beyond once adds no score — keyword stuffing is not rewarded and will flag as an ATS risk hint if a term appears 4+ times unnaturally.
+
+---
+
+#### Factor 2 — Summary Quality (20%)
+
+Checks four independent signals. Each signal contributes to the factor score:
+
+| Signal | Points | How it's measured |
+|---|---|---|
+| Word count in range | 25pts | Summary is 30–80 words. Below 30 = insufficient. Above 80 = penalised (verbose). |
+| Starts with action verb or role title | 25pts | First word is a recognized action verb (from a curated list) or a professional title (e.g. "Frontend Developer", "Software Engineer") |
+| Contains a quantifiable achievement | 30pts | Summary contains at least one number, percentage, or measurable result (regex: `\d+%`, `\d+ [a-z]+`, `\$\d+`) |
+| Contains path-relevant keyword | 20pts | At least one keyword from the path baseline appears in the summary |
+
+**Total: 100pts mapped to 0–100 for this factor.**
+
+**Examples:**
+
+- "Hardworking developer who loves coding and wants to learn more." → 10/100 (no action verb start, no number, no keyword, barely in word range)
+- "Frontend Developer with 2 years building React applications. Reduced load time by 40% on an e-commerce project. Seeking a full-stack role." → 100/100 (role title start, number, keyword, 30 words)
+
+---
+
+#### Factor 3 — Project Descriptions (15%)
+
+Evaluates every included project's description. Average score across all included projects.
+
+Per project, checks:
+
+| Signal | Points | How it's measured |
+|---|---|---|
+| Starts with action verb | 30pts | First bullet starts with a recognized action verb |
+| Contains measurable result | 40pts | At least one bullet contains a number, %, scale, or concrete outcome |
+| Minimum length | 30pts | At least 2 bullets, each ≥ 8 words |
+
+**Action verb list (curated for tech):** Built, Developed, Designed, Implemented, Created, Deployed, Optimized, Reduced, Increased, Led, Integrated, Architected, Automated, Migrated, Refactored, Launched, Delivered, Engineered, Configured, Established + ~50 more.
+
+If a project has no description at all → 0 points for that project. Projects with only a title and no bullets → 0.
+
+---
+
+#### Factor 4 — Section Completeness (20%)
+
+Binary check per section. Each section is either complete or not:
+
+| Section | Weight within factor | Complete condition |
+|---|---|---|
+| Summary | 30% | Non-empty, ≥ 10 words |
+| Skills | 25% | ≥ 3 included skills |
+| Projects | 20% | ≥ 1 included project with a description |
+| Experience | 15% | ≥ 1 entry (or section hidden — hidden counts as complete) |
+| Education | 10% | ≥ 1 entry (or section hidden) |
+
+Personal Info is always pre-filled and always complete — not checked.
+Certifications is optional — not checked.
+
+---
+
+#### Factor 5 — Formatting Compliance (10%)
+
+Passes/fails checks enforced by the PDF template. Since Mallah controls the output, this factor should always be 100% for resumes built within the builder. It exists as a safety check and ATS education tool.
+
+Checks:
+- Single column: always true (enforced by template) → 100%
+- Standard section headings: always true (enforced by template) → 100%
+- No images or tables: always true → 100%
+- Contact info in body (not header/footer block): always true → 100%
+- Text-based PDF (not image-based): always true → 100%
+
+If all pass: 100. If any fail (possible if learner somehow exports outside the builder): score reflects the failure with a specific hint.
+
+---
+
+### 9.4 Path Keyword Baselines (General Resumes)
+
+Used for keyword coverage scoring when `resume_type = 'general'`. Curated based on actual job posting frequency for each path.
+
+| Path | Required keywords | Preferred keywords |
+|---|---|---|
+| `frontend` | HTML, CSS, JavaScript, React, TypeScript, Git, REST API | Responsive Design, Tailwind, Next.js, Webpack, Testing |
+| `fullstack` | Node.js, Express, PostgreSQL, REST API, React, Git | Docker, JWT, CI/CD, TypeScript, Redis |
+| `cybersecurity` | Penetration Testing, Network Security, Linux, Python, Vulnerability Assessment | OWASP, Burp Suite, Wireshark, Metasploit, SIEM |
+| `datascience` | Python, SQL, Pandas, NumPy, Machine Learning, Data Analysis | scikit-learn, Visualization, TensorFlow, Jupyter, Statistics |
+
+**Required keywords** contribute full weight to keyword coverage. **Preferred keywords** contribute 0.5× weight — present but not critical. This mirrors how real ATS systems distinguish required vs preferred skills.
+
+For `resume_type = 'job_based'`, the path baseline is replaced entirely by the extracted `source_jd.required_skills` (full weight) and `source_jd.preferred_skills` (0.5× weight).
+
+---
+
+### 9.5 Match Score (Job-Based Resumes Only)
+
+A separate score from the ATS Score. Shown on the job-based resume card, in the JD keyword strip, and in the ATS overlay.
+
+**Formula:**
+
+```
+required_covered = skills in resume that match source_jd.required_skills (case-insensitive)
+preferred_covered = skills in resume that match source_jd.preferred_skills (case-insensitive)
+
+required_rate = required_covered / total required_skills
+preferred_rate = preferred_covered / total preferred_skills (0 if no preferred skills)
+
+match_score = (required_rate × 0.70) + (preferred_rate × 0.30)
+match_percent = round(match_score × 100)
+```
+
+Required skills carry 70% of the match. Preferred carry 30%. This is the industry-standard weighting used by Jobscan and Teal — required skills are what determine whether you meet the minimum bar for a role.
+
+**Contextual thresholds shown in UI:**
+
+| Match % | Label | Guidance shown |
+|---|---|---|
+| 0–49% | Low match | "You're missing several required skills for this role." |
+| 50–74% | Moderate match | "You meet some requirements — add missing skills to improve." |
+| 75–89% | Strong match | "You're a strong match — review preferred skills to go further." |
+| 90–100% | Excellent match | "You meet all key requirements for this role." |
+
+A 75%+ match is the recommended threshold before applying, based on industry data from Jobscan's State of the Job Search 2025 report.
+
+---
+
+### 9.6 Score Display
+
+ATS Score badge always visible in the editor header. Color-coded:
+
+| Score | Color token |
 |---|---|
-| `frontend` | HTML, CSS, JavaScript, React, TypeScript, Git, REST API, Responsive Design, Tailwind |
-| `fullstack` | Node.js, Express, PostgreSQL, REST API, React, Docker, JWT, CI/CD |
-| `cybersecurity` | Penetration Testing, Network Security, OWASP, Burp Suite, Linux, Python, Vulnerability Assessment |
-| `datascience` | Python, Pandas, NumPy, Machine Learning, scikit-learn, SQL, Data Analysis, Visualization |
+| 0–49 | `destructive` (Alert Red) |
+| 50–74 | `warning` (Tactical Amber) |
+| 75–89 | `success` (Forest Emerald) |
+| 90–100 | `success` (Forest Emerald) |
 
-Job-description-specific ATS scoring is a v2 feature connected to the Opportunity Analyzer.
+Clicking the badge opens the ATS Detail Overlay (Section 6.4) with:
+- Score ring
+- 5 factor breakdown bars with percentages
+- 2–4 actionable hints based on the lowest-scoring factors
+- Each hint has a "Fix →" that navigates to the relevant section in the left nav
 
-### 9.3 Score Display
+**Hint examples by factor:**
 
-Always visible in the left sidebar (see Section 5.2). Color-coded ring + breakdown bars + actionable hints with "Fix →" deep links to relevant sections.
+| Factor | Example hint |
+|---|---|
+| Keyword Coverage | "Your summary is missing key terms for your path. Add React and TypeScript." |
+| Summary Quality | "Your summary doesn't start with a role title or action verb. Try: 'Frontend Developer with...'" |
+| Summary Quality | "Add a number or result to your summary — e.g. '...built 5 production apps' or '...reduced load time by 30%'." |
+| Project Descriptions | "Project bullets should start with action verbs. Change 'Worked on X' to 'Built X'." |
+| Project Descriptions | "Add a measurable result to at least one project bullet — a number, %, or scale." |
+| Section Completeness | "Add at least 3 skills to complete the Skills section." |
 
 ---
 
@@ -585,16 +765,87 @@ Always visible in the left sidebar (see Section 5.2). Color-coded ring + breakdo
 
 ### 10.1 Format Rules (ATS-Safe)
 
-- Single column
-- Fonts: Arial or Calibri, 10–11pt body, 13–14pt name
-- No images, icons, color fills, or borders
-- Section headings: bold, all caps
-- Bullet points: `•` characters
-- Contact info at top as plain text — not in a header/footer block
-- Text-based PDF (not image-based — must be copy-pasteable by ATS)
+- Single column, black and white only — no colors, no icons
+- Text-based PDF — must be copy-pasteable by ATS, never image-based
+- Contact info rendered as plain text at top — not in a header/footer block
+- Bullet points: `•` character
+- No images, borders, color fills, or decorative elements
 - Filename: `{first_name}-{last_name}-Resume.pdf`
 
-### 10.2 Export Guard
+### 10.2 Typography System
+
+The PDF uses `Inter` throughout — the same font Mallah uses in its UI, embedded via `@react-pdf/renderer`. This creates consistency and gives the output a clean, modern feel distinct from the generic Calibri/Helvetica resumes.
+
+**Type scale:**
+
+| Element | Font | Size | Weight | Style |
+|---|---|---|---|---|
+| Full name | Inter | 24pt | Bold | Normal |
+| Contact line | Inter | 9.5pt | Normal | Normal |
+| Section headings | Inter | 10pt | Bold | Uppercase + letter-spacing: 0.08em |
+| Section rule | — | 0.5pt | — | Full-width horizontal line below heading |
+| Entry title (job title, project name, degree) | Inter | 10.5pt | SemiBold | Normal |
+| Entry subtitle (company, institution, tech stack) | Inter | 9.5pt | Normal | Normal |
+| Date / location | Inter | 9.5pt | Normal | Right-aligned on same line as entry title |
+| Bullet text | Inter | 9.5pt | Normal | Normal |
+| Skills label (e.g. "Programming Languages:") | Inter | 9.5pt | SemiBold | Normal |
+| Skills value | Inter | 9.5pt | Normal | Normal |
+
+**Spacing system:**
+
+| Location | Value |
+|---|---|
+| Page margins (all sides) | 36pt (0.5 inch) |
+| Name block bottom padding | 6pt |
+| Contact line bottom padding | 14pt |
+| Between sections | 12pt |
+| Section heading bottom margin (before rule) | 2pt |
+| Section rule bottom margin | 5pt |
+| Between entries within a section | 8pt |
+| Between entry header and first bullet | 3pt |
+| Between bullets | 2.5pt |
+| Line height (body text) | 1.3 |
+
+**Name block layout:**
+
+```
+Abdulaziz Alotaibi                          ← 24pt bold, full width
+─────────────────────────────────────────── ← NOT a rule, just spacing
++966541533620 · abdulaziz@gmail.com · Riyadh, Saudi Arabia · linkedin.com/in/... 
+                                            ← 9.5pt, · separator, no icons
+```
+
+**Section heading layout:**
+
+```
+EXPERIENCE                                  ← 10pt bold uppercase, letter-spacing
+───────────────────────────────────────     ← 0.5pt full-width rule
+```
+
+**Entry layout (Experience, Projects):**
+
+```
+Frontend Developer                          May 2024 – Present
+Noon · Riyadh, Saudi Arabia                 ← 9.5pt, muted
+
+• Built reusable React components...
+• Reduced load time by 30%...
+```
+
+Entry title + date on the same line (flexRow, spaceBetween). Company/subtitle on the line below in normal weight.
+
+**Skills section layout:**
+
+Rendered as labeled rows, not a flat comma string:
+
+```
+Programming Languages    Python, JavaScript, TypeScript, SQL
+Tools & Platforms        Git, VS Code, MySQL, Google Colab
+```
+
+Label in SemiBold, value in Normal, both 9.5pt. Two-column appearance achieved via fixed label width (120pt) within the single-column layout — ATS-safe because it's plain text flow, not a table.
+
+### 10.3 Export Guard
 
 Before generating, backend validates:
 - Summary is non-empty
@@ -602,11 +853,11 @@ Before generating, backend validates:
 
 If either fails: `Alert` (destructive) "Add at least a Summary and one Skill before exporting."
 
-### 10.3 Generation
+### 10.4 Generation
 
 `GET /api/resume/:resume_id/export`
 
-Backend fetches `resume_sections` ordered by `sort_order`, compiles into PDF via a fixed ATS-safe template. Returns as direct file download. No third-party PDF styling.
+Backend fetches `resume_sections` ordered by `sort_order`, compiles via `resume-pdf-template.tsx` using `@react-pdf/renderer`. Returns as direct file download.
 
 ---
 
@@ -621,12 +872,12 @@ Backend fetches `resume_sections` ordered by `sort_order`, compiles into PDF via
 ### 11.2 Open Editor (Existing Resume)
 
 1. Load `resume_sections` for selected `resume_id`
-2. Merge with current `user_skills` (roadmap + project sourced) and `user_projects` (completed)
-3. Render three-zone editor: ATS sidebar + form panel + live preview
-4. If `ats_score` is null → ATS sidebar shows "—" ring with "Save to calculate" message
-5. **No wizard** — existing resumes always open directly to the full editor
+2. Merge with current `user_skills` and `user_projects`
+3. Render editor: left nav + active section form + Edit/Preview toggle
+4. Default active section: Summary
+5. If `ats_score` is null → ATS badge shows "—"
 
-### 11.3 Create New Resume (Wizard Flow)
+### 11.3 Create New Resume
 
 1. Create `resumes` row with `status = 'in_progress'`, title = "My Resume {N}"
 2. Auto-create `resume_sections`:
@@ -634,9 +885,7 @@ Backend fetches `resume_sections` ordered by `sort_order`, compiles into PDF via
    - SKILLS: all `user_skills` where `source IN ('roadmap', 'project')` pre-checked
    - PROJECTS: all `user_projects` where `status = 'completed'` pre-included
    - SUMMARY, EXPERIENCE, EDUCATION, CERTIFICATIONS: empty
-3. Open **Guided Wizard** (Section 5) — not the editor
-4. Wizard walks through Summary → Experience → Education → Certifications
-5. On wizard completion or skip → open full editor with `Sonner` toast: "Your resume is ready — review and refine it below."
+3. Open editor directly — no wizard. Default active section: Summary.
 
 ### 11.4 Save
 
@@ -655,23 +904,33 @@ See Section 8.
 
 `GET /api/resume/:resume_id/export` → validate guard → compile → return file download.
 
-### 11.7 Create Job-Based Resume
+### 11.7 Clone Resume
 
-1. Learner clicks `🎯 Job-Based Resume` from the Cards Grid
-2. Job Setup screen opens (Section 5B)
-3. Learner selects a saved analysis or pastes a new JD, sets title
+1. Learner clicks `Clone` in a general resume card's `⋯` dropdown
+2. Backend creates a new `resumes` row: `resume_type = 'general'`, `status = 'in_progress'`, title = "Copy of [Original Title]"
+3. All `resume_sections` rows from the source resume are duplicated into the new resume — exact copies
+4. New card appears on the Cards Grid
+5. No editor opens automatically — learner clicks `Edit` when ready
+
+**Guard:** Clone is disabled if the learner is already at the 3-resume limit.
+
+### 11.8 Personalize for a Job
+
+1. Learner clicks `Personalize for a Job` in the editor header of a general resume
+2. Personalization Modal opens (Section 5B.2)
+3. Learner pastes JD, confirms title, clicks `Personalize →`
 4. Backend:
-   - Creates a new `resumes` row with `resume_type = 'job_based'`, `source_jd` populated
-   - Copies all `resume_sections` content from the learner's most recent general resume as the base
-   - **General resume is not touched in any way**
-5. Runs tailoring logic: reorder/filter skills, reorder/filter projects, AI-draft job-specific summary
-6. Opens full editor — no wizard. One-time `Alert` (info): "This resume is tailored for [Job Title]. Skills and projects have been pre-selected based on the job requirements. Your general resume is unchanged."
-
-### 11.8 Create Another Job-Based Resume
-
-The learner can create as many job-based resumes as the 3-resume limit allows. Each one is independent — a fresh tailored copy from the general resume base, targeting a different role. None of them affect each other or the general resume.
-
-Process is identical to 11.7. Each new job-based resume appears as its own card on the grid.
+   - Parses JD via AI → extracts `job_title`, `company_name`, `required_skills[]`, `preferred_skills[]`
+   - Rewrites `SUMMARY` section content via AI
+   - Rewrites `EXPERIENCE` bullets via AI
+   - Reorders skills in `SKILLS` section (required → preferred → unmatched)
+   - Reorders projects in `PROJECTS` section (most JD-relevant first)
+   - Updates `resumes.resume_type = 'job_based'`
+   - Stores `resumes.source_jd` JSONB
+   - Updates `resumes.title` to entered title
+   - Reconfigures ATS scoring to use JD keywords
+5. Modal closes. Editor reloads with JD keyword strip, relevance indicators active
+6. `Sonner` toast: "Your resume has been personalized for [Job Title]. Review the changes below."
 
 ---
 
@@ -789,9 +1048,11 @@ Process is identical to 11.7. Each new job-based resume appears as its own card 
 | `ready` resume has Summary cleared | On next save: `status` downgrades to `in_progress`. Dashboard tile updates. |
 | Skill removed from `user_skills` after being included in a resume | Skill remains `included` in `resume_sections` but is reclassified as a manual skill for that resume. Not removed automatically. |
 | Learner changes path | Skills section reloads with new path-relevant skills. General resume ATS keyword baseline updates to new path. Job-based resume ATS baseline stays JD-specific — unaffected by path change. |
-| Job-Based Resume created with no saved analyses | "Pick from saved analyses" option greyed out in Job Setup. Learner must paste a new JD. |
-| JD paste fails to parse (AI error) | Show `Alert` (destructive) in Job Setup: "We couldn't read this job description. Try pasting a more detailed version." Block progression until resolved. |
-| Re-tailoring existing job-based resume | Not possible from within the editor. Learner returns to the Cards Grid and creates a new job-based resume for the new role. All resumes remain independent. |
+| Job-Based Resume created with no saved analyses | No longer applicable — job-based resumes are created via the Personalize flow, not from the grid. |
+| JD paste fails to parse (AI error) | `Alert` (destructive) in the Personalization Modal: "Personalization failed. Try again or paste a more detailed job description." Modal stays open. |
+| Re-tailoring existing job-based resume | Not supported. Learner clones the general resume again and personalizes the new clone for the new role. |
+| Clone attempted at 3-resume limit | `Clone` option disabled in the dropdown with `Tooltip`: "Delete a resume to create a new one." |
+| Personalization AI partially fails (e.g. summary rewrites but bullets fail) | Apply what succeeded, flag what didn't with a `Sonner` toast: "Personalization partially completed — some sections couldn't be rewritten. Review and edit manually." |
 
 ---
 

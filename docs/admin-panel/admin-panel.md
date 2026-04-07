@@ -107,6 +107,7 @@ Fixed left sidebar. Icon + label. No deep nesting.
     ├── Topics & Resources
     └── Skills Catalog
 🗂  Projects
+💼  Jobs                    ← new — weekly job feed management
 👥  Learners
 📋  Audit Log              ← super admin only
 ⚙️  Settings               ← super admin only
@@ -369,7 +370,45 @@ appear in learner roadmaps.
 
 ---
 
-## 8. Learners View
+## 8. Jobs Monitor
+
+Accessed via "Jobs" in the sidebar. Read-only view for monitoring the automated weekly job feed. No publish/reject actions — jobs are fetched, published, and expired fully automatically.
+
+### 8.1 Jobs Dashboard
+
+4 stat cards — one per path:
+
+| Card | Value |
+|---|---|
+| Frontend | N live jobs · Last fetched [date] · Next fetch Monday |
+| Full-Stack | N live jobs · Last fetched [date] |
+| Cybersecurity | N live jobs · Last fetched [date] |
+| Data Science | N live jobs · Last fetched [date] |
+
+An amber `Alert` appears if any path's last fetch was more than 8 days ago (indicating the cron job may have failed): "Job fetch for [path] appears delayed. Check server logs."
+
+### 8.2 Jobs Table (Read-Only)
+
+Filterable by: Path · Status (published / expired)
+
+| Title | Company | Location | Path | Skills Extracted | Published | Expires |
+|---|---|---|---|---|---|---|
+| Frontend Developer | Noon | Riyadh | Frontend | React, TypeScript, Git | Mon 3 Apr | Mon 10 Apr |
+| React Engineer | STC | Remote (SA) | Frontend | React, Node.js | Mon 3 Apr | Mon 10 Apr |
+
+No action buttons. Admins can see what's live, verify skill extraction quality, and spot any anomalies.
+
+### 8.3 Audit Log Events for Jobs
+
+| Event | Description |
+|---|---|
+| `jobs_fetched` | Cron job fetched [N] jobs for [path] (automated) |
+| `jobs_expired` | [N] jobs expired automatically for [path] (automated) |
+| `job_fetch_failed` | Cron job failed to fetch jobs for [path] — see logs (automated) |
+
+---
+
+## 9. Learners View
 
 Read-only. Admins can view learner data for platform health and support. The only write
 action available is block/unblock.
@@ -407,7 +446,7 @@ raw onboarding answers, or AI recommendation data.
 
 ---
 
-## 9. Audit Log (Super Admin Only)
+## 10. Audit Log (Super Admin Only)
 
 Every action taken by any admin is recorded in `admin_audit_log`. The log is append-only —
 no admin, including super, can edit or delete entries.
@@ -448,7 +487,7 @@ no admin, including super, can edit or delete entries.
 
 ---
 
-## 10. Settings (Super Admin Only)
+## 11. Settings (Super Admin Only)
 
 ### 10.1 Admin Account Management
 
@@ -479,7 +518,7 @@ cannot be changed from the UI.
 
 ---
 
-## 11. Safe Deletion & Deactivation Rules
+## 12. Safe Deletion & Deactivation Rules
 
 The system never silently deletes content that learners depend on. Every destructive action
 shows a human-readable impact count before proceeding.
@@ -503,7 +542,7 @@ Cascade deletions must be explicit in the confirmation modal:
 
 ---
 
-## 12. States & Edge Cases
+## 13. States & Edge Cases
 
 | Scenario                                         | Behavior                                                                               |
 |--------------------------------------------------|----------------------------------------------------------------------------------------|
@@ -520,7 +559,7 @@ Cascade deletions must be explicit in the confirmation modal:
 
 ---
 
-## 13. Data Model — Admin-Specific Tables
+## 14. Data Model — Admin-Specific Tables
 
 The admin panel reads and writes core content tables (`paths`, `stages`, `topics`,
 `topic_resources`, `skills`, `topic_skills`, `projects`, `project_skills`) defined in the
@@ -546,7 +585,7 @@ No `UPDATE` or `DELETE` is permitted on this table at the application level.
 
 ---
 
-## 14. API Routes
+## 15. API Routes
 
 All routes are prefixed `/api/admin/`. Every route verifies `users.role = 'admin'` and the
 required `admin_level` server-side on every request — never trusted from the token alone.
@@ -583,7 +622,7 @@ required `admin_level` server-side on every request — never trusted from the t
 | POST   | `/api/admin/projects`                   | Create project                              | normal   |
 | PATCH  | `/api/admin/projects/:id`               | Edit project                                | normal   |
 | PATCH  | `/api/admin/projects/:id/skills`        | Set skill links + importance for a project  | normal   |
-| GET    | `/api/admin/learners`                   | List learners (filterable, read-only)       | normal   |
+| GET    | `/api/admin/jobs`                       | List all job listings (filterable, read-only) | normal   |
 | GET    | `/api/admin/learners/:id`               | Learner detail (read-only)                  | normal   |
 | PATCH  | `/api/admin/learners/:id/status`        | Block or unblock learner                    | normal   |
 | GET    | `/api/admin/audit-log`                  | View audit log (paginated, filterable)      | super    |
@@ -594,7 +633,7 @@ required `admin_level` server-side on every request — never trusted from the t
 
 ---
 
-## 15. Integration Points
+## 16. Integration Points
 
 - **Auth module** — admin login uses the same `users` table but a completely separate
   endpoint, controller, and session scope. Admin and learner sessions are never mixed.
@@ -603,8 +642,7 @@ required `admin_level` server-side on every request — never trusted from the t
   learners' next page load.
 - **Portfolio Hub** — learner-submitted skills (`is_verified = false`) surface in the
   Skills Catalog for admin review. Verified skills become available in all learner dropdowns.
-- **Opportunity Analyzer** — `topic_skills.importance_level` set by admins directly controls
-  which topics the Opportunity Analyzer prioritizes when a learner is missing a skill.
+- **Opportunity Analyzer** — `topic_skills.importance_level` set by admins directly controls which topics the Opportunity Analyzer prioritizes when a learner is missing a skill. The Jobs Monitor provides visibility into the automated `job_listings` feed that powers the Opportunity Analyzer's weekly job board.
 - **Resume Builder** — `project_skills` set by admins feeds into the Resume Builder's
   path-specific ATS keyword scoring system.
 - **Dashboard (learner)** — the admin dashboard aggregates from the same `user_progress`,

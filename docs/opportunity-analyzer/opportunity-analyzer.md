@@ -2,17 +2,19 @@
 
 ## 1. Purpose
 
-The Opportunity Analyzer is Mallah's most unique feature. It bridges the gap between
-where the learner is right now and a specific job they want — then tells them exactly
-what to do to close that gap, with every action linked directly back to their roadmap.
+The Opportunity Analyzer is Mallah's career intelligence layer. It does two connected things:
+
+1. **Surfaces curated real jobs** relevant to the learner's path — sourced weekly from Saudi Arabia via SerpAPI (Google for Jobs), reviewed by admins, and refreshed every 7 days. The learner arrives to a curated job board, not a blank input screen.
+
+2. **Analyzes any job in depth** — whether from the curated feed or pasted manually. It compares the job's requirements against the learner's full profile, identifies skill gaps, and generates a roadmap-linked action plan telling them exactly what to study and build to close the gap.
 
 It does three things no other feature on the platform does:
 
-1. **Parses a real job description** and extracts what the employer actually wants.
-2. **Compares that against the learner's full profile** — skills earned on Mallah, projects built, roadmap progress, and optionally a CV they upload with prior experience.
-3. **Generates a prioritized, roadmap-linked action plan** that tells the learner not just what they're missing, but exactly which topics to study and which projects to build to fix it.
+1. **Surfaces curated, current job listings** from Saudi Arabia matched to the learner's career path, refreshed weekly.
+2. **Parses any job description** and extracts what the employer actually wants.
+3. **Generates a prioritized, roadmap-linked action plan** telling the learner exactly which topics to study and which projects to build to close the gap.
 
-The result is not a generic score. It is a personalized gap report with a concrete path forward.
+The result is a curated job discovery tool with a personalized gap report and a concrete path forward for each opportunity.
 
 ---
 
@@ -42,12 +44,13 @@ This is not a resume optimizer. It is a **learning direction engine** built arou
 - Resume Builder → Cards Grid → `🎯 Job-Based Resume` (uses saved analysis as JD source)
 
 **Depends on:**
-- `opportunity_analyses`
+- `opportunity_analyses`, `job_listings` *(new — stores curated job posts)*
 - `user_skills`, `skills`
 - `user_projects`, `projects`, `project_skills`
 - `paths`, `stages`, `topics`, `topic_skills`
 - `user_progress`
-- `cv_uploads` *(new — optional, stores parsed CV data per user)*
+- `cv_uploads` *(optional, stores parsed CV data per user)*
+- **SerpAPI** — weekly Google for Jobs fetch for Saudi Arabia. Free tier (100 searches/month) covers 4 paths × 4 weeks = 16 calls/month.
 - AI Engine (required for JD parsing, CV parsing, and action plan generation)
 
 ---
@@ -153,40 +156,117 @@ All UI in the Opportunity Analyzer is built with **shadcn/ui** components on top
 
 ---
 
-## 6. The Two-Phase UX
+## 6. The Three-Phase UX
 
-The feature has two clear phases: **Input** and **Results**.
-
----
-
-### Phase 1 — Input
-
-**Single focused screen. No clutter.**
-
-Components (see Section 5.1 for shadcn mapping):
-- Large `Textarea`: "Paste the job description here"
-  - Minimum 100 characters to proceed (validates on submit via Zod)
-  - No maximum — full JDs are welcome
-- Optional `Input`: Job title (editable — pre-filled by AI after parse, learner can correct)
-- Optional `Input`: Company name (for saved analysis labeling only, not used in scoring)
-- CV Upload zone: drag-and-drop or click-to-browse. PDF/DOCX only, max 5MB.
-  - If a CV was previously uploaded: shows "Using: [filename]" with a "Remove" option
-  - If no CV: shows "No CV attached — analysis will use your Mallah profile only"
-- `Analyze` button (primary, large)
-
-**What happens on submit:**
-- Button transitions to loading state with `Spinner` + "Analyzing…"
-- `Skeleton` placeholders render immediately for all 5 result panels
-- Backend processes in the background (see Section 8)
-- `Tabs` results screen replaces the skeleton when data arrives (typically 3–8 seconds)
+The feature has three phases: **Job Feed → Job Card → Full Analysis**.
 
 ---
 
-### Phase 2 — Results
+### Phase 1 — Job Feed (Landing Screen)
 
-Results are organized into **5 tabs** using shadcn `Tabs`. Each tab is independently navigable. The default open tab is "Overview."
+The learner lands on a **curated job board** showing the latest published jobs for their path. Jobs are sourced weekly from Google for Jobs (Saudi Arabia) via SerpAPI, reviewed by admins, and auto-expire after 7 days.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Opportunity Analyzer                                            │
+│                                                                  │
+│  [🔍 Search jobs...          ]              [Analyze a JD]       │
+│                                                                  │
+│  This week's jobs — Frontend Development     Updated Monday      │
+│  ─────────────────────────────────────────                       │
+│  ┌────────────────────────────┐  ┌────────────────────────────┐  │
+│  │ Frontend Developer         │  │ React Engineer             │  │
+│  │ Noon · Riyadh              │  │ STC · Remote (SA)          │  │
+│  │ Match: 74%  ████████░░     │  │ Match: 61%  ██████░░░░     │  │
+│  │ Expires in 5 days          │  │ Expires in 5 days          │  │
+│  │ [Analyze →]  [Save]        │  │ [Analyze →]  [Save]        │  │
+│  └────────────────────────────┘  └────────────────────────────┘  │
+│  ┌────────────────────────────┐  ┌────────────────────────────┐  │
+│  │ UI Developer               │  │ Junior Frontend Dev        │  │
+│  │ Jarir · Jeddah             │  │ Aramco Digital · Riyadh    │  │
+│  │ Match: 51%  █████░░░░░     │  │ Match: 88%  █████████░     │  │
+│  │ Expires in 3 days          │  │ Expires in 3 days          │  │
+│  │ [Analyze →]  [Save]        │  │ [Analyze →]  [Save]        │  │
+│  └────────────────────────────┘  └────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**How the feed works:**
+
+- Shows up to 10 published `job_listings` where `path_id = learner.current_path_id` and `status = 'published'`
+- Sorted by `published_at` descending — newest first
+- Each card shows: job title, company, city, match score (calculated server-side against `user_skills`), and days until expiry
+- Jobs expire automatically 7 days after publishing — expired jobs are hidden from learners
+
+**Match score on the card:**
+
+Calculated server-side without AI, using the stored `required_skills[]` and `preferred_skills[]` from the `job_listings` row:
+
+```
+match = (required_covered / total_required) × 0.70 + (preferred_covered / total_preferred) × 0.30
+```
+
+This is a **preview score** — fast, rule-based. Full AI analysis (Phase 3) runs only on explicit user action.
+
+**Search bar:**
+
+Filters the current feed by job title keyword. Searches only within published listings for the learner's path — not a live external search. If no results match, shows: "No jobs match your search. Try Analyze a JD to paste a job from anywhere."
+
+**"Analyze a JD" button:**
+
+Opens the manual JD input panel. Allows the learner to analyze any job from outside the feed — a company's own careers page, an email, a LinkedIn post, etc.
+
+**Empty state (no jobs published yet for this path):**
+
+"No jobs this week yet — check back Monday. In the meantime, paste any job description to analyze it."
 
 ---
+
+### Phase 2 — Job Card (Quick View)
+
+Clicking `Analyze →` on any job card from the feed triggers analysis and shows a **quick analysis card** that expands inline or opens as a side panel. This is a condensed version of the full results — enough to decide whether this job is worth pursuing.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  ← Back to feed                                                  │
+│                                                                  │
+│  Frontend Developer                                              │
+│  Noon · Riyadh, Saudi Arabia · Full-time · Posted 2 days ago    │
+│  [Apply on LinkedIn ↗]   [Save Analysis]   [Full Analysis →]    │
+│  ─────────────────────────────────────────                       │
+│                                                                  │
+│  Match: 74%   ████████░░  Strong Candidate                       │
+│                                                                  │
+│  ✅ You have:  React · TypeScript · Git · REST API               │
+│  ❌ Missing:   Node.js · PostgreSQL                              │
+│  ⚠  Partial:  CSS (need advanced level)                         │
+│                                                                  │
+│  Top 3 actions:                                                  │
+│  1. [learn] Complete "Node.js Fundamentals" → Open Topic         │
+│  2. [build] Build "REST API Blog Backend" project → View         │
+│  3. [resume] Create a job-based resume for this role → Builder   │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**What's shown in the quick view:**
+- Job details (title, company, location, type, posted date, apply link)
+- Match score ring + label
+- Skills you have (top 4–5)
+- Missing required skills
+- Partial matches
+- Top 3 action plan steps
+- `Full Analysis →` button — opens Phase 3 for the complete 5-tab results
+
+The quick view is generated on click — no full AI analysis yet. It uses rule-based matching against `user_skills`. Full AI processing only happens when the learner clicks `Full Analysis →`.
+
+---
+
+### Phase 3 — Full Analysis
+
+The full 5-tab results experience. Identical to the previous spec — triggered either from `Full Analysis →` in the quick view, or directly from `Analyze a JD` (manual paste flow).
+
+The 5 tabs remain: **Overview / Skills / Portfolio / Action Plan / Saved.**
 
 #### Tab 1 — Overview
 
@@ -194,14 +274,17 @@ Contains Panel 1 (Job Snapshot) and Panel 2 (Match Score) side by side on deskto
 
 **Panel 1 — Job Snapshot**
 
-Extracted automatically by AI from the job description. Learner can edit any field inline.
+For jobs from the feed: pre-populated from JSearch data. For pasted JDs: extracted by AI.
 
 | Field | Source |
 |---|---|
-| Job title | AI-extracted, editable |
+| Job title | JSearch / AI-extracted, editable |
+| Company | JSearch / AI-extracted |
+| Location | JSearch / AI-extracted |
 | Seniority level | AI-extracted: `Intern` / `Junior` / `Mid` / `Senior` |
 | Key responsibilities | AI-extracted: 3–5 bullet summary |
-| Employment type | AI-extracted: Full-time / Part-time / Contract / Remote |
+| Employment type | JSearch / AI-extracted: Full-time / Part-time / Contract / Remote |
+| Apply URL | JSearch direct link (for feed jobs) / none (for pasted JDs) |
 
 **Panel 2 — Match Score**
 
@@ -219,15 +302,15 @@ A circular SVG progress ring showing the match percentage (0–100%).
   Path alignment:   72%   ████████████░░░░
 ```
 
-Score label thresholds:
+Score label thresholds — use Mallah color tokens:
 
-| Score | Label | Ring color |
+| Score | Label | Color token |
 |---|---|---|
-| 0–34% | Not Ready Yet | Red (`text-red-500`) |
-| 35–54% | Early Stage | Amber (`text-amber-500`) |
-| 55–74% | Getting Close | Yellow (`text-yellow-500`) |
-| 75–89% | Strong Candidate | Green (`text-green-500`) |
-| 90–100% | Excellent Match | Emerald (`text-emerald-500`) |
+| 0–34% | Not Ready Yet | `destructive` (Alert Red) |
+| 35–54% | Early Stage | `warning` (Tactical Amber) |
+| 55–74% | Getting Close | `warning` (Tactical Amber) |
+| 75–89% | Strong Candidate | `success` (Forest Emerald) |
+| 90–100% | Excellent Match | `success` (Forest Emerald) |
 
 If CV data contributed to the score, an `Alert` (info variant) appears below the score:
 > "X of your matched skills came from your CV and are unverified. Complete roadmap topics to strengthen them."
@@ -240,14 +323,13 @@ Panel 3 — Skills Breakdown. Three columns (responsive: stacked on mobile):
 
 **✅ You Have These**
 - Skills from `user_skills` that match extracted job requirements
-- Mallah-verified skills: `Badge` (green) + `BadgeCheck` icon
+- Mallah-verified skills: `Badge` (success) + `BadgeCheck` icon
 - CV-sourced skills: `Badge` (outline) + `FileText` icon + "From CV" label
 - Source tag below each: Roadmap / Project / Manual / CV
-- For Mallah project skills: small chip showing which project demonstrates it
 
 **⚠ Partial Match**
 - Skills the learner has at a lower level than the job likely requires
-- `Badge` (amber) showing: current level → required level estimate
+- `Badge` (warning) showing: current level → required level estimate
 - Action link: `Button` (ghost) "Strengthen this skill →" → relevant roadmap topics
 
 **❌ Missing**
@@ -263,71 +345,37 @@ Panel 3 — Skills Breakdown. Three columns (responsive: stacked on mobile):
 
 #### Tab 3 — Portfolio
 
-Panel 4 — Portfolio Relevance. Two sub-sections within the tab.
+Panel 4 — Portfolio Relevance. Two sub-sections.
 
 **Your relevant projects:**
 - Lists completed `user_projects` relevant to this job (matched via `project_skills` + extracted skills)
-- Each as a `Card`: project title, skill `Badge` chips, GitHub/demo `Button` (outline) links
+- Each as a `Card`: project title, skill `Badge` chips, GitHub/demo `Button` links
 - Sub-label: "Highlight these in your resume for this role"
-- If CV projects exist: displayed separately with "From CV" label
 
 **Projects to build:**
 - Suggests 1–3 specific projects from the `projects` catalog that address skill gaps
 - Prioritizes: (a) not yet done, (b) cover the most missing required skills, (c) within learner's current stage range
-- Each `Card` shows: project title, skills it would add as `Badge` chips, which stage it belongs to
 - CTA: `Button` "Add to My Projects" → writes to `user_projects` with `status = 'available'`
 
 ---
 
 #### Tab 4 — Action Plan
 
-Panel 5 — The most important output. AI-generated, roadmap-anchored, prioritized.
+Panel 5 — AI-generated, roadmap-anchored, prioritized. Maximum 7 steps.
 
 A numbered list of concrete steps. Each step is a `Card` row with:
 - Step number (large, muted)
-- Step type `Badge` (color-coded: learn = blue, build = purple, update resume = amber, apply = green)
+- Step type `Badge` (learn = `info` Digital Blue, build = purple, update resume = `warning` Amber, apply = `success` Emerald)
 - Title (one line, bold)
 - Reason (1–2 lines, muted — omitted if `ai_detail_level = short`)
-- CTA `Button` (outline or ghost depending on step type)
+- CTA `Button`
 
-**Step ordering:** learn first → build second → resume/apply third.
-
-**Example:**
-
-```
-1  [learn]   Complete "CSS Flexbox & Grid"
-             Stage 1 · Topic 4 · ~45 mins
-             Required by this JD. Currently missing from your skills.
-             → Open Topic
-
-2  [build]   Build the "Responsive Portfolio Page" project
-             Demonstrates HTML/CSS — employers want proof, not just knowledge.
-             → View Project
-
-3  [build]   Complete "JavaScript Async & Fetch API"
-             Stage 2 · Topic 6
-             Listed as required. Currently missing from your skills.
-             → Open Topic
-
-4  [resume]  Add your "Movie Search App" to your resume for this role
-             Demonstrates React and API integration — both required.
-             → Open Resume Builder
-
-5  [resume]  Update your Summary section
-             Your current summary is generic. This JD has 3 frontend-specific keywords.
-             → Open Resume Builder
-```
-
-**Rules for AI-generated action plan:**
-- Maximum 7 steps. More becomes overwhelming.
-- Every `learn_topic` step must include a deep link to the Topic Viewer.
-- Every `build_project` step must link to the Portfolio Hub.
-- Every `update_resume` step must link to the Resume Builder — specifically:
-  - If the learner has a job-based resume whose `source_jd.analysis_id` matches this saved analysis → link directly to that resume in the editor.
-  - If no matching job-based resume exists → link to the Resume Builder Cards Grid, where the learner can create a job-based resume for this role.
-- Steps ordered: learn → build → apply/polish.
-- Respects `ai_language_pref` and `ai_detail_level`.
-- If `ai_detail_level = short` → reason omitted, steps are one line each.
+**Rules:**
+- Every `learn_topic` step → deep link to the Topic Viewer
+- Every `build_project` step → link to the Portfolio Hub
+- Every `update_resume` step → link to the Resume Builder (directly to matching job-based resume if `source_jd.analysis_id` matches, otherwise to the Cards Grid)
+- Steps ordered: learn → build → resume/apply
+- Respects `ai_language_pref` and `ai_detail_level`
 
 ---
 
@@ -337,14 +385,11 @@ Lists all saved analyses for this learner. See Section 7.
 
 ---
 
-#### Bottom Action Bar (Persistent across all tabs)
+#### Bottom Action Bar (Persistent across all tabs in Phase 3)
 
-Sticky bar at the bottom of the results screen:
-
-- `Button` (default): `Save Analysis` — persists to `opportunity_analyses`
+- `Button` (default): `Save Analysis`
 - `Button` (outline): `Re-analyze` — reruns same JD + CV against updated learner data
-- `Button` (ghost): `Analyze New Job` — clears and returns to input screen
-- `Button` (outline, v2 only): `Export as PDF`
+- `Button` (ghost): `← Back to Feed` — returns to Phase 1
 
 ---
 
@@ -361,6 +406,97 @@ Learners can save analyses and return to them later.
 - `Button` (ghost/destructive): "Delete"
 
 **Re-analyze is a key feature.** As the learner completes topics and builds projects, their match score for a saved job increases. Seeing that number move from 52% to 71% is a powerful motivator. This is what makes the Opportunity Analyzer a living tool, not a one-time report.
+
+---
+
+## 7B. Job Feed — SerpAPI Fully Automated
+
+### 7B.1 Overview
+
+Jobs are fetched automatically every Monday via SerpAPI (Google for Jobs), published immediately with no admin review, and expire automatically after 7 days. Learners always see a fresh weekly feed with zero manual effort.
+
+**Volume:** 4 paths × ~10 jobs per fetch = ~40 jobs per week.
+**Cost:** SerpAPI free tier allows 100 searches/month. 4 searches/week × 4 weeks = 16 calls/month. Free tier covers this indefinitely.
+
+### 7B.2 Weekly Cron Job
+
+Fires every **Monday at 8:00 AM AST**. Runs one SerpAPI query per path:
+
+```ts
+const pathQueries = {
+  frontend:      'Frontend Developer OR React Developer Riyadh OR Jeddah Saudi Arabia',
+  fullstack:     'Full Stack Developer OR Node.js Developer Riyadh OR Jeddah Saudi Arabia',
+  cybersecurity: 'Cybersecurity Analyst OR Penetration Tester Saudi Arabia',
+  datascience:   'Data Scientist OR Data Analyst Saudi Arabia',
+};
+```
+
+Each query hits the SerpAPI Google Jobs endpoint with `location: "Saudi Arabia"` and `chips: "date_posted:week"` (jobs posted in the last 7 days only).
+
+**On each fetch:**
+1. Fetch up to 10 results per path from SerpAPI
+2. For each result, run AI skill extraction from the job description → populate `required_skills[]` and `preferred_skills[]`
+3. Save to `job_listings` with `status = 'published'`, `published_at = now()`, `expires_at = now() + 7 days`
+4. Delete or expire any `job_listings` rows from the previous week (`expires_at < now()`)
+
+No human review step. Jobs go live immediately after AI extraction.
+
+### 7B.3 `job_listings` Table
+
+| Field | Type | Notes |
+|---|---|---|
+| `job_id` | UUID (PK) | |
+| `path_id` | VARCHAR | FK to paths |
+| `title` | VARCHAR | |
+| `company` | VARCHAR | |
+| `location` | VARCHAR | City or "Remote (SA)" |
+| `is_remote` | BOOLEAN | |
+| `employment_type` | VARCHAR | Full-time / Part-time / Contract |
+| `description` | TEXT | Full job description |
+| `required_skills` | JSONB | `string[]` — AI-extracted on fetch |
+| `preferred_skills` | JSONB | `string[]` — AI-extracted on fetch |
+| `apply_url` | VARCHAR | Direct apply link from SerpAPI |
+| `source_url` | VARCHAR | Original listing URL |
+| `status` | ENUM | `published` / `expired` |
+| `published_at` | TIMESTAMP | Set on cron insert |
+| `expires_at` | TIMESTAMP | `published_at + 7 days` |
+| `created_at` | TIMESTAMP | |
+
+No `pending` or `rejected` status — fully automated means jobs are either live or expired.
+
+### 7B.4 Auto-Expiry
+
+A second cron job runs every day at **midnight AST**. It sets `status = 'expired'` for all rows where `expires_at < now()` and `status = 'published'`. Expired jobs disappear from learner view immediately.
+
+### 7B.5 Match Score Calculation (Phase 1 Cards)
+
+Calculated server-side without AI for speed when the learner opens the feed:
+
+```ts
+const requiredCovered = job.required_skills.filter(skill =>
+  learnerSkills.some(s => s.name.toLowerCase() === skill.toLowerCase())
+).length;
+
+const preferredCovered = job.preferred_skills.filter(skill =>
+  learnerSkills.some(s => s.name.toLowerCase() === skill.toLowerCase())
+).length;
+
+const matchScore = Math.round(
+  (requiredCovered / job.required_skills.length) * 0.70 * 100 +
+  (preferredCovered / Math.max(job.preferred_skills.length, 1)) * 0.30 * 100
+);
+```
+
+Runs in < 100ms for 10 jobs. Cached per `(user_id, job_id)` and invalidated when the learner gains a new skill.
+
+### 7B.6 Error Handling
+
+| Scenario | Behavior |
+|---|---|
+| SerpAPI fetch fails | Log error, retry once after 1 hour. Previous week's jobs remain live until natural expiry. Error logged in server monitoring — no admin notification needed. |
+| AI skill extraction fails for a job | Job is still published with `required_skills = []` and `preferred_skills = []`. Match score shows 0% on the card. Learner can still click Analyze → for full analysis. |
+| No results returned for a path | That path's feed shows empty state: "No jobs this week — paste any JD to analyze it." Other paths unaffected. |
+| Duplicate job fetched (same URL as previous week) | Deduplication by `source_url` before insert — duplicates are skipped. |
 
 ---
 
@@ -545,7 +681,9 @@ This is the loop that makes the platform coherent:
 
 ## 12. Integration Points
 
-- **Roadmap** — Tags topics linked to missing skills with "From Opportunity Analyzer" badge when an analysis is saved. CV-unverified skills with roadmap topics are also tagged. Completing a tagged topic upgrades a CV skill to roadmap-verified.
+- **SerpAPI** — weekly Google for Jobs fetch for Saudi Arabia. 4 queries per week (one per path) = 16/month, within the free tier. Results are published automatically with AI skill extraction — no admin review step.
+- **Admin Panel** — the admin panel provides read-only visibility into the `job_listings` table for monitoring purposes (see what was fetched, verify expiry dates). No publish/reject workflow needed since jobs are automated.
+- **Roadmap** — Tags topics linked to missing skills with "From Opportunity Analyzer" badge when an analysis is saved. Completing a tagged topic upgrades a CV skill to roadmap-verified.
 - **Portfolio Hub** — "Projects to Build" suggestions can be added directly to `user_projects` with `status = 'available'`.
-- **Resume Builder** — Action plan `update_resume` steps deep-link directly to the learner's job-based resume for this role if one exists, or to the Resume Builder Cards Grid to create one. The Job-Based Resume feature uses the saved analysis (`analysis_id`) as its source JD — creating a tailored resume copy pre-configured around this job's requirements. This connection is live in v1.
+- **Resume Builder** — Action plan `update_resume` steps deep-link directly to the learner's job-based resume for this role if one exists, or to the Resume Builder Cards Grid to clone and personalize. The `source_jd.analysis_id` field on job-based resumes links back to the originating saved analysis.
 - **Dashboard** — Quick Navigation links here. `opportunity_analyses.created_at` feeds the Dashboard Recent Activity section.

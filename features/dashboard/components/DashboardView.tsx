@@ -21,8 +21,8 @@ export function DashboardView({ summary, recentActivity }: DashboardViewProps) {
     const isFirstSession = summary.onboarding_banner.show;
 
     return (
-        <div className="space-y-6">
-            {/* 1. Greeting & Context Bar — full width */}
+        <div className="space-y-8 pb-12">
+            {/* Top row - Greeting */}
             <GreetingBar
                 learner={summary.learner}
                 path={summary.path}
@@ -30,50 +30,62 @@ export function DashboardView({ summary, recentActivity }: DashboardViewProps) {
                 paceStatus={summary.pace.pace_status}
             />
 
-            {/* 2–6. Two-column layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Left column (60%) */}
-                <div className="lg:col-span-3 space-y-6">
-                    {/* 2. Onboarding Banner (new users only) */}
-                    <OnboardingBanner banner={summary.onboarding_banner} />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Main Control Area (66%) */}
+                <div className="lg:col-span-8 space-y-8">
+                    {/* Primary Focus: Today's Mission */}
+                    <div className="space-y-4">
+                        <OnboardingBanner banner={summary.onboarding_banner} />
+                        <MissionCard
+                            mission={summary.mission}
+                            estimatedTime={summary.topics.next_topic_estimated_time_min}
+                        />
+                    </div>
 
-                    {/* 3. Mission Card (primary) */}
-                    <MissionCard
-                        mission={summary.mission}
-                        estimatedTime={summary.topics.next_topic_estimated_time_min}
+                    {/* Secondary Focus: Performance Analysis */}
+                    <ProgressZone
+                        path={summary.path}
+                        stage={summary.stage}
+                        topics={summary.topics}
+                        velocity={summary.learner.learning_velocity}
                     />
 
-                    {/* 4. AI Micro-Coach */}
-                    <AIMicroCoach tip={summary.ai_tip} />
+                    {/* Recent Operational History */}
+                    {!isFirstSession && (
+                        <RecentActivity items={recentActivity} />
+                    )}
                 </div>
 
-                {/* Right column (40%) */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* 5. Readiness Tiles */}
-                    <ReadinessTiles readiness={summary.readiness} />
+                {/* Tactical Sidebar (33%) */}
+                <div className="lg:col-span-4 space-y-8 sticky top-6">
+                    {/* Readiness Dashboard */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 px-1">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_var(--primary)]" />
+                            <span className="text-[10px] font-mono font-black uppercase text-muted-foreground tracking-widest">
+                                Status & Readiness
+                            </span>
+                        </div>
+                        <ReadinessTiles readiness={summary.readiness} />
+                    </div>
 
-                    {/* 6. Pace & Momentum Strip */}
+                    {/* Tactical Coaching */}
+                    <AIMicroCoach tip={summary.ai_tip} />
+
+                    {/* Quick Access */}
+                    <div className="space-y-4">
+                         <div className="flex items-center gap-2 px-1 text-muted-foreground/60 uppercase text-[9px] font-mono font-bold tracking-widest">
+                            // Tactical Routing //
+                        </div>
+                        <QuickNav readiness={summary.readiness} />
+                    </div>
+
+                    {/* Pace Momentum */}
                     {!isFirstSession && (
                         <PaceMomentumStrip pace={summary.pace} />
                     )}
                 </div>
             </div>
-
-            {/* 7. Progress Zone — full width */}
-            <ProgressZone
-                path={summary.path}
-                stage={summary.stage}
-                topics={summary.topics}
-                velocity={summary.learner.learning_velocity}
-            />
-
-            {/* 8. Quick Navigation — full width */}
-            <QuickNav readiness={summary.readiness} />
-
-            {/* 9. Recent Activity — full width, optional */}
-            {!isFirstSession && (
-                <RecentActivity items={recentActivity} />
-            )}
         </div>
     );
 }

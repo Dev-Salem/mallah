@@ -79,7 +79,7 @@ export default async function LandingPage() {
                 <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 <span className={`text-[9px] uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} text-primary font-mono font-bold`}>{t('Hero.navLog')}</span>
               </div>
-              <h1 className={`text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-white ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>
+              <h1 className={`text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-foreground ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>
                 {t('Hero.title1')} <br />
                 <span className="text-primary">{t('Hero.title2')}</span> <br />
                 {t('Hero.title3')}
@@ -94,8 +94,8 @@ export default async function LandingPage() {
                     {t('Hero.initiate')} <ArrowRight className={`ml-3 h-4 w-4 group-hover:translate-x-1 transition-transform ${locale === 'ar' ? 'rotate-180' : ''}`} />
                   </Button>
                 </Link>
-                <div className="flex flex-col border-l border-white/10 pl-6">
-                  <span className={`text-[9px] font-mono uppercase ${!isArabic ? 'tracking-[0.3em]' : ''} text-white/40 mb-1`}>{t('Hero.status')}</span>
+                <div className="flex flex-col border-l border-primary/10 pl-6">
+                  <span className={`text-[9px] font-mono uppercase ${!isArabic ? 'tracking-[0.3em]' : ''} text-muted-foreground mb-1`}>{t('Hero.status')}</span>
                   <span className={`text-[11px] font-mono text-primary/80 uppercase ${!isArabic ? 'tracking-widest' : ''}`}>{t('Hero.statusDetail')}</span>
                 </div>
               </div>
@@ -135,18 +135,18 @@ export default async function LandingPage() {
         </section>
 
         {/* The Gap - Modular HUD Diagnostics */}
-        <section id="the-gap" className="py-24 lg:py-32 border-y border-white/5 relative overflow-hidden bg-black/50">
+        <section id="the-gap" className="py-24 lg:py-32 border-y border-primary/5 relative overflow-hidden bg-muted/30">
           <div className="absolute inset-0 hud-grid opacity-[0.1] -z-10" />
           <div className="container mx-auto px-6 lg:px-12">
             <div className="max-w-4xl mb-24">
               <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-6 block px-3 py-1 border-l-2 border-primary bg-primary/5 w-fit">{t('Problem.label')}</span>
-              <h2 className={`text-4xl md:text-5xl lg:text-6xl font-mono font-bold text-white mb-8 ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>{t('Problem.title')}</h2>
-              <p className="text-muted-foreground text-lg leading-relaxed font-mono italic border-l border-white/10 pl-8">
+              <h2 className={`text-4xl md:text-5xl lg:text-6xl font-mono font-bold text-foreground mb-8 ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>{t('Problem.title')}</h2>
+              <p className="text-muted-foreground text-lg leading-relaxed font-mono italic border-l border-primary/10 pl-8">
                 {t('Problem.subtitle')}
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-1px bg-white/5 border border-white/5">
+            <div className="grid md:grid-cols-3 gap-1px bg-primary/5 border border-primary/5">
               {[
                 { label: "SYS_ERR_01", key: "item1" },
                 { label: "SYS_ERR_02", key: "item2" },
@@ -155,7 +155,7 @@ export default async function LandingPage() {
                 <div key={item.label} className="bg-background p-10 hover:bg-primary/5 transition-all duration-500 group relative">
                   <div className="absolute top-0 left-0 w-1 h-0 bg-primary group-hover:h-full transition-all duration-500" />
                   <span className="text-[9px] font-mono text-primary/60 mb-8 block tracking-[0.3em] font-bold">{item.label}</span>
-                  <h4 className="text-lg font-mono font-bold text-white mb-4 tracking-tight uppercase group-hover:text-primary transition-colors">{t(`Problem.${item.key}Title`)}</h4>
+                  <h4 className="text-lg font-mono font-bold text-foreground mb-4 tracking-tight uppercase group-hover:text-primary transition-colors">{t(`Problem.${item.key}Title`)}</h4>
                   <p className="text-sm font-mono text-muted-foreground/70 leading-relaxed font-mono">{t(`Problem.${item.key}Desc`)}</p>
                 </div>
               ))}
@@ -169,9 +169,9 @@ export default async function LandingPage() {
             <div className="flex flex-col lg:flex-row justify-between items-baseline mb-20 gap-8">
               <div className="max-w-2xl">
                 <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-6 block">{t('Process.label')}</span>
-                <h2 className={`text-4xl md:text-5xl font-mono font-bold text-white ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>{t('Process.title')}</h2>
+                <h2 className={`text-4xl md:text-5xl font-mono font-bold text-foreground ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>{t('Process.title')}</h2>
               </div>
-              <div className="px-6 py-4 border border-white/5 glass flex items-center gap-6">
+              <div className="px-6 py-4 border border-primary/5 glass flex items-center gap-6">
                 <div className="h-10 w-10 flex items-center justify-center rounded-full border border-primary/20 font-mono text-primary text-xs italic">
                   "
                 </div>
@@ -179,7 +179,7 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 border border-white/5">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-primary/5 border border-primary/5">
               {[
                 { key: "step1" },
                 { key: "step2" },
@@ -191,7 +191,7 @@ export default async function LandingPage() {
                     <span className="text-[9px] font-mono text-primary bg-primary/10 px-2 py-1 tracking-widest font-bold">STAGE_0{idx + 1}</span>
                     <div className="h-1.5 w-1.5 rounded-full bg-primary/20" />
                   </div>
-                  <h4 className={`text-sm font-mono font-bold text-white mb-4 ${!isArabic ? 'tracking-widest' : ''} uppercase`}>{t(`Process.${step.key}Title`)}</h4>
+                  <h4 className={`text-sm font-mono font-bold text-foreground mb-4 ${!isArabic ? 'tracking-widest' : ''} uppercase`}>{t(`Process.${step.key}Title`)}</h4>
                   <div className="h-px w-8 bg-primary/40 mb-4 group-hover:w-full transition-all duration-700" />
                   <p className="text-[11px] font-mono text-muted-foreground leading-relaxed uppercase tracking-tighter">{t(`Process.${step.key}Desc`)}</p>
                 </div>
@@ -201,14 +201,14 @@ export default async function LandingPage() {
         </section>
 
         {/* Closing CTA - System Override */}
-        <section className="py-40 px-6 lg:px-12 relative text-center bg-black overflow-hidden">
+        <section className="py-40 px-6 lg:px-12 relative text-center bg-muted/50 overflow-hidden">
           <div className="absolute inset-0 hud-grid opacity-[0.2] -z-10" />
           <div className="container mx-auto max-w-4xl relative">
             <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[8px] font-mono text-primary/20 tracking-[1em] uppercase">
               // OVERRIDE_SYSTEM_INITIATE //
             </div>
             <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-10 block">{t('CTA.label')}</span>
-            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-white mb-16 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
+            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-foreground mb-16 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
               {t('CTA.title')}
             </h2>
             <Link href="/login">
@@ -221,7 +221,7 @@ export default async function LandingPage() {
         </section>
       </main>
 
-      <footer className="py-16 border-t border-white/5 px-6 lg:px-12 bg-background font-mono">
+      <footer className="py-16 border-t border-primary/5 px-6 lg:px-12 bg-background font-mono">
         <div className="container mx-auto grid md:grid-cols-4 gap-16">
           <div className="col-span-2">
             <LogoText />
@@ -230,7 +230,7 @@ export default async function LandingPage() {
             </p>
           </div>
           <div className="flex flex-col gap-5">
-            <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4 flex items-center gap-2">
+            <span className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/60 font-bold mb-4 flex items-center gap-2">
               <div className="h-1 w-1 bg-primary" /> {t('Footer.coords')}
             </span>
             <a href="#" className="text-[10px] uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">{t('Navigation.gap')}</a>
@@ -238,7 +238,7 @@ export default async function LandingPage() {
             <a href="#" className="text-[10px] uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">{t('Navigation.features')}</a>
           </div>
           <div className="flex flex-col gap-5">
-            <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4 flex items-center gap-2">
+            <span className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/60 font-bold mb-4 flex items-center gap-2">
               <div className="h-1 w-1 bg-primary" /> {t('Footer.trans')}
             </span>
             <a href="#" className="text-[10px] uppercase text-muted-foreground hover:text-primary transition-colors tracking-widest">{t('Footer.contact')}</a>

@@ -68,28 +68,32 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
     ];
 
     return (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3">
             {tiles.map((tile) => (
                 <Link
                     key={tile.label}
                     href={tile.href}
                     className={cn(
-                        "block relative border p-4 transition-all duration-300 group hover:bg-white/5",
+                        "block relative border p-4 transition-all duration-300 group bg-dashboard-card-bg shadow-sm hover:shadow-md hover:border-primary/20",
                         tile.warning
-                            ? "border-amber-500/20 bg-amber-500/5 border-s-2 border-s-amber-500/40"
-                            : "border-white/10 bg-white/[0.02]"
+                            ? "border-amber-500/30 bg-amber-500/5 border-s-4 border-s-amber-500"
+                            : "border-primary/10"
                     )}
                 >
-                    <div className="flex items-start gap-3">
-                        <tile.icon className={cn(
-                            "w-4 h-4 shrink-0 mt-0.5 transition-colors",
-                            tile.warning ? "text-amber-500/60" : "text-primary/40 group-hover:text-primary"
-                        )} />
+                    <div className="flex items-center gap-4">
+                        <div className={cn(
+                            "w-10 h-10 shrink-0 flex items-center justify-center border transition-colors",
+                            tile.warning 
+                                ? "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-400" 
+                                : "bg-primary/5 border-primary/10 text-primary"
+                        )}>
+                            <tile.icon className="w-5 h-5" />
+                        </div>
 
                         <div className="min-w-0 flex-1">
                             {/* Label */}
                             <div className={cn(
-                                "text-[9px] font-mono text-muted-foreground/50 uppercase mb-1",
+                                "text-[9px] font-mono text-muted-foreground uppercase mb-1 font-bold",
                                 !isArabic && "tracking-[0.15em]"
                             )}>
                                 {tile.label}
@@ -97,21 +101,21 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
 
                             {/* Value */}
                             <div className={cn(
-                                "text-base font-black text-white uppercase mb-0.5",
-                                !isArabic && "tracking-tight"
+                                "text-lg font-black text-foreground uppercase mb-0.5",
+                                !isArabic && "tracking-tighter"
                             )}>
                                 {tile.value}
                             </div>
 
                             {/* Sub-label */}
-                            <div className="text-[10px] text-muted-foreground/40 leading-relaxed">
+                            <div className="text-[10px] text-muted-foreground font-medium leading-relaxed opacity-80">
                                 {tile.subLabel}
                             </div>
                         </div>
                     </div>
 
                     {/* Hover indicator */}
-                    <div className="absolute bottom-0 start-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-500" />
+                    <div className="absolute bottom-0 start-0 w-0 h-1 bg-primary group-hover:w-full transition-all duration-500" />
                 </Link>
             ))}
         </div>

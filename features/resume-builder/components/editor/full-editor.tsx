@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import {
   Loader2,
@@ -14,15 +13,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import SectionNav, {
-  buildSectionNavItems,
-  type SectionType,
-} from "./section-nav";
+import { buildSectionNavItems, type SectionType } from "./section-nav";
 import EditorFormPanel from "./editor-form-panel";
 import ATSModal, { type ATSBreakdown, type ATSHint } from "./ats-modal";
 import PreviewCard from "../live-preview/preview-card";
 import { saveResumeAction } from "@/features/resume-builder/actions/resume-actions";
 import { cn } from "@/lib/utils";
+
+// New components
+import { TwoZoneLayout } from "./two-zone-layout";
+import { LeftNav, NavItem } from "./left-nav";
+import { EditPreviewToggle } from "./edit-preview-toggle";
+import { JDKeywordStrip } from "./jd-keyword-strip";
+import { LiveKeywordPanel } from "./live-keyword-panel";
 
 /* -------------------------------------------------------------------------- */
 /*  Component                                                                 */
@@ -47,8 +50,9 @@ export default function FullEditor({ resume }: { resume: any }) {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const [atsModalOpen, setAtsModalOpen] = useState(false);
 
-  const isJobBased = resume.resume_type === "job_based";
+  const isJobBased = resume.resume_type === "job_based" || resume.resume_type === "tailored";
   const jobTitle = isJobBased ? resume.source_jd?.job_title : undefined;
+  const requiredSkills = isJobBased ? resume.source_jd?.required_skills || [] : [];
 
   /* ── Handlers ─────────────────────────────────────────────────────────────── */
   const handleSave = async () => {
@@ -77,7 +81,13 @@ export default function FullEditor({ resume }: { resume: any }) {
   );
 
   /* ── Derived ──────────────────────────────────────────────────────────────── */
-  const navItems = buildSectionNavItems(sections, t);
+  const oldNavItems = buildSectionNavItems(sections, t);
+  const navItems: NavItem[] = oldNavItems.map(item => ({
+    id: item.type,
+    label: item.label,
+    isComplete: item.status === "green",
+    isActive: activeSection === item.type
+  }));
 
   const scoreColor =
     atsScore === null
@@ -89,10 +99,10 @@ export default function FullEditor({ resume }: { resume: any }) {
           : "text-red-500";
 
   /* ── Render ───────────────────────────────────────────────────────────────── */
-  return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-muted/20">
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between px-4 py-3 border-b bg-background z-10 shrink-0 shadow-sm">
+  
+  const headerNode = (
+    <div className="flex flex-col">
+      <header className="flex items-center justify-between px-4 py-3 border-b bg-background shadow-sm">
         <div className="flex items-center space-x-4">
           <Link
             href="/dashboard/resume-builder"
@@ -109,7 +119,6 @@ export default function FullEditor({ resume }: { resume: any }) {
         </div>
 
         <div className="flex items-center space-x-3">
-          {/* ATS Badge */}
           <button
             type="button"
             onClick={() => setAtsModalOpen(true)}
@@ -149,49 +158,62 @@ export default function FullEditor({ resume }: { resume: any }) {
           </Button>
         </div>
       </header>
+      {isJobBased && (
+        <JDKeywordStrip requiredSkills={requiredSkills} resumeText={JSON.stringify(sections)} />
+      )}
+    </div>
+  );
 
-      {/* ── Main ────────────────────────────────────────────────────────────── */}
-      <main className="flex-1 flex overflow-hidden">
-        {/* Left Nav */}
-        <SectionNav
-          sections={navItems}
-          activeSection={activeSection}
-          onSectionChange={(section) => {
-            setActiveSection(section);
-            setActiveTab("edit");
-          }}
-        />
-
-        {/* Right Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Edit / Preview Tabs */}
-          <div className="px-6 pt-4 pb-2 bg-background border-b shrink-0">
-            <Tabs
-              value={activeTab}
-              onValueChange={(val) => setActiveTab(val as "edit" | "preview")}
-            >
-              <TabsList className="grid w-[200px] grid-cols-2">
-                <TabsTrigger value="edit">{t("Edit")}</TabsTrigger>
-                <TabsTrigger value="preview">{t("Preview")}</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-
-          {/* Content */}
-          {activeTab === "edit" ? (
-            <EditorFormPanel
-              initialSections={sections}
-              resumeId={resume.resume_id}
-              activeSection={activeSection}
-              onUpdate={(newSections: any[]) => setSections(newSections)}
-            />
-          ) : (
-            <PreviewCard sections={sections} resumeInfo={resume} />
-          )}
+  const leftNavNode = (
+    <div className="flex flex-col h-full bg-background border-r">
+      <LeftNav 
+        items={navItems}
+        onSelect={(id) => {
+          setActiveSection(id as SectionType);
+          setActiveTab("edit");
+        }}
+      />
+      {isJobBased && (
+        <div className="mt-auto p-4 border-t">
+          <LiveKeywordPanel requiredSkills={requiredSkills} preferredSkills={[]} resumeText={JSON.stringify(sections)} />
         </div>
-      </main>
+      )}
+    </div>
+  );
 
-      {/* ATS Modal */}
+  const rightEditorNode = (
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="px-6 pt-4 pb-2 bg-background border-b shrink-0 flex items-center justify-between">
+         <h2 className="text-xl font-bold tracking-tight">
+            {navItems.find(i => i.id === activeSection)?.label}
+         </h2>
+         <EditPreviewToggle 
+            mode={activeTab} 
+            onChange={setActiveTab} 
+         />
+      </div>
+
+      {activeTab === "edit" ? (
+        <EditorFormPanel
+          initialSections={sections}
+          resumeId={resume.resume_id}
+          activeSection={activeSection}
+          onUpdate={(newSections: any[]) => setSections(newSections)}
+        />
+      ) : (
+        <PreviewCard sections={sections} resumeInfo={resume} />
+      )}
+    </div>
+  );
+
+  return (
+    <>
+      <TwoZoneLayout 
+        header={headerNode}
+        leftNav={leftNavNode}
+        rightEditor={rightEditorNode}
+      />
+
       <ATSModal
         open={atsModalOpen}
         onOpenChange={setAtsModalOpen}
@@ -202,6 +224,6 @@ export default function FullEditor({ resume }: { resume: any }) {
         jobTitle={jobTitle}
         onFixNavigation={handleFixNavigation}
       />
-    </div>
+    </>
   );
 }
