@@ -4,6 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { adminLoginAction } from '../../../../../features/admin/actions/admin-auth-actions'
+import { Logo } from '@/components/ui/logo'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
 
 export default function AdminLoginPage() {
   const t = useTranslations('Admin.Login')
@@ -26,7 +32,6 @@ export default function AdminLoginPage() {
     try {
       const result = await adminLoginAction(email, password)
       if (result.success) {
-        // Navigate to admin dashboard with locale
         router.push(`/${locale}/${adminBasePath}/dashboard`)
         router.refresh()
       } else {
@@ -40,79 +45,74 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6 selection:bg-blue-500/30">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
-        {/* Elite Minimal Box */}
-        <div className="bg-zinc-900/40 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-10 shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t-zinc-700/30">
-          <div className="mb-10 text-center space-y-2">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600/10 border border-blue-500/20 mb-4 animate-pulse">
-              <span className="text-blue-500 text-xl font-black italic font-serif">M</span>
+        <Card>
+          <CardHeader className="items-center text-center space-y-4 pb-2">
+            <Logo size={48} />
+            <div className="space-y-1">
+              <h1 className="text-xl font-semibold text-card-foreground tracking-tight">
+                {t('title')}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Admin Console
+              </p>
             </div>
-            <h1 className="text-xl font-black text-white tracking-tighter uppercase italic italic">
-              {t('title')}
-            </h1>
-            <div className="h-0.5 w-12 bg-blue-600/50 mx-auto rounded-full" />
-          </div>
+          </CardHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="admin-email" className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">
-                {t('email')}
-              </label>
-              <input
-                id="admin-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="w-full px-4 py-3.5 bg-zinc-950/50 border border-zinc-800 rounded-xl text-sm text-zinc-100 placeholder-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all duration-300 font-medium"
-                placeholder="root@mallah.io"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="admin-password" className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">
-                {t('password')}
-              </label>
-              <input
-                id="admin-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                className="w-full px-4 py-3.5 bg-zinc-950/50 border border-zinc-800 rounded-xl text-sm text-zinc-100 placeholder-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all duration-300 font-medium"
-                placeholder="••••••••••••"
-              />
-            </div>
-
-            {error && (
-              <div className="p-3 bg-red-500/5 border border-red-500/20 rounded-lg animate-in fade-in zoom-in duration-300">
-                <p className="text-[11px] font-bold text-red-500/80 text-center uppercase tracking-wider leading-relaxed">
-                  {error}
-                </p>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="admin-email">{t('email')}</Label>
+                <Input
+                  id="admin-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  placeholder="admin@mallah.io"
+                />
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full py-4 bg-white text-zinc-950 text-xs font-black uppercase tracking-[0.2em] rounded-xl hover:bg-zinc-100 transition-all duration-300 shadow-2xl shadow-white/5 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-            >
-              <span className="relative z-10">
+              <div className="space-y-2">
+                <Label htmlFor="admin-password">{t('password')}</Label>
+                <Input
+                  id="admin-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              {error && (
+                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                  <p className="text-xs font-medium text-destructive text-center">
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full"
+              >
+                {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {loading ? t('signingIn') : t('signIn')}
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
-          </form>
+              </Button>
+            </form>
+          </CardContent>
 
-          <div className="mt-12 text-center">
-            <p className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.3em] font-mono italic">
-              Mallah Command v4.0.0
+          <CardFooter className="justify-center">
+            <p className="text-xs text-muted-foreground">
+              Mallah Admin v4.0
             </p>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   )

@@ -4,6 +4,27 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { verifySkill, rejectSkill, createSkill } from '../../actions/admin-content-actions'
 import type { AdminSkill } from '../../types'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { Loader2 } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from '@/components/ui/sheet'
 
 const CATEGORIES = ['fundamentals', 'language', 'framework_library', 'tool', 'platform_service', 'practice', 'other'] as const
 
@@ -50,14 +71,14 @@ export function SkillsTable({ initialSkills }: { initialSkills: AdminSkill[] }) 
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Filters & Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as 'all' | 'verified' | 'pending')}
-            className="px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all hover:border-zinc-700 cursor-pointer"
+            className="h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none cursor-pointer"
           >
             <option value="all">All Status</option>
             <option value="verified">{t('verified')}</option>
@@ -67,7 +88,7 @@ export function SkillsTable({ initialSkills }: { initialSkills: AdminSkill[] }) 
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold uppercase tracking-widest text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all hover:border-zinc-700 cursor-pointer"
+            className="h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none cursor-pointer"
           >
             <option value="all">All Categories</option>
             {CATEGORIES.map((c) => (
@@ -78,172 +99,139 @@ export function SkillsTable({ initialSkills }: { initialSkills: AdminSkill[] }) 
           </select>
         </div>
 
-        <button
-          onClick={() => setShowCreate(true)}
-          className="px-5 py-2.5 bg-zinc-200 text-zinc-900 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-xl shadow-white/5 active:scale-95"
-        >
+        <Button onClick={() => setShowCreate(true)}>
           + {t('add')}
-        </button>
+        </Button>
       </div>
 
-      {/* Table Content */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl relative group">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-        
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-sm">
-                <th className="text-left px-6 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{t('name')}</th>
-                <th className="text-left px-6 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{t('category')}</th>
-                <th className="text-left px-6 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{tc('status')}</th>
-                <th className="text-right px-6 py-5 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{tc('actions')}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-800/50">
-              {filtered.map((skill) => (
-                <tr key={skill.skill_id} className="hover:bg-zinc-800/40 transition-all duration-300 group/row">
-                  <td className="px-6 py-4.5">
-                    <div className="flex flex-col">
-                      <span className="text-zinc-100 font-black tracking-tight uppercase group-hover/row:text-blue-400 transition-colors">
-                        {skill.name}
-                      </span>
-                      <span className="text-[10px] text-zinc-600 font-mono italic lowercase">{skill.skill_id}</span>
+      {/* Table */}
+      <div className="border border-border rounded-lg overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('name')}</TableHead>
+              <TableHead>{t('category')}</TableHead>
+              <TableHead>{tc('status')}</TableHead>
+              <TableHead className="text-right">{tc('actions')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filtered.map((skill) => (
+              <TableRow key={skill.skill_id}>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium text-foreground">
+                      {skill.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground font-mono">{skill.skill_id}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline" className="text-xs">
+                    {t(`categories.${skill.category as any}`)}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={skill.is_verified ? 'default' : 'secondary'}
+                    className={skill.is_verified
+                      ? 'bg-success/10 text-success border-success/20'
+                      : 'bg-warning/10 text-warning border-warning/20'
+                    }
+                  >
+                    {skill.is_verified ? t('verified') : t('pending')}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  {!skill.is_verified ? (
+                    <div className="flex items-center justify-end gap-1">
+                      <Button variant="ghost" size="xs" onClick={() => handleVerify(skill.skill_id)}
+                        className="text-success hover:text-success"
+                      >
+                        {t('verify')}
+                      </Button>
+                      <Button variant="ghost" size="xs" onClick={() => handleReject(skill.skill_id)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        {t('reject')}
+                      </Button>
                     </div>
-                  </td>
-                  <td className="px-6 py-4.5">
-                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-950/30 px-2.5 py-1 rounded-md border border-zinc-800/50">
-                      {t(`categories.${skill.category as any}`)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4.5">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-1 text-[10px] font-black uppercase rounded tracking-widest border ${
-                        skill.is_verified 
-                          ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/10 shadow-[0_0_15px_rgba(52,211,153,0.05)]' 
-                          : 'bg-amber-500/5 text-amber-500/80 border-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.05)]'
-                      }`}
-                    >
-                      {skill.is_verified ? t('verified') : t('pending')}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4.5 text-right">
-                    {!skill.is_verified ? (
-                      <div className="flex items-center justify-end gap-4">
-                        <button
-                          onClick={() => handleVerify(skill.skill_id)}
-                          className="text-[10px] font-black uppercase text-emerald-500/70 hover:text-emerald-400 transition-all tracking-widest"
-                        >
-                          {t('verify')}
-                        </button>
-                        <button
-                          onClick={() => handleReject(skill.skill_id)}
-                          className="text-[10px] font-black uppercase text-red-500/60 hover:text-red-400 transition-all tracking-widest"
-                        >
-                          {t('reject')}
-                        </button>
-                      </div>
-                    ) : (
-                      <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest italic">—</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="px-6 py-20 text-center">
-                    <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">
-                      {filter === 'pending' ? 'No pending validations detected' : 'Skills vault empty'}
-                    </p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-12 text-sm text-muted-foreground">
+                  {filter === 'pending' ? t('noPending') : t('noSkills')}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Create Drawer */}
-      {showCreate && (
-        <>
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[60] transition-all duration-500" onClick={() => setShowCreate(false)} />
-          <div className="fixed inset-y-0 right-0 w-full max-w-md bg-zinc-950 border-l border-zinc-800 z-[70] overflow-y-auto shadow-[0_0_100px_rgba(0,0,0,0.8)] animate-in slide-in-from-right duration-500 ease-out">
-            <div className="p-10 space-y-10">
-              <div className="flex items-center justify-between border-b border-zinc-800/50 pb-6">
-                <div className="space-y-1">
-                  <h2 className="text-2xl font-black text-white tracking-tightest uppercase italic">
-                    {t('add')}
-                  </h2>
-                  <div className="h-1 w-12 bg-blue-600/50 rounded-full" />
-                </div>
-                <button 
-                  onClick={() => setShowCreate(false)} 
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-900 text-zinc-500 hover:text-white hover:bg-zinc-800 transition-all border border-zinc-800"
-                >
-                  ✕
-                </button>
-              </div>
+      <Sheet open={showCreate} onOpenChange={setShowCreate}>
+        <SheetContent className="overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{t('add')}</SheetTitle>
+            <SheetDescription>
+              Admin-created skills are verified by default.
+            </SheetDescription>
+          </SheetHeader>
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{t('name')}</label>
-                  <input
-                    value={newSkill.name}
-                    onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
-                    className="w-full px-5 py-4 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-100 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/40 transition-all placeholder:text-zinc-700"
-                    placeholder="e.g. Advanced TypeScript"
-                  />
-                </div>
+          <div className="space-y-5 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="skill-name">{t('name')}</Label>
+              <Input
+                id="skill-name"
+                value={newSkill.name}
+                onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
+                placeholder="e.g. Advanced TypeScript"
+              />
+            </div>
 
-                <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{t('category')}</label>
-                  <select
-                    value={newSkill.category}
-                    onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
-                    className="w-full px-5 py-4 bg-zinc-900 border border-zinc-800 rounded-xl text-sm text-zinc-300 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all hover:bg-zinc-800/50 cursor-pointer"
-                  >
-                    {CATEGORIES.map((c) => (
-                      <option key={c} value={c}>{t(`categories.${c}`)}</option>
-                    ))}
-                  </select>
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="skill-category">{t('category')}</Label>
+              <select
+                id="skill-category"
+                value={newSkill.category}
+                onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none cursor-pointer"
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{t(`categories.${c}`)}</option>
+                ))}
+              </select>
+            </div>
 
-                <div className="pt-4 space-y-4">
-                  <div className="p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
-                    <p className="text-[10px] text-zinc-600 italic leading-relaxed uppercase tracking-widest">
-                      New skills will be created in <span className="text-emerald-500 font-black">Verified</span> status by default when created via Administrative Console.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {error && (
-                <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-xl">
-                  <p className="text-xs text-red-500 font-black uppercase tracking-widest italic text-center">
-                    ⚠️ {error}
-                  </p>
-                </div>
-              )}
-
-              <div className="flex gap-4 pt-6">
-                <button
-                  onClick={handleCreateSkill}
-                  disabled={saving || !newSkill.name}
-                  className="flex-1 py-4.5 bg-zinc-100 text-zinc-950 text-xs font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white transition-all shadow-2xl shadow-white/5 active:scale-[0.98] disabled:opacity-30"
-                >
-                  {saving ? tc('saving') : tc('confirm')}
-                </button>
-                <button
-                  onClick={() => setShowCreate(false)}
-                  className="px-6 py-4.5 bg-zinc-900 text-zinc-500 text-xs font-black uppercase tracking-[0.2em] rounded-xl hover:bg-zinc-800 hover:text-zinc-200 transition-all border border-zinc-800"
-                >
-                  {tc('cancel')}
-                </button>
-              </div>
+            <div className="rounded-md border border-input bg-muted/50 p-3">
+              <p className="text-xs text-muted-foreground">
+                New skills will be created as <span className="text-success font-medium">Verified</span> by default.
+              </p>
             </div>
           </div>
-        </>
-      )}
+
+          {error && (
+            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md mb-4">
+              <p className="text-xs font-medium text-destructive text-center">{error}</p>
+            </div>
+          )}
+
+          <SheetFooter>
+            <Button variant="outline" onClick={() => setShowCreate(false)}>
+              {tc('cancel')}
+            </Button>
+            <Button onClick={handleCreateSkill} disabled={saving || !newSkill.name}>
+              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+              {saving ? tc('saving') : tc('confirm')}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

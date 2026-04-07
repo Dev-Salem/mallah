@@ -20,14 +20,14 @@ export default async function AdminProtectedLayout({
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-background text-foreground">
       <AdminSidebar
         displayName={admin.displayName}
         adminLevel={admin.adminLevel}
         adminBasePath={ADMIN_PANEL_PATH}
       />
       <main className="ml-60 min-h-screen">
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-6 max-w-7xl mx-auto">
           {children}
         </div>
       </main>
