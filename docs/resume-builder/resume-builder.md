@@ -885,7 +885,7 @@ Backend fetches `resume_sections` ordered by `sort_order`, compiles via `resume-
    - SKILLS: all `user_skills` where `source IN ('roadmap', 'project')` pre-checked
    - PROJECTS: all `user_projects` where `status = 'completed'` pre-included
    - SUMMARY, EXPERIENCE, EDUCATION, CERTIFICATIONS: empty
-3. Open editor directly — no wizard. Default active section: Summary.
+3. Open editor directly. Default active section: Summary.
 
 ### 11.4 Save
 

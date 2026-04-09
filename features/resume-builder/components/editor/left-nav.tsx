@@ -19,9 +19,9 @@ interface LeftNavProps {
 
 export function LeftNav({ items, onSelect, className }: LeftNavProps) {
   return (
-    <nav className={cn("p-4 space-y-2 w-full", className)}>
-      <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wider hidden md:block">
-        Resume Sections
+    <nav className={cn("py-6 px-3 space-y-1 w-full", className)}>
+      <h3 className="text-[10px] font-bold text-muted-foreground mb-4 uppercase tracking-[0.2em] hidden md:block px-3">
+        Sections
       </h3>
       <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
         {items.map((item) => (
@@ -31,8 +31,8 @@ export function LeftNav({ items, onSelect, className }: LeftNavProps) {
             className={cn(
               "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap",
               item.isActive
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? "bg-primary/10 text-primary shadow-sm"
+                : "text-muted-foreground/80 hover:bg-muted/80 hover:text-foreground"
             )}
           >
             {item.isComplete ? (

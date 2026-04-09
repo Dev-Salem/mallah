@@ -26,7 +26,7 @@ export function TwoZoneLayout({ leftNav, rightEditor, header, className }: TwoZo
         </div>
 
         {/* Right Editor Zone */}
-        <main className="flex-1 overflow-y-auto relative bg-muted/10">
+        <main className="flex-1 overflow-y-auto relative bg-muted/40">
           {rightEditor}
         </main>
       </div>

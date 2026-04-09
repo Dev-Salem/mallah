@@ -165,7 +165,7 @@ export default function FullEditor({ resume }: { resume: any }) {
   );
 
   const leftNavNode = (
-    <div className="flex flex-col h-full bg-background border-r">
+    <div className="flex flex-col h-full bg-background">
       <LeftNav 
         items={navItems}
         onSelect={(id) => {
@@ -212,6 +212,7 @@ export default function FullEditor({ resume }: { resume: any }) {
         header={headerNode}
         leftNav={leftNavNode}
         rightEditor={rightEditorNode}
+        className="bg-muted/50"
       />
 
       <ATSModal
