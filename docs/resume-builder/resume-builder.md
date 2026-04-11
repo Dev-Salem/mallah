@@ -44,7 +44,7 @@ The Resume Builder opens to a **Resume Cards Grid**. All resumes start as genera
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  My Resumes                                  [+ New Resume]      │
+│  My Resumes                                  [New Resume]       │
 ├──────────────────┬──────────────────┬───────────────────────────┤
 │  ┌────────────┐  │  ┌────────────┐  │  ┌──────────────────────┐ │
 │  │ [preview]  │  │  │ [preview]  │  │  │        +             │ │
@@ -70,11 +70,11 @@ The Resume Builder opens to a **Resume Cards Grid**. All resumes start as genera
 - `Job-Based` badge on the card
 - Dropdown `⋯` menu: `Edit` · `Download` · `Delete` (no Clone option on job-based resumes)
 
-**One creation button in the header:** `+ New Resume` — creates a general resume, editor opens directly. No job-based creation from the grid header.
+**One creation button in the header:** `New Resume` — creates a general resume, editor opens directly. No job-based creation from the grid header.
 
 **First-time user (no resumes yet):** the grid shows only the New Resume empty-state card with the message: "Build your resume from your Mallah profile — your skills and projects are already here."
 
-**Limit:** 3 resumes total per learner (general + job-based combined). When at the limit, `+ New Resume` and `Clone` are both disabled with `Tooltip`: "Delete a resume to create a new one."
+**Limit:** 3 resumes total per learner (general + job-based combined). When at the limit, `New Resume` and `Clone` are both disabled with `Tooltip`: "Delete a resume to create a new one."
 
 ---
 
@@ -82,7 +82,7 @@ The Resume Builder opens to a **Resume Cards Grid**. All resumes start as genera
 
 ### 5.1 New General Resume
 
-Clicking `+ New Resume` on the Cards Grid creates a general resume and opens the editor immediately — no wizard, no guided steps. The resume is pre-populated with the learner's skills, projects, and personal info from Mallah. They land on the Summary section and can edit freely.
+Clicking `New Resume` on the Cards Grid creates a general resume and opens the editor immediately — no wizard, no guided steps. The resume is pre-populated with the learner's skills, projects, and personal info from Mallah. They land on the Summary section and can edit freely.
 
 ### 5.2 Clone
 
