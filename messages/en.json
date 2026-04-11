@@ -951,7 +951,7 @@
       "pace": "Pace: {velocity}"
     },
     "Placeholders": {
-      "min8Chars": "Minimum 8 characters",
+      "passwordMin": "Minimum 8 characters",
       "select": "Select...",
       "typeEmail": "Type your email to confirm"
     },
@@ -963,7 +963,12 @@
       "verificationSent": "Verification email sent.",
       "passwordSuccess": "Password updated successfully.",
       "onboardingResetDesc": "Clears your path, goals, and preferences. Progress and portfolio data are preserved.",
-      "deleteAccountDesc": "Permanently deletes your account, progress, and all data. This cannot be undone."
+      "deleteAccountDesc": "Permanently deletes your account, progress, and all data. This cannot be undone.",
+      "confirmResetTitle": "Reset Progress",
+      "confirmResetDesc": "Are you sure? This will reset your profile and learning path. Your projects and history will not be deleted.",
+      "confirmDeleteTitle": "Delete Account",
+      "confirmDeleteDesc": "DANGER: This action is permanent. All your data and progress will be purged immediately.",
+      "confirmEmailLabel": "Type your email to confirm account deletion"
     },
     "Actions": {
       "saveChanges": "Save Changes",
@@ -974,6 +979,8 @@
       "deleteAccount": "Delete Account",
       "confirmReset": "Confirm Reset",
       "confirmDelete": "Delete My Account",
+      "confirmResetAction": "Reset Progress",
+      "confirmDeleteAction": "Delete Account",
       "cancel": "Cancel",
       "signOutDesc": "Sign out of your account on this device."
     },
@@ -992,6 +999,10 @@
       "short": "Short",
       "balanced": "Balanced",
       "detailed": "Detailed",
+      "0-3": "0-3 hours/week",
+      "4-7": "4-7 hours/week",
+      "8-12": "8-12 hours/week",
+      "13+": "13+ hours/week",
       "slow": "slow",
       "normal": "normal",
       "fast": "fast"
@@ -1030,7 +1041,15 @@
     },
     "DangerZone": {
       "title": "Account Management",
-      "subtitle": "Reset progress or permanently delete your account."
+      "subtitle": "Reset progress or permanently delete your account.",
+      "ResetOnboarding": {
+        "title": "Reset Onboarding",
+        "subtitle": "Restart your career path selection and goal setting."
+      },
+      "DeleteAccount": {
+        "title": "Delete Account",
+        "subtitle": "Permanently wipe all your credentials and platform data."
+      }
     },
     "LanguageToggle": {
       "english": "English",

@@ -10,7 +10,11 @@ import { changePasswordAction } from '../actions/settings-actions';
 export function SecuritySection() {
     const locale = useLocale();
     const isArabic = locale === 'ar';
-    const t = useTranslations('Settings.Security');
+    const t = useTranslations('Settings');
+    const tl = useTranslations('Settings.Labels');
+    const tm = useTranslations('Settings.Messages');
+    const ta = useTranslations('Settings.Actions');
+    const tp = useTranslations('Settings.Placeholders');
 
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,7 +34,7 @@ export function SecuritySection() {
             setConfirmPassword('');
             setTimeout(() => setSuccess(false), 3000);
         } else {
-            setError(result.error || 'Failed to update password');
+            setError(result.error || tm('saveError'));
         }
     };
 
@@ -39,13 +43,13 @@ export function SecuritySection() {
             <div className="flex items-center gap-3 mb-6">
                 <Shield className="w-4 h-4 text-primary" />
                 <h2 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-[0.15em]")}>
-                    {t('title')}
+                    {t('Security.title')}
                 </h2>
             </div>
 
             {success && (
                 <div className="flex items-center gap-2 text-green-500 text-xs font-mono mb-4">
-                    <CheckCircle className="w-3 h-3" /> Password updated successfully.
+                    <CheckCircle className="w-3 h-3" /> {tm('passwordSuccess')}
                 </div>
             )}
             {error && (
@@ -57,17 +61,17 @@ export function SecuritySection() {
             <div className="max-w-sm space-y-4">
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        New Password
+                        {tl('newPassword')}
                     </label>
                     <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)}
-                        placeholder="Minimum 8 characters"
+                        placeholder={tp('passwordMin')}
                         className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors placeholder:text-muted-foreground/30"
                     />
                 </div>
 
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Confirm Password
+                        {tl('confirmPassword')}
                     </label>
                     <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
                         className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
@@ -80,7 +84,7 @@ export function SecuritySection() {
                     className={cn("h-9 px-6 rounded-none uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.15em]")}
                 >
                     {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                    Change Password
+                    {ta('changePassword')}
                 </Button>
             </div>
         </div>

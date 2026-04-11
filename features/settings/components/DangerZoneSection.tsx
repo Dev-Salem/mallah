@@ -15,7 +15,11 @@ interface DangerZoneSectionProps {
 export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
-    const t = useTranslations('Settings.DangerZone');
+    const t = useTranslations('Settings');
+    const ta = useTranslations('Settings.Actions');
+    const tm = useTranslations('Settings.Messages');
+    const tp = useTranslations('Settings.Placeholders');
+    const td = useTranslations('Settings.DangerZone');
     const router = useRouter();
 
     // Reset Onboarding state
@@ -45,7 +49,7 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
         if (result.success) {
             router.push(`/${locale}/login`);
         } else {
-            setDeleteError(result.error || 'Failed to delete account');
+            setDeleteError(result.error || tm('saveError'));
         }
     };
 
@@ -54,7 +58,7 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
             <div className="flex items-center gap-3 mb-6">
                 <AlertTriangle className="w-4 h-4 text-destructive" />
                 <h2 className={cn("text-sm font-bold text-destructive uppercase", !isArabic && "tracking-[0.15em]")}>
-                    {t('title')}
+                    {td('title')}
                 </h2>
             </div>
 
@@ -63,16 +67,16 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-destructive/10">
                     <div>
                         <h3 className={cn("text-xs font-bold text-foreground uppercase mb-1", !isArabic && "tracking-wide")}>
-                            Reset Onboarding
+                            {td('ResetOnboarding.title')}
                         </h3>
                         <p className="text-[10px] text-muted-foreground/60 leading-relaxed max-w-md">
-                            Clears your path, goals, and preferences. Progress and portfolio data are preserved.
+                            {td('ResetOnboarding.subtitle')}
                         </p>
                     </div>
                     <Button variant="outline" onClick={() => setShowResetDialog(true)}
                         className={cn("h-9 px-5 rounded-none border-destructive/20 text-destructive hover:bg-destructive/10 hover:border-destructive/30 uppercase font-mono text-[10px] gap-2 shrink-0", !isArabic && "tracking-[0.1em]")}
                     >
-                        <RotateCcw className="w-3 h-3" /> Reset Onboarding
+                        <RotateCcw className="w-3 h-3" /> {ta('resetOnboarding')}
                     </Button>
                 </div>
 
@@ -80,16 +84,16 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h3 className={cn("text-xs font-bold text-foreground uppercase mb-1", !isArabic && "tracking-wide")}>
-                            Delete Account
+                            {td('DeleteAccount.title')}
                         </h3>
                         <p className="text-[10px] text-muted-foreground/60 leading-relaxed max-w-md">
-                            Permanently deletes your account, progress, and all data. This cannot be undone.
+                            {td('DeleteAccount.subtitle')}
                         </p>
                     </div>
                     <Button variant="outline" onClick={() => setShowDeleteDialog(true)}
                         className={cn("h-9 px-5 rounded-none border-destructive/20 text-destructive hover:bg-destructive/10 hover:border-destructive/30 uppercase font-mono text-[10px] gap-2 shrink-0", !isArabic && "tracking-[0.1em]")}
                     >
-                        <Trash2 className="w-3 h-3" /> Delete Account
+                        <Trash2 className="w-3 h-3" /> {ta('deleteAccount')}
                     </Button>
                 </div>
             </div>
@@ -101,23 +105,23 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                         <div className="flex items-center gap-2 mb-4">
                             <AlertTriangle className="w-5 h-5 text-amber-500" />
                             <h3 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-wide")}>
-                                Reset Onboarding?
+                                {tm('confirmResetTitle')}
                             </h3>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed mb-6">
-                            This will reset your path selection, goals, and preferences. Your progress, projects, and portfolio are not deleted — but your roadmap will be re-scaffolded once you complete onboarding again. This cannot be undone.
+                            {tm('confirmResetDesc')}
                         </p>
                         <div className="flex gap-3 justify-end">
                             <Button variant="outline" onClick={() => setShowResetDialog(false)}
                                 className={cn("h-9 px-5 rounded-none border-border uppercase font-mono text-[10px]", !isArabic && "tracking-[0.1em]")}
                             >
-                                Cancel
+                                {ta('cancel')}
                             </Button>
                             <Button onClick={handleResetOnboarding} disabled={resetting}
                                 className={cn("h-9 px-5 rounded-none bg-warning text-warning-foreground hover:bg-warning/90 uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.1em]")}
                             >
                                 {resetting ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                                Confirm Reset
+                                {ta('confirmResetAction')}
                             </Button>
                         </div>
                     </div>
@@ -131,15 +135,15 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                         <div className="flex items-center gap-2 mb-4">
                             <Trash2 className="w-5 h-5 text-red-400" />
                             <h3 className={cn("text-sm font-bold text-red-400 uppercase", !isArabic && "tracking-wide")}>
-                                Delete Account?
+                                {tm('confirmDeleteTitle')}
                             </h3>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed mb-4">
-                            This will permanently delete your account, progress, and all data. This cannot be undone.
+                            {tm('confirmDeleteDesc')}
                         </p>
                         <div className="mb-6">
                             <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                                Type your email to confirm
+                                {tm('confirmEmailLabel')}
                             </label>
                             <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
                                 placeholder={userEmail}
@@ -153,14 +157,14 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                             <Button variant="outline" onClick={() => { setShowDeleteDialog(false); setConfirmEmail(''); setDeleteError(''); }}
                                 className={cn("h-9 px-5 rounded-none border-border uppercase font-mono text-[10px]", !isArabic && "tracking-[0.1em]")}
                             >
-                                Cancel
+                                {ta('cancel')}
                             </Button>
                             <Button onClick={handleDeleteAccount}
                                 disabled={deleting || confirmEmail !== userEmail}
                                 className={cn("h-9 px-5 rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 uppercase font-mono text-[10px] gap-2 disabled:opacity-30", !isArabic && "tracking-[0.1em]")}
                             >
                                 {deleting ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                                Delete My Account
+                                {ta('confirmDeleteAction')}
                             </Button>
                         </div>
                     </div>

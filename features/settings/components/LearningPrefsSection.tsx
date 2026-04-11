@@ -16,7 +16,12 @@ interface LearningPrefsSectionProps {
 export function LearningPrefsSection({ currentCategory, currentVelocity }: LearningPrefsSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
-    const t = useTranslations('Settings.LearningPrefs');
+    const t = useTranslations('Settings');
+    const tl = useTranslations('Settings.Labels');
+    const tm = useTranslations('Settings.Messages');
+    const ta = useTranslations('Settings.Actions');
+    const to = useTranslations('Settings.Options');
+    const tp = useTranslations('Settings.Placeholders');
 
     const [category, setCategory] = useState(currentCategory || '');
     const [velocity, setVelocity] = useState(currentVelocity || '');
@@ -36,7 +41,7 @@ export function LearningPrefsSection({ currentCategory, currentVelocity }: Learn
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
         } else {
-            setError(result.error || 'Failed to save');
+            setError(result.error || tm('saveError'));
         }
     };
 
@@ -45,13 +50,13 @@ export function LearningPrefsSection({ currentCategory, currentVelocity }: Learn
             <div className="flex items-center gap-3 mb-6">
                 <Clock className="w-4 h-4 text-primary" />
                 <h2 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-[0.15em]")}>
-                    {t('title')}
+                    {t('LearningPrefs.title')}
                 </h2>
             </div>
 
             {success && (
                 <div className="flex items-center gap-2 text-green-500 text-xs font-mono mb-4">
-                    <CheckCircle className="w-3 h-3" /> Saved successfully.
+                    <CheckCircle className="w-3 h-3" /> {tm('saveSuccess')}
                 </div>
             )}
             {error && (
@@ -62,20 +67,20 @@ export function LearningPrefsSection({ currentCategory, currentVelocity }: Learn
 
             <div className="max-w-sm">
                 <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                    Weekly Study Time
+                    {tl('weeklyStudyTime')}
                 </label>
                 <select value={category} onChange={e => setCategory(e.target.value)}
                     className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                 >
-                    <option value="">Select...</option>
+                    <option value="">{tp('select')}</option>
                     {HOURS_OPTIONS.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                     ))}
                 </select>
 
                 {velocity && (
                     <p className={cn("text-[9px] font-mono text-primary/60 mt-2 uppercase", !isArabic && "tracking-widest")}>
-                        Pace: {velocity}
+                        {tl('pace', { velocity: to(velocity as any) })}
                     </p>
                 )}
             </div>
@@ -85,7 +90,7 @@ export function LearningPrefsSection({ currentCategory, currentVelocity }: Learn
                     className={cn("h-9 px-6 rounded-none uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.15em]")}
                 >
                     {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                    Save Changes
+                    {ta('saveChanges')}
                 </Button>
             </div>
         </div>

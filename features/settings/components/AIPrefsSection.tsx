@@ -16,7 +16,12 @@ interface AIPrefsSectionProps {
 export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
-    const t = useTranslations('Settings.AIPrefs');
+    const t = useTranslations('Settings');
+    const tl = useTranslations('Settings.Labels');
+    const tm = useTranslations('Settings.Messages');
+    const ta = useTranslations('Settings.Actions');
+    const to = useTranslations('Settings.Options');
+    const tp = useTranslations('Settings.Placeholders');
 
     const [lang, setLang] = useState(currentLang || '');
     const [detail, setDetail] = useState(currentDetail || '');
@@ -44,13 +49,13 @@ export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionPro
             <div className="flex items-center gap-3 mb-6">
                 <Bot className="w-4 h-4 text-primary" />
                 <h2 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-[0.15em]")}>
-                    {t('title')}
+                    {t('AIPrefs.title')}
                 </h2>
             </div>
 
             {success && (
                 <div className="flex items-center gap-2 text-green-500 text-xs font-mono mb-4">
-                    <CheckCircle className="w-3 h-3" /> Saved successfully.
+                    <CheckCircle className="w-3 h-3" /> {tm('saveSuccess')}
                 </div>
             )}
             {error && (
@@ -62,28 +67,28 @@ export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionPro
             <div className="grid md:grid-cols-2 gap-6 max-w-lg">
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        AI Language
+                        {tl('aiLanguage')}
                     </label>
                     <select value={lang} onChange={e => setLang(e.target.value)}
                         className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {AI_LANG_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
 
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Response Detail
+                        {tl('aiDetail')}
                     </label>
                     <select value={detail} onChange={e => setDetail(e.target.value)}
                         className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {AI_DETAIL_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
@@ -94,7 +99,7 @@ export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionPro
                     className={cn("h-9 px-6 rounded-none uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.15em]")}
                 >
                     {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                    Save Changes
+                    {ta('saveChanges')}
                 </Button>
             </div>
         </div>

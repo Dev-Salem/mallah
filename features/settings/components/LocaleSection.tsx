@@ -11,7 +11,8 @@ export function LocaleSection() {
     const pathname = usePathname();
     const router = useRouter();
     const isArabic = locale === 'ar';
-    const t = useTranslations('Settings.Language');
+    const t = useTranslations('Settings');
+    const tl = useTranslations('Settings.Language');
     const lt = useTranslations('Settings.LanguageToggle');
 
     const handleLocaleChange = (newLocale: 'en' | 'ar') => {
@@ -27,7 +28,7 @@ export function LocaleSection() {
                     "text-sm font-bold text-foreground uppercase",
                     !isArabic && "tracking-[0.15em]"
                 )}>
-                    {t('title')}
+                    {tl('title')}
                 </h2>
             </div>
 
@@ -70,7 +71,7 @@ export function LocaleSection() {
             </div>
 
             <p className="text-[10px] text-muted-foreground mt-4 leading-relaxed font-mono">
-                {t('subtitle')}
+                {tl('subtitle')}
             </p>
         </div>
     );
