@@ -185,12 +185,7 @@
       "AIMicroCoach": {
         "label": "المساعد الذكي"
       },
-      "MarketIntel": {
-        "label": "ذكاء السوق",
-        "targetRoles": "أدوار متطابقة",
-        "matchScore": "مطابق بنسبة {score}%",
-        "viewAll": "تقييم جميع الفرص"
-      },
+
       "RecentActivity": {
         "label": "النشاط الأخير",
         "topicCompleted": "مكتمل: {title}",

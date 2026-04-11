@@ -185,12 +185,7 @@
       "AIMicroCoach": {
         "label": "AI Coach"
       },
-      "MarketIntel": {
-        "label": "Market Intelligence",
-        "targetRoles": "Matching Roles",
-        "matchScore": "{score}% Match",
-        "viewAll": "Evaluate All Opportunities"
-      },
+
       "RecentActivity": {
         "label": "Recent Activity",
         "topicCompleted": "Completed: {title}",
