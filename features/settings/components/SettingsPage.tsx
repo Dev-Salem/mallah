@@ -4,8 +4,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type { ProfileData } from '../types';
 import { ProfileSection } from './ProfileSection';
-import { LearningPrefsSection } from './LearningPrefsSection';
-import { AIPrefsSection } from './AIPrefsSection';
 import { SecuritySection } from './SecuritySection';
 import { LogoutSection } from './LogoutSection';
 import { DangerZoneSection } from './DangerZoneSection';
@@ -42,15 +40,8 @@ export function SettingsPage({ profile }: SettingsPageProps) {
             <div className="space-y-6 mb-20">
                 <ProfileSection profile={profile} />
                 <LocaleSection />
-                <LearningPrefsSection
-                    currentCategory={profile.learner.weekly_hours_category}
-                    currentVelocity={profile.learner.learning_velocity}
-                />
-                <AIPrefsSection
-                    currentLang={profile.learner.ai_language_pref}
-                    currentDetail={profile.learner.ai_detail_level}
-                />
                 <SecuritySection />
+
                 <LogoutSection />
                 <DangerZoneSection userEmail={profile.user.email} />
             </div>
