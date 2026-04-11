@@ -1015,7 +1015,18 @@
     },
     "Profile": {
       "title": "Personal Profile",
-      "subtitle": "Update your personal details and contact information."
+      "subtitle": "Update your personal details and contact information.",
+      "Groups": {
+        "Identity": {
+          "title": "Identity"
+        },
+        "Background": {
+          "title": "Background & Goals"
+        },
+        "LearningAI": {
+          "title": "Learning & AI"
+        }
+      }
     },
     "AIPrefs": {
       "title": "AI Configuration",
