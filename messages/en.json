@@ -185,12 +185,11 @@
       "AIMicroCoach": {
         "label": "AI Coach"
       },
-      "QuickNav": {
-        "label": "Quick Navigation",
-        "viewRoadmap": "View Full Roadmap",
-        "portfolioHub": "Portfolio Hub",
-        "resumeBuilder": "Resume Builder",
-        "analyzeJob": "Opportunity Analyzer"
+      "MarketIntel": {
+        "label": "Market Intelligence",
+        "targetRoles": "Matching Roles",
+        "matchScore": "{score}% Match",
+        "viewAll": "Evaluate All Opportunities"
       },
       "RecentActivity": {
         "label": "Recent Activity",

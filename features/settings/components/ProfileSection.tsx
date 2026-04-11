@@ -98,6 +98,132 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                     <div className="flex items-center gap-2 text-red-400 text-xs font-mono">
                         <AlertCircle className="w-3 h-3" /> {error}
                     </div>
+                )}
+            </div>
+
+            {/* Sub-group 1: Identity */}
+            <section className="space-y-6">
+                <div className="flex items-center gap-2 pb-2 border-b border-border/50">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {t('Profile.Groups.Identity.title')}
+                    </span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                    {/* First Name */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                            {tl('firstName')}
+                        </label>
+                        <input value={firstName} onChange={e => setFirstName(e.target.value)}
+                            className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
+                        />
+                    </div>
+
+                    {/* Last Name */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                            {tl('lastName')}
+                        </label>
+                        <input value={lastName} onChange={e => setLastName(e.target.value)}
+                            className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
+                        />
+                    </div>
+
+                    {/* Email (read-only) */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                            {tl('email')}
+                        </label>
+                        <div className="flex items-center gap-2">
+                            <input value={profile.user.email} disabled
+                                className="flex-1 h-10 px-3 bg-muted/30 border border-border text-muted-foreground text-sm font-mono cursor-not-allowed"
+                            />
+                            {profile.user.email_verified ? (
+                                <span className="flex items-center gap-1 text-[9px] font-mono text-green-500 uppercase shrink-0">
+                                    <CheckCircle className="w-3 h-3" /> {tl('verified')}
+                                </span>
+                            ) : (
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <span className="flex items-center gap-1 text-[9px] font-mono text-amber-500 uppercase">
+                                        <AlertCircle className="w-3 h-3" /> {tl('unverified')}
+                                    </span>
+                                    <button onClick={handleResend} disabled={resending || resendCooldown}
+                                        className="text-[9px] font-mono text-primary underline hover:text-primary/80 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+                                    >
+                                        {resending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                                        {ta('resend')}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        {resendMsg && <p className="text-[9px] font-mono text-primary/60 mt-1">{resendMsg}</p>}
+                        <p className="text-[9px] font-mono text-muted-foreground/40 mt-1">{tm('emailChangeSupport')}</p>
+                    </div>
+
+                    {/* Current Path (read-only) */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                            {tl('currentPath')}
+                        </label>
+                        <input value={tpaths(profile.learner.current_path_id || 'frontend')} disabled
+                            className="w-full h-10 px-3 bg-muted/30 border border-border text-muted-foreground text-sm font-mono cursor-not-allowed"
+                        />
+                        <p className="text-[9px] font-mono text-muted-foreground/40 mt-1">{tm('pathChangeSupport')}</p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Sub-group 2: Background & Goals */}
+            <section className="space-y-6">
+                <div className="flex items-center gap-2 pb-2 border-b border-border/50">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {t('Profile.Groups.Background.title')}
+                    </span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                    {/* Background Type */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                            {tl('background')}
+                        </label>
+                        <select value={backgroundType} onChange={e => setBackgroundType(e.target.value)}
+                            className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        >
+                            <option value="">{tp('select')}</option>
+                            {BACKGROUND_OPTIONS.map(opt => (
+                                <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Primary Goal */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
+                            {tl('primaryGoal')}
+                        </label>
+                        <select value={primaryGoal} onChange={e => setPrimaryGoal(e.target.value)}
+                            className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        >
+                            <option value="">{tp('select')}</option>
+                            {GOAL_OPTIONS.map(opt => (
+                                <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            {/* Sub-group 3: Learning & AI */}
+            <section className="space-y-6">
+                <div className="flex items-center gap-2 pb-2 border-b border-border/50">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {t('Profile.Groups.LearningAI.title')}
+                    </span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                    {/* Weekly Hours */}
+                    <div>
+                        <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
                             {tl('weeklyCommitment')}
                         </label>
                         <select value={weeklyHours} onChange={e => setWeeklyHours(e.target.value)}

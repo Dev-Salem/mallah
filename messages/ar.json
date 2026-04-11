@@ -185,12 +185,11 @@
       "AIMicroCoach": {
         "label": "المساعد الذكي"
       },
-      "QuickNav": {
-        "label": "تنقل سريع",
-        "viewRoadmap": "عرض الخارطة كاملة",
-        "portfolioHub": "مركز الأعمال",
-        "resumeBuilder": "بناء السيرة",
-        "analyzeJob": "محلل الفرص"
+      "MarketIntel": {
+        "label": "ذكاء السوق",
+        "targetRoles": "أدوار متطابقة",
+        "matchScore": "مطابق بنسبة {score}%",
+        "viewAll": "تقييم جميع الفرص"
       },
       "RecentActivity": {
         "label": "النشاط الأخير",

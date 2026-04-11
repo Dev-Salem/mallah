@@ -8,7 +8,7 @@ import { AIMicroCoach } from './AIMicroCoach';
 import { ReadinessTiles } from './ReadinessTiles';
 import { PaceMomentumStrip } from './PaceMomentumStrip';
 import { ProgressZone } from './ProgressZone';
-import { QuickNav } from './QuickNav';
+import { MarketIntelWidget } from './MarketIntelWidget';
 import { RecentActivity } from './RecentActivity';
 import type { RecentActivityItem } from '../types';
 
@@ -72,13 +72,9 @@ export function DashboardView({ summary, recentActivity }: DashboardViewProps) {
                     {/* Tactical Coaching */}
                     <AIMicroCoach tip={summary.ai_tip} />
 
-                    {/* Quick Access */}
-                    <div className="space-y-4">
-                         <div className="flex items-center gap-2 px-1 text-muted-foreground/60 uppercase text-[9px] font-mono font-bold tracking-widest">
-                            // Tactical Routing //
-                        </div>
-                        <QuickNav readiness={summary.readiness} />
-                    </div>
+                    {/* Quick Access Replacement - Market Intelligence */}
+                    <MarketIntelWidget summary={summary} />
+
 
                     {/* Pace Momentum */}
                     {!isFirstSession && (
