@@ -1028,6 +1028,14 @@
         }
       }
     },
+    "Appearance": {
+      "title": "Appearance",
+      "subtitle": "Customize how the application looks on your screen.",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
     "AIPrefs": {
       "title": "AI Configuration",
       "subtitle": "Customize how the AI assistant interacts with you."

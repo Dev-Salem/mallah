@@ -8,6 +8,7 @@ import { SecuritySection } from './SecuritySection';
 import { LogoutSection } from './LogoutSection';
 import { DangerZoneSection } from './DangerZoneSection';
 import { LocaleSection } from './LocaleSection';
+import { AppearanceSection } from './AppearanceSection';
 
 interface SettingsPageProps {
     profile: ProfileData;
@@ -40,6 +41,7 @@ export function SettingsPage({ profile }: SettingsPageProps) {
             <div className="space-y-6 mb-20">
                 <ProfileSection profile={profile} />
                 <LocaleSection />
+                <AppearanceSection />
                 <SecuritySection />
 
                 <LogoutSection />
