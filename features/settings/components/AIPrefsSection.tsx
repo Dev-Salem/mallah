@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Bot, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ interface AIPrefsSectionProps {
 export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Settings.AIPrefs');
 
     const [lang, setLang] = useState(currentLang || '');
     const [detail, setDetail] = useState(currentDetail || '');
@@ -34,16 +35,16 @@ export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionPro
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
         } else {
-            setError(result.error || 'Failed to save');
+            setError(result.error || tm('saveError'));
         }
     };
 
     return (
-        <div className="border border-white/10 bg-white/[0.02] p-6 lg:p-8">
+        <div className="border border-border bg-card p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-6">
                 <Bot className="w-4 h-4 text-primary" />
-                <h2 className={cn("text-sm font-bold text-white uppercase", !isArabic && "tracking-[0.15em]")}>
-                    AI Assistant Preferences
+                <h2 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-[0.15em]")}>
+                    {t('title')}
                 </h2>
             </div>
 
@@ -64,7 +65,7 @@ export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionPro
                         AI Language
                     </label>
                     <select value={lang} onChange={e => setLang(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
                         <option value="">Select...</option>
                         {AI_LANG_OPTIONS.map(opt => (
@@ -78,7 +79,7 @@ export function AIPrefsSection({ currentLang, currentDetail }: AIPrefsSectionPro
                         Response Detail
                     </label>
                     <select value={detail} onChange={e => setDetail(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
                         <option value="">Select...</option>
                         {AI_DETAIL_OPTIONS.map(opt => (

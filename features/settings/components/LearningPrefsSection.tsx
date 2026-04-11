@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Clock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ interface LearningPrefsSectionProps {
 export function LearningPrefsSection({ currentCategory, currentVelocity }: LearningPrefsSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Settings.LearningPrefs');
 
     const [category, setCategory] = useState(currentCategory || '');
     const [velocity, setVelocity] = useState(currentVelocity || '');
@@ -40,11 +41,11 @@ export function LearningPrefsSection({ currentCategory, currentVelocity }: Learn
     };
 
     return (
-        <div className="border border-white/10 bg-white/[0.02] p-6 lg:p-8">
+        <div className="border border-border bg-card p-6 lg:p-8">
             <div className="flex items-center gap-3 mb-6">
                 <Clock className="w-4 h-4 text-primary" />
-                <h2 className={cn("text-sm font-bold text-white uppercase", !isArabic && "tracking-[0.15em]")}>
-                    Learning Preferences
+                <h2 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-[0.15em]")}>
+                    {t('title')}
                 </h2>
             </div>
 
@@ -64,7 +65,7 @@ export function LearningPrefsSection({ currentCategory, currentVelocity }: Learn
                     Weekly Study Time
                 </label>
                 <select value={category} onChange={e => setCategory(e.target.value)}
-                    className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                    className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                 >
                     <option value="">Select...</option>
                     {HOURS_OPTIONS.map(opt => (

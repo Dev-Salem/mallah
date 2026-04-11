@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { User, CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,13 @@ interface ProfileSectionProps {
 export function ProfileSection({ profile }: ProfileSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Settings');
+    const tl = useTranslations('Settings.Labels');
+    const tm = useTranslations('Settings.Messages');
+    const ta = useTranslations('Settings.Actions');
+    const to = useTranslations('Settings.Options');
+    const tp = useTranslations('Settings.Placeholders');
+    const tpaths = useTranslations('Settings.Paths');
 
     const [firstName, setFirstName] = useState(profile.learner.first_name);
     const [lastName, setLastName] = useState(profile.learner.last_name);
@@ -49,7 +56,7 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
         } else {
-            setError(result.error || 'Failed to save');
+            setError(result.error || tm('saveError'));
         }
     };
 
@@ -59,31 +66,31 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
         const result = await resendVerificationAction();
         setResending(false);
         if (result.success) {
-            setResendMsg('Verification email sent.');
+            setResendMsg(tm('verificationSent'));
             setResendCooldown(true);
             setTimeout(() => setResendCooldown(false), 60000);
         } else {
-            setResendMsg(result.error || 'Failed to send');
+            setResendMsg(result.error || tm('saveError'));
         }
     };
 
     return (
-        <div className="border border-white/10 bg-white/[0.02] p-6 lg:p-8">
+        <div className="border border-border bg-card p-6 lg:p-8">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
                 <User className="w-4 h-4 text-primary" />
                 <h2 className={cn(
-                    "text-sm font-bold text-white uppercase",
+                    "text-sm font-bold text-foreground uppercase",
                     !isArabic && "tracking-[0.15em]"
                 )}>
-                    Profile
+                    {t('Profile.title')}
                 </h2>
             </div>
 
             {/* Success/Error */}
             {success && (
                 <div className="flex items-center gap-2 text-green-500 text-xs font-mono mb-4">
-                    <CheckCircle className="w-3 h-3" /> Saved successfully.
+                    <CheckCircle className="w-3 h-3" /> {tm('saveSuccess')}
                 </div>
             )}
             {error && (
@@ -96,76 +103,76 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                 {/* First Name */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        First Name
+                        {tl('firstName')}
                     </label>
                     <input value={firstName} onChange={e => setFirstName(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
                     />
                 </div>
 
                 {/* Last Name */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Last Name
+                        {tl('lastName')}
                     </label>
                     <input value={lastName} onChange={e => setLastName(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
                     />
                 </div>
 
                 {/* Email (read-only) */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Email
+                        {tl('email')}
                     </label>
                     <div className="flex items-center gap-2">
                         <input value={profile.user.email} disabled
-                            className="flex-1 h-10 px-3 bg-black/30 border border-white/5 text-muted-foreground text-sm font-mono cursor-not-allowed"
+                            className="flex-1 h-10 px-3 bg-muted/30 border border-border text-muted-foreground text-sm font-mono cursor-not-allowed"
                         />
                         {profile.user.email_verified ? (
                             <span className="flex items-center gap-1 text-[9px] font-mono text-green-500 uppercase shrink-0">
-                                <CheckCircle className="w-3 h-3" /> Verified
+                                <CheckCircle className="w-3 h-3" /> {tl('verified')}
                             </span>
                         ) : (
                             <div className="flex items-center gap-2 shrink-0">
                                 <span className="flex items-center gap-1 text-[9px] font-mono text-amber-500 uppercase">
-                                    <AlertCircle className="w-3 h-3" /> Unverified
+                                    <AlertCircle className="w-3 h-3" /> {tl('unverified')}
                                 </span>
                                 <button onClick={handleResend} disabled={resending || resendCooldown}
                                     className="text-[9px] font-mono text-primary underline hover:text-primary/80 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
                                 >
                                     {resending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                                    Resend
+                                    {ta('resend')}
                                 </button>
                             </div>
                         )}
                     </div>
                     {resendMsg && <p className="text-[9px] font-mono text-primary/60 mt-1">{resendMsg}</p>}
-                    <p className="text-[9px] font-mono text-muted-foreground/40 mt-1">Contact support to change your email.</p>
+                    <p className="text-[9px] font-mono text-muted-foreground/40 mt-1">{tm('emailChangeSupport')}</p>
                 </div>
 
                 {/* Current Path (read-only) */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Current Path
+                        {tl('currentPath')}
                     </label>
-                    <input value={profile.learner.current_path_display_name} disabled
-                        className="w-full h-10 px-3 bg-black/30 border border-white/5 text-muted-foreground text-sm font-mono cursor-not-allowed"
+                    <input value={tpaths(profile.learner.current_path_id || 'frontend')} disabled
+                        className="w-full h-10 px-3 bg-muted/30 border border-border text-muted-foreground text-sm font-mono cursor-not-allowed"
                     />
-                    <p className="text-[9px] font-mono text-muted-foreground/40 mt-1">Want to change your path? Contact support.</p>
+                    <p className="text-[9px] font-mono text-muted-foreground/40 mt-1">{tm('pathChangeSupport')}</p>
                 </div>
 
                 {/* Background Type */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Background
+                        {tl('background')}
                     </label>
                     <select value={backgroundType} onChange={e => setBackgroundType(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {BACKGROUND_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
@@ -173,14 +180,14 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                 {/* Primary Goal */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Primary Goal
+                        {tl('primaryGoal')}
                     </label>
                     <select value={primaryGoal} onChange={e => setPrimaryGoal(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {GOAL_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
@@ -188,14 +195,14 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                 {/* Weekly Hours */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        Weekly Commitment
+                        {tl('weeklyCommitment')}
                     </label>
                     <select value={weeklyHours} onChange={e => setWeeklyHours(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {HOURS_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
@@ -203,14 +210,14 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                 {/* AI Language */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        AI Language Preference
+                        {tl('aiLanguage')}
                     </label>
                     <select value={aiLanguage} onChange={e => setAiLanguage(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {AI_LANG_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
@@ -218,14 +225,14 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                 {/* AI Detail */}
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
-                        AI Explanation Detail
+                        {tl('aiDetail')}
                     </label>
                     <select value={aiDetail} onChange={e => setAiDetail(e.target.value)}
-                        className="w-full h-10 px-3 bg-black/50 border border-white/10 text-white text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
+                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none appearance-none cursor-pointer"
                     >
-                        <option value="">Select...</option>
+                        <option value="">{tp('select')}</option>
                         {AI_DETAIL_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{to(opt.value)}</option>
                         ))}
                     </select>
                 </div>
@@ -237,7 +244,7 @@ export function ProfileSection({ profile }: ProfileSectionProps) {
                     className={cn("h-9 px-6 rounded-none uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.15em]")}
                 >
                     {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                    Save Changes
+                    {ta('saveChanges')}
                 </Button>
             </div>
         </div>

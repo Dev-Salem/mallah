@@ -277,6 +277,7 @@
   white-space: nowrap;
   margin-bottom: -1px; /* Align with TabsList border */
   overflow: hidden;
+  cursor: pointer;
 }
 
 .tactical-tab-trigger[data-state="active"] {
@@ -284,9 +285,37 @@
   border-bottom-color: oklch(var(--primary));
   opacity: 1;
   background: linear-gradient(to bottom, transparent, oklch(var(--primary) / 0.05)) !important;
+  text-shadow: 0 0 8px oklch(var(--primary) / 0.4);
 }
 
-/* Light/Glow effect on hover */
+/* Sweep Beam Effect */
+.tactical-tab-trigger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    oklch(var(--primary) / 0.2),
+    transparent
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+.tactical-tab-trigger[data-state="active"]::before {
+  animation: tabSweep 0.8s ease-out forwards;
+}
+
+@keyframes tabSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* Deep Glow Radial */
 .tactical-tab-trigger::after {
   content: '';
   position: absolute;
@@ -294,15 +323,15 @@
   left: 50%;
   width: 0;
   height: 100%;
-  background: radial-gradient(circle at bottom, oklch(var(--primary) / 0.15), transparent 70%);
+  background: radial-gradient(circle at bottom, oklch(var(--primary) / 0.25), transparent 70%);
   transform: translateX(-50%);
-  transition: width 0.3s ease;
+  transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   pointer-events: none;
 }
 
 .tactical-tab-trigger:hover::after,
 .tactical-tab-trigger[data-state="active"]::after {
-  width: 100%;
+  width: 140%;
 }
 
 .tactical-tab-trigger:hover {
@@ -310,8 +339,17 @@
   opacity: 1;
 }
 
+/* Click Pulse Micro-Interaction */
 .tactical-tab-trigger:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
+  background: oklch(var(--primary) / 0.1) !important;
+  transition: transform 0.1s ease;
+}
+
+@keyframes tabPulse {
+  0% { background: oklch(var(--primary) / 0); }
+  50% { background: oklch(var(--primary) / 0.2); }
+  100% { background: oklch(var(--primary) / 0.05); }
 }
 
 @theme inline {

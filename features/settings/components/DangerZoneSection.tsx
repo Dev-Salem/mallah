@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { AlertTriangle, RotateCcw, Trash2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ interface DangerZoneSectionProps {
 export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
+    const t = useTranslations('Settings.DangerZone');
     const router = useRouter();
 
     // Reset Onboarding state
@@ -49,19 +50,19 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
     };
 
     return (
-        <div className="border border-red-500/20 bg-red-500/[0.02] p-6 lg:p-8 mt-4">
+        <div className="border border-destructive/20 bg-destructive/[0.02] p-6 lg:p-8 mt-4">
             <div className="flex items-center gap-3 mb-6">
-                <AlertTriangle className="w-4 h-4 text-red-400" />
-                <h2 className={cn("text-sm font-bold text-red-400 uppercase", !isArabic && "tracking-[0.15em]")}>
-                    Danger Zone
+                <AlertTriangle className="w-4 h-4 text-destructive" />
+                <h2 className={cn("text-sm font-bold text-destructive uppercase", !isArabic && "tracking-[0.15em]")}>
+                    {t('title')}
                 </h2>
             </div>
 
             <div className="space-y-6">
                 {/* Reset Onboarding */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-red-500/10">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-destructive/10">
                     <div>
-                        <h3 className={cn("text-xs font-bold text-white uppercase mb-1", !isArabic && "tracking-wide")}>
+                        <h3 className={cn("text-xs font-bold text-foreground uppercase mb-1", !isArabic && "tracking-wide")}>
                             Reset Onboarding
                         </h3>
                         <p className="text-[10px] text-muted-foreground/60 leading-relaxed max-w-md">
@@ -69,7 +70,7 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                         </p>
                     </div>
                     <Button variant="outline" onClick={() => setShowResetDialog(true)}
-                        className={cn("h-9 px-5 rounded-none border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/30 uppercase font-mono text-[10px] gap-2 shrink-0", !isArabic && "tracking-[0.1em]")}
+                        className={cn("h-9 px-5 rounded-none border-destructive/20 text-destructive hover:bg-destructive/10 hover:border-destructive/30 uppercase font-mono text-[10px] gap-2 shrink-0", !isArabic && "tracking-[0.1em]")}
                     >
                         <RotateCcw className="w-3 h-3" /> Reset Onboarding
                     </Button>
@@ -78,7 +79,7 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                 {/* Delete Account */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h3 className={cn("text-xs font-bold text-white uppercase mb-1", !isArabic && "tracking-wide")}>
+                        <h3 className={cn("text-xs font-bold text-foreground uppercase mb-1", !isArabic && "tracking-wide")}>
                             Delete Account
                         </h3>
                         <p className="text-[10px] text-muted-foreground/60 leading-relaxed max-w-md">
@@ -86,7 +87,7 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                         </p>
                     </div>
                     <Button variant="outline" onClick={() => setShowDeleteDialog(true)}
-                        className={cn("h-9 px-5 rounded-none border-red-500/20 text-red-400 hover:bg-red-500/10 hover:border-red-500/30 uppercase font-mono text-[10px] gap-2 shrink-0", !isArabic && "tracking-[0.1em]")}
+                        className={cn("h-9 px-5 rounded-none border-destructive/20 text-destructive hover:bg-destructive/10 hover:border-destructive/30 uppercase font-mono text-[10px] gap-2 shrink-0", !isArabic && "tracking-[0.1em]")}
                     >
                         <Trash2 className="w-3 h-3" /> Delete Account
                     </Button>
@@ -95,11 +96,11 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
 
             {/* Reset Onboarding Dialog */}
             {showResetDialog && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-                    <div className="border border-white/10 bg-background p-8 max-w-md w-full mx-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+                    <div className="border border-border bg-card p-8 max-w-md w-full mx-4 shadow-2xl">
                         <div className="flex items-center gap-2 mb-4">
                             <AlertTriangle className="w-5 h-5 text-amber-500" />
-                            <h3 className={cn("text-sm font-bold text-white uppercase", !isArabic && "tracking-wide")}>
+                            <h3 className={cn("text-sm font-bold text-foreground uppercase", !isArabic && "tracking-wide")}>
                                 Reset Onboarding?
                             </h3>
                         </div>
@@ -108,12 +109,12 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                         </p>
                         <div className="flex gap-3 justify-end">
                             <Button variant="outline" onClick={() => setShowResetDialog(false)}
-                                className={cn("h-9 px-5 rounded-none border-white/10 uppercase font-mono text-[10px]", !isArabic && "tracking-[0.1em]")}
+                                className={cn("h-9 px-5 rounded-none border-border uppercase font-mono text-[10px]", !isArabic && "tracking-[0.1em]")}
                             >
                                 Cancel
                             </Button>
                             <Button onClick={handleResetOnboarding} disabled={resetting}
-                                className={cn("h-9 px-5 rounded-none bg-amber-500 text-black hover:bg-amber-400 uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.1em]")}
+                                className={cn("h-9 px-5 rounded-none bg-warning text-warning-foreground hover:bg-warning/90 uppercase font-mono text-[10px] gap-2", !isArabic && "tracking-[0.1em]")}
                             >
                                 {resetting ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
                                 Confirm Reset
@@ -125,8 +126,8 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
 
             {/* Delete Account Dialog */}
             {showDeleteDialog && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-                    <div className="border border-red-500/20 bg-background p-8 max-w-md w-full mx-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+                    <div className="border border-destructive/20 bg-card p-8 max-w-md w-full mx-4 shadow-2xl">
                         <div className="flex items-center gap-2 mb-4">
                             <Trash2 className="w-5 h-5 text-red-400" />
                             <h3 className={cn("text-sm font-bold text-red-400 uppercase", !isArabic && "tracking-wide")}>
@@ -142,7 +143,7 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                             </label>
                             <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
                                 placeholder={userEmail}
-                                className="w-full h-10 px-3 bg-black/50 border border-red-500/20 text-white text-sm font-mono focus:border-red-500/50 focus:outline-none transition-colors placeholder:text-muted-foreground/20"
+                                className="w-full h-10 px-3 bg-background border border-destructive/20 text-foreground text-sm font-mono focus:border-destructive focus:outline-none transition-colors placeholder:text-muted-foreground/30"
                             />
                             {deleteError && (
                                 <p className="text-[9px] font-mono text-red-400 mt-1">{deleteError}</p>
@@ -150,13 +151,13 @@ export function DangerZoneSection({ userEmail }: DangerZoneSectionProps) {
                         </div>
                         <div className="flex gap-3 justify-end">
                             <Button variant="outline" onClick={() => { setShowDeleteDialog(false); setConfirmEmail(''); setDeleteError(''); }}
-                                className={cn("h-9 px-5 rounded-none border-white/10 uppercase font-mono text-[10px]", !isArabic && "tracking-[0.1em]")}
+                                className={cn("h-9 px-5 rounded-none border-border uppercase font-mono text-[10px]", !isArabic && "tracking-[0.1em]")}
                             >
                                 Cancel
                             </Button>
                             <Button onClick={handleDeleteAccount}
                                 disabled={deleting || confirmEmail !== userEmail}
-                                className={cn("h-9 px-5 rounded-none bg-red-500 text-white hover:bg-red-400 uppercase font-mono text-[10px] gap-2 disabled:opacity-30", !isArabic && "tracking-[0.1em]")}
+                                className={cn("h-9 px-5 rounded-none bg-destructive text-destructive-foreground hover:bg-destructive/90 uppercase font-mono text-[10px] gap-2 disabled:opacity-30", !isArabic && "tracking-[0.1em]")}
                             >
                                 {deleting ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
                                 Delete My Account

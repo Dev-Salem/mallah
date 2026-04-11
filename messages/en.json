@@ -929,5 +929,112 @@
       "confirm": "Confirm",
       "error": "An error occurred"
     }
+  },
+  "Settings": {
+    "title": "Account Settings",
+    "subtitle": "Manage your profile, preferences, and system security.",
+    "Labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "currentPath": "Current Path",
+      "background": "Background",
+      "primaryGoal": "Primary Goal",
+      "weeklyCommitment": "Weekly Commitment",
+      "aiLanguage": "AI Language Preference",
+      "aiDetail": "AI Explanation Detail",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "weeklyStudyTime": "Weekly Study Time",
+      "pace": "Pace: {velocity}"
+    },
+    "Placeholders": {
+      "min8Chars": "Minimum 8 characters",
+      "select": "Select...",
+      "typeEmail": "Type your email to confirm"
+    },
+    "Messages": {
+      "saveSuccess": "Saved successfully.",
+      "saveError": "Failed to save. Please try again.",
+      "emailChangeSupport": "Contact support to change your email.",
+      "pathChangeSupport": "Want to change your path? Contact support.",
+      "verificationSent": "Verification email sent.",
+      "passwordSuccess": "Password updated successfully.",
+      "onboardingResetDesc": "Clears your path, goals, and preferences. Progress and portfolio data are preserved.",
+      "deleteAccountDesc": "Permanently deletes your account, progress, and all data. This cannot be undone."
+    },
+    "Actions": {
+      "saveChanges": "Save Changes",
+      "resend": "Resend",
+      "changePassword": "Change Password",
+      "signOut": "Sign Out",
+      "resetOnboarding": "Reset Onboarding",
+      "deleteAccount": "Delete Account",
+      "confirmReset": "Confirm Reset",
+      "confirmDelete": "Delete My Account",
+      "cancel": "Cancel",
+      "signOutDesc": "Sign out of your account on this device."
+    },
+    "Options": {
+      "student": "Student",
+      "fresh_grad": "Fresh Graduate",
+      "career_shifter": "Career Shifter",
+      "no_tech": "No Tech Background",
+      "job": "Get a Full-Time Job",
+      "freelance": "Freelance",
+      "startup": "Build My Own Project",
+      "exploring": "Exploring",
+      "arabic": "Arabic",
+      "english": "English",
+      "mix": "Mix",
+      "short": "Short",
+      "balanced": "Balanced",
+      "detailed": "Detailed",
+      "slow": "slow",
+      "normal": "normal",
+      "fast": "fast"
+    },
+    "Paths": {
+      "frontend": "Frontend Development",
+      "fullstack": "Full-Stack Web Development",
+      "cybersecurity": "Cybersecurity & Ethical Hacking",
+      "datascience": "Data Science & Machine Learning"
+    },
+    "Profile": {
+      "title": "Personal Profile",
+      "subtitle": "Update your personal details and contact information."
+    },
+    "AIPrefs": {
+      "title": "AI Configuration",
+      "subtitle": "Customize how the AI assistant interacts with you."
+    },
+    "LearningPrefs": {
+      "title": "Learning Plan",
+      "subtitle": "Set your weekly availability and study intensity."
+    },
+    "Security": {
+      "title": "Security & Access",
+      "subtitle": "Update your password and secure your account."
+    },
+    "Language": {
+      "title": "Display Language",
+      "subtitle": "Choose your preferred interface language."
+    },
+    "Session": {
+      "title": "Active Session",
+      "subtitle": "Logout or manage your current connectivity.",
+      "signOut": "Sign Out",
+      "signOutDesc": "Sign out of your account on this device."
+    },
+    "DangerZone": {
+      "title": "Account Management",
+      "subtitle": "Reset progress or permanently delete your account."
+    },
+    "LanguageToggle": {
+      "english": "English",
+      "arabic": "العربية"
+    }
   }
 }
