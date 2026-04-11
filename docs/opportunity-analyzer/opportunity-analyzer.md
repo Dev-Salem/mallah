@@ -90,38 +90,29 @@ The learner can upload a CV (PDF or DOCX). The AI parses it and extracts skills 
 
 All UI in the Opportunity Analyzer is built with **shadcn/ui** components on top of Tailwind CSS. This section specifies exactly which components map to which parts of the feature.
 
-### 5.1 Input Screen Components
+### 5.1 Job Feed Components
+
+| Element | shadcn/ui Component | Notes |
+|---|---|---|
+| Feed heading | `Text` + `Badge` | "This week's jobs — [Path Name]" + "Updated Monday" badge |
+| Sort dropdown | `Select` | "Best Match" (default) / "Newest" |
+| Seniority filter | `Select` | "All levels" / "Intern" / "Junior" / "Mid" / "Senior" |
+| Search bar | `Input` with search icon | Filters feed by keyword, client-side |
+| Job card | `Card` with hover shadow | Title, company, location, seniority, match score bar, expiry |
+| Match score bar | Custom `Progress` | Colored by threshold — red/amber/green |
+| Analyze button | `Button` (default, small) | "Analyze →" — triggers quick view |
+| Save button | `Button` (ghost, small) | Saves to `opportunity_analyses` without running analysis |
+| Analyze a JD button | `Button` (outline) | Opens manual JD input panel |
+| Empty state | Custom | "No jobs this week yet" with CTA to paste JD |
+
+### 5.2 Manual JD Input Components
 
 | Element | shadcn/ui Component | Notes |
 |---|---|---|
 | JD textarea | `Textarea` | Large, min 6 rows, placeholder: "Paste the job description here…" |
-| Job title field | `Input` | Optional, placeholder: "Job title (optional — we'll detect it)" |
-| Company name field | `Input` | Optional, placeholder: "Company name (optional)" |
-| CV upload zone | `shadcn-dropzone` / react-dropzone + shadcn styling | Dashed border zone, "Drop your CV here or click to browse". Accepts PDF and DOCX only. Max 5MB. Shows filename + remove button after upload. |
-| CV status indicator | `Badge` (secondary variant) | Shows "CV uploaded: [filename]" when a CV is attached. "No CV — using Mallah profile only" when not. |
-| Analyze button | `Button` (default, large) | Full width on mobile. Loading state: `Button` with `Spinner` inside + "Analyzing…" label. |
-| Form wrapper | `Card` > `CardContent` | Clean centered card, max-w-2xl, no unnecessary padding |
-
-**Input screen layout:**
-
-```
-┌─────────────────────────────────────────┐
-│  Analyze a Job Opportunity              │
-│  ─────────────────────────────────────  │
-│  [JD Textarea — large]                  │
-│                                         │
-│  Job title (optional)  Company (opt.)   │
-│                                         │
-│  ┌─────────────────────────────────┐    │
-│  │  📄 Upload your CV (optional)   │    │
-│  │  Drop PDF/DOCX or click to browse│   │
-│  │  Adds your prior experience     │    │
-│  └─────────────────────────────────┘    │
-│  [Badge: CV status]                     │
-│                                         │
-│  [Analyze →]  (primary, full width)     │
-└─────────────────────────────────────────┘
-```
+| CV upload zone | react-dropzone + shadcn styling | Dashed border zone. Accepts PDF and DOCX only. Max 5MB. |
+| CV status indicator | `Badge` (secondary variant) | Shows "CV uploaded: [filename]" or "No CV — Mallah profile only" |
+| Analyze button | `Button` (default, large) | Full width on mobile. Loading state: `Spinner` + "Analyzing…" |
 
 ### 5.2 Results Screen Components
 
@@ -152,7 +143,7 @@ All UI in the Opportunity Analyzer is built with **shadcn/ui** components on top
 | Saved analyses list | `Card` list or `Table` | Job title, company, score badge, date, Re-analyze + Delete buttons |
 | Score badge in list | `Badge` colored by threshold | Same color logic as match score circle |
 | Score delta | `Badge` (green) | "+12% since last analysis" — shown if score improved on re-analyze |
-| Empty state | shadcn `Empty` or custom | "No saved analyses yet. Paste a job description to get started." |
+| Empty state | shadcn `Empty` or custom | "No saved analyses yet. Analyze a job from the feed or paste a JD to get started." |
 
 ---
 
@@ -164,27 +155,29 @@ The feature has three phases: **Job Feed → Job Card → Full Analysis**.
 
 ### Phase 1 — Job Feed (Landing Screen)
 
-The learner lands on a **curated job board** showing the latest published jobs for their path. Jobs are sourced weekly from Google for Jobs (Saudi Arabia) via SerpAPI, reviewed by admins, and auto-expire after 7 days.
+The learner lands on a **curated job board** showing the latest published jobs for their path. Jobs are sourced weekly from Google for Jobs (Saudi Arabia) via SerpAPI, published automatically, and auto-expire after 7 days.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │  Opportunity Analyzer                                            │
 │                                                                  │
-│  [🔍 Search jobs...          ]              [Analyze a JD]       │
+│  [🔍 Search jobs...    ] [All levels ▾]     [Analyze a JD]       │
 │                                                                  │
 │  This week's jobs — Frontend Development     Updated Monday      │
 │  ─────────────────────────────────────────                       │
+│  Sort: [Best Match ▾]                                            │
+│                                                                  │
 │  ┌────────────────────────────┐  ┌────────────────────────────┐  │
 │  │ Frontend Developer         │  │ React Engineer             │  │
-│  │ Noon · Riyadh              │  │ STC · Remote (SA)          │  │
-│  │ Match: 74%  ████████░░     │  │ Match: 61%  ██████░░░░     │  │
+│  │ Noon · Riyadh · Junior     │  │ STC · Remote (SA) · Mid    │  │
+│  │ Match: 88%  █████████░     │  │ Match: 74%  ████████░░     │  │
 │  │ Expires in 5 days          │  │ Expires in 5 days          │  │
 │  │ [Analyze →]  [Save]        │  │ [Analyze →]  [Save]        │  │
 │  └────────────────────────────┘  └────────────────────────────┘  │
 │  ┌────────────────────────────┐  ┌────────────────────────────┐  │
 │  │ UI Developer               │  │ Junior Frontend Dev        │  │
-│  │ Jarir · Jeddah             │  │ Aramco Digital · Riyadh    │  │
-│  │ Match: 51%  █████░░░░░     │  │ Match: 88%  █████████░     │  │
+│  │ Jarir · Jeddah · Junior    │  │ Aramco · Riyadh · Junior   │  │
+│  │ Match: 61%  ██████░░░░     │  │ Match: 51%  █████░░░░░     │  │
 │  │ Expires in 3 days          │  │ Expires in 3 days          │  │
 │  │ [Analyze →]  [Save]        │  │ [Analyze →]  [Save]        │  │
 │  └────────────────────────────┘  └────────────────────────────┘  │
@@ -194,13 +187,13 @@ The learner lands on a **curated job board** showing the latest published jobs f
 **How the feed works:**
 
 - Shows up to 10 published `job_listings` where `path_id = learner.current_path_id` and `status = 'published'`
-- Sorted by `published_at` descending — newest first
-- Each card shows: job title, company, city, match score (calculated server-side against `user_skills`), and days until expiry
-- Jobs expire automatically 7 days after publishing — expired jobs are hidden from learners
+- **Default sort: match score descending** — best fit jobs shown first. Learner can toggle to "Newest" via the sort dropdown.
+- Each card shows: job title, company, city, seniority level, match score bar, and days until expiry
+- Jobs expire automatically 7 days after publishing
 
 **Match score on the card:**
 
-Calculated server-side without AI, using the stored `required_skills[]` and `preferred_skills[]` from the `job_listings` row:
+Calculated server-side without AI using the stored `required_skills[]` and `preferred_skills[]`:
 
 ```
 match = (required_covered / total_required) × 0.70 + (preferred_covered / total_preferred) × 0.30
@@ -208,13 +201,17 @@ match = (required_covered / total_required) × 0.70 + (preferred_covered / total
 
 This is a **preview score** — fast, rule-based. Full AI analysis (Phase 3) runs only on explicit user action.
 
+**Seniority filter:**
+
+A dropdown next to the search bar: `All levels` / `Intern` / `Junior` / `Mid` / `Senior`. Filters the current feed. Default: `All levels`. Seniority is AI-extracted from the job description during the cron fetch and stored in `job_listings.seniority`.
+
 **Search bar:**
 
-Filters the current feed by job title keyword. Searches only within published listings for the learner's path — not a live external search. If no results match, shows: "No jobs match your search. Try Analyze a JD to paste a job from anywhere."
+Filters the current feed by job title keyword within published listings for the learner's path. If no results: "No jobs match your search. Try Analyze a JD to paste a job from anywhere."
 
 **"Analyze a JD" button:**
 
-Opens the manual JD input panel. Allows the learner to analyze any job from outside the feed — a company's own careers page, an email, a LinkedIn post, etc.
+Opens the manual JD input panel. Allows the learner to analyze any job from outside the feed.
 
 **Empty state (no jobs published yet for this path):**
 
@@ -274,17 +271,17 @@ Contains Panel 1 (Job Snapshot) and Panel 2 (Match Score) side by side on deskto
 
 **Panel 1 — Job Snapshot**
 
-For jobs from the feed: pre-populated from JSearch data. For pasted JDs: extracted by AI.
+For jobs from the feed: pre-populated from `job_listings` data (SerpAPI). For pasted JDs: extracted by AI.
 
 | Field | Source |
 |---|---|
-| Job title | JSearch / AI-extracted, editable |
-| Company | JSearch / AI-extracted |
-| Location | JSearch / AI-extracted |
-| Seniority level | AI-extracted: `Intern` / `Junior` / `Mid` / `Senior` |
+| Job title | `job_listings` / AI-extracted, editable |
+| Company | `job_listings` / AI-extracted |
+| Location | `job_listings` / AI-extracted |
+| Seniority level | `job_listings` (AI-extracted during cron fetch) |
 | Key responsibilities | AI-extracted: 3–5 bullet summary |
-| Employment type | JSearch / AI-extracted: Full-time / Part-time / Contract / Remote |
-| Apply URL | JSearch direct link (for feed jobs) / none (for pasted JDs) |
+| Employment type | `job_listings` / AI-extracted: Full-time / Part-time / Contract / Remote |
+| Apply URL | `job_listings.apply_url` (for feed jobs) / none (for pasted JDs) |
 
 **Panel 2 — Match Score**
 
@@ -400,12 +397,15 @@ Learners can save analyses and return to them later.
 **Saved Analyses list** (Tab 5 of results, or accessible from the input screen):
 - Job title + company (if entered)
 - Match score `Badge` (colored by threshold)
-- Score delta `Badge` (green "+X%" if re-analyzed and improved)
+- Score delta `Badge` (success "+X%" if re-analyzed and improved)
 - Date saved
 - `Button` (outline): "Re-analyze" — reruns against current Mallah data + CV
 - `Button` (ghost/destructive): "Delete"
+- **"Apply Ready" badge** — shown prominently when match score ≥ 75%: a `Badge` (success) with a checkmark "✓ Ready to Apply". Clicking it deep-links to the Resume Builder to create a job-based resume for this role.
 
-**Re-analyze is a key feature.** As the learner completes topics and builds projects, their match score for a saved job increases. Seeing that number move from 52% to 71% is a powerful motivator. This is what makes the Opportunity Analyzer a living tool, not a one-time report.
+**Re-analyze is a key feature.** As the learner completes topics and builds projects, their match score for a saved job increases. Seeing that number move from 52% to 71% is a powerful motivator.
+
+**Apply Ready notification:** when a learner re-analyzes a saved job and their score crosses 75% for the first time, a `Sonner` toast appears: "You're now ready to apply for [Job Title] at [Company]. Create a tailored resume to get started." The toast includes a direct link to the Resume Builder.
 
 ---
 
@@ -431,11 +431,11 @@ const pathQueries = {
 };
 ```
 
-Each query hits the SerpAPI Google Jobs endpoint with `location: "Saudi Arabia"` and `chips: "date_posted:week"` (jobs posted in the last 7 days only).
+Each query hits the SerpAPI Google Jobs endpoint with `location: "Saudi Arabia"` and `chips: "date_posted:month"` (jobs posted in the last 30 days — ensures enough results even in slow weeks).
 
 **On each fetch:**
 1. Fetch up to 10 results per path from SerpAPI
-2. For each result, run AI skill extraction from the job description → populate `required_skills[]` and `preferred_skills[]`
+2. For each result, run AI skill + seniority extraction from the job description → populate `required_skills[]`, `preferred_skills[]`, and `seniority`
 3. Save to `job_listings` with `status = 'published'`, `published_at = now()`, `expires_at = now() + 7 days`
 4. Delete or expire any `job_listings` rows from the previous week (`expires_at < now()`)
 
@@ -452,6 +452,7 @@ No human review step. Jobs go live immediately after AI extraction.
 | `location` | VARCHAR | City or "Remote (SA)" |
 | `is_remote` | BOOLEAN | |
 | `employment_type` | VARCHAR | Full-time / Part-time / Contract |
+| `seniority` | ENUM | `Intern` / `Junior` / `Mid` / `Senior` — AI-extracted during cron fetch |
 | `description` | TEXT | Full job description |
 | `required_skills` | JSONB | `string[]` — AI-extracted on fetch |
 | `preferred_skills` | JSONB | `string[]` — AI-extracted on fetch |
@@ -672,6 +673,8 @@ This is the loop that makes the platform coherent:
 | CV parse fails | Proceed using Mallah profile only. Show `Alert` (warning). |
 | Very low match (< 35%) for Senior role | Honest message in action plan: "This is a Senior role. We recommend building your skills through your roadmap before applying." |
 | All required skills already matched | Celebrate in Overview: "You're an excellent match. Focus on portfolio polish and applying." |
+| Learner re-analyzes and crosses 75% for first time | `Sonner` toast: "You're now ready to apply for [Job Title]. Create a tailored resume to get started." → deep-link to Resume Builder. "Apply Ready" badge appears on the saved analysis card. |
+| Learner has 0 skills and opens full analysis | Skills tab shows "You're just getting started" message instead of a wall of red badges. CTA: "Begin your [Path] roadmap to start building the skills this job needs." → links to Roadmap. Action Plan tab shows roadmap-first steps. |
 | JD is not a tech role | `Alert` (warning): "This doesn't appear to be a tech role. Results may be inaccurate." Proceed. |
 | Learner re-analyzes saved job | Score updates. If improved: `Badge` (green) "+X% since last analysis" shown in Saved tab and at top of Overview. |
 | Missing skill has no roadmap topic | Label "Outside current path scope." Suggest as manual skill to add after path completion. |

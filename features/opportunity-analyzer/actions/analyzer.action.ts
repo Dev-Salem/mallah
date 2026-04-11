@@ -1,5 +1,8 @@
 "use server";
 
+import { createClient } from '@/lib/supabase/server';
+
+
 import { generateObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
@@ -171,4 +174,66 @@ export const getSavedAnalysesAction = async () => {
 
 export const deleteAnalysisAction = async (id: string) => {
     return await analyzerService.deleteAnalysis(id);
+};
+
+
+export const uploadCVAction = async (formData: FormData): Promise<{ success: boolean; data?: ExtractedCV; error?: string }> => {
+    try {
+        const file = formData.get('file') as File;
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            return { success: false, error: "Authentication required" };
+        }
+
+        if (!file) {
+            return { success: false, error: "Missing file" };
+        }
+
+        // 1. Upload to Storage
+        const filePath = `${user.id}/${Date.now()}_${file.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('cv-uploads')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            throw new Error(`Upload failed: ${uploadError.message}`);
+        }
+
+        // 2. Invoke Edge Function for Parsing
+        // We get the public URL for the function to access
+        const { data: { publicUrl } } = supabase.storage
+            .from('cv-uploads')
+            .getPublicUrl(filePath);
+
+        const { data: functionData, error: functionError } = await supabase.functions.invoke('parse-cv', {
+            body: { 
+                userId: user.id,
+                fileName: file.name,
+                fileUrl: publicUrl
+            }
+        });
+
+        if (functionError) {
+            throw new Error(`Parsing failed: ${functionError.message}`);
+        }
+
+        // The edge function returns the CV data under { cv: { ... } }
+        const cvData = functionData.cv;
+        
+        return { 
+            success: true, 
+            data: {
+                extracted_skills: cvData.extracted_skills,
+                experience_years: cvData.experience_years,
+                previous_roles: cvData.previous_roles
+            } 
+        };
+
+    } catch (e: unknown) {
+        const err = e as Error;
+        console.error("CV Upload Orchestration Error:", err);
+        return { success: false, error: err.message || "Failed to upload CV" };
+    }
 };

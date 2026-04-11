@@ -62,7 +62,7 @@ The Resume Builder opens to a **Resume Cards Grid**. All resumes start as genera
 **General resume card:**
 - Standard card styling
 - Shows: title, ATS score badge, last updated timestamp
-- Dropdown `⋯` menu: `Edit` · `Download` · `Clone` · `Delete`
+- Dropdown `⋯` menu: `Edit` · `Download` · `Clone` · `Tailor for a Job` · `Delete`
 
 **Job-based resume card:**
 - `🎯` icon + job title and company as the card headline (e.g. "React Dev @ Noon")
@@ -86,15 +86,18 @@ Clicking `+ New Resume` on the Cards Grid creates a general resume and opens the
 
 ### 5.2 Clone
 
-The `Clone` option in a general resume card's `⋯` dropdown creates a **complete independent copy** of that resume. The clone:
+Cloning is used in two ways:
+
+**Manual clone** — The `Clone` option in a general resume card's `⋯` dropdown creates a complete independent copy of that resume for the learner to freely edit as a new general resume. The clone:
 
 - Gets the title "Copy of [Original Title]" (editable inline on the card)
 - Copies all `resume_sections` content exactly — same summary, same skills, same projects, same experience
 - Starts as `resume_type = 'general'`
 - Is completely independent — the original is never modified, and future edits to either resume have no effect on the other
 - Counts toward the 3-resume limit
+- Opens on the Cards Grid as a new card — no editor opens automatically
 
-The clone opens on the Cards Grid as a new card. The learner can edit it freely as a general resume, or personalize it for a specific job (Section 5B).
+**System-triggered clone (for job personalization)** — When the learner clicks `Tailor for a Job` on a general resume card, the system silently clones that resume in the background before opening the personalization modal. The learner never sees or manages this clone step — it is invisible. The original general resume is always preserved. See Section 5B for the full flow.
 
 **Clone is only available on general resumes.** Job-based resumes cannot be cloned.
 
@@ -102,13 +105,15 @@ The clone opens on the Cards Grid as a new card. The learner can edit it freely 
 
 ## 5B. Job-Based Personalization
 
-A job-based resume is created by cloning a general resume and then personalizing the clone for a specific job. The AI rewrites the content — bullets, summary, skill ordering — to better match the pasted JD without changing any core facts.
+A job-based resume is created directly from the Resume Cards Grid — no manual cloning required. When the learner clicks `Tailor for a Job` on a general resume card, the system automatically clones that resume in the background and immediately opens the Personalization Modal. The learner pastes the job description, the AI rewrites the content of the clone — bullets, summary, skill ordering — to better match the JD without changing any core facts. The original general resume is never touched.
 
-### 5B.1 Entry Point — "Personalize for a Job" Button
+### 5B.1 Entry Point — "Tailor for a Job" on the Cards Grid
 
-In the editor header, a `Personalize for a Job` `Button` (outline) is visible **only on general resumes**. It disappears once the resume has been personalized (i.e. becomes job-based).
+The `Tailor for a Job` option appears in the `⋯` dropdown of every **general resume card** on the Cards Grid. It does not appear on job-based resume cards.
 
-Clicking it opens the **Personalization Modal** (Section 5B.2).
+Clicking it triggers:
+1. System silently clones the resume in the background (no loading indicator, no confirmation step — this is instant)
+2. Personalization Modal opens immediately over the grid (Section 5B.2)
 
 ### 5B.2 Personalization Modal
 
@@ -141,6 +146,8 @@ A centered `Dialog` that appears over the editor.
 
 When the learner clicks `Personalize →`:
 
+0. **Silent clone already done** — the system cloned the resume when the learner clicked `Tailor for a Job` on the card. The modal is operating on the clone, not the original. The original general resume is untouched.
+
 1. **Parse the JD** — AI extracts `job_title`, `company_name`, `required_skills[]`, `preferred_skills[]`. Same extraction logic as the Opportunity Analyzer.
 
 2. **Rewrite Summary** — AI rewrites the existing summary to incorporate JD keywords and emphasize relevant experience. Core facts are preserved — no invented credentials or experience. The rewrite is stored back into `resume_sections.SUMMARY`.
@@ -155,13 +162,37 @@ When the learner clicks `Personalize →`:
 
 7. **Reconfigure ATS scoring** — ATS Keyword Coverage now scores against JD required/preferred skills instead of the path keyword baseline.
 
-8. Modal closes. Editor reloads with:
-   - `Personalize for a Job` button replaced by `🎯 Job-Based` badge in the header
+8. Modal closes. Editor opens on the new job-based resume with:
+   - `🎯 Job-Based` badge in the header
    - JD keyword strip appears at the top of the editing area
    - Relevance indicators activate in Skills and Projects sections
-   - One-time `Sonner` toast: "Your resume has been personalized for [Job Title]. Review the changes below."
+   - **"What changed" summary panel** shown once at the top of the editing area (Section 5B.3a)
+   - One-time `Sonner` toast: "Your resume has been tailored for [Job Title]. Review the changes below."
 
-**Processing state:** while AI is working, the modal shows a loading state: spinner + "Personalizing your resume…". The `Personalize →` button is disabled. If AI fails: `Alert` (destructive) in the modal: "Personalization failed. Try again or paste a more detailed job description."
+**Processing state:** while AI is working, the modal shows a loading state: spinner + "Tailoring your resume…". The `Personalize →` button is disabled. If AI fails: `Alert` (destructive) in the modal: "Personalization failed. Try again or paste a more detailed job description."
+
+### 5B.3a "What Changed" Summary Panel
+
+A collapsible info panel shown **once** at the top of the editing area immediately after personalization completes. It gives the learner a clear picture of what the AI actually did so they know where to review first.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  ✨ Here's what was tailored for React Engineer @ Noon   │
+│                                                          │
+│  Summary rewritten to highlight React and TypeScript     │
+│  3 experience bullets updated with JD-relevant language  │
+│  Skills reordered — React, TypeScript now first          │
+│  Projects reordered — E-commerce Dashboard now first     │
+│                                                          │
+│  Review each section and edit anything that feels off.   │
+│                              [Got it — dismiss]          │
+└──────────────────────────────────────────────────────────┘
+```
+
+- The panel is dismissable via "Got it — dismiss" or Escape
+- It does not reappear after being dismissed (stored in session)
+- If AI partially failed (e.g. bullets failed but summary succeeded), the panel only lists what actually changed and includes a note: "Some sections couldn't be rewritten — edit those manually."
+- The panel is informational only — no actions, no diffs embedded in it. The learner navigates sections themselves.
 
 ### 5B.4 Job-Based Resume in the Editor
 
@@ -885,7 +916,7 @@ Backend fetches `resume_sections` ordered by `sort_order`, compiles via `resume-
    - SKILLS: all `user_skills` where `source IN ('roadmap', 'project')` pre-checked
    - PROJECTS: all `user_projects` where `status = 'completed'` pre-included
    - SUMMARY, EXPERIENCE, EDUCATION, CERTIFICATIONS: empty
-3. Open editor directly. Default active section: Summary.
+3. Open editor directly — no wizard. Default active section: Summary.
 
 ### 11.4 Save
 
@@ -904,7 +935,7 @@ See Section 8.
 
 `GET /api/resume/:resume_id/export` → validate guard → compile → return file download.
 
-### 11.7 Clone Resume
+### 11.7 Clone Resume (Manual)
 
 1. Learner clicks `Clone` in a general resume card's `⋯` dropdown
 2. Backend creates a new `resumes` row: `resume_type = 'general'`, `status = 'in_progress'`, title = "Copy of [Original Title]"
@@ -914,12 +945,15 @@ See Section 8.
 
 **Guard:** Clone is disabled if the learner is already at the 3-resume limit.
 
-### 11.8 Personalize for a Job
+### 11.8 Tailor for a Job
 
-1. Learner clicks `Personalize for a Job` in the editor header of a general resume
-2. Personalization Modal opens (Section 5B.2)
-3. Learner pastes JD, confirms title, clicks `Personalize →`
-4. Backend:
+1. Learner clicks `Tailor for a Job` in a general resume card's `⋯` dropdown on the Cards Grid
+2. Backend immediately and silently clones the resume:
+   - New `resumes` row: `resume_type = 'general'`, `status = 'in_progress'`, title = "[Original Title]" (temporary — will be updated after personalization)
+   - All `resume_sections` rows duplicated exactly
+3. Personalization Modal opens over the Cards Grid (Section 5B.2) — no loading indicator for the clone step, it is invisible to the learner
+4. Learner pastes JD, confirms title, clicks `Personalize →`
+5. Backend (operating on the clone):
    - Parses JD via AI → extracts `job_title`, `company_name`, `required_skills[]`, `preferred_skills[]`
    - Rewrites `SUMMARY` section content via AI
    - Rewrites `EXPERIENCE` bullets via AI
@@ -929,8 +963,12 @@ See Section 8.
    - Stores `resumes.source_jd` JSONB
    - Updates `resumes.title` to entered title
    - Reconfigures ATS scoring to use JD keywords
-5. Modal closes. Editor reloads with JD keyword strip, relevance indicators active
-6. `Sonner` toast: "Your resume has been personalized for [Job Title]. Review the changes below."
+   - Builds a "what changed" summary: list of sections actually modified by AI
+6. Modal closes. Editor opens on the new job-based resume with JD keyword strip, relevance indicators, and the "What Changed" panel (Section 5B.3a) visible at the top of the editing area
+7. `Sonner` toast: "Your resume has been tailored for [Job Title]. Review the changes below."
+8. The original general resume remains unchanged on the Cards Grid
+
+**Guard:** `Tailor for a Job` is disabled if the learner is already at the 3-resume limit. The silent clone counts toward the limit — the guard is checked before cloning.
 
 ---
 
@@ -1050,9 +1088,9 @@ See Section 8.
 | Learner changes path | Skills section reloads with new path-relevant skills. General resume ATS keyword baseline updates to new path. Job-based resume ATS baseline stays JD-specific — unaffected by path change. |
 | Job-Based Resume created with no saved analyses | No longer applicable — job-based resumes are created via the Personalize flow, not from the grid. |
 | JD paste fails to parse (AI error) | `Alert` (destructive) in the Personalization Modal: "Personalization failed. Try again or paste a more detailed job description." Modal stays open. |
-| Re-tailoring existing job-based resume | Not supported. Learner clones the general resume again and personalizes the new clone for the new role. |
-| Clone attempted at 3-resume limit | `Clone` option disabled in the dropdown with `Tooltip`: "Delete a resume to create a new one." |
-| Personalization AI partially fails (e.g. summary rewrites but bullets fail) | Apply what succeeded, flag what didn't with a `Sonner` toast: "Personalization partially completed — some sections couldn't be rewritten. Review and edit manually." |
+| Re-tailoring existing job-based resume | Not supported. Learner uses `Tailor for a Job` on the original general resume again to create a new tailored version. |
+| `Tailor for a Job` attempted at 3-resume limit | Option is disabled in the dropdown with `Tooltip`: "Delete a resume to create a new one." The silent clone is never triggered. |
+| Personalization AI partially fails (e.g. summary rewrites but bullets fail) | Apply what succeeded. The "What Changed" panel lists only what actually changed and includes a note: "Some sections couldn't be rewritten — edit those manually." `Sonner` toast: "Tailoring partially completed — review the sections below." |
 
 ---
 

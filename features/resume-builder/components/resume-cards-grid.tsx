@@ -2,21 +2,31 @@
 
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Target, Plus, Loader2, MoreVertical, FileText, Trash2, Download, LayoutTemplate } from "lucide-react";
+import {
+  Target,
+  Plus,
+  Loader2,
+  FileText,
+  Trash2,
+  Download,
+  LayoutTemplate,
+  Copy,
+  Sparkles,
+  ArrowRight,
+  ExternalLink,
+} from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import { createGeneralResumeAction, deleteResumeAction } from "@/features/resume-builder/actions/resume-actions";
+import {
+  createGeneralResumeAction,
+  deleteResumeAction,
+  cloneResumeAction,
+} from "@/features/resume-builder/actions/resume-actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,15 +37,30 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import PersonalizationModal from "./personalization-modal";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 export default function ResumeCardsGrid({ initialData = [] }: { initialData: any[] }) {
   const t = useTranslations("ResumeBuilder");
   const router = useRouter();
-  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [isCreatingGeneral, setIsCreatingGeneral] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [cloningId, setCloningId] = useState<string | null>(null);
+
+  // Personalization modal state
+  const [tailorBaseResume, setTailorBaseResume] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   // Resume deletion handlers
   const openDeleteDialog = (id: string) => {
@@ -56,7 +81,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
       await deleteResumeAction(deletingId);
       toast.success(t("ResumeDeletedSuccess") || "Resume deleted successfully");
       closeDeleteDialog();
-      router.refresh(); // Ensure the layout explicitly refreshes
+      router.refresh();
     } catch (err: any) {
       toast.error(err.message || "Failed to delete resume");
       setIsDeleting(false);
@@ -64,203 +89,361 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   };
 
   const handleCreateGeneral = async () => {
-      setIsCreatingGeneral(true);
-      try {
-          const resume = await createGeneralResumeAction("General Resume");
-          router.push(`/dashboard/resume-builder/${resume.resume_id}`);
-      } catch (err: any) {
-          toast.error(err.message || "Failed to create resume");
-      } finally {
-          setIsCreatingGeneral(false);
-      }
+    setIsCreatingGeneral(true);
+    try {
+      const resume = await createGeneralResumeAction("General Resume");
+      router.push(`/dashboard/resume-builder/${resume.resume_id}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create resume");
+    } finally {
+      setIsCreatingGeneral(false);
+    }
   };
 
-  // Filter or manage resumes
+  const handleClone = async (resumeId: string, resumeTitle: string) => {
+    setCloningId(resumeId);
+    try {
+      await cloneResumeAction(resumeId, `Copy of ${resumeTitle || "Resume"}`);
+      toast.success(t("CloneSuccess"));
+      router.refresh();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to clone resume");
+    } finally {
+      setCloningId(null);
+    }
+  };
+
   const resumes = initialData;
   const isAtLimit = resumes.length >= 3;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-           <h1 className="text-2xl font-black tracking-tight">{t("MyResumes")}</h1>
-           <p className="text-sm text-muted-foreground mt-1">{t("ManageResumesDesc")}</p>
-        </div>
-        <div className="flex items-center space-x-3">
-          <Button 
-            variant="outline" 
-            disabled={isAtLimit || isCreatingGeneral}
-            onClick={isAtLimit ? undefined : handleCreateGeneral}
-            className="shadow-sm"
-          >
-             {isAtLimit ? (
-                 <span title={t("LimitReachedTooltip")} className="flex items-center">
-                     <Plus className="w-4 h-4 mr-2" />
-                     {t("GeneralResume")}
-                 </span>
-             ) : (
-                 <span className="flex items-center">
-                    {isCreatingGeneral ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-                    {t("GeneralResume")}
-                 </span>
-             )}
-          </Button>
-
-          <Button 
-            disabled={isAtLimit}
-            onClick={() => toast.info(t("CreateGeneralFirst", { fallback: "Create a General Resume first, then Personalize it from the Editor." }))}
-            className="shadow-sm"
-          >
-            <Target className="w-4 h-4 mr-2" />
-            {t("JobBasedResume")}
-          </Button>
-        </div>
-      </div>
-
-      {resumes.length === 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              <Card className="border-dashed bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group" onClick={handleCreateGeneral}>
-                  <CardContent className="p-8 text-center flex flex-col items-center justify-center min-h-[260px]">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                          <LayoutTemplate className="w-6 h-6 text-primary" />
-                      </div>
-                      <h3 className="font-semibold text-lg">{t("GeneralDescriptionTitle")}</h3>
-                      <p className="text-sm text-muted-foreground mt-2 max-w-[250px]">{t("GeneralDescription")}</p>
-                      <Button variant="secondary" className="mt-6 pointer-events-none" disabled={isCreatingGeneral}>
-                          {isCreatingGeneral && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                          {t("CreateGeneral")}
-                      </Button>
-                  </CardContent>
-              </Card>
-
-              <Card className="border-dashed bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group" onClick={() => toast.info(t("CreateGeneralFirst", { fallback: "Create a General Resume first, then Personalize it from the Editor." }))}>
-                  <CardContent className="p-8 text-center flex flex-col items-center justify-center min-h-[260px]">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                          <Target className="w-6 h-6 text-primary" />
-                      </div>
-                      <h3 className="font-semibold text-lg">{t("JobBasedDescriptionTitle")}</h3>
-                      <p className="text-sm text-muted-foreground mt-2 max-w-[250px]">{t("JobBasedDescription")}</p>
-                      <Button className="mt-6 pointer-events-none">{t("CreateJobBased")}</Button>
-                  </CardContent>
-              </Card>
+    <TooltipProvider>
+      <div className="space-y-8 max-w-7xl mx-auto px-4 py-8">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6 mb-2">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">{t("MyResumes")}</h1>
+            <p className="text-muted-foreground text-sm font-medium">{t("ManageResumesDesc")}</p>
           </div>
-      ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-              {resumes.map(resume => (
-                  <Card key={resume.resume_id} className="relative group overflow-hidden border-border/50 hover:border-primary/30 hover:shadow-md transition-all duration-300">
-                      
-                      <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-                          {resume.resume_type === 'job_based' && (
-                              <Badge variant="secondary" className="flex items-center px-2 py-0.5 space-x-1 shadow-sm backdrop-blur bg-background/80">
-                                  <Target className="w-3 h-3 mr-1" />
-                                  <span className="text-[10px] uppercase font-bold tracking-wider">{t("JobBased")}</span>
-                              </Badge>
-                          )}
-                          
-                          <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                  <Button variant="secondary" size="icon" className="h-7 w-7 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur shadow-sm hover:bg-background">
-                                      <MoreVertical className="w-4 h-4 text-muted-foreground" />
-                                  </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-40">
-                                  <DropdownMenuItem asChild>
-                                      <a href={`/api/resume/${resume.resume_id}/export`} download className="flex items-center cursor-pointer">
-                                          <Download className="w-4 h-4 mr-2 text-muted-foreground" />
-                                          <span>{t("Download")}</span>
-                                      </a>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem 
-                                      className="text-red-600 focus:bg-red-50 focus:text-red-600 cursor-pointer"
-                                      onClick={() => openDeleteDialog(resume.resume_id)}
-                                  >
-                                      <Trash2 className="w-4 h-4 mr-2" />
-                                      <span>{t("Delete")}</span>
-                                  </DropdownMenuItem>
-                              </DropdownMenuContent>
-                          </DropdownMenu>
-                      </div>
+          
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button
+                  disabled={isAtLimit || isCreatingGeneral}
+                  onClick={isAtLimit ? undefined : handleCreateGeneral}
+                  className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 h-11 px-6 rounded-xl transition-all active:scale-95"
+                >
+                  {isCreatingGeneral ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <Plus className="w-5 h-5 mr-2" />
+                  )}
+                  <span className="font-semibold">{t("NewResume")}</span>
+                </Button>
+              </span>
+            </TooltipTrigger>
+            {isAtLimit && (
+              <TooltipContent className="bg-slate-900 text-white border-none rounded-lg p-3 shadow-xl">
+                <p className="text-xs font-semibold">{t("LimitReachedTooltip")}</p>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </div>
 
-                      <div className="bg-gradient-to-br from-muted to-muted/30 h-[180px] w-full flex items-center justify-center overflow-hidden border-b relative">
-                          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
-                          
-                          <div className="bg-white shadow-sm border border-black/5 rounded-sm w-[110px] h-[155px] p-2 relative z-10 group-hover:-translate-y-1 transition-transform duration-500 ease-out flex flex-col gap-1.5">
-                              {/* Fake Resume Skeleton */}
-                              <div className="w-1/2 h-2 bg-muted-foreground/20 rounded-full mx-auto mt-2"></div>
-                              <div className="w-3/4 h-1.5 bg-muted-foreground/10 rounded-full mx-auto mb-2"></div>
-                              <div className="w-full h-1 bg-muted-foreground/10 rounded-full"></div>
-                              <div className="w-full h-1 bg-muted-foreground/10 rounded-full"></div>
-                              <div className="w-5/6 h-1 bg-muted-foreground/10 rounded-full"></div>
-                              <div className="w-full h-1 bg-muted-foreground/10 rounded-full mt-1"></div>
-                              <div className="w-4/5 h-1 bg-muted-foreground/10 rounded-full"></div>
-                          </div>
-                      </div>
-
-                      <CardHeader className="p-4 pb-2">
-                          <CardTitle className="text-base truncate" title={resume.title || t("UntitledResume")}>
-                              {resume.title || t("UntitledResume")}
-                          </CardTitle>
-                          <CardDescription className="flex items-center space-x-2 text-xs font-medium">
-                              <Badge variant={resume.ats_score && resume.ats_score > 75 ? "default" : "secondary"} className="h-5 px-1.5 text-[10px] rounded-sm">
-                                  ATS: {resume.ats_score !== null ? `${resume.ats_score}` : "—"}
-                              </Badge>
-                              <span className="text-muted-foreground/40">•</span>
-                              <span className="text-muted-foreground" suppressHydrationWarning>{new Date(resume.last_updated_at).toLocaleDateString()}</span>
-                          </CardDescription>
-                      </CardHeader>
-
-                      <CardFooter className="p-4 pt-2">
-                           <Button asChild className="w-full transition-all" variant="default">
-                               <Link href={`/dashboard/resume-builder/${resume.resume_id}`}>
-                                  <FileText className="w-3.5 h-3.5 mr-2" />
-                                  {t("EditResume")}
-                               </Link>
-                           </Button>
-                      </CardFooter>
-                  </Card>
-              ))}
-          </div>
-      )}
-
-
-      <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && closeDeleteDialog()}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("DeleteTitle")}</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3" asChild>
-              <div>
-                <p>
-                  {t("DeleteDescription1")}
-                </p>
-                <p className="text-foreground font-medium">
-                  {t("DeleteDescription2")} <span className="font-bold text-red-600">Delete</span> {t("DeleteDescription3")}
-                </p>
-                <Input 
-                  value={deleteConfirmationText}
-                  onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                  placeholder={t("TypeDeleteToConfirm")}
-                  disabled={isDeleting}
-                  className="mt-2"
-                />
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>{t("Cancel")}</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={(e) => {
-                e.preventDefault();
-                handleDeleteConfirm();
-              }}
-              disabled={deleteConfirmationText !== 'Delete' || isDeleting}
-              className="bg-red-600 hover:bg-red-700 text-white disabled:opacity-50"
+        {/* Resumes Grid */}
+        {resumes.length === 0 ? (
+          <div className="mt-12">
+            <Card
+              className="border border-primary/10 bg-muted/5 hover:bg-muted/10 hover:border-primary/20 transition-all cursor-pointer group rounded-2xl relative overflow-hidden"
+              onClick={handleCreateGeneral}
             >
-              {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
-              {t("DeleteResume")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+              <CardContent className="p-12 text-center flex flex-col items-center justify-center min-h-[300px]">
+                <div className="w-16 h-16 rounded-2xl bg-dashboard-card-bg shadow-sm border border-primary/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
+                  <LayoutTemplate className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="font-black text-xl text-foreground uppercase tracking-tight leading-none mb-4">{t("GeneralDescriptionTitle")}</h3>
+                <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed font-bold text-xs uppercase tracking-widest opacity-60">
+                   {t("EmptyStateMessage")}
+                </p>
+                <Button variant="outline" className="mt-8 rounded-xl border-primary/20 font-bold group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all px-8 h-12" disabled={isCreatingGeneral}>
+                  {isCreatingGeneral && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {t("NewResume")}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {resumes.map((resume) => (
+              <ResumeCard 
+                key={resume.resume_id}
+                resume={resume}
+                t={t}
+                onClone={handleClone}
+                onDelete={openDeleteDialog}
+                onTailor={(id, title) => setTailorBaseResume({ id, title })}
+                isCloning={cloningId === resume.resume_id}
+                isAtLimit={isAtLimit}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && closeDeleteDialog()}>
+          <AlertDialogContent className="rounded-3xl border border-primary/10 shadow-2xl bg-dashboard-card-bg p-0 overflow-hidden max-w-md">
+            <div className="p-8 space-y-6">
+              <AlertDialogHeader>
+                <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
+                   <Trash2 className="w-7 h-7 text-red-500" />
+                </div>
+                <AlertDialogTitle className="text-2xl font-black uppercase tracking-tight text-foreground">{t("DeleteTitle")}</AlertDialogTitle>
+                <AlertDialogDescription className="space-y-4 pt-2 block" asChild>
+                  <div className="text-muted-foreground">
+                    <p className="font-bold text-xs leading-relaxed opacity-80">{t("DeleteDescription1")}</p>
+                    <div className="bg-red-500/5 p-4 border border-red-500/20 rounded-none">
+                      <p className="text-[10px] font-black text-red-500 uppercase tracking-widest leading-none mb-2 opacity-70">
+                        {t("DeleteDescription2")}
+                      </p>
+                      <p className="text-sm font-black text-foreground uppercase tracking-tight">
+                        {t("DeleteDescription3")}
+                      </p>
+                    </div>
+                    <div className="space-y-2 mt-4">
+                       <p className="text-[10px] font-mono font-bold text-primary uppercase tracking-widest ml-1">{t("TypeDeleteToConfirm")}</p>
+                       <Input
+                         value={deleteConfirmationText}
+                         onChange={(e) => setDeleteConfirmationText(e.target.value)}
+                         placeholder="DELETE"
+                         disabled={isDeleting}
+                         className="h-12 rounded-xl border-primary/10 bg-muted/5 focus:ring-red-500 focus:border-red-500 font-mono text-center tracking-widest"
+                       />
+                    </div>
+                  </div>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="gap-3 mt-4">
+                <AlertDialogCancel disabled={isDeleting} className="rounded-xl h-12 border-primary/10 bg-muted/5 font-bold px-6">{t("Cancel")}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDeleteConfirm();
+                  }}
+                  disabled={deleteConfirmationText !== "DELETE" || isDeleting}
+                  className="bg-red-600 hover:bg-red-700 text-white rounded-xl h-12 border-none disabled:opacity-50 font-black uppercase tracking-widest px-8 shadow-lg shadow-red-600/20"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    t("DeleteResume")
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Personalization Modal */}
+        {tailorBaseResume && (
+          <PersonalizationModal
+            open={!!tailorBaseResume}
+            onOpenChange={(open) => !open && setTailorBaseResume(null)}
+            baseResumeId={tailorBaseResume.id}
+            baseResumeTitle={tailorBaseResume.title}
+          />
+        )}
+      </div>
+    </TooltipProvider>
+  );
+}
+
+function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLimit }: { 
+  resume: any; 
+  t: any; 
+  onClone: (id: string, title: string) => void; 
+  onDelete: (id: string) => void;
+  onTailor: (id: string, title: string) => void;
+  isCloning: boolean;
+  isAtLimit: boolean;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  const isJobBased = resume.resume_type === "job_based" || resume.resume_type === "tailored";
+  const targetCompany = resume.source_jd?.company_name;
+  const targetRole = resume.source_jd?.job_title;
+
+  return (
+    <motion.div
+      layout
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="relative"
+    >
+      <Card
+        className={cn(
+          "group relative flex flex-col h-full bg-dashboard-card-bg rounded-3xl overflow-hidden transition-all duration-500",
+          "border border-primary/10",
+          "hover:shadow-xl hover:border-primary/20 ring-0"
+        )}
+      >
+        {/* Smooth Glow Gradient */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/5 blur-[80px] group-hover:bg-primary/10 transition-colors" />
+
+        {/* Card Header Illustration Area */}
+        <div className="h-40 bg-muted/20 flex items-end justify-center overflow-hidden border-b border-primary/10 relative">
+          <div className="absolute inset-0 bg-[radial-gradient(var(--primary)_0.5px,transparent_0.5px)] [background-size:12px_12px] opacity-[0.03]"></div>
+          
+          <div className="bg-card shadow-2xl border border-border rounded-xl w-[120px] h-[160px] p-2.5 relative z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out flex flex-col gap-2">
+            <div className="w-12 h-1.5 bg-muted rounded-full"></div>
+            <div className="space-y-1">
+              <div className="w-full h-1 bg-muted/40 rounded-full"></div>
+              <div className="w-full h-1 bg-muted/40 rounded-full"></div>
+              <div className="w-[90%] h-1 bg-muted/40 rounded-full"></div>
+            </div>
+            <div className="mt-2 space-y-1">
+              <div className="w-1/3 h-1.5 bg-muted rounded-full"></div>
+              <div className="w-full h-0.5 bg-muted/20 rounded-full"></div>
+              <div className="w-full h-0.5 bg-muted/20 rounded-full"></div>
+            </div>
+          </div>
+
+          {isJobBased && (
+             <div className="absolute top-4 start-4">
+                <div className="flex items-center gap-1.5 bg-dashboard-card-bg/90 backdrop-blur px-2.5 py-1 border border-primary/10 rounded-full shadow-sm">
+                   <Target className="w-3.5 h-3.5 text-primary" />
+                   <span className="text-[9px] font-black uppercase tracking-wider text-primary">
+                      {t("Targeted")}
+                   </span>
+                </div>
+             </div>
+          )}
+
+          <div className="absolute top-4 end-4">
+             <div className="bg-dashboard-card-bg/90 backdrop-blur px-2 py-1 border border-primary/10 rounded-full shadow-sm text-[9px] font-bold text-muted-foreground uppercase">
+                ATS: {resume.ats_score || "—"}
+             </div>
+          </div>
+        </div>
+
+        <div className="p-5 flex flex-col flex-grow bg-dashboard-card-bg relative z-10">
+          <div className="space-y-1.5 mb-4">
+            <h3 className="font-black text-foreground uppercase truncate pr-4 leading-tight group-hover:text-primary transition-colors text-sm tracking-tight" title={resume.title}>
+              {resume.title || t("UntitledResume")}
+            </h3>
+            
+            {isJobBased ? (
+              <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
+                 <span className="truncate">{targetCompany || targetRole || "Specific Role"}</span>
+              </div>
+            ) : (
+              <p className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">{t("GeneralResume")}</p>
+            )}
+          </div>
+
+          <div className="mt-auto flex items-center justify-between pt-3 border-t border-primary/10">
+             <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest opacity-60">
+                UPD: {new Date(resume.last_updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+             </span>
+             <Link 
+              href={`/dashboard/resume-builder/${resume.resume_id}`}
+              className="text-primary hover:scale-110 transition-transform"
+             >
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+             </Link>
+          </div>
+        </div>
+
+        {/* Hover Action Tray */}
+        <AnimatePresence>
+           {isHovered && (
+             <motion.div 
+               initial={{ y: 50, opacity: 0 }}
+               animate={{ y: 0, opacity: 1 }}
+               exit={{ y: 50, opacity: 0 }}
+               transition={{ type: "spring", damping: 25, stiffness: 200 }}
+               className="absolute inset-0 bg-primary/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-white"
+             >
+                <div className="grid grid-cols-2 gap-3 w-full max-w-[200px]">
+                    <Tooltip>
+                       <TooltipTrigger asChild>
+                          <Button 
+                            variant="secondary" 
+                            size="icon" 
+                            asChild 
+                            className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
+                          >
+                             <Link href={`/dashboard/resume-builder/${resume.resume_id}`}>
+                                <FileText className="w-5 h-5" />
+                             </Link>
+                          </Button>
+                       </TooltipTrigger>
+                       <TooltipContent><p className="font-bold text-xs">{t("Edit")}</p></TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                       <TooltipTrigger asChild>
+                         <span>
+                           <Button 
+                             variant="secondary" 
+                             size="icon" 
+                             disabled={isAtLimit}
+                             onClick={() => onTailor(resume.resume_id, resume.title)}
+                             className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
+                           >
+                             {isJobBased ? <Target className="w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
+                           </Button>
+                         </span>
+                       </TooltipTrigger>
+                       <TooltipContent><p className="font-bold text-xs">{t("TailorForJob")}</p></TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                       <TooltipTrigger asChild>
+                         <span>
+                           <Button 
+                             variant="secondary" 
+                             size="icon" 
+                             disabled={isAtLimit || isCloning}
+                             onClick={() => onClone(resume.resume_id, resume.title)}
+                             className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
+                           >
+                             {isCloning ? <Loader2 className="w-5 h-5 animate-spin" /> : <Copy className="w-5 h-5" />}
+                           </Button>
+                         </span>
+                       </TooltipTrigger>
+                       <TooltipContent><p className="font-bold text-xs">{t("Clone")}</p></TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                       <TooltipTrigger asChild>
+                          <Button 
+                            variant="secondary" 
+                            size="icon" 
+                            asChild
+                            className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
+                          >
+                             <a href={`/api/resume/${resume.resume_id}/export`} download>
+                                <Download className="w-5 h-5" />
+                             </a>
+                          </Button>
+                       </TooltipTrigger>
+                       <TooltipContent><p className="font-bold text-xs">{t("Download")}</p></TooltipContent>
+                    </Tooltip>
+                 </div>
+
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => onDelete(resume.resume_id)}
+                  className="mt-6 text-white/60 hover:text-white hover:bg-white/10 rounded-lg group/del"
+                >
+                   <Trash2 className="w-4 h-4 mr-2 group-hover/del:text-red-400 transition-colors" />
+                   <span className="text-[10px] font-black uppercase tracking-widest">{t("Delete")}</span>
+                </Button>
+             </motion.div>
+           )}
+        </AnimatePresence>
+      </Card>
+    </motion.div>
   );
 }

@@ -8,11 +8,13 @@ import {
   updateResumeStatus,
   fetchResumeById,
   deleteResume,
+  cloneResume,
+  updateResumeTypeAndJD,
 } from "../services/resume-service";
 import { parseJobDescription, improveResumeText } from "../services/ai-service";
 import { calculateATSScore, PATH_BASELINES } from "../services/ats-service";
 import { createClient } from "@/lib/supabase/server";
-import { SourceJDShape } from "../types";
+import { SourceJDShape, WhatChangedSummary } from "../types";
 
 /* -------------------------------------------------------------------------- */
 /*  Helper – get learner's current path                                       */
@@ -39,7 +41,6 @@ async function getLearnerPathId(): Promise<string> {
 /*  Actions                                                                   */
 /* -------------------------------------------------------------------------- */
 
-import { updateResumeTypeAndJD, cloneResume } from "../services/resume-service";
 
 export async function createGeneralResumeAction(title: string) {
   const resume = await createResume(title, "general");
@@ -47,11 +48,6 @@ export async function createGeneralResumeAction(title: string) {
   return resume;
 }
 
-export async function cloneResumeAction(baseResumeId: string, cloneTitle: string) {
-  const cloned = await cloneResume(baseResumeId, cloneTitle);
-  revalidatePath("/resume-builder");
-  return cloned;
-}
 
 export async function personalizeResumeAction(
   resumeId: string,
@@ -154,7 +150,165 @@ export async function aiImproveAction(
   });
 }
 
+export async function cloneResumeAction(resumeId: string, newTitle: string) {
+  const existing = await fetchResumes();
+  if (existing.length >= 3) {
+    throw new Error("Resume limit reached. Delete a resume to create a new one.");
+  }
+  const cloned = await cloneResume(resumeId, newTitle);
+  revalidatePath("/dashboard/resume-builder");
+  return cloned;
+}
+
 export async function deleteResumeAction(resumeId: string) {
   await deleteResume(resumeId);
   revalidatePath("/dashboard/resume-builder");
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Tailor for a Job — Silent clone + AI personalization                       */
+/* -------------------------------------------------------------------------- */
+
+export async function tailorForJobAction(
+  baseResumeId: string,
+  title: string,
+  jdText: string
+): Promise<{ newResumeId: string; whatChanged: WhatChangedSummary }> {
+  // 1. Guard: check resume count
+  const existing = await fetchResumes();
+  if (existing.length >= 3) {
+    throw new Error("Resume limit reached. Delete a resume to create a new one.");
+  }
+
+  // 2. Silent clone
+  const cloned = await cloneResume(baseResumeId, title);
+  const cloneId = cloned.resume_id;
+
+  // 3. Parse JD
+  const jdData = await parseJobDescription(jdText);
+  const jobTitle = jdData.job_title || "this role";
+  const companyName = jdData.company_name || "";
+  const requiredSkills = jdData.required_skills || [];
+  const preferredSkills = jdData.preferred_skills || [];
+
+  // 4. Fetch clone's sections
+  const cloneData = await fetchResumeById(cloneId);
+  const sections = cloneData?.resume_sections || [];
+
+  const whatChanged: WhatChangedSummary = {
+    summaryRewritten: false,
+    bulletsUpdatedCount: 0,
+    skillsReordered: false,
+    projectsReordered: false,
+    partialFailure: false,
+    jobTitle: `${jobTitle}${companyName ? " @ " + companyName : ""}`,
+  };
+
+  // 5. AI rewrite Summary
+  const summarySection = sections.find((s: any) => s.section_type === "SUMMARY");
+  if (summarySection?.content?.text) {
+    try {
+      const improved = await improveResumeText({
+        text: summarySection.content.text,
+        sectionType: "SUMMARY",
+        pathId: "",
+        primaryGoal: `Tailoring for: ${jobTitle}. Required: ${requiredSkills.join(", ")}`,
+        languagePref: "en",
+      });
+      summarySection.content.text = improved;
+      whatChanged.summaryRewritten = true;
+    } catch {
+      whatChanged.partialFailure = true;
+    }
+  }
+
+  // 6. AI rewrite Experience bullets (batch approach)
+  const expSection = sections.find((s: any) => s.section_type === "EXPERIENCE");
+  if (expSection?.content && Array.isArray(expSection.content)) {
+    const allBullets: { entryIdx: number; bulletIdx: number; text: string }[] = [];
+    expSection.content.forEach((entry: any, eIdx: number) => {
+      if (entry.bullets && Array.isArray(entry.bullets)) {
+        entry.bullets.forEach((b: string, bIdx: number) => {
+          if (b.trim()) allBullets.push({ entryIdx: eIdx, bulletIdx: bIdx, text: b });
+        });
+      }
+    });
+
+    if (allBullets.length > 0) {
+      try {
+        const bulletTexts = allBullets.map((b) => b.text);
+        const batchPrompt = `These are experience bullets from a resume. Rewrite each to better match a ${jobTitle} role requiring: ${requiredSkills.join(", ")}.
+
+Rules:
+1. Use strong action verbs.
+2. Highlight achievements relevant to the JD.
+3. Preserve original facts — do NOT invent new accomplishments.
+4. Return ONLY the rewritten bullets, one per line, in the SAME order.
+5. Same count of bullets as input.
+
+Bullets:
+${bulletTexts.map((t, i) => `${i + 1}. ${t}`).join("\n")}`;
+
+        const { text: improvedBullets } = await (await import("ai")).generateText({
+          model: (await import("@ai-sdk/openai")).openai("gpt-4o"),
+          maxRetries: 2,
+          system: "You are an expert resume writer. Rewrite the provided resume bullets to be more relevant to the target job. ONLY return the rewritten bullets, numbered, one per line.",
+          prompt: batchPrompt,
+        });
+
+        const lines = improvedBullets
+          .trim()
+          .split("\n")
+          .map((l) => l.replace(/^\d+\.\s*/, "").trim())
+          .filter((l) => l.length > 0);
+
+        let updated = 0;
+        allBullets.forEach((b, idx) => {
+          if (lines[idx] && lines[idx] !== b.text) {
+            expSection.content[b.entryIdx].bullets[b.bulletIdx] = lines[idx];
+            updated++;
+          }
+        });
+        whatChanged.bulletsUpdatedCount = updated;
+      } catch {
+        whatChanged.partialFailure = true;
+      }
+    }
+  }
+
+  // 7. Reorder Skills — required first, then preferred, then unmatched
+  const skillsSection = sections.find((s: any) => s.section_type === "SKILLS");
+  if (skillsSection?.content?.included_skill_ids) {
+    // Skills are stored as IDs — reordering happens at render time using source_jd
+    // We mark this as reordered since the JD data will be stored
+    whatChanged.skillsReordered = requiredSkills.length > 0;
+  }
+
+  // 8. Reorder Projects — most JD-relevant first
+  const projectsSection = sections.find((s: any) => s.section_type === "PROJECTS");
+  if (projectsSection?.content && Array.isArray(projectsSection.content) && projectsSection.content.length > 1) {
+    // Projects reordering also happens at render time based on project_skills overlap
+    whatChanged.projectsReordered = requiredSkills.length > 0;
+  }
+
+  // 9. Save updated sections
+  const updatedSections = sections.map((s: any) => ({
+    ...s,
+    resume_id: cloneId,
+  }));
+  await upsertResumeSections(updatedSections);
+
+  // 10. Update resume type to job_based and store source_jd
+  const sourceJd: SourceJDShape = {
+    job_title: jobTitle,
+    company_name: companyName,
+    required_skills: requiredSkills,
+    preferred_skills: preferredSkills,
+    analysis_id: null,
+  };
+  const finalTitle = title || `${jobTitle}${companyName ? " @ " + companyName : ""}`;
+  await updateResumeTypeAndJD(cloneId, finalTitle, sourceJd, "job_based");
+
+  revalidatePath("/dashboard/resume-builder");
+  return { newResumeId: cloneId, whatChanged };
 }

@@ -4,11 +4,13 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Briefcase, FileText } from 'lucide-react';
+
+import { Loader2, Briefcase } from 'lucide-react';
+import { CVUploadZone } from './CVUploadZone';
+import { ExtractedCV } from '../types';
 
 interface InputScreenProps {
-    onAnalyze: (jdText: string, cvFile: File | null) => void;
+    onAnalyze: (jdText: string, cvData: ExtractedCV | null) => void;
     isAnalyzing: boolean;
     error: string | null;
     onViewSaved: () => void;
@@ -17,11 +19,11 @@ interface InputScreenProps {
 export function InputScreen({ onAnalyze, isAnalyzing, error, onViewSaved }: InputScreenProps) {
     const t = useTranslations('Dashboard.Opportunities');
     const [jdText, setJdText] = useState('');
-    const [cvFile, setCvFile] = useState<File | null>(null);
+    const [cvData, setCvData] = useState<ExtractedCV | null>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (jdText.trim()) onAnalyze(jdText, cvFile);
+        if (jdText.trim()) onAnalyze(jdText, cvData);
     };
 
     return (
@@ -47,23 +49,13 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, onViewSaved }: Inpu
                         />
                     </div>
 
-                    <div className="border border-dashed rounded-xl p-6 text-center space-y-4 bg-muted/30">
-                        <FileText className="w-8 h-8 mx-auto text-muted-foreground" />
-                        <div>
-                            <p className="font-medium text-sm">Upload your CV (Optional)</p>
-                            <p className="text-xs text-muted-foreground mb-4">Adds prior experience not yet on your Mallah profile</p>
-                            <input 
-                                type="file" 
-                                accept=".txt,.md" 
-                                onChange={(e) => setCvFile(e.target.files?.[0] || null)}
-                                className="text-sm ml-4"
-                            />
-                        </div>
-                        {cvFile ? (
-                            <Badge variant="secondary">Using CV: {cvFile.name}</Badge>
-                        ) : (
-                            <Badge variant="outline">No CV — using Mallah profile only</Badge>
-                        )}
+                    <div>
+                        <label className="text-sm font-medium mb-2 block">Upload your CV (Optional)</label>
+                        <CVUploadZone 
+                            onUploadComplete={(data) => {
+                                setCvData(data);
+                            }} 
+                        />
                     </div>
 
                     {error && (

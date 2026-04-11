@@ -10,6 +10,15 @@ export interface SourceJDShape {
   analysis_id?: string | null;
 }
 
+export interface WhatChangedSummary {
+  summaryRewritten: boolean;
+  bulletsUpdatedCount: number;
+  skillsReordered: boolean;
+  projectsReordered: boolean;
+  partialFailure: boolean;
+  jobTitle: string;
+}
+
 export const personalInfoSchema = z.object({
   full_name: z.string(),
   phone: z.string(),

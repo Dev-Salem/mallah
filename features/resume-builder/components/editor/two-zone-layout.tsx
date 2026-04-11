@@ -12,21 +12,23 @@ interface TwoZoneLayoutProps {
 
 export function TwoZoneLayout({ leftNav, rightEditor, header, className }: TwoZoneLayoutProps) {
   return (
-    <div className={cn("flex flex-col h-screen overflow-hidden", className)}>
-      {header && <div className="flex-shrink-0 w-full z-10">{header}</div>}
+    <div className={cn("flex flex-col h-screen overflow-hidden bg-background", className)}>
+      {header && <div className="flex-shrink-0 w-full z-10 border-b bg-card">{header}</div>}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Nav Zone (~200px width on desktop) */}
-        <aside className="hidden md:flex w-[200px] flex-shrink-0 border-r overflow-y-auto">
-          {leftNav}
+        {/* Left Nav Zone (~280px width on desktop) */}
+        <aside className="hidden md:flex w-[280px] flex-shrink-0 border-r bg-card/50 overflow-y-auto overflow-x-hidden">
+          <div className="w-full flex flex-col h-full overflow-hidden">
+            {leftNav}
+          </div>
         </aside>
         
         {/* Mobile Nav Zone */}
-        <div className="md:hidden w-full overflow-x-auto border-b flex-shrink-0">
+        <div className="md:hidden w-full overflow-x-auto border-b flex-shrink-0 bg-card">
           {leftNav}
         </div>
 
         {/* Right Editor Zone */}
-        <main className="flex-1 overflow-y-auto relative bg-muted/40">
+        <main className="flex-1 overflow-y-auto relative bg-dashboard-bg/30">
           {rightEditor}
         </main>
       </div>

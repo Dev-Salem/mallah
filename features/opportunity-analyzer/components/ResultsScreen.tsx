@@ -2,10 +2,11 @@
 import { OpportunityAnalysisResult } from '../types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { ResultsTab } from './tabs/ResultsTab';
 import { OverviewTab } from './tabs/OverviewTab';
 import { SkillsTab } from './tabs/SkillsTab';
-import { PortfolioTab } from './tabs/PortfolioTab';
 import { ActionPlanTab } from './tabs/ActionPlanTab';
+import { PortfolioTab } from './tabs/PortfolioTab';
 import { SavedAnalysesTab } from './tabs/SavedAnalysesTab';
 import { saveAnalysisAction } from '../actions/analyzer.action';
 import { toast } from 'sonner';
@@ -41,20 +42,22 @@ export function ResultsScreen({ result, onNewAnalysis, onViewAnalysis }: Results
                 </div>
             </div>
 
-            <Tabs defaultValue="overview" className="w-full">
+            <Tabs defaultValue="results" className="w-full">
                 <TabsList className="flex w-full items-center justify-start h-auto p-1 bg-muted/50 rounded-lg overflow-x-auto inline-flex flex-nowrap snap-x">
-                    <TabsTrigger value="overview" className="py-2.5 min-w-[100px] snap-center">Overview</TabsTrigger>
+                    <TabsTrigger value="results" className="py-2.5 min-w-[100px] snap-center">Results</TabsTrigger>
+                    <TabsTrigger value="overview" className="py-2.5 min-w-[110px] snap-center">Job Details</TabsTrigger>
                     <TabsTrigger value="skills" className="py-2.5 min-w-[80px] snap-center">Skills</TabsTrigger>
-                    <TabsTrigger value="portfolio" className="py-2.5 min-w-[80px] snap-center">Portfolio</TabsTrigger>
                     <TabsTrigger value="actionplan" className="py-2.5 min-w-[100px] snap-center">Action Plan</TabsTrigger>
+                    <TabsTrigger value="portfolio" className="py-2.5 min-w-[80px] snap-center">Portfolio</TabsTrigger>
                     <TabsTrigger value="saved" className="py-2.5 min-w-[80px] snap-center">Saved</TabsTrigger>
                 </TabsList>
 
                 <div className="mt-6">
+                    <TabsContent value="results"><ResultsTab result={result} /></TabsContent>
                     <TabsContent value="overview"><OverviewTab result={result} /></TabsContent>
                     <TabsContent value="skills"><SkillsTab result={result} /></TabsContent>
-                    <TabsContent value="portfolio"><PortfolioTab result={result} /></TabsContent>
                     <TabsContent value="actionplan"><ActionPlanTab result={result} /></TabsContent>
+                    <TabsContent value="portfolio"><PortfolioTab result={result} /></TabsContent>
                     <TabsContent value="saved"><SavedAnalysesTab onViewAnalysis={onViewAnalysis} /></TabsContent>
                 </div>
             </Tabs>

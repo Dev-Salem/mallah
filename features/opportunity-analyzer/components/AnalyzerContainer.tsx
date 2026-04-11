@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { OpportunityAnalysisResult } from '../types';
+import { OpportunityAnalysisResult, ExtractedCV } from '../types';
 import { InputScreen } from './InputScreen';
 import { ResultsScreen } from './ResultsScreen';
-import { analyzeJobAction, parseCvAction } from '../actions/analyzer.action';
+import { analyzeJobAction } from '../actions/analyzer.action';
 import { SavedAnalysesTab } from './tabs/SavedAnalysesTab';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -14,20 +14,11 @@ export function AnalyzerContainer() {
     const [error, setError] = useState<string | null>(null);
     const [viewingSaved, setViewingSaved] = useState(false);
 
-    const handleAnalyze = async (jdText: string, cvFile: File | null) => {
+    const handleAnalyze = async (jdText: string, cvData: ExtractedCV | null) => {
         setIsAnalyzing(true);
         setError(null);
         
         try {
-            let cvData = null;
-            if (cvFile) {
-                const cvText = await cvFile.text(); // Assuming text-based CVs for now
-                const cvRes = await parseCvAction(cvText);
-                if (cvRes.success && cvRes.data) {
-                    cvData = cvRes.data;
-                }
-            }
-
             const analysisRes = await analyzeJobAction(jdText, cvData);
             if (analysisRes.success && analysisRes.analysis) {
                 setResult(analysisRes.analysis);

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
 
 export function OverviewTab({ result }: { result: OpportunityAnalysisResult }) {
+    const isApplyReady = result.match_score >= 80;
     
     const getScoreColor = (s: number) => {
         if (s < 35) return 'text-red-500';
@@ -73,6 +74,12 @@ export function OverviewTab({ result }: { result: OpportunityAnalysisResult }) {
                         <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 p-3 rounded-lg text-sm w-full dark:text-blue-400">
                             <AlertCircle className="w-5 h-5 shrink-0" />
                             <p>{result.cv_skills_contributed} skills from your CV contributed to this score. Complete roadmap topics to verify them.</p>
+                        </div>
+                    )}
+                    {isApplyReady && (
+                        <div className="flex items-start gap-2 bg-emerald-500/10 text-emerald-600 p-3 rounded-lg text-sm w-full font-bold dark:text-emerald-400">
+                            <AlertCircle className="w-5 h-5 shrink-0" />
+                            <p>You are Apply Ready! You meet the core requirements for this role. Check the Action Plan to prepare your application.</p>
                         </div>
                     )}
                 </CardContent>

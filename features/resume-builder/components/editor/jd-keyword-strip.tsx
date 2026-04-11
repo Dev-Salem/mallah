@@ -21,7 +21,7 @@ export function JDKeywordStrip({ requiredSkills, resumeText }: JDKeywordStripPro
 
   return (
     <div className="bg-primary/5 border-b px-4 py-2 flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-hide">
-      <span className="text-xs font-semibold text-primary uppercase tracking-wider shrink-0">
+      <span className="text-xs font-bold text-primary shrink-0">
         Job Keywords:
       </span>
       {matchStatus.map(({ skill, matched }) => (

@@ -1,5 +1,7 @@
 export type OpportunityScoreTier = 'NOT_READY' | 'EARLY_STAGE' | 'GETTING_CLOSE' | 'STRONG_CANDIDATE' | 'EXCELLENT_MATCH';
 
+export const SCORE_WEIGHT_MALLAH = 1.0;
+export const SCORE_WEIGHT_CV = 0.7;
 export interface ExtractedSkill {
     name: string;
     level?: 'beginner' | 'intermediate' | 'advanced';
@@ -67,4 +69,34 @@ export interface OpportunityAnalysisResult {
     matchingResumeId?: string | null;
     created_at?: string;
     last_reanalyzed_at?: string;
+}
+
+export interface CVUpload {
+    cv_id: string;
+    user_id: string;
+    file_name: string;
+    extracted_skills: Array<{ skill_name: string; inferred_level: string }>;
+    experience_years: number;
+    previous_roles: string[];
+    uploaded_at: string;
+}
+
+export interface JobListing {
+    job_id: string;
+    path_id: string;
+    title: string;
+    company: string;
+    location: string;
+    is_remote: boolean;
+    employment_type: string;
+    seniority: 'Intern' | 'Junior' | 'Mid' | 'Senior';
+    description: string;
+    required_skills: string[];
+    preferred_skills: string[];
+    apply_url?: string;
+    source_url?: string;
+    status: 'published' | 'expired';
+    published_at: string;
+    expires_at: string;
+    created_at: string;
 }
