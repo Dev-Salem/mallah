@@ -162,21 +162,6 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
               <div className="absolute inset-0 hud-grid opacity-[0.03] pointer-events-none" />
 
               
-              {/* Decorative Terminal Metrics */}
-              <div className="absolute top-4 left-6 flex flex-col gap-1 pointer-events-none opacity-40">
-                <span className="font-mono text-[10px] uppercase font-bold text-primary tabular-nums tracking-wider italic">
-                   STATUS: STANDBY
-                </span>
-                <span className="font-mono text-[9px] uppercase font-medium text-muted-foreground tabular-nums tracking-widest">
-                   REF: RM_00_INIT
-                </span>
-              </div>
-
-              <div className="absolute bottom-4 right-6 flex flex-col gap-1 text-right pointer-events-none opacity-40">
-                <span className="font-mono text-[9px] uppercase font-medium text-muted-foreground tabular-nums tracking-widest">
-                   LAT: 25.0 N / LONG: 55.0 E
-                </span>
-              </div>
 
               <CardContent className="p-16 text-center flex flex-col items-center justify-center min-h-[350px] relative z-10">
                 <div className="w-20 h-20 rounded-2xl bg-background/50 backdrop-blur-sm shadow-xl border border-primary/30 flex items-center justify-center mb-8 group-hover:scale-105 group-hover:border-primary/60 transition-all duration-500 glow-border">

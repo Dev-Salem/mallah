@@ -75,10 +75,7 @@ export default async function LandingPage() {
         <section className="relative pt-32 pb-24 lg:pt-56 lg:pb-40 px-6 lg:px-12">
           <div className="container mx-auto grid lg:grid-cols-[1fr_auto] gap-20 items-center">
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-3 px-3 py-1 border border-primary/20 bg-primary/5 mb-8">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                <span className={`text-[9px] uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} text-primary font-mono font-bold`}>{t('Hero.navLog')}</span>
-              </div>
+
               <h1 className={`text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-foreground ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>
                 {t('Hero.title1')} <br />
                 <span className="text-primary">{t('Hero.title2')}</span> <br />
@@ -109,21 +106,7 @@ export default async function LandingPage() {
                   <Logo size={320} />
                 </div>
 
-                {/* HUD Overlays */}
-                <div className="absolute top-4 left-4 text-[8px] font-mono text-primary flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <span className="opacity-40 tracking-widest">LAT:</span>
-                    <span className="font-bold">25.1972° N</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="opacity-40 tracking-widest">LNG:</span>
-                    <span className="font-bold">55.2744° E</span>
-                  </div>
-                </div>
 
-                <div className="absolute bottom-4 right-4 text-[8px] font-mono text-primary/40 uppercase tracking-[0.3em]">
-                  Mallah-Interface_v4.0
-                </div>
 
                 <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20" />
                 <div className="absolute inset-y-0 left-1/2 w-px bg-primary/20" />
@@ -148,13 +131,12 @@ export default async function LandingPage() {
 
             <div className="grid md:grid-cols-3 gap-1px bg-primary/5 border border-primary/5">
               {[
-                { label: "SYS_ERR_01", key: "item1" },
-                { label: "SYS_ERR_02", key: "item2" },
-                { label: "SYS_ERR_03", key: "item3" }
-              ].map((item) => (
-                <div key={item.label} className="bg-background p-10 hover:bg-primary/5 transition-all duration-500 group relative">
-                  <div className="absolute top-0 left-0 w-1 h-0 bg-primary group-hover:h-full transition-all duration-500" />
-                  <span className="text-[9px] font-mono text-primary/60 mb-8 block tracking-[0.3em] font-bold">{item.label}</span>
+                { key: "item1" },
+                { key: "item2" },
+                { key: "item3" }
+              ].map((item, idx) => (
+                <div key={item.key} className="bg-background p-10 hover:bg-primary/5 transition-all duration-500 group relative">
+
                   <h4 className="text-lg font-mono font-bold text-foreground mb-4 tracking-tight uppercase group-hover:text-primary transition-colors">{t(`Problem.${item.key}Title`)}</h4>
                   <p className="text-sm font-mono text-muted-foreground/70 leading-relaxed font-mono">{t(`Problem.${item.key}Desc`)}</p>
                 </div>
@@ -204,9 +186,7 @@ export default async function LandingPage() {
         <section className="py-40 px-6 lg:px-12 relative text-center bg-muted/50 overflow-hidden">
           <div className="absolute inset-0 hud-grid opacity-[0.2] -z-10" />
           <div className="container mx-auto max-w-4xl relative">
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[8px] font-mono text-primary/20 tracking-[1em] uppercase">
-              // OVERRIDE_SYSTEM_INITIATE //
-            </div>
+
             <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-10 block">{t('CTA.label')}</span>
             <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-foreground mb-16 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
               {t('CTA.title')}
