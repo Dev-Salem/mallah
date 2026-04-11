@@ -155,19 +155,46 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
         {resumes.length === 0 ? (
           <div className="mt-12">
             <Card
-              className="border border-primary/10 bg-muted/5 hover:bg-muted/10 hover:border-primary/20 transition-all cursor-pointer group rounded-2xl relative overflow-hidden"
+              className="glass border border-primary/20 bg-muted/5 hover:border-primary/40 transition-all cursor-pointer group rounded-2xl relative overflow-hidden"
               onClick={handleCreateGeneral}
             >
-              <CardContent className="p-12 text-center flex flex-col items-center justify-center min-h-[300px]">
-                <div className="w-16 h-16 rounded-2xl bg-dashboard-card-bg shadow-sm border border-primary/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
-                  <LayoutTemplate className="w-8 h-8 text-primary" />
+              {/* HUD Background Elements */}
+              <div className="absolute inset-0 hud-grid opacity-[0.03] pointer-events-none" />
+
+              
+              {/* Decorative Terminal Metrics */}
+              <div className="absolute top-4 left-6 flex flex-col gap-1 pointer-events-none opacity-40">
+                <span className="font-mono text-[10px] uppercase font-bold text-primary tabular-nums tracking-wider italic">
+                   STATUS: STANDBY
+                </span>
+                <span className="font-mono text-[9px] uppercase font-medium text-muted-foreground tabular-nums tracking-widest">
+                   REF: RM_00_INIT
+                </span>
+              </div>
+
+              <div className="absolute bottom-4 right-6 flex flex-col gap-1 text-right pointer-events-none opacity-40">
+                <span className="font-mono text-[9px] uppercase font-medium text-muted-foreground tabular-nums tracking-widest">
+                   LAT: 25.0 N / LONG: 55.0 E
+                </span>
+              </div>
+
+              <CardContent className="p-16 text-center flex flex-col items-center justify-center min-h-[350px] relative z-10">
+                <div className="w-20 h-20 rounded-2xl bg-background/50 backdrop-blur-sm shadow-xl border border-primary/30 flex items-center justify-center mb-8 group-hover:scale-105 group-hover:border-primary/60 transition-all duration-500 glow-border">
+                  <LayoutTemplate className="w-10 h-10 text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
                 </div>
-                <h3 className="font-black text-xl text-foreground uppercase tracking-tight leading-none mb-4">{t("GeneralDescriptionTitle")}</h3>
-                <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed font-bold text-xs uppercase tracking-widest opacity-60">
+                <h3 className="font-black text-2xl text-foreground uppercase tracking-tight leading-none mb-4 drop-shadow-sm">{t("GeneralDescriptionTitle")}</h3>
+                <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed font-bold text-[10px] uppercase tracking-[0.2em] opacity-80">
                    {t("EmptyStateMessage")}
                 </p>
-                <Button variant="outline" className="mt-8 rounded-xl border-primary/20 font-bold group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all px-8 h-12" disabled={isCreatingGeneral}>
-                  {isCreatingGeneral && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                <Button 
+                  variant="outline" 
+                  className="mt-10 rounded-xl border-primary/30 font-bold group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all px-10 h-14 text-sm tracking-wide shadow-lg shadow-primary/5 group-hover:shadow-primary/20" 
+                  disabled={isCreatingGeneral}>
+                  {isCreatingGeneral ? (
+                    <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                  ) : (
+                    <Plus className="w-5 h-5 mr-3" />
+                  )}
                   {t("NewResume")}
                 </Button>
               </CardContent>
@@ -192,18 +219,18 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && closeDeleteDialog()}>
-          <AlertDialogContent className="rounded-3xl border border-primary/10 shadow-2xl bg-dashboard-card-bg p-0 overflow-hidden max-w-md">
+          <AlertDialogContent className="rounded-3xl border border-border bg-background shadow-2xl p-0 overflow-hidden max-w-md">
             <div className="p-8 space-y-6">
               <AlertDialogHeader>
-                <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
+                <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-4">
                    <Trash2 className="w-7 h-7 text-red-500" />
                 </div>
                 <AlertDialogTitle className="text-2xl font-black uppercase tracking-tight text-foreground">{t("DeleteTitle")}</AlertDialogTitle>
                 <AlertDialogDescription className="space-y-4 pt-2 block" asChild>
-                  <div className="text-muted-foreground">
-                    <p className="font-bold text-xs leading-relaxed opacity-80">{t("DeleteDescription1")}</p>
-                    <div className="bg-red-500/5 p-4 border border-red-500/20 rounded-none">
-                      <p className="text-[10px] font-black text-red-500 uppercase tracking-widest leading-none mb-2 opacity-70">
+                  <div className="text-foreground/70">
+                    <p className="font-bold text-xs leading-relaxed">{t("DeleteDescription1")}</p>
+                    <div className="bg-red-500/10 p-4 border border-red-500/30 rounded-xl">
+                      <p className="text-[10px] font-black text-red-500 uppercase tracking-widest leading-none mb-2">
                         {t("DeleteDescription2")}
                       </p>
                       <p className="text-sm font-black text-foreground uppercase tracking-tight">
@@ -217,7 +244,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
                          onChange={(e) => setDeleteConfirmationText(e.target.value)}
                          placeholder="DELETE"
                          disabled={isDeleting}
-                         className="h-12 rounded-xl border-primary/10 bg-muted/5 focus:ring-red-500 focus:border-red-500 font-mono text-center tracking-widest"
+                         className="h-12 rounded-xl border-border bg-muted/30 focus:ring-red-500 focus:border-red-500 font-mono text-center tracking-widest font-bold"
                        />
                     </div>
                   </div>
@@ -333,7 +360,7 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
                 exit={{ opacity: 0 }}
                 className="absolute inset-0 bg-background/80 backdrop-blur-md z-30 flex items-center justify-center p-4 border-b border-primary/20"
               >
-                <div className="scanline" />
+
                 
                 <div className="grid grid-cols-2 gap-4 w-full max-w-[160px] relative z-40">
                   <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.05 }}>
@@ -421,12 +448,10 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
               {resume.title || t("UntitledResume")}
             </h3>
             
-            {isJobBased ? (
+            {isJobBased && (
               <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
                  <span className="truncate">{targetCompany || targetRole || "Specific Role"}</span>
               </div>
-            ) : (
-              <p className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider">{t("GeneralResume")}</p>
             )}
           </div>
 
@@ -436,7 +461,7 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
              </span>
              
              <AnimatePresence>
-                {isHovered ? (
+                {isHovered && (
                   <motion.div
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -452,13 +477,6 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
                        <span className="text-[9px] font-black uppercase tracking-widest">{t("Delete")}</span>
                     </Button>
                   </motion.div>
-                ) : (
-                  <Link 
-                    href={`/dashboard/resume-builder/${resume.resume_id}`}
-                    className="text-primary hover:scale-110 transition-transform"
-                   >
-                      <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                   </Link>
                 )}
              </AnimatePresence>
           </div>

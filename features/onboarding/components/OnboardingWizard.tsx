@@ -126,7 +126,6 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
             {/* HUD Background */}
             <div className="absolute inset-0 hud-grid" />
             <div className="absolute inset-0 noise" />
-            <div className="scanline" />
 
             {/* Progress bar */}
             {currentStep !== "intro" && currentStep !== "loading" && (

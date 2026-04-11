@@ -123,12 +123,14 @@ export default function FullEditor({ resume }: { resume: any }) {
                <h1 className="text-xl font-bold tracking-tight text-foreground max-w-sm truncate">
                 {resume.title || t("UntitledResume")}
               </h1>
+            {isJobBased && (
               <div className={cn(
                 "px-2 py-0.5 rounded-lg text-xs font-bold border",
-                isJobBased ? "text-primary bg-primary/10 border-primary/20" : "text-muted-foreground bg-muted border-border"
+                "text-primary bg-primary/10 border-primary/20"
               )}>
-                {isJobBased ? t("JobBased") : t("GeneralResume")}
+                {t("JobBased")}
               </div>
+            )}
             </div>
             {isJobBased && (
                <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mt-0.5">
@@ -180,15 +182,25 @@ export default function FullEditor({ resume }: { resume: any }) {
             {t("Save")}
           </Button>
 
-          <Button size="sm" asChild className="rounded-xl h-10 px-4 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 font-bold text-xs">
-            <a
-              href={`/api/resume/${resume.resume_id}/export`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              {t("Export")}
-            </a>
+          <Button 
+            size="sm" 
+            onClick={() => {
+              const summarySection = sections.find(s => s.section_type === "SUMMARY");
+              const skillsSection = sections.find(s => s.section_type === "SKILLS");
+              
+              const hasSummary = summarySection?.content?.text?.trim().length > 0;
+              const hasSkills = (skillsSection?.content?.skills?.length || 0) > 0;
+
+              if (!hasSummary || !hasSkills) {
+                toast.error(t("ExportGuardError"));
+                return;
+              }
+              window.open(`/api/resume/${resume.resume_id}/export`, "_blank");
+            }}
+            className="rounded-xl h-10 px-4 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 font-bold text-xs"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {t("Export")}
           </Button>
         </div>
       </header>

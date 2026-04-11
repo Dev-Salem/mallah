@@ -167,26 +167,6 @@
   pointer-events: none;
 }
 
-.scanline {
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
-  opacity: 0.1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation: scan 8s linear infinite;
-}
-
-@keyframes scan {
-  from {
-    top: 0%;
-  }
-
-  to {
-    top: 100%;
-  }
-}
 
 .glass {
   background: color-mix(in oklch, var(--background), transparent 60%);
