@@ -308,7 +308,7 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
           </div>
 
           {isJobBased && (
-             <div className="absolute top-4 start-4">
+             <div className="absolute top-4 start-4 z-10">
                 <div className="flex items-center gap-1.5 bg-dashboard-card-bg/90 backdrop-blur px-2.5 py-1 border border-primary/10 rounded-full shadow-sm">
                    <Target className="w-3.5 h-3.5 text-primary" />
                    <span className="text-[9px] font-black uppercase tracking-wider text-primary">
@@ -318,11 +318,101 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
              </div>
           )}
 
-          <div className="absolute top-4 end-4">
+          <div className="absolute top-4 end-4 z-10">
              <div className="bg-dashboard-card-bg/90 backdrop-blur px-2 py-1 border border-primary/10 rounded-full shadow-sm text-[9px] font-bold text-muted-foreground uppercase">
                 ATS: {resume.ats_score || "—"}
              </div>
           </div>
+
+          {/* Header HUD Overlay */}
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-background/80 backdrop-blur-md z-30 flex items-center justify-center p-4 border-b border-primary/20"
+              >
+                <div className="scanline" />
+                
+                <div className="grid grid-cols-2 gap-4 w-full max-w-[160px] relative z-40">
+                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.05 }}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="secondary" 
+                          size="icon" 
+                          asChild 
+                          className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
+                        >
+                          <Link href={`/dashboard/resume-builder/${resume.resume_id}`}>
+                            <FileText className="w-5 h-5" />
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent><p className="font-bold text-xs">{t("Edit")}</p></TooltipContent>
+                    </Tooltip>
+                  </motion.div>
+
+                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.1 }}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>
+                          <Button 
+                            variant="secondary" 
+                            size="icon" 
+                            disabled={isAtLimit}
+                            onClick={() => onTailor(resume.resume_id, resume.title)}
+                            className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
+                          >
+                            {isJobBased ? <Target className="w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent><p className="font-bold text-xs">{t("TailorForJob")}</p></TooltipContent>
+                    </Tooltip>
+                  </motion.div>
+
+                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.15 }}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>
+                          <Button 
+                            variant="secondary" 
+                            size="icon" 
+                            disabled={isAtLimit || isCloning}
+                            onClick={() => onClone(resume.resume_id, resume.title)}
+                            className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
+                          >
+                            {isCloning ? <Loader2 className="w-5 h-5 animate-spin" /> : <Copy className="w-5 h-5" />}
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent><p className="font-bold text-xs">{t("Clone")}</p></TooltipContent>
+                    </Tooltip>
+                  </motion.div>
+
+                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2 }}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="secondary" 
+                          size="icon" 
+                          asChild
+                          className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
+                        >
+                          <a href={`/api/resume/${resume.resume_id}/export`} download>
+                            <Download className="w-5 h-5" />
+                          </a>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent><p className="font-bold text-xs">{t("Download")}</p></TooltipContent>
+                    </Tooltip>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className="p-5 flex flex-col flex-grow bg-dashboard-card-bg relative z-10">
@@ -344,105 +434,35 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
              <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest opacity-60">
                 UPD: {new Date(resume.last_updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
              </span>
-             <Link 
-              href={`/dashboard/resume-builder/${resume.resume_id}`}
-              className="text-primary hover:scale-110 transition-transform"
-             >
-                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-             </Link>
+             
+             <AnimatePresence>
+                {isHovered ? (
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                  >
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => onDelete(resume.resume_id)}
+                      className="h-7 text-red-500/60 hover:text-red-500 hover:bg-red-500/10 rounded-lg px-2"
+                    >
+                       <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                       <span className="text-[9px] font-black uppercase tracking-widest">{t("Delete")}</span>
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <Link 
+                    href={`/dashboard/resume-builder/${resume.resume_id}`}
+                    className="text-primary hover:scale-110 transition-transform"
+                   >
+                      <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                   </Link>
+                )}
+             </AnimatePresence>
           </div>
         </div>
-
-        {/* Hover Action Tray */}
-        <AnimatePresence>
-           {isHovered && (
-             <motion.div 
-               initial={{ y: 50, opacity: 0 }}
-               animate={{ y: 0, opacity: 1 }}
-               exit={{ y: 50, opacity: 0 }}
-               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-               className="absolute inset-0 bg-primary/95 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-white"
-             >
-                <div className="grid grid-cols-2 gap-3 w-full max-w-[200px]">
-                    <Tooltip>
-                       <TooltipTrigger asChild>
-                          <Button 
-                            variant="secondary" 
-                            size="icon" 
-                            asChild 
-                            className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
-                          >
-                             <Link href={`/dashboard/resume-builder/${resume.resume_id}`}>
-                                <FileText className="w-5 h-5" />
-                             </Link>
-                          </Button>
-                       </TooltipTrigger>
-                       <TooltipContent><p className="font-bold text-xs">{t("Edit")}</p></TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                       <TooltipTrigger asChild>
-                         <span>
-                           <Button 
-                             variant="secondary" 
-                             size="icon" 
-                             disabled={isAtLimit}
-                             onClick={() => onTailor(resume.resume_id, resume.title)}
-                             className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
-                           >
-                             {isJobBased ? <Target className="w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
-                           </Button>
-                         </span>
-                       </TooltipTrigger>
-                       <TooltipContent><p className="font-bold text-xs">{t("TailorForJob")}</p></TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                       <TooltipTrigger asChild>
-                         <span>
-                           <Button 
-                             variant="secondary" 
-                             size="icon" 
-                             disabled={isAtLimit || isCloning}
-                             onClick={() => onClone(resume.resume_id, resume.title)}
-                             className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
-                           >
-                             {isCloning ? <Loader2 className="w-5 h-5 animate-spin" /> : <Copy className="w-5 h-5" />}
-                           </Button>
-                         </span>
-                       </TooltipTrigger>
-                       <TooltipContent><p className="font-bold text-xs">{t("Clone")}</p></TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                       <TooltipTrigger asChild>
-                          <Button 
-                            variant="secondary" 
-                            size="icon" 
-                            asChild
-                            className="w-full h-12 rounded-xl bg-white/10 hover:bg-white/20 border-none text-white transition-all active:scale-90"
-                          >
-                             <a href={`/api/resume/${resume.resume_id}/export`} download>
-                                <Download className="w-5 h-5" />
-                             </a>
-                          </Button>
-                       </TooltipTrigger>
-                       <TooltipContent><p className="font-bold text-xs">{t("Download")}</p></TooltipContent>
-                    </Tooltip>
-                 </div>
-
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => onDelete(resume.resume_id)}
-                  className="mt-6 text-white/60 hover:text-white hover:bg-white/10 rounded-lg group/del"
-                >
-                   <Trash2 className="w-4 h-4 mr-2 group-hover/del:text-red-400 transition-colors" />
-                   <span className="text-[10px] font-black uppercase tracking-widest">{t("Delete")}</span>
-                </Button>
-             </motion.div>
-           )}
-        </AnimatePresence>
       </Card>
     </motion.div>
   );
