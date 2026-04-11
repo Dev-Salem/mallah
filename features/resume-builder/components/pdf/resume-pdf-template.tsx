@@ -1,72 +1,96 @@
-import { Document, Page, Text, View, StyleSheet, Link } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Link, Font } from "@react-pdf/renderer";
+
+// Register Fonts
+Font.register({
+  family: 'Inter',
+  fonts: [
+    { src: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf', fontWeight: 400 },
+    { src: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fMZhrib2Bg-4.ttf', fontWeight: 600 },
+    { src: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYMZhrib2Bg-4.ttf', fontWeight: 700 },
+  ]
+});
+
+Font.register({
+  family: 'JetBrains Mono',
+  src: 'https://fonts.gstatic.com/s/jetbrainsmono/v18/t64v85u_7LIsfshR2k42VfB3_X6t.ttf'
+});
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
-    fontFamily: "Helvetica",
-    fontSize: 10,
+    padding: 36, // 0.5in
+    fontFamily: "Inter",
+    fontSize: 9.5,
     color: "#000",
-    lineHeight: 1.5,
+    lineHeight: 1.3,
   },
   header: {
-    marginBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    paddingBottom: 10,
-    textAlign: "center",
+    marginBottom: 20,
+    textAlign: "left",
   },
   name: {
-    fontSize: 22,
-    fontWeight: "bold",
-    fontFamily: "Helvetica-Bold",
-    textTransform: "uppercase",
+    fontSize: 20,
+    fontWeight: 600,
+    fontFamily: "Inter",
     marginBottom: 4,
   },
   contact: {
-    fontSize: 9,
-    color: "#555",
+    fontSize: 9.5,
+    color: "#64748b", // Slate-500
+    flexDirection: 'row',
+    gap: 4,
+    flexWrap: 'wrap',
   },
   section: {
-    marginBottom: 12,
+    marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 11,
-    fontWeight: "bold",
+    fontSize: 9,
+    fontWeight: 700,
     textTransform: "uppercase",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#cbd5e1", // Slate-300
     paddingBottom: 2,
-    marginBottom: 6,
-    fontFamily: "Helvetica-Bold",
+    marginBottom: 8,
+    fontFamily: "Inter",
+    letterSpacing: 0.1,
   },
   text: {
-    fontSize: 10,
-    textAlign: "justify",
+    fontSize: 9.5,
+    textAlign: "left",
   },
   entryHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 2,
   },
-  bold: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 10,
+  title: {
+    fontSize: 10.5,
+    fontWeight: 600,
+    fontFamily: "Inter",
   },
-  small: {
+  companyLine: {
+    fontSize: 9.5,
+    color: "#64748b", // Slate-500
+  },
+  dates: {
+    fontFamily: "JetBrains Mono",
     fontSize: 9,
-    color: "#555",
+    color: "#64748b", // Slate-500
   },
   bullet: {
-    fontSize: 9,
+    fontSize: 9.5,
     paddingLeft: 10,
-    marginBottom: 1,
+    marginBottom: 2,
+    lineHeight: 1.3,
   },
   link: {
-    color: "#3b82f6",
+    color: "#1a56db", // Darker blue
     textDecoration: "none",
   },
-  skillsText: {
-    fontSize: 10,
+  skillLabel: {
+    fontSize: 9.5,
+    fontWeight: 600,
+    fontFamily: "Inter",
   },
 });
 
@@ -121,25 +145,25 @@ export const ResumePDFTemplate = ({
           <Text style={styles.name}>
             {displayName}
           </Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 4, flexWrap: 'wrap', marginTop: 4 }}>
-            {personalInfo.phone && <Text style={styles.contact}>{personalInfo.phone}</Text>}
-            {personalInfo.phone && (personalInfo.location || personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text style={styles.contact}>•</Text>}
+          <View style={styles.contact}>
+            {personalInfo.phone && <Text>{personalInfo.phone}</Text>}
+            {personalInfo.phone && (personalInfo.location || personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text>•</Text>}
             
-            {personalInfo.location && <Text style={styles.contact}>{personalInfo.location}</Text>}
-            {personalInfo.location && (personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text style={styles.contact}>•</Text>}
+            {personalInfo.location && <Text>{personalInfo.location}</Text>}
+            {personalInfo.location && (personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text>•</Text>}
 
             {personalInfo.linkedin && (
-              <Link src={personalInfo.linkedin} style={{ ...styles.contact, ...styles.link }}>LinkedIn</Link>
+              <Link src={personalInfo.linkedin} style={styles.link}>LinkedIn</Link>
             )}
-            {personalInfo.linkedin && (personalInfo.github || personalInfo.portfolio) && <Text style={styles.contact}>•</Text>}
+            {personalInfo.linkedin && (personalInfo.github || personalInfo.portfolio) && <Text>•</Text>}
 
             {personalInfo.github && (
-              <Link src={personalInfo.github} style={{ ...styles.contact, ...styles.link }}>GitHub</Link>
+              <Link src={personalInfo.github} style={styles.link}>GitHub</Link>
             )}
-            {personalInfo.github && personalInfo.portfolio && <Text style={styles.contact}>•</Text>}
+            {personalInfo.github && personalInfo.portfolio && <Text>•</Text>}
 
             {personalInfo.portfolio && (
-              <Link src={personalInfo.portfolio} style={{ ...styles.contact, ...styles.link }}>Portfolio</Link>
+              <Link src={personalInfo.portfolio} style={styles.link}>Portfolio</Link>
             )}
           </View>
         </View>
@@ -156,15 +180,18 @@ export const ResumePDFTemplate = ({
         {skills.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Skills</Text>
-            <Text style={styles.skillsText}>
-              {skills
-                .map((item: any) =>
-                  typeof item === "string"
-                    ? item
-                    : `${item.name}: ${item.skills.join(", ")}`
-                )
-                .join(" • ")}
-            </Text>
+            {skills.map((item: any, i: number) => (
+              <Text key={i} style={{ marginBottom: 2 }}>
+                {typeof item === "string" ? (
+                  <Text style={styles.text}>{item}</Text>
+                ) : (
+                  <>
+                    <Text style={styles.skillLabel}>{item.name}</Text>
+                    <Text style={styles.text}> — {item.skills.join(", ")}</Text>
+                  </>
+                )}
+              </Text>
+            ))}
           </View>
         ) : null}
 
@@ -175,18 +202,18 @@ export const ResumePDFTemplate = ({
             {experienceEntries.map((exp: any, i: number) => (
               <View key={i} style={{ marginBottom: 8 }}>
                 <View style={styles.entryHeader}>
-                  <Text style={styles.bold}>
+                  <Text style={styles.title}>
                     {exp.title}
                     {exp.company ? ` — ${exp.company}` : ""}
                   </Text>
-                  <Text style={styles.small}>
+                  <Text style={styles.dates}>
                     {exp.start}
                     {(exp.end || exp.current) &&
                       ` – ${exp.current ? "Present" : exp.end}`}
                   </Text>
                 </View>
                 {exp.location ? (
-                  <Text style={styles.small}>{exp.location}</Text>
+                  <Text style={{ ...styles.companyLine, marginBottom: 2 }}>{exp.location}</Text>
                 ) : null}
                 {exp.bullets
                   ?.filter(Boolean)
@@ -206,31 +233,33 @@ export const ResumePDFTemplate = ({
             <Text style={styles.sectionTitle}>Projects</Text>
             {projectEntries.map((proj: any, i: number) => (
               <View key={i} style={{ marginBottom: 8 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  {proj.demo || proj.demo_override ? (
-                    <Link
-                      src={proj.demo || proj.demo_override}
-                      style={{ ...styles.bold, ...styles.link }}
-                    >
-                      {proj.title || "Untitled Project"}
-                    </Link>
-                  ) : (
-                    <Text style={styles.bold}>
-                      {proj.title || "Untitled Project"}
-                    </Text>
-                  )}
-                  {proj.technologies?.length > 0 && (
-                    <Text style={{ fontSize: 9, color: "#555" }}>
-                      {" | "}
-                      {proj.technologies.join(", ")}
-                    </Text>
-                  )}
+                <View style={styles.entryHeader}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, flexWrap: 'wrap' }}>
+                    {proj.demo || proj.demo_override ? (
+                      <Link
+                        src={proj.demo || proj.demo_override}
+                        style={{ ...styles.title, ...styles.link }}
+                      >
+                        {proj.title || "Untitled Project"}
+                      </Link>
+                    ) : (
+                      <Text style={styles.title}>
+                        {proj.title || "Untitled Project"}
+                      </Text>
+                    )}
+                    {proj.technologies?.length > 0 && (
+                      <Text style={styles.dates}>
+                        {" | "}
+                        {proj.technologies.join(", ")}
+                      </Text>
+                    )}
+                  </View>
                 </View>
 
                 {(proj.github || proj.github_override) && (
                   <Link
                     src={proj.github || proj.github_override}
-                    style={{ ...styles.small, ...styles.link, marginTop: 1 }}
+                    style={{ ...styles.companyLine, ...styles.link, marginTop: 1, fontSize: 9 }}
                   >
                     GitHub Codebase
                   </Link>
@@ -258,16 +287,18 @@ export const ResumePDFTemplate = ({
             <Text style={styles.sectionTitle}>Education</Text>
             {educationEntries.map((edu: any, i: number) => (
               <View key={i} style={{ marginBottom: 4 }}>
-                <Text style={styles.bold}>
-                  {edu.degree}
-                  {edu.institution ? ` — ${edu.institution}` : ""}
-                  {edu.field ? `, ${edu.field}` : ""}
-                </Text>
-                {edu.year ? (
-                  <Text style={styles.small}>
-                    {edu.in_progress ? `Expected ${edu.year}` : edu.year}
+                <View style={styles.entryHeader}>
+                  <Text style={styles.title}>
+                    {edu.degree}
+                    {edu.institution ? ` — ${edu.institution}` : ""}
+                    {edu.field ? `, ${edu.field}` : ""}
                   </Text>
-                ) : null}
+                  {edu.year ? (
+                    <Text style={styles.dates}>
+                      {edu.in_progress ? `Expected ${edu.year}` : edu.year}
+                    </Text>
+                  ) : null}
+                </View>
               </View>
             ))}
           </View>
@@ -279,23 +310,17 @@ export const ResumePDFTemplate = ({
             <Text style={styles.sectionTitle}>Certifications</Text>
             {certEntries.map((cert: any, i: number) => (
               <View key={i} style={{ marginBottom: 4 }}>
-                <Text style={styles.text}>
-                  {cert.name}
-                  {cert.issuer ? ` — ${cert.issuer}` : ""}
-                  {cert.year ? ` (${cert.year})` : ""}
-                </Text>
+                <View style={styles.entryHeader}>
+                   <Text style={styles.text}>
+                    <Text style={styles.title}>{cert.name}</Text>
+                    {cert.issuer ? ` — ${cert.issuer}` : ""}
+                  </Text>
+                  {cert.year ? (
+                    <Text style={styles.dates}>{cert.year}</Text>
+                  ) : null}
+                </View>
               </View>
             ))}
-          </View>
-        ) : null}
-
-        {/* ── Empty state ──────────────────────── */}
-        {sections.length === 0 ? (
-          <View style={styles.section}>
-            <Text style={styles.text}>
-              This resume is currently empty. Edit it in Mallah to populate
-              sections.
-            </Text>
           </View>
         ) : null}
       </Page>

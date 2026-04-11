@@ -209,7 +209,7 @@ export function Sidebar() {
       </aside>
 
       {/* ─── Mobile Bottom Tab Bar ─── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 border-t border-primary/10 backdrop-blur-xl lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl lg:hidden shadow-[0_-1px_10px_rgba(0,0,0,0.1)]">
         <div className="flex items-center justify-around h-16 px-2">
           {mobileTabItems.map((item) => {
             const isActive = item.key !== 'more' && pathname === item.href;
@@ -254,7 +254,7 @@ export function Sidebar() {
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setMobileSheetOpen(false)}>
           <div className="absolute inset-0 bg-background/60" />
           <div
-            className="absolute bottom-16 left-0 right-0 bg-background border-t border-primary/10 p-4 space-y-2"
+            className="absolute bottom-16 left-0 right-0 bg-background p-4 space-y-2 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <Link

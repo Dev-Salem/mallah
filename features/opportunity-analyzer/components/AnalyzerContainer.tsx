@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { OpportunityAnalysisResult, ExtractedCV } from '../types';
 import { InputScreen } from './InputScreen';
 import { ResultsScreen } from './ResultsScreen';
@@ -8,11 +8,22 @@ import { SavedAnalysesTab } from './tabs/SavedAnalysesTab';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
-export function AnalyzerContainer() {
-    const [result, setResult] = useState<OpportunityAnalysisResult | null>(null);
+interface AnalyzerContainerProps {
+    initialJD?: string;
+    initialAnalysis?: OpportunityAnalysisResult | null;
+}
+
+export function AnalyzerContainer({ initialJD, initialAnalysis }: AnalyzerContainerProps) {
+    const [result, setResult] = useState<OpportunityAnalysisResult | null>(initialAnalysis || null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [viewingSaved, setViewingSaved] = useState(false);
+
+    // Sync result when initialAnalysis changes
+    useEffect(() => {
+        if (initialAnalysis) {
+            setResult(initialAnalysis);
+        }
+    }, [initialAnalysis]);
 
     const handleAnalyze = async (jdText: string, cvData: ExtractedCV | null) => {
         setIsAnalyzing(true);
@@ -35,31 +46,7 @@ export function AnalyzerContainer() {
 
     const handleNewAnalysis = () => {
         setResult(null);
-        setViewingSaved(false);
     };
-
-    const handleViewAnalysis = (analysis: OpportunityAnalysisResult) => {
-        setResult(analysis);
-        setViewingSaved(false);
-    };
-
-    if (viewingSaved) {
-        return (
-            <div className="max-w-5xl mx-auto w-full space-y-6">
-                <Button 
-                    variant="ghost" 
-                    onClick={() => setViewingSaved(false)}
-                    className="flex items-center gap-2 mb-4"
-                >
-                    <ArrowLeft className="w-4 h-4" /> Back to Analyzer
-                </Button>
-                <div className="bg-card p-6 rounded-xl border shadow-sm">
-                    <h2 className="text-2xl font-bold mb-6">Saved Analyses</h2>
-                    <SavedAnalysesTab onViewAnalysis={handleViewAnalysis} />
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="max-w-5xl mx-auto w-full">
@@ -68,10 +55,10 @@ export function AnalyzerContainer() {
                     onAnalyze={handleAnalyze} 
                     isAnalyzing={isAnalyzing} 
                     error={error} 
-                    onViewSaved={() => setViewingSaved(true)}
+                    initialJD={initialJD}
                 />
             ) : (
-                <ResultsScreen result={result} onNewAnalysis={handleNewAnalysis} onViewAnalysis={handleViewAnalysis} />
+                <ResultsScreen result={result} onNewAnalysis={handleNewAnalysis} />
             )}
         </div>
     );

@@ -31,6 +31,10 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
+          // Preserve existing headers (like next-intl rewrites)
+          existingResponse?.headers.forEach((value, key) => {
+            supabaseResponse.headers.set(key, value);
+          });
         },
       },
     }

@@ -4,36 +4,62 @@ import { createClient } from '@/lib/supabase/server';
 import { JobListing } from '../types';
 
 /**
- * Computes the matching score based on required and preferred skills
- * using the specified Phase 1 formula:
- * match = (required_covered / total_required) * 0.70 + (preferred_covered / total_preferred) * 0.30
+ * Fetches the learner's current_path_id and name from the learners table joined with paths.
  */
-function calculatePhaseOneMatchScore(job: JobListing, learnerSkills: string[]): number {
-    const learnerSkillsLower = learnerSkills.map(s => s.toLowerCase());
+export async function getLearnerPathAction(): Promise<{ id: string; name: string } | null> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
 
-    const requiredCovered = job.required_skills.filter(skill =>
-        learnerSkillsLower.some(s => s === skill.toLowerCase())
-    ).length;
+    const { data, error } = await supabase
+        .from('learners')
+        .select(`
+            current_path_id,
+            path:current_path_id (
+                name
+            )
+        `)
+        .eq('user_id', user.id)
+        .single();
 
-    const preferredCovered = job.preferred_skills.filter(skill =>
-        learnerSkillsLower.some(s => s === skill.toLowerCase())
-    ).length;
+    if (error || !data || !data.current_path_id) return null;
 
-    const requiredScore = job.required_skills.length > 0 
-        ? (requiredCovered / job.required_skills.length) * 0.70 
-        : 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pathName = (data.path as any)?.name || 'Unknown Path';
 
-    const preferredScore = job.preferred_skills.length > 0
-        ? (preferredCovered / job.preferred_skills.length) * 0.30
-        : 0;
-
-    return Math.round((requiredScore + preferredScore) * 100);
+    return {
+        id: data.current_path_id,
+        name: pathName
+    };
 }
 
+/**
+ * Fetches the learner's skill names from user_skills joined with skills.
+ */
+export async function getLearnerSkillsAction(): Promise<string[]> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const { data, error } = await supabase
+        .from('user_skills')
+        .select('skills(name)')
+        .eq('user_id', user.id);
+
+    if (error || !data) return [];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data.map((row: any) => row.skills?.name).filter(Boolean) as string[];
+}
+
+/**
+ * Fetches published job listings for a given path.
+ * Match scoring is deferred until AI skill extraction is implemented on feed jobs.
+ */
 export async function getJobListingsAction(
     pathId: string,
     learnerSkills: string[],
-    sortBy: 'Best Match' | 'Newest' = 'Best Match',
+    sortBy: 'Best Match' | 'Newest' = 'Newest',
     search: string = '',
     seniority: string = 'All levels'
 ) {
@@ -53,6 +79,9 @@ export async function getJobListingsAction(
         query = query.eq('seniority', seniority);
     }
 
+    // Sort by newest by default since match scoring is not yet available
+    query = query.order('published_at', { ascending: false });
+
     const { data: jobs, error } = await query;
 
     if (error) {
@@ -60,17 +89,18 @@ export async function getJobListingsAction(
         throw new Error('Failed to fetch job listings');
     }
 
-    // Append match score manually
+    // Append a placeholder matchScore of 0 for now
+    // Match scoring will be meaningful once required_skills/preferred_skills
+    // are populated by AI extraction
     const scoredJobs = (jobs as JobListing[]).map(job => ({
         ...job,
-        matchScore: calculatePhaseOneMatchScore(job, learnerSkills)
+        matchScore: 0
     }));
 
-    if (sortBy === 'Best Match') {
-        scoredJobs.sort((a, b) => b.matchScore - a.matchScore);
-    } else {
-        scoredJobs.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
-    }
+    // Suppress unused variable warning — learnerSkills will be used for scoring
+    // once AI skill extraction populates required_skills on feed jobs
+    void learnerSkills;
+    void sortBy;
 
-    return scoredJobs.slice(0, 10); // Returns max 10 for the feed
+    return scoredJobs;
 }

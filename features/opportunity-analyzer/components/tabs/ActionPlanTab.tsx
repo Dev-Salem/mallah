@@ -18,10 +18,10 @@ export function ActionPlanTab({ result }: { result: OpportunityAnalysisResult })
 
     const getBadge = (type: string) => {
         switch (type) {
-            case 'learn_topic': return <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-600 hover:bg-indigo-500/20">Learn</Badge>;
-            case 'build_project': return <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 hover:bg-blue-500/20">Build</Badge>;
-            case 'update_resume': return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20">Resume</Badge>;
-            case 'apply_now': return <Badge variant="secondary" className="bg-purple-500/10 text-purple-600 hover:bg-purple-500/20">Action</Badge>;
+            case 'learn_topic': return <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20">Learn</Badge>;
+            case 'build_project': return <Badge variant="secondary" className="bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20">Build</Badge>;
+            case 'update_resume': return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20">Resume</Badge>;
+            case 'apply_now': return <Badge variant="secondary" className="bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20">Action</Badge>;
             default: return null;
         }
     };
@@ -44,7 +44,7 @@ export function ActionPlanTab({ result }: { result: OpportunityAnalysisResult })
                                     <div className="ml-2 shrink-0">{getBadge(step.step_type)}</div>
                                 </div>
                                 {step.reason && (
-                                    <p className="text-sm text-muted-foreground">{step.reason}</p>
+                                    <p className="text-sm text-foreground/80">{step.reason}</p>
                                 )}
                                 {step.link_target && step.step_type !== 'update_resume' && (
                                     <a href={step.link_target} target="_blank" rel="noopener noreferrer" className="mt-2 text-sm text-primary hover:underline font-medium inline-flex items-center gap-1">

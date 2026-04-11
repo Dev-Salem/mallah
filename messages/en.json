@@ -201,20 +201,63 @@
       }
     },
     "Opportunities": {
-      "pageTitle": "Opportunity Analyzer",
-      "pageDescription": "Paste a job description to see how your skills match and what you need to learn.",
-      "pasteJobLabel": "Job Description",
-      "pasteJobPlaceholder": "Paste the full job description here...",
-      "analyzeButton": "Analyze Match",
-      "analyzing": "Analyzing...",
-      "errorFallback": "Failed to analyze. Please try again.",
-      "matchScoreLabel": "Match Score",
-      "fulfilledSkills": "Skills You Have",
-      "noFulfilledSkills": "No direct matches found.",
-      "missingSkills": "Skills You Need",
-      "noMissingSkills": "You have all the required skills!",
-      "missingSkillsCallToAction": "These skills are missing from your profile. We can help you build them.",
-      "suggestLearningPath": "Find Learning Resources"
+      "tabs": {
+        "jobFeed": "Job Feed",
+        "analyzeARole": "Analyze a Role",
+        "savedAnalyses": "Saved Analyses"
+      },
+      "jobFeed": {
+        "status": {
+          "activePath": "Matching Opportunities: {pathName}",
+          "refresh": "Updated Weekly"
+        },
+        "searchPlaceholder": "Filter signal by role, company...",
+        "empty": {
+          "title": "NO SIGNAL DETECTED",
+          "description": "The mission board is currently empty. Initiate a direct role analysis to proceed.",
+          "action": "ANALYZE_ROLE"
+        },
+        "analyzeButton": "Evaluate Match"
+      },
+      "customAnalysis": {
+        "missionBrief": "Analyze Job Opportunity",
+        "description": "Analyze external job descriptions to identify skill gaps and receive a tailored preparation roadmap.",
+        "inputLabel": "Job Description Content",
+        "resumeLabel": "Resume Settings",
+        "savedAnalyses": "View Saved Analyses",
+        "textareaPlaceholder": "Paste the complete job description here...",
+        "button": {
+          "empty": "Waiting for Input",
+          "ready": "Analyze Role",
+          "loading": "Analyzing..."
+        },
+        "fileUpload": {
+          "title": "Resume Analysis",
+          "dragActive": "Processing resume...",
+          "ready": "Resume processed",
+          "empty": "Upload Resume (Optional)",
+          "formats": "Accepts PDF or DOCX up to 5MB",
+          "status": "System Status: Ready"
+        }
+      },
+      "results": {
+        "status": "Analysis Complete",
+        "level": "{level} Level",
+        "export": "Export PDF",
+        "new": "New Analysis",
+        "save": "Save Analysis",
+        "gapsTitle": "Action Required: Gaps",
+        "nextStepTitle": "Recommended Next Step",
+        "savedAnalyses": "Saved Analyses",
+        "tabs": {
+          "report": "Match Report",
+          "intel": "Role Insights",
+          "skills": "Skill Gaps",
+          "plan": "Action Plan",
+          "portfolio": "Portfolio Sync",
+          "archive": "Saved"
+        }
+      }
     }
   },
   "Roadmap": {

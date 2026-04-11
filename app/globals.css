@@ -137,6 +137,8 @@
   --leading-relaxed: 1.625;
   --tracking-tight: -0.01em;
   --tracking-tighter: -0.02em;
+
+  --font-mono: var(--font-mono-internal);
 }
 
 @layer base {
@@ -177,6 +179,139 @@
 .glow-border {
   box-shadow: 0 0 15px color-mix(in oklch, var(--primary), transparent 90%);
   border: 1px solid color-mix(in oklch, var(--primary), transparent 70%);
+}
+
+/* --- Redesign HUD Utilities --- */
+
+/* Pulse dot for live feed header */
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.pulse-dot {
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+/* Card entrance stagger */
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.job-card {
+  animation: cardEntrance 400ms ease-out both;
+  animation-delay: calc(var(--card-index) * 80ms);
+}
+
+/* Card hover glow */
+.job-card:hover {
+  border-color: oklch(0.68 0.13 38.8 / 0.4);
+  box-shadow: 0 0 20px oklch(0.68 0.13 38.8 / 0.15);
+  transition: all 200ms ease;
+}
+
+/* Expiry strip */
+@keyframes stripPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+.expiry-strip--urgent {
+  animation: stripPulse 1.2s ease-in-out infinite;
+}
+
+/* Match bar re-pulse on hover */
+@keyframes pulseOnce {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+.animate-pulse-once {
+  animation: pulseOnce 600ms ease-out;
+}
+
+/* Save heart bounce */
+@keyframes heartBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.2); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.heart-saved {
+  animation: heartBounce 300ms ease-out;
+  color: oklch(0.68 0.13 38.8);
+}
+
+/* Scanline sweep — runs once */
+@keyframes scanSweep {
+  from { transform: translateY(-100%); opacity: 0.03; }
+  to   { transform: translateY(100%); opacity: 0; }
+}
+.scanline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    oklch(0.68 0.13 38.8 / 0.06) 50%,
+    transparent 100%
+  );
+  animation: scanSweep 1.5s ease-in-out forwards;
+  pointer-events: none;
+}
+
+/* Tab active state — professional indicator */
+.tactical-tab-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem; /* h-12 */
+  padding: 0 1.5rem; /* px-6 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500;
+  color: oklch(var(--foreground) / 0.6);
+  background: transparent !important;
+  border-radius: 0 !important;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  margin-bottom: -1px; /* Align with TabsList border */
+  overflow: hidden;
+}
+
+.tactical-tab-trigger[data-state="active"] {
+  color: oklch(var(--primary));
+  border-bottom-color: oklch(var(--primary));
+  opacity: 1;
+  background: linear-gradient(to bottom, transparent, oklch(var(--primary) / 0.05)) !important;
+}
+
+/* Light/Glow effect on hover */
+.tactical-tab-trigger::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 100%;
+  background: radial-gradient(circle at bottom, oklch(var(--primary) / 0.15), transparent 70%);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+  pointer-events: none;
+}
+
+.tactical-tab-trigger:hover::after,
+.tactical-tab-trigger[data-state="active"]::after {
+  width: 100%;
+}
+
+.tactical-tab-trigger:hover {
+  color: oklch(var(--foreground));
+  opacity: 1;
+}
+
+.tactical-tab-trigger:active {
+  transform: scale(0.98);
 }
 
 @theme inline {

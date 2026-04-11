@@ -24,7 +24,7 @@ function isPublicRoute(pathname: string): boolean {
   return false;
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   try {
     const pathname = request.nextUrl.pathname;
 
@@ -40,32 +40,25 @@ export async function proxy(request: NextRequest) {
       return new NextResponse('Not Found', { status: 404 });
     }
 
-    // ─── STANDARD LEARNER ROUTING (unchanged) ───
-    const isLocalized = pathname.startsWith('/en') || pathname.startsWith('/ar');
-    const isImplicitAdmin = pathname.startsWith(`/${ADMIN_PANEL_PATH}`);
-
-    if (process.env.NODE_ENV === 'development' && isImplicitAdmin) {
-      console.log(`[Middleware] Admin Path Detected: "${pathname}", Localized: ${isLocalized}, key: "${ADMIN_PANEL_PATH}"`);
-    }
-
-    // FORCE locale block removed to prevent infinite redirect loop with next-intl 'as-needed' mode.
+    // ─── STANDARD LEARNER ROUTING ───
+    // Bypass intl for specific system paths
     if (pathname.startsWith('/auth/') || pathname === '/auth' || pathname.startsWith('/api/') || pathname === '/api') {
       const { response } = await updateSession(request);
       return response;
     }
 
-    // Run intl middleware first
+    // Run intl middleware first to handle routing/locales
     const intlResponse = intlMiddleware(request);
 
     // If intlMiddleware issued a redirect (e.g. locale prefix normalization),
-    // just update the session cookies on it and return — no auth logic needed
+    // update session cookies and return
     const isRedirect = intlResponse.headers.get('location');
     if (isRedirect) {
       const { response } = await updateSession(request, intlResponse);
       return response;
     }
 
-    // For normal (non-redirect) responses, apply route protection
+    // For normal responses, apply route protection
     const { response: supabaseResponse, user } = await updateSession(request, intlResponse);
 
     const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
@@ -73,37 +66,31 @@ export async function proxy(request: NextRequest) {
     const withoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
     const isAdminPath = ADMIN_PANEL_PATH && (withoutLocale === `/${ADMIN_PANEL_PATH}` || withoutLocale.startsWith(`/${ADMIN_PANEL_PATH}/`));
 
-    // Not authenticated or restricted
+    // Authentication Guard
     if (!user) {
       if (!isPublic) {
-        // If at admin path, redirect to Admin Login
         if (isAdminPath) {
           const adminLoginUrl = new URL(`/${locale}/${ADMIN_PANEL_PATH}/login`, request.url);
           return NextResponse.redirect(adminLoginUrl);
         }
-        // Otherwise, standard learner login redirect
         const loginUrl = new URL(`/${locale}/login`, request.url);
         return NextResponse.redirect(loginUrl);
       }
     }
 
-    // Authenticated logic
+    // Role & Status Guards
     if (user) {
-      const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
-
-      // 1. Block unverified users from protected routes (unless it's the verify-success page or public)
       if (!user.email_confirmed_at && !isPublic && !pathname.includes('/verify-success')) {
         const loginUrl = new URL(`/${locale}/login`, request.url);
         return NextResponse.redirect(loginUrl);
       }
 
-      // 2. Auth Page Guard: Redirect authenticated users AWAY from login/register
       if (pathname.match(/^\/(en|ar)\/(login|register)$/)) {
         const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
         return NextResponse.redirect(dashboardUrl);
       }
 
-      // 3. Status & Role Guard (Fetch profile)
+      // Profile-based onboarding checks
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -123,13 +110,11 @@ export async function proxy(request: NextRequest) {
         .eq('user_id', user.id)
         .single();
 
-      // Blocked account check
       if (learner?.status === 'blocked' && !isPublic) {
         const loginUrl = new URL(`/${locale}/login`, request.url);
         return NextResponse.redirect(loginUrl);
       }
 
-      // 4. Onboarding Guard: Redirect to /onboarding if not completed
       const isLearnerDashboard = /^\/(en|ar)\/dashboard/.test(pathname);
       const isLearnerSettings = /^\/(en|ar)\/settings/.test(pathname);
       const isOnboarding = /^\/(en|ar)\/onboarding/.test(pathname);
@@ -149,12 +134,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

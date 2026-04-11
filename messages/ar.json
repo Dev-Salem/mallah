@@ -201,20 +201,63 @@
       }
     },
     "Opportunities": {
-      "pageTitle": "محلل الفرص",
-      "pageDescription": "قم بلصق الوصف الوظيفي لترى مدى تطابق مهاراتك وما تحتاج إلى تعلمه.",
-      "pasteJobLabel": "الوصف الوظيفي",
-      "pasteJobPlaceholder": "قم بلصق الوصف الوظيفي الكامل هنا...",
-      "analyzeButton": "تحليل التطابق",
-      "analyzing": "جاري التحليل...",
-      "errorFallback": "فشل التحليل. يرجى المحاولة مرة أخرى.",
-      "matchScoreLabel": "نسبة التطابق",
-      "fulfilledSkills": "المهارات التي تمتلكها",
-      "noFulfilledSkills": "لم يتم العثور على تطابق مباشر.",
-      "missingSkills": "المهارات التي تحتاجها",
-      "noMissingSkills": "أنت تمتلك جميع المهارات المطلوبة!",
-      "missingSkillsCallToAction": "هذه المهارات مفقودة من ملفك الشخصي. يمكننا مساعدتك في بنائها.",
-      "suggestLearningPath": "البحث عن مصادر التعلم"
+      "tabs": {
+        "jobFeed": "خلاصة الوظائف",
+        "analyzeARole": "تحليل دور وظيفي",
+        "savedAnalyses": "التحليلات المحفوظة"
+      },
+      "jobFeed": {
+        "status": {
+          "activePath": "فرص متطابقة: {pathName}",
+          "refresh": "يُحدّث أسبوعياً"
+        },
+        "searchPlaceholder": "تصفية الإشارة حسب الدور، الشركة...",
+        "empty": {
+          "title": "لم يتم العثور على إشارات",
+          "description": "لوحة المهام فارغة حالياً. ابدأ بتحليل مباشر لوظيفة للمتابعة.",
+          "action": "تحليل وظيفة"
+        },
+        "analyzeButton": "تقييم التطابق"
+      },
+      "customAnalysis": {
+        "missionBrief": "تحليل فرصة عمل",
+        "description": "قم بتحليل أوصاف الوظائف الخارجية لتحديد الثغرات المهارية والحصول على خطة تحضير مخصصة.",
+        "inputLabel": "محتوى وصف الوظيفة",
+        "resumeLabel": "إعدادات السيرة الذاتية",
+        "savedAnalyses": "عرض التحليلات المحفوظة",
+        "textareaPlaceholder": "الصق وصف الوظيفة الكامل هنا...",
+        "button": {
+          "empty": "بانتظار المدخلات",
+          "ready": "تحليل الوظيفة",
+          "loading": "جاري التحليل..."
+        },
+        "fileUpload": {
+          "title": "تحليل السيرة الذاتية",
+          "dragActive": "جاري معالجة السيرة...",
+          "ready": "تمت معالجة السيرة",
+          "empty": "ارفع سيرتك الذاتية (اختياري)",
+          "formats": "يقبل ملفات PDF أو DOCX حتى 5 ميجابايت",
+          "status": "حالة النظام: جاهز"
+        }
+      },
+      "results": {
+        "status": "اكتمل التحليل",
+        "level": "مستوى {level}",
+        "export": "تصدير PDF",
+        "new": "تحليل جديد",
+        "save": "حفظ التحليل",
+        "gapsTitle": "إجراء مطلوب: الفجوات",
+        "nextStepTitle": "الخطوة التالية الموصى بها",
+        "savedAnalyses": "التحليلات المحفوظة",
+        "tabs": {
+          "report": "تقرير المطابقة",
+          "intel": "رؤى الدور",
+          "skills": "فجوات المهارات",
+          "plan": "خطة العمل",
+          "portfolio": "مزامنة الأعمال",
+          "archive": "المحفوظات"
+        }
+      }
     }
   },
   "Roadmap": {

@@ -5,8 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle2, AlertTriangle, XCircle, ArrowRight, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
+    const t = useTranslations('Dashboard.Opportunities');
     const isApplyReady = result.match_score >= 80;
 
     const getScoreColor = (s: number) => {
@@ -46,7 +48,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                         <div className="p-8 flex-1 space-y-4">
                             <div>
                                 <h3 className="text-xl font-bold mb-1">Match Potential Analysis</h3>
-                                <p className="text-muted-foreground text-sm">
+                                <p className="text-foreground/70 text-sm">
                                     Based on your Mallah profile and uploaded CV, you are a <strong>{result.match_score >= 80 ? "strong" : "developing"}</strong> candidate for this role.
                                 </p>
                             </div>
@@ -79,7 +81,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                 <Card className="border-red-500/10 dark:bg-red-500/5">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-bold flex items-center gap-2 text-red-500">
-                            <AlertTriangle className="w-4 h-4" /> ACTION REQUIRED: GAPS
+                            <AlertTriangle className="w-4 h-4" /> {t('results.gapsTitle')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -93,7 +95,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                                 <span className="text-xs text-muted-foreground self-center">+{result.skills_breakdown.missing.required.length - 5} more</span>
                             )}
                         </div>
-                        <p className="text-xs text-muted-foreground">Focus on these to increase your match score above 80%.</p>
+                        <p className="text-xs text-foreground/60">Focus on these to increase your match score above 80%.</p>
                     </CardContent>
                 </Card>
 
@@ -101,7 +103,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                 <Card className="border-emerald-500/10 dark:bg-emerald-500/5">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-500">
-                            <Zap className="w-4 h-4" /> NEXT MISSION STEP
+                            <Zap className="w-4 h-4" /> {t('results.nextStepTitle')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -111,7 +113,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                                     <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5" />
                                     <div>
                                         <p className="text-sm font-bold">{result.action_plan[0].title}</p>
-                                        <p className="text-xs text-muted-foreground line-clamp-1">{result.action_plan[0].reason}</p>
+                                        <p className="text-xs text-foreground/70 line-clamp-1">{result.action_plan[0].reason}</p>
                                     </div>
                                 </div>
                                 <ArrowRight className="w-4 h-4 text-emerald-500 group-hover:translate-x-1 transition-transform" />
@@ -119,7 +121,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                         ) : (
                             <p className="text-sm italic text-muted-foreground">Ready to apply! Update your resume first.</p>
                         )}
-                        <p className="text-xs text-muted-foreground">See the full Action Plan tab for your customized roadmap.</p>
+                        <p className="text-xs text-foreground/60">See the full Action Plan tab for your customized roadmap.</p>
                     </CardContent>
                 </Card>
             </div>
