@@ -43,7 +43,7 @@ export default function ResetPasswordForm() {
         return (
             <div className="flex flex-col gap-6 text-center">
                 <div className="p-4 border border-primary/30 bg-primary/5 rounded-lg">
-                    <p className="text-sm text-white/80">{t('resetPassword.successMessage')}</p>
+                    <p className="text-sm text-foreground">{t('resetPassword.successMessage')}</p>
                 </div>
             </div>
         )
@@ -53,7 +53,7 @@ export default function ResetPasswordForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
             {/* New Password */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="password" className="text-sm font-medium text-white/70">
+                <label htmlFor="password" className="text-sm font-medium text-muted-foreground">
                     {t('resetPassword.passwordLabel')}
                 </label>
                 <input
@@ -61,7 +61,7 @@ export default function ResetPasswordForm() {
                     type="password"
                     autoComplete="new-password"
                     {...register('password')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
                     placeholder="••••••••"
                 />
                 {errors.password && (
@@ -71,7 +71,7 @@ export default function ResetPasswordForm() {
 
             {/* Confirm Password */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="confirmPassword" className="text-sm font-medium text-white/70">
+                <label htmlFor="confirmPassword" className="text-sm font-medium text-muted-foreground">
                     {t('resetPassword.confirmLabel')}
                 </label>
                 <input
@@ -79,7 +79,7 @@ export default function ResetPasswordForm() {
                     type="password"
                     autoComplete="new-password"
                     {...register('confirmPassword')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
                     placeholder="••••••••"
                 />
                 {errors.confirmPassword && (

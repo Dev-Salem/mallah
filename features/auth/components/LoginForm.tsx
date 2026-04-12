@@ -40,7 +40,7 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="email" className="text-sm font-medium text-white/70">
+                <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
                     {t('login.emailLabel')}
                 </label>
                 <input
@@ -48,8 +48,8 @@ export default function LoginForm() {
                     type="email"
                     autoComplete="email"
                     {...register('email')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
-                    placeholder={t('login.emailLabel')}
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
+                    placeholder="salem@mallah.io"
                 />
                 {errors.email && (
                     <span className="text-xs text-red-400">{t(errors.email.message!)}</span>
@@ -58,7 +58,7 @@ export default function LoginForm() {
 
             {/* Password */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="password" className="text-sm font-medium text-white/70">
+                <label htmlFor="password" className="text-sm font-medium text-muted-foreground">
                     {t('login.passwordLabel')}
                 </label>
                 <input
@@ -66,7 +66,7 @@ export default function LoginForm() {
                     type="password"
                     autoComplete="current-password"
                     {...register('password')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
                     placeholder="••••••••"
                 />
                 {errors.password && (
@@ -98,7 +98,7 @@ export default function LoginForm() {
                 >
                     {t('login.forgotPassword')}
                 </Link>
-                <p className="text-white/40">
+                <p className="text-muted-foreground/60">
                     {t('login.noAccount')}{' '}
                     <Link
                         href="/register"

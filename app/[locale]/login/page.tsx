@@ -21,7 +21,7 @@ export default async function LoginPage() {
           <div className="inline-block transform hover:rotate-12 transition-transform duration-500 mb-8 p-1 border border-primary/20 glass">
             <Logo size={64} />
           </div>
-          <h1 className={`text-3xl font-black text-white mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
+          <h1 className={`text-3xl font-black text-foreground mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
             {t('login.title')}
           </h1>
           <div className="flex items-center justify-center gap-2">
@@ -37,7 +37,7 @@ export default async function LoginPage() {
 
           <LoginForm />
 
-          <div className={`mt-8 pt-8 border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-white/20 uppercase ${locale !== 'ar' ? 'tracking-widest' : ''}`}>
+          <div className={`mt-8 pt-8 border-t border-primary/10 flex justify-between items-center text-[8px] font-mono text-muted-foreground/40 uppercase ${locale !== 'ar' ? 'tracking-widest' : ''}`}>
             <span>ENC: AES-256</span>
             <span>MALLAH_CORE_v4.0.2</span>
           </div>

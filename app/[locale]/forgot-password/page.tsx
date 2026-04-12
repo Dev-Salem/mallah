@@ -21,7 +21,7 @@ export default async function ForgotPasswordPage() {
                     <div className="inline-block transform hover:rotate-12 transition-transform duration-500 mb-8 p-1 border border-primary/20 glass">
                         <Logo size={64} />
                     </div>
-                    <h1 className={`text-3xl font-black text-white mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
+                    <h1 className={`text-3xl font-black text-foreground mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
                         {t('forgotPassword.title')}
                     </h1>
                 </div>

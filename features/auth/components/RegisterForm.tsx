@@ -46,7 +46,7 @@ export default function RegisterForm() {
             {/* Name Row */}
             <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                    <label htmlFor="firstName" className="text-sm font-medium text-white/70">
+                    <label htmlFor="firstName" className="text-sm font-medium text-muted-foreground">
                         {t('register.firstNameLabel')}
                     </label>
                     <input
@@ -54,14 +54,15 @@ export default function RegisterForm() {
                         type="text"
                         autoComplete="given-name"
                         {...register('firstName')}
-                        className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                        className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
+                        placeholder="Salem"
                     />
                     {errors.firstName && (
                         <span className="text-xs text-red-400">{t(errors.firstName.message!)}</span>
                     )}
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <label htmlFor="lastName" className="text-sm font-medium text-white/70">
+                    <label htmlFor="lastName" className="text-sm font-medium text-muted-foreground">
                         {t('register.lastNameLabel')}
                     </label>
                     <input
@@ -69,7 +70,8 @@ export default function RegisterForm() {
                         type="text"
                         autoComplete="family-name"
                         {...register('lastName')}
-                        className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                        className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
+                        placeholder="Al-Otaibi"
                     />
                     {errors.lastName && (
                         <span className="text-xs text-red-400">{t(errors.lastName.message!)}</span>
@@ -79,7 +81,7 @@ export default function RegisterForm() {
 
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="email" className="text-sm font-medium text-white/70">
+                <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
                     {t('register.emailLabel')}
                 </label>
                 <input
@@ -87,7 +89,8 @@ export default function RegisterForm() {
                     type="email"
                     autoComplete="email"
                     {...register('email')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
+                    placeholder="salem@mallah.io"
                 />
                 {errors.email && (
                     <span className="text-xs text-red-400">{t(errors.email.message!)}</span>
@@ -96,7 +99,7 @@ export default function RegisterForm() {
 
             {/* Password */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="password" className="text-sm font-medium text-white/70">
+                <label htmlFor="password" className="text-sm font-medium text-muted-foreground">
                     {t('register.passwordLabel')}
                 </label>
                 <input
@@ -104,7 +107,7 @@ export default function RegisterForm() {
                     type="password"
                     autoComplete="new-password"
                     {...register('password')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
                     placeholder="••••••••"
                 />
                 {errors.password && (
@@ -114,7 +117,7 @@ export default function RegisterForm() {
 
             {/* Confirm Password */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="confirmPassword" className="text-sm font-medium text-white/70">
+                <label htmlFor="confirmPassword" className="text-sm font-medium text-muted-foreground">
                     {t('register.confirmPasswordLabel')}
                 </label>
                 <input
@@ -122,7 +125,7 @@ export default function RegisterForm() {
                     type="password"
                     autoComplete="new-password"
                     {...register('confirmPassword')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
                     placeholder="••••••••"
                 />
                 {errors.confirmPassword && (
@@ -147,7 +150,7 @@ export default function RegisterForm() {
             </Button>
 
             {/* Links */}
-            <p className="text-center text-sm text-white/40">
+            <p className="text-center text-sm text-muted-foreground/60">
                 {t('register.hasAccount')}{' '}
                 <Link
                     href="/login"

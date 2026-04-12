@@ -33,7 +33,7 @@ export default function ForgotPasswordForm() {
         return (
             <div className="flex flex-col gap-6 text-center">
                 <div className="p-4 border border-primary/30 bg-primary/5 rounded-lg">
-                    <p className="text-sm text-white/80">{t('forgotPassword.successMessage')}</p>
+                    <p className="text-sm text-foreground">{t('forgotPassword.successMessage')}</p>
                 </div>
                 <Link
                     href="/login"
@@ -49,7 +49,7 @@ export default function ForgotPasswordForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-                <label htmlFor="email" className="text-sm font-medium text-white/70">
+                <label htmlFor="email" className="text-sm font-medium text-muted-foreground">
                     {t('forgotPassword.emailLabel')}
                 </label>
                 <input
@@ -57,8 +57,8 @@ export default function ForgotPasswordForm() {
                     type="email"
                     autoComplete="email"
                     {...register('email')}
-                    className="w-full px-4 py-3 glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
-                    placeholder={t('forgotPassword.emailLabel')}
+                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
+                    placeholder="salem@mallah.io"
                 />
                 {errors.email && (
                     <span className="text-xs text-red-400">{t(errors.email.message!)}</span>
