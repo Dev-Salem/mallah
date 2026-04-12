@@ -76,7 +76,7 @@ export default async function LandingPage() {
           <div className="container mx-auto grid lg:grid-cols-[1fr_auto] gap-20 items-center">
             <div className="relative z-10">
 
-              <h1 className={`text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-foreground ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>
+              <h1 className={`text-5xl md:text-7xl lg:text-[80px] leading-[1.05] font-sans font-black mb-10 text-foreground ${!isArabic ? 'tracking-tight' : ''} uppercase`}>
                 {t('Hero.title1')} <br />
                 <span className="text-primary">{t('Hero.title2')}</span>
               </h1>
@@ -97,26 +97,10 @@ export default async function LandingPage() {
             </div>
 
             <div className="relative hidden lg:block">
-              {/* Tactical Navigational HUD */}
-              <div className="relative w-[400px] aspect-square border border-primary/20 glass p-1 flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 hud-grid opacity-30" />
-                <div className="relative scale-125 opacity-20 filter grayscale contrast-150">
-                  <Logo size={320} />
-                  {/* Looping Scan Beam - Clipped to Main Sail (M13 5L21 21H13V5Z) */}
-                  <div 
-                    className="hero-scan-beam" 
-                    style={{ 
-                      clipPath: 'polygon(54.1% 20.8%, 87.5% 87.5%, 54.1% 87.5%)'
-                    }} 
-                  />
+              <div className="relative flex items-center justify-center py-20">
+                <div className="relative scale-[1.3]">
+                  <Logo size={420} />
                 </div>
-
-
-
-                <div className="absolute inset-x-0 top-1/2 h-px bg-primary/20" />
-                <div className="absolute inset-y-0 left-1/2 w-px bg-primary/20" />
-
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-primary/40 rounded-full animate-ping opacity-20" />
               </div>
             </div>
           </div>
@@ -193,7 +177,7 @@ export default async function LandingPage() {
           <div className="container mx-auto max-w-4xl relative">
 
             <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-10 block">{t('CTA.label')}</span>
-            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-foreground mb-10 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
+            <h2 className={`text-4xl md:text-5xl lg:text-7xl font-sans font-black text-foreground mb-10 leading-tight ${!isArabic ? 'tracking-tight' : ''} uppercase px-4`}>
               {t('CTA.title')}
             </h2>
             <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest mb-16 max-w-lg mx-auto leading-relaxed">
