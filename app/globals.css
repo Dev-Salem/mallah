@@ -3,24 +3,24 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.96 0.01 106);
+  --background: oklch(0.98 0.005 106);
   --foreground: oklch(0.12 0.01 106);
-  --card: oklch(0.98 0.005 106);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.10 0.01 106);
-  --popover: oklch(0.98 0.005 106);
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.10 0.01 106);
   --primary: oklch(0.62 0.14 39);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.92 0.01 106);
+  --secondary: oklch(0.94 0.01 106);
   --secondary-foreground: oklch(0.20 0.01 106);
-  --muted: oklch(0.94 0.01 106);
-  --muted-foreground: oklch(0.40 0.01 106);
-  --accent: oklch(0.92 0.01 106);
+  --muted: oklch(0.96 0.01 106);
+  --muted-foreground: oklch(0.35 0.01 106);
+  --accent: oklch(0.94 0.01 106);
   --accent-foreground: oklch(0.15 0.01 106);
   --destructive: oklch(0.60 0.20 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.85 0.01 106);
-  --input: oklch(0.85 0.01 106);
+  --border: oklch(0.88 0.01 106);
+  --input: oklch(0.88 0.01 106);
   --ring: oklch(0.62 0.14 39);
 
   --dashboard-card-bg: oklch(0.985 0.005 106);
@@ -157,8 +157,8 @@
 .hud-grid {
   background-size: 30px 30px;
   background-image:
-    linear-gradient(to right, color-mix(in oklch, var(--primary), transparent 95%) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklch, var(--primary), transparent 95%) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklch, var(--primary), transparent 90%) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--primary), transparent 90%) 1px, transparent 1px);
   mask-image: radial-gradient(circle at center, transparent 30%, black 100%);
 }
 
@@ -171,14 +171,14 @@
 
 
 .glass {
-  background: color-mix(in oklch, var(--background), transparent 60%);
-  backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in oklch, var(--primary), transparent 90%);
+  background: color-mix(in oklch, var(--background), transparent 25%);
+  backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 85%);
 }
 
 .glow-border {
-  box-shadow: 0 0 15px color-mix(in oklch, var(--primary), transparent 90%);
-  border: 1px solid color-mix(in oklch, var(--primary), transparent 70%);
+  box-shadow: 0 0 15px color-mix(in oklch, var(--primary), transparent 85%);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 60%);
 }
 
 /* --- Redesign HUD Utilities --- */

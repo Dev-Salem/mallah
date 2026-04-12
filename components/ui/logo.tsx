@@ -20,11 +20,12 @@ export function Logo({ className, size = 32 }: LogoProps) {
         {/* Rear Sail - Glassy / Translucent */}
         <path
           d="M12 3L4 19H12V3Z"
-          fill="white"
-          fillOpacity="0.05"
-          stroke="white"
-          strokeOpacity="0.2"
+          fill="currentColor"
+          fillOpacity="0.15"
+          stroke="currentColor"
+          strokeOpacity="0.3"
           strokeWidth="0.5"
+          className="text-foreground/30 dark:text-white"
         />
         
         {/* Front Main Sail - Brand Gradient */}
@@ -54,7 +55,7 @@ export function LogoText() {
   return (
     <div className="flex items-center gap-3">
       <Logo size={40} />
-      <span className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/40 uppercase">
+      <span className="text-2xl font-black tracking-tighter text-foreground uppercase">
         {t('logo')}
       </span>
     </div>
