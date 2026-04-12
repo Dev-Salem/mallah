@@ -9,43 +9,44 @@
   },
   "Hero": {
     "navLog": "Navigational Log 24.02",
-    "title1": "Graduate",
-    "title2": "into a",
-    "title3": "Career.",
-    "subtitle": "University provides the coordinates. Mallah provides the vessel. A professional engineering engine dedicated to bridging the academic disconnect.",
-    "initiate": "Initiate Prep",
-    "status": "Status Report",
-    "statusDetail": "Ready for Onboarding // 842 Navigators Enrolled",
+    "title1": "Learn with",
+    "title2": "a Destination.",
+    "subtitle": "Mallah gives you a structured, AI-guided path into your first tech career — with real projects, a built portfolio, and four specialized tracks to choose from.",
+    "initiate": "Start My Path",
+    "status": "System Online",
+    "statusDetail": "4 Career Tracks // Fully Bilingual // Free to Start",
     "latLong": "FIX: LAT 25.0 // LONG 55.0"
   },
   "Problem": {
     "label": "Diagnostics",
-    "title": "The Academic Disconnect",
-    "subtitle": "Universities are legacy systems optimized for theory. The market is a real-time environment optimized for production. Mallah bridges this gap.",
-    "item1Title": "Theory vs. Practice",
-    "item1Desc": "Traditional education ends at the degree. Real careers begin with practical evidence. We enforce the latter.",
-    "item2Title": "Information Noise",
-    "item2Desc": "The internet is a sea of scattered data. We provide the compass and the path through curated roadmap logic.",
+    "title": "The gap nobody talks about.",
+    "subtitle": "You did everything right. The degree, the grades, the effort. And still — the job market feels like a different world.",
+    "item1Title": "Theory vs. Reality",
+    "item1Desc": "Your degree taught you concepts. Employers want to see what you've actually built. There's a gap between what you studied and what day one actually looks like.",
+    "item2Title": "Information Overload",
+    "item2Desc": "You've searched for answers and gotten hundreds of conflicting ones. Every resource points somewhere different. Nobody gave you a map.",
     "item3Title": "Job Readiness Gap",
-    "item3Desc": "Hiring managers don't want knowledge; they want readiness. Mallah engineers your professional identity."
+    "item3Desc": "It's not that you lack ambition. Without a structured path, every hour of studying feels like it might be the wrong hour."
   },
   "Process": {
     "label": "Navigation Flow",
-    "title": "Career Engineering",
+    "title": "Four Stages. One Destination.",
     "quote": "A steady hand on the rudder, a clear eye on the horizon.",
     "step1Title": "Assessment",
-    "step1Desc": "We map your current technical coordinates.",
+    "step1Desc": "Tell us where you are. We figure out exactly where to start.",
     "step2Title": "Selection",
-    "step2Desc": "Choose a role-specific navigational path.",
+    "step2Desc": "Pick your target role. We build your personalized roadmap.",
     "step3Title": "Execution",
-    "step3Desc": "Build evidence through structured projects.",
+    "step3Desc": "Build real projects that prove your skills to any employer.",
     "step4Title": "Arrival",
-    "step4Desc": "Deploy your professional identity to market."
+    "step4Desc": "Your portfolio, resume, and profile — ready to go to market."
   },
   "CTA": {
     "label": "Final Approach",
-    "title": "Ready to embark?",
-    "button": "Join the Mallah"
+    "title": "Your path is six questions away.",
+    "button": "Start My Path",
+    "subtitle": "Tell us where you are and where you want to go. Mallah handles the rest.",
+    "login": "Already have an account? Log in"
   },
   "Footer": {
     "desc": "Precision instrumentation for the next generation of technical navigators. Bridge the academic disconnect.",

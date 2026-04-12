@@ -78,8 +78,7 @@ export default async function LandingPage() {
 
               <h1 className={`text-5xl md:text-7xl lg:text-[100px] leading-[0.85] font-mono font-black mb-10 text-foreground ${!isArabic ? 'tracking-tighter' : ''} uppercase`}>
                 {t('Hero.title1')} <br />
-                <span className="text-primary">{t('Hero.title2')}</span> <br />
-                {t('Hero.title3')}
+                <span className="text-primary">{t('Hero.title2')}</span>
               </h1>
               <p className="text-base md:text-lg text-muted-foreground/80 max-w-lg mb-12 leading-relaxed font-mono">
                 <span className="text-primary/40 mr-2">{">"}</span>
@@ -91,8 +90,7 @@ export default async function LandingPage() {
                     {t('Hero.initiate')} <ArrowRight className={`ml-3 h-4 w-4 group-hover:translate-x-1 transition-transform ${locale === 'ar' ? 'rotate-180' : ''}`} />
                   </Button>
                 </Link>
-                <div className="flex flex-col border-l border-primary/10 pl-6">
-                  <span className={`text-[9px] font-mono uppercase ${!isArabic ? 'tracking-[0.3em]' : ''} text-muted-foreground mb-1`}>{t('Hero.status')}</span>
+                <div className="flex flex-col border-l border-primary/10 pl-6 h-10 justify-center">
                   <span className={`text-[11px] font-mono text-primary/80 uppercase ${!isArabic ? 'tracking-widest' : ''}`}>{t('Hero.statusDetail')}</span>
                 </div>
               </div>
@@ -104,6 +102,13 @@ export default async function LandingPage() {
                 <div className="absolute inset-0 hud-grid opacity-30" />
                 <div className="relative scale-125 opacity-20 filter grayscale contrast-150">
                   <Logo size={320} />
+                  {/* Looping Scan Beam - Clipped to Main Sail (M13 5L21 21H13V5Z) */}
+                  <div 
+                    className="hero-scan-beam" 
+                    style={{ 
+                      clipPath: 'polygon(54.1% 20.8%, 87.5% 87.5%, 54.1% 87.5%)'
+                    }} 
+                  />
                 </div>
 
 
@@ -188,15 +193,23 @@ export default async function LandingPage() {
           <div className="container mx-auto max-w-4xl relative">
 
             <span className="text-[9px] uppercase tracking-[0.5em] text-primary font-mono font-bold mb-10 block">{t('CTA.label')}</span>
-            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-foreground mb-16 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
+            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-mono font-black text-foreground mb-10 leading-[0.85] ${!isArabic ? 'tracking-tighter' : ''} uppercase px-4`}>
               {t('CTA.title')}
             </h2>
-            <Link href="/login">
-              <Button size="lg" className={`h-20 px-16 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} font-mono font-black rounded-none shadow-[0_45px_100px_-25px_var(--primary)] shadow-primary/30 relative overflow-hidden group border-2 border-primary`}>
-                <span className="relative z-10">{t('CTA.button')}</span>
-                <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white/10 transition-transform duration-300" />
-              </Button>
-            </Link>
+            <p className="text-muted-foreground font-mono text-sm uppercase tracking-widest mb-16 max-w-lg mx-auto leading-relaxed">
+              {t('CTA.subtitle')}
+            </p>
+            <div className="flex flex-col items-center gap-8">
+              <Link href="/login">
+                <Button size="lg" className={`h-20 px-16 bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase ${!isArabic ? 'tracking-[0.4em]' : ''} font-mono font-black rounded-none shadow-[0_45px_100px_-25px_var(--primary)] shadow-primary/30 relative overflow-hidden group border-2 border-primary`}>
+                  <span className="relative z-10">{t('CTA.button')}</span>
+                  <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-white/10 transition-transform duration-300" />
+                </Button>
+              </Link>
+              <Link href="/login" className="text-[10px] font-mono text-muted-foreground hover:text-primary transition-colors tracking-[0.2em] uppercase">
+                {t('CTA.login')}
+              </Link>
+            </div>
           </div>
         </section>
       </main>
