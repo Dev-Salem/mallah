@@ -259,6 +259,29 @@
     "title": "خارطة طريقك",
     "subtitle": "اتبع التسلسل لبناء خبرتك. المشاريع تفتح المراحل القادمة.",
     "overall_progress": "التقدم الإجمالي",
+    "overall_progress_label": "التقدم الإجمالي",
+    "stages_active_label": "المراحل النشطة",
+    "topics_done_label": "المواضيع المكتملة",
+    "active_status": "نشط",
+    "gates_stage": "بوابات المرحلة {stage}",
+    "unlock_notice": "أكمل مشروع المرحلة {stage} لفتح القفل",
+    "done": "تم الإنجاز",
+    "in_progress_caps": "قيد التقدم",
+    "not_started_caps": "لم يبدأ",
+    "your_path_to": "مسارك نحو",
+    "you_mastered": "لقد أتقنت",
+    "path_display": {
+      "frontend": "تطوير الواجهة الأمامية",
+      "fullstack": "تطوير الويب المتكامل",
+      "datascience": "علم البيانات والتعلم الآلي",
+      "cybersecurity": "الأمن السيبراني والاختراق الأخلاقي"
+    },
+    "path_destination": {
+      "frontend": "تطوير الواجهة الأمامية",
+      "fullstack": "تطوير الويب المتكامل",
+      "datascience": "علم البيانات",
+      "cybersecurity": "الأمن السيبراني"
+    },
     "stages_completed": "مراحل مكتملة",
     "topics_completed": "مواضيع مكتملة",
     "modules": "وحدات",
@@ -278,7 +301,7 @@
       "not_started": "لم يبدأ"
     },
     "actions": {
-      "start": "ابدأ المهمة",
+      "start": "ابدأ",
       "continue": "متابعة",
       "review": "مراجعة",
       "start_project": "ابدأ المشروع",

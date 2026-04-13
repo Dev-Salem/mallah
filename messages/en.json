@@ -259,6 +259,29 @@
     "title": "Your Navigational Roadmap",
     "subtitle": "Follow the sequence to build your expertise. Milestones unlock subsequent stages.",
     "overall_progress": "Overall Progress",
+    "overall_progress_label": "Overall Progress",
+    "stages_active_label": "Stages Active",
+    "topics_done_label": "Topics Done",
+    "active_status": "Active",
+    "gates_stage": "GATES STAGE {stage}",
+    "unlock_notice": "COMPLETE STAGE {stage} PROJECT TO UNLOCK",
+    "done": "DONE",
+    "in_progress_caps": "IN PROGRESS",
+    "not_started_caps": "NOT STARTED",
+    "your_path_to": "Your Path to",
+    "you_mastered": "You Mastered",
+    "path_display": {
+      "frontend": "FRONTEND DEVELOPMENT",
+      "fullstack": "FULL-STACK WEB DEV",
+      "datascience": "DATA SCIENCE & ML",
+      "cybersecurity": "CYBERSECURITY & ETHICAL HACKING"
+    },
+    "path_destination": {
+      "frontend": "Frontend Development",
+      "fullstack": "Full-Stack Development",
+      "datascience": "Data Science",
+      "cybersecurity": "Cybersecurity"
+    },
     "stages_completed": "Stages Completed",
     "topics_completed": "Topics Completed",
     "modules": "Modules",
@@ -278,7 +301,7 @@
       "not_started": "Not Started"
     },
     "actions": {
-      "start": "Start Mission",
+      "start": "Start",
       "continue": "Resume",
       "review": "Review",
       "start_project": "Start Project",

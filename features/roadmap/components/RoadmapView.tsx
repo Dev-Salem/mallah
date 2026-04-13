@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { RoadmapData, Stage, Topic } from '../types';
-import { CheckCircle2, Circle, Lock, PlayCircle, FileText, FlaskConical, LayoutTemplate, Trophy, Video, BookOpen, Clock } from 'lucide-react';
+import { CheckCircle2, Circle, Lock, PlayCircle, FileText, FlaskConical, LayoutTemplate, Trophy, Video, BookOpen, Clock, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocale } from 'next-intl';
 
@@ -18,335 +18,478 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
     const t = useTranslations('Roadmap');
     const locale = useLocale();
 
-    // Calculate overall progress
-    let totalTopics = 0;
+    // Constant stats per path as per spec
+    const PATH_HEADER_STATS: Record<string, { totalStages: number; totalTopics: number }> = {
+        frontend: { totalStages: 7, totalTopics: 45 },
+        fullstack: { totalStages: 8, totalTopics: 49 },
+        datascience: { totalStages: 8, totalTopics: 49 },
+        cybersecurity: { totalStages: 8, totalTopics: 48 },
+    };
+
+    const pathId = roadmap.path_id as keyof typeof PATH_HEADER_STATS;
+    const stats = PATH_HEADER_STATS[pathId] || PATH_HEADER_STATS.frontend;
+
+    // Calculate dynamic stats
     let completedTopics = 0;
-    let totalStagesCompleted = 0;
+    let currentActiveStageIndex = stats.totalStages;
 
-    roadmap.stages.forEach(stage => {
-        const stageTopicsCount = stage.topics.length + (stage.project ? 1 : 0);
-        totalTopics += stageTopicsCount;
+    roadmap.stages.forEach((stage, idx) => {
+        const stageTopicsCompleted = stage.topics.filter(t => t.user_status === 'completed').length;
+        const projectCompleted = stage.project?.user_status === 'completed' ? 1 : 0;
+        completedTopics += (stageTopicsCompleted + projectCompleted);
 
-        let stageCompletedCount = stage.topics.filter(t => t.user_status === 'completed').length;
-        if (stage.project?.user_status === 'completed') {
-            stageCompletedCount++;
-        }
-        completedTopics += stageCompletedCount;
-
-        if (stageCompletedCount === stageTopicsCount && stageTopicsCount > 0) {
-            totalStagesCompleted++;
+        // Find first non-completed stage (current active)
+        const totalStageItems = stage.topics.length + (stage.project ? 1 : 0);
+        if (stageTopicsCompleted + projectCompleted < totalStageItems && currentActiveStageIndex === stats.totalStages) {
+            currentActiveStageIndex = idx + 1;
         }
     });
 
-    const overallProgress = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+    const overallPct = Math.round((completedTopics / stats.totalTopics) * 100);
+    const isCompleted = overallPct >= 100;
 
     return (
-        <div className="w-full max-w-4xl mx-auto py-8">
-            <div className="mb-10 text-center">
-                <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-4">
-                    {t('title')}
-                </h1>
-                <p className="text-muted-foreground max-w-2xl mx-auto text-lg mb-6">
-                    {t('subtitle')}
-                </p>
+        <div className="w-full max-w-6xl py-8 px-4 md:px-10">
+            {/* Header Card - Theme Aware & Accessible */}
+            <div 
+                className="relative overflow-hidden rounded-xl border p-[18px_24px] mb-6 shadow-xl bg-card border-border dark:border-primary/20 transition-colors duration-500"
+                style={{ 
+                    '--header-dark-bg': 'oklch(0.155 0.015 106)'
+                } as any}
+            >
+                {/* Specific Dark Background Overlay to avoid blue tint */}
+                <div className="absolute inset-0 z-[-1] opacity-0 dark:opacity-100 dark:bg-[var(--header-dark-bg)] transition-opacity" />
+                {/* Top decorative accent line */}
+                <div 
+                    className="absolute top-0 left-0 right-0 h-[2px]"
+                    style={{ background: 'linear-gradient(90deg, transparent, oklch(0.68 0.13 38.8), transparent)' }}
+                />
 
-                {/* Overall Progress Section */}
-                <div className="bg-card border rounded-xl p-6 text-left max-w-2xl mx-auto shadow-sm">
-                    <div className="flex justify-between items-end mb-2">
-                        <div>
-                            <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-1">{t('overall_progress')}</p>
-                            <h2 className="text-2xl font-bold">{Math.round(overallProgress)}%</h2>
+                <div className="flex flex-col">
+                    {/* Row 1 — Top Bar */}
+                    <div className="flex items-center justify-between gap-4 mb-6">
+                        {/* Path Tag Pill */}
+                        <div 
+                            className="px-[10px] py-[3.5px] rounded-[4px] border text-[11px] font-mono font-bold uppercase tracking-[0.2em]"
+                            style={{ 
+                                color: 'oklch(0.68 0.13 38.8)',
+                                backgroundColor: 'oklch(0.68 0.13 38.8 / 0.1)',
+                                borderColor: 'oklch(0.68 0.13 38.8 / 0.25)'
+                            }}
+                        >
+                            {t(`path_display.${roadmap.path_id}`, { fallback: roadmap.path_id.toUpperCase() })}
                         </div>
-                        <div className="text-right flex flex-col gap-1 items-end">
-                            <Badge variant="secondary" className="font-medium">
-                                {totalStagesCompleted} / {roadmap.stages.length} {t('stages_completed')}
-                            </Badge>
-                            <Badge variant="outline" className="font-medium text-muted-foreground">
-                                {completedTopics} / {totalTopics} {t('topics_completed')}
-                            </Badge>
+
+                        {/* Status Indicator */}
+                        <div 
+                            className="flex items-center gap-[7px] text-[11px] font-mono font-bold uppercase tracking-[0.08em]"
+                            style={{ 
+                                color: isCompleted ? 'oklch(0.68 0.13 38.8)' : 'oklch(0.65 0.12 153)' 
+                            }}
+                        >
+                            <span className={cn(
+                                "flex h-[6px] w-[6px] rounded-full",
+                                !isCompleted && "animate-header-pulse"
+                            )} 
+                            style={{ 
+                                backgroundColor: isCompleted ? 'oklch(0.68 0.13 38.8)' : 'oklch(0.65 0.12 153)' 
+                            }} />
+                            {isCompleted ? 'COMPLETED' : t('active_status', { fallback: 'ACTIVE' })}
                         </div>
                     </div>
-                    <Progress value={overallProgress} className="h-3 bg-secondary" />
+
+                    {/* Row 2 — Title */}
+                    <div className="mb-[16px]">
+                        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
+                            {isCompleted ? t('you_mastered') : t('your_path_to')}{' '}
+                            <span style={{ color: 'oklch(0.68 0.13 38.8)' }}>
+                                {t(`path_destination.${roadmap.path_id}`, { fallback: roadmap.path_id })}
+                            </span>
+                        </h1>
+                    </div>
+
+                    {/* Row 3 — Stats Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
+                        {/* Card 1 — Overall Progress */}
+                        <div className="rounded-[8px] border p-[12px_16px] flex flex-col gap-[6px] shadow-inner bg-muted/30 dark:bg-black/40 border-border dark:border-white/5 transition-colors">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-[20px] font-mono font-medium" style={{ color: 'oklch(0.68 0.13 38.8)' }}>
+                                    {overallPct}%
+                                </span>
+                            </div>
+                            <span className="text-[11px] font-bold tracking-[0.03em] uppercase opacity-70 text-muted-foreground">
+                                {t('overall_progress_label')}
+                            </span>
+                        </div>
+
+                        {/* Card 2 — Stages Active */}
+                        <div className="rounded-[8px] border p-[12px_16px] flex flex-col gap-[6px] shadow-inner bg-muted/30 dark:bg-black/40 border-border dark:border-white/5 transition-colors">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-[20px] font-mono font-medium" style={{ color: 'oklch(0.68 0.13 38.8)' }}>
+                                    {isCompleted ? stats.totalStages : currentActiveStageIndex}
+                                </span>
+                                <span className="text-[12px] font-mono font-bold opacity-40 text-muted-foreground">
+                                    / {stats.totalStages}
+                                </span>
+                            </div>
+                            <span className="text-[11px] font-bold tracking-[0.03em] uppercase opacity-70 text-muted-foreground">
+                                {t('stages_active_label')}
+                            </span>
+                        </div>
+
+                        {/* Card 3 — Topics Done */}
+                        <div className="rounded-[8px] border p-[12px_16px] flex flex-col gap-[6px] shadow-inner bg-muted/30 dark:bg-black/40 border-border dark:border-white/5 transition-colors">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-[20px] font-mono font-medium" style={{ color: 'oklch(0.68 0.13 38.8)' }}>
+                                    {completedTopics}
+                                </span>
+                                <span className="text-[12px] font-mono font-bold opacity-40 text-muted-foreground">
+                                    / {stats.totalTopics}
+                                </span>
+                            </div>
+                            <span className="text-[11px] font-bold tracking-[0.03em] uppercase opacity-70 text-muted-foreground">
+                                {t('topics_done_label')}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <Accordion type="single" collapsible className="w-full space-y-4">
-                {roadmap.stages.map((stage) => {
-                    // Check if current stage is the active one
+            {/* Scanline Divider */}
+            <div className="w-full h-[1px] mb-8 opacity-30" 
+                style={{ 
+                    backgroundImage: 'repeating-linear-gradient(to right, oklch(0.68 0.13 38.8) 0, oklch(0.68 0.13 38.8) 4px, transparent 4px, transparent 8px)'
+                }}
+            />
+
+            {/* Timeline Spine & Stages */}
+            <div className="relative grid grid-cols-[40px_1fr] md:grid-cols-[50px_1fr] gap-3 md:gap-4 min-h-[400px]">
+                {/* Vertical Spine Line */}
+                <div className="absolute left-[19px] md:left-[24px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-primary/30 to-transparent opacity-20 dark:opacity-40" />
+
+                {roadmap.stages.map((stage, index) => {
                     const isCompleted = !stage.topics.some(t => t.user_status !== 'completed') &&
                         (!stage.project || stage.project.user_status === 'completed');
+                    const state = !stage.is_unlocked ? 'locked' : isCompleted ? 'completed' : 'current';
 
                     return (
-                        <StageCard
-                            key={stage.stage_id}
-                            stage={stage}
-                            t={t}
-                            locale={locale}
-                            state={!stage.is_unlocked ? 'locked' : isCompleted ? 'completed' : 'current'}
-                        />
+                        <div key={stage.stage_id} className="contents">
+                            {/* Timeline Node - Stage Number Circle */}
+                            <div className="relative flex flex-col items-center pt-8">
+                                <div 
+                                    className={cn(
+                                        "z-20 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 text-[10px] md:text-xs font-mono font-bold transition-all duration-700",
+                                        state === 'completed' ? "bg-success border-success text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]" :
+                                        state === 'current' ? "bg-primary border-primary text-white shadow-[0_0_25px_rgba(249,115,22,0.5)] scale-110" :
+                                        "bg-muted border-border text-muted-foreground opacity-60"
+                                    )}
+                                >
+                                    {String(index + 1).padStart(2, '0')}
+                                </div>
+                                {index === 0 && (
+                                    <div className="absolute -top-1 text-[9px] font-mono text-primary/60 uppercase tracking-widest text-center">
+                                        START
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Stage Content Card */}
+                            <div className="pb-16 group">
+                                <StageCard
+                                    stage={stage}
+                                    t={t}
+                                    locale={locale}
+                                    state={state}
+                                    isFirst={index === 0}
+                                />
+                            </div>
+                        </div>
                     );
                 })}
-            </Accordion>
+            </div>
         </div>
     );
 }
 
-function StageCard({ stage, t, locale, state }: { stage: Stage; t: ReturnType<typeof useTranslations>; locale: string; state: 'locked' | 'current' | 'completed' }) {
-    const totalTopics = stage.topics.length + (stage.project ? 1 : 0);
-    const completedTopics = stage.topics.filter(t => t.user_status === 'completed').length +
-        (stage.project?.user_status === 'completed' ? 1 : 0);
+function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: ReturnType<typeof useTranslations>; locale: string; state: 'locked' | 'current' | 'completed', isFirst?: boolean }) {
+    const totalTopics = stage.topics.filter(t => !t.topic_type.startsWith('project_')).length;
+    const completedTopics = stage.topics.filter(t => !t.topic_type.startsWith('project_') && t.user_status === 'completed').length;
     const progressPercent = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
 
     return (
-        <AccordionItem
-            value={stage.stage_id}
-            disabled={state === 'locked'}
+        <div
             className={cn(
-                "border rounded-xl px-2 sm:px-6 py-2 overflow-hidden bg-card transition-all",
-                state === 'locked' && "opacity-70 bg-muted/20 grayscale-[0.2]",
-                state === 'current' && "border-primary/50 ring-1 ring-primary/10 shadow-sm"
+                "relative flex flex-col gap-6 p-6 md:p-10 rounded-3xl border transition-all duration-700",
+                state === 'current' ? "border-primary/40 shadow-[0_0_40px_rgba(249,115,22,0.08)] bg-card/60 backdrop-blur-xl" :
+                state === 'completed' ? "border-success/20 bg-success/[0.03] dark:bg-success/[0.01]" :
+                "border-border/40 bg-muted/40 opacity-70 cursor-not-allowed overflow-hidden"
             )}
         >
-            <AccordionTrigger className="hover:no-underline py-4 group">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full text-left gap-4">
-                    <div className="flex items-start gap-4 flex-1 pr-4">
-                        <div className={cn(
-                            "flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full border-2 mt-1 md:mt-0",
-                            state === 'completed' ? "border-primary text-primary bg-primary/10" :
-                                state === 'current' ? "border-primary text-primary" :
-                                    "border-muted bg-muted text-muted-foreground"
+            {/* Glossy overlay for active stage */}
+            {state === 'current' && (
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.03] to-transparent pointer-events-none" />
+            )}
+
+            {/* Stage Header */}
+            <div className="relative z-10 flex flex-col gap-6">
+                <div className="flex items-center justify-between gap-6">
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3">
+                            <span className={cn(
+                                "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
+                                state === 'locked' ? "text-muted-foreground/60" : "text-primary/80"
+                            )}>
+                                {state === 'locked' ? 'ENCRYPTED' : 'CURRENT STAGE'} // {String(stage.order_index).padStart(2, '0')}
+                            </span>
+                            <div className={cn(
+                                "text-[9px] px-2 py-0.5 rounded-md border uppercase font-mono font-bold tracking-widest",
+                                stage.difficulty_level === 'beginner' ? "border-success/30 text-success bg-success/5" :
+                                stage.difficulty_level === 'intermediate' ? "border-warning/30 text-warning bg-warning/5" :
+                                "border-destructive/30 text-destructive bg-destructive/5"
+                            )}>
+                                {t(`difficulty.${stage.difficulty_level}`)}
+                            </div>
+                        </div>
+                        <h3 className={cn(
+                            "text-2xl md:text-3xl font-bold tracking-tight",
+                            state === 'locked' && "text-muted-foreground/40"
                         )}>
-                            {state === 'completed' ? <CheckCircle2 className="w-6 h-6" /> :
-                                state === 'locked' ? <Lock className="w-5 h-5" /> :
-                                    <span className="font-bold text-lg">{stage.order_index}</span>}
-                        </div>
-                        <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <h3 className="text-xl font-bold tracking-tight">{stage.title}</h3>
-                                {state === 'current' && <Badge variant="default" className="ml-2 text-[10px] uppercase tracking-wider">{t('current_stage')}</Badge>}
-                                {state === 'completed' && <Badge variant="secondary" className="ml-2 text-[10px] uppercase tracking-wider">{t('completed')}</Badge>}
-                                {state === 'locked' && <Badge variant="outline" className="ml-2 text-[10px] uppercase tracking-wider text-muted-foreground">{t('locked')}</Badge>}
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground capitalize flex-wrap">
-                                <span className={cn(
-                                    "font-medium",
-                                    stage.difficulty_level === 'beginner' && "text-success",
-                                    stage.difficulty_level === 'intermediate' && "text-warning",
-                                    stage.difficulty_level === 'advanced' && "text-destructive"
-                                )}>
-                                    {t(`difficulty.${stage.difficulty_level}`, { fallback: stage.difficulty_level })}
-                                </span>
-                                <span>•</span>
-                                <span>{totalTopics} {t('modules')}</span>
-                            </div>
-                        </div>
+                            {stage.title}
+                        </h3>
                     </div>
 
-                    {state !== 'locked' && (
-                        <div className="flex items-center gap-4 w-full md:w-1/4 pt-2 md:pt-0 border-t md:border-none">
-                            <div className="w-full h-2 rounded-full bg-secondary overflow-hidden">
-                                <Progress value={progressPercent} className="h-full bg-primary" />
-                            </div>
-                            <span className="text-sm font-bold text-foreground whitespace-nowrap w-10 text-right">
-                                {Math.round(progressPercent)}%
-                            </span>
+                    {state === 'locked' ? (
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-muted/50 border border-border text-muted-foreground/40">
+                            <Lock className="w-6 h-6" />
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-6">
+                             <div className="text-right flex flex-col">
+                                <span className={cn(
+                                    "text-3xl font-mono font-bold leading-none tracking-tighter",
+                                    state === 'completed' ? "text-success" : "text-primary"
+                                )}>
+                                    {Math.round(progressPercent)}%
+                                </span>
+                                <span className="text-[9px] text-muted-foreground/60 uppercase font-mono font-bold tracking-[0.1em] mt-2 text-center md:text-right">
+                                    {state === 'completed' ? 'SYNCHRONIZED' : ''}
+                                </span>
+                             </div>
                         </div>
                     )}
                 </div>
-            </AccordionTrigger>
 
-            <AccordionContent className="pt-4 pb-6 border-t mt-2">
-                <div className="space-y-3 md:pl-[3.25rem]">
-                    {stage.topics.filter(t => !t.topic_type.startsWith('project_')).map(topic => (
-                        <TopicItem key={topic.topic_id} topic={topic} t={t} locale={locale} />
-                    ))}
+                {state !== 'locked' && (
+                    <div className="w-full h-[3px] bg-muted/50 overflow-hidden rounded-full p-[0.5px] border border-white/[0.03]">
+                        <div 
+                            className={cn(
+                                "h-full transition-all duration-1000 ease-out rounded-full shadow-[0_0_10px_currentColor]",
+                                state === 'completed' ? "bg-success text-success" : "bg-primary text-primary"
+                            )} 
+                            style={{ width: `${progressPercent}%` }} 
+                        />
+                    </div>
+                )}
+            </div>
 
+            {/* Stage Content - Restricted if locked */}
+            {state !== 'locked' ? (
+                <div className="relative z-10 flex flex-col gap-6">
+                    <div className="flex flex-col gap-3">
+                        {stage.topics.filter(t => !t.topic_type.startsWith('project_')).map(topic => (
+                            <TopicItem key={topic.topic_id} topic={topic} t={t} locale={locale} />
+                        ))}
+                    </div>
+                    
                     {stage.project && (
-                        <div className="mt-6 pt-6 border-t border-dashed">
-                            <ProjectItem project={stage.project} t={t} locale={locale} />
-                        </div>
+                         <div className="mt-2">
+                            <ProjectItem project={{ ...stage.project, stage_order: stage.order_index }} t={t} locale={locale} />
+                         </div>
                     )}
                 </div>
-            </AccordionContent>
-        </AccordionItem>
+            ) : (
+                /* Unlock Notice Footer for Locked Stage */
+                <div className="mt-4 pt-6 border-t border-border/20 flex items-center gap-3 text-muted-foreground/40 font-mono font-bold text-[10px] uppercase tracking-[0.15em]">
+                    <Lock className="w-3.5 h-3.5" />
+                    {t('unlock_notice', { stage: stage.order_index - 1 })}
+                </div>
+            )}
+        </div>
     );
 }
 
 function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof useTranslations>, locale: string }) {
-    // Determine primary resource type
-    const hasVideo = topic.resources?.some(r => r.resource_type === 'VIDEO');
-    const hasArticle = topic.resources?.some(r => r.resource_type === 'ARTICLE' || r.resource_type === 'INTERNAL_TEXT');
-
-    const getIcon = () => {
-        if (topic.user_status === 'completed') return <CheckCircle2 className="w-5 h-5" />;
-        if (hasVideo && topic.topic_type === 'lesson') return <Video className="w-5 h-5" />;
-        if (hasArticle && topic.topic_type === 'lesson') return <BookOpen className="w-5 h-5" />;
-
-        switch (topic.topic_type) {
-            case 'lesson': return <PlayCircle className="w-5 h-5" />;
-            case 'concept': return <FileText className="w-5 h-5" />;
-            case 'lesson_lab': return <FlaskConical className="w-5 h-5" />;
-            case 'project_milestone': return <LayoutTemplate className="w-5 h-5" />;
-            default: return <Circle className="w-5 h-5" />;
-        }
-    };
+    const isCompleted = topic.user_status === 'completed';
+    const isInProgress = topic.user_status === 'in_progress';
+    const isNotStarted = topic.user_status === 'not_started' || !topic.user_status;
 
     return (
-        <div className={cn(
-            "group flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-lg border bg-background hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden",
-            topic.user_status === 'completed' && "opacity-80 bg-muted/10 border-muted"
-        )}>
-            {/* Status indicator bar on the left edge */}
-            <div className={cn(
-                "absolute left-0 top-0 bottom-0 w-1",
-                topic.user_status === 'completed' ? "bg-primary/50" :
-                    topic.user_status === 'in_progress' ? "bg-info" : "bg-transparent group-hover:bg-primary/20"
-            )} />
-
-            <div className={cn(
-                "flex-shrink-0 flex items-center gap-3",
-                topic.user_status === 'completed' ? "text-primary" :
-                    topic.user_status === 'in_progress' ? "text-info" : "text-muted-foreground"
-            )}>
-                {getIcon()}
-            </div>
-
-            <div className="flex-grow min-w-0 flex flex-col gap-1.5">
-                <div className="flex items-start justify-between gap-4">
-                    <h4 className={cn("text-base font-bold", topic.user_status === 'completed' && "text-muted-foreground")}>
-                        {topic.title}
-                    </h4>
-
-                    {/* Status Badge */}
-                    <div className="hidden sm:block">
-                        {topic.user_status === 'completed' ? (
-                            <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 uppercase text-[10px] tracking-wider">{t('status.completed')}</Badge>
-                        ) : topic.user_status === 'in_progress' ? (
-                            <Badge variant="secondary" className="text-info bg-info/15 uppercase text-[10px] tracking-wider">{t('status.in_progress')}</Badge>
-                        ) : (
-                            <Badge variant="outline" className="text-muted-foreground uppercase text-[10px] tracking-wider">{t('status.not_started')}</Badge>
-                        )}
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                    <span className="flex items-center gap-1 font-medium bg-secondary/50 px-2 py-0.5 rounded uppercase tracking-wider">
-                        {t(`types.${topic.topic_type}`)}
-                    </span>
-                    <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" />
-                        {topic.estimated_time_min} {t('minutes')}
-                    </span>
-
-                    {/* Skills Tags */}
-                    {topic.skills && topic.skills.length > 0 && (
-                        <div className="flex items-center gap-1.5 ml-1 border-l pl-3 border-border">
-                            {topic.skills.slice(0, 2).map((skill: { skill_id: string, name: string }) => (
-                                <span key={skill.skill_id} className="text-xs text-muted-foreground/80 truncate max-w-[120px]">
-                                    {skill.name}
-                                </span>
-                            ))}
-                            {topic.skills.length > 2 && <span className="text-xs text-muted-foreground/60">+{topic.skills.length - 2}</span>}
-                        </div>
+        <Link
+            href={`/${locale}/dashboard/topic/${topic.topic_id}`}
+            className="group relative flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-2xl border border-border/50 bg-card hover:border-primary/40 hover:bg-accent/5 transition-all duration-300 shadow-sm hover:shadow-md"
+        >
+            {/* Left: Icon & Title */}
+            <div className="flex items-center gap-4 flex-grow min-w-0">
+                <div className={cn(
+                    "flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-500 relative",
+                    isCompleted ? "bg-success/10 text-success" :
+                    isInProgress ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_20px_rgba(249,115,22,0.2)]" :
+                    "bg-muted text-muted-foreground/60"
+                )}>
+                    {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : 
+                     topic.topic_type === 'lesson' ? <PlayCircle className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
+                     topic.topic_type === 'lesson_lab' ? <FlaskConical className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
+                     <FileText className={cn("w-5 h-5", isInProgress && "animate-pulse")} />}
+                    
+                    {isInProgress && (
+                        <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-ping" />
                     )}
                 </div>
+
+                <div className="flex flex-col gap-0.5">
+                    <h4 className={cn(
+                        "text-sm font-bold truncate transition-colors",
+                        isCompleted ? "text-muted-foreground" : "text-foreground group-hover:text-primary"
+                    )}>
+                        {topic.title}
+                    </h4>
+                    <span className="text-[11px] text-muted-foreground font-mono font-bold uppercase tracking-wider">
+                        {topic.estimated_minutes} {t('minutes')}
+                    </span>
+                </div>
             </div>
 
-            <div className="mt-2 sm:mt-0 flex shrink-0 sm:items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                {/* Mobile Status Badge */}
-                <div className="sm:hidden self-center">
-                    {topic.user_status === 'completed' ? (
-                        <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 uppercase text-[10px] tracking-wider">{t('status.completed')}</Badge>
-                    ) : topic.user_status === 'in_progress' ? (
-                        <Badge variant="secondary" className="text-info bg-info/15 uppercase text-[10px] tracking-wider">{t('status.in_progress')}</Badge>
-                    ) : null}
+            {/* Middle: Skills Section (New Better Placement) */}
+            <div className="flex flex-wrap items-center gap-2 md:px-6 md:border-x border-border/30 min-w-[150px] max-w-[280px]">
+                {topic.skills && topic.skills.length > 0 && (
+                     <div className="flex flex-col gap-2 w-full">
+                        <span className="text-[10px] text-muted-foreground/50 font-mono font-bold uppercase tracking-[.15em] block">
+                            ACQUIRED_SKILLS
+                        </span>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                            {topic.skills.slice(0, 3).map((skill: any) => (
+                                <span 
+                                    key={skill.skill_id} 
+                                    className={cn(
+                                        "flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-mono leading-none transition-all duration-300 shadow-sm",
+                                        isCompleted ? "border-success/10 bg-success/[0.02] text-success/60" : 
+                                        isInProgress ? "border-primary/50 bg-primary/20 text-primary shadow-[0_0_10px_rgba(249,115,22,0.1)]" :
+                                        "border-primary/40 bg-primary/10 text-primary"
+                                    )}
+                                >
+                                    <Zap className={cn("w-2.5 h-2.5", !isCompleted && "fill-current", isInProgress && "animate-pulse")} />
+                                    {skill.name.toUpperCase()}
+                                </span>
+                            ))}
+                        </div>
+                     </div>
+                )}
+            </div>
+
+            {/* Right: Status & Action */}
+            <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end mt-2 md:mt-0 flex-shrink-0">
+                <div className={cn(
+                    "px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-widest border relative overflow-hidden whitespace-nowrap flex-shrink-0",
+                    isCompleted ? "bg-success/5 border-success/20 text-success/70" :
+                    isInProgress ? "bg-primary/20 border-primary shadow-[0_0_15px_rgba(249,115,22,0.2)] text-primary" :
+                    "bg-muted border-border text-muted-foreground/40"
+                )}>
+                    {isInProgress && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_2s_infinite]" />
+                    )}
+                    {isCompleted ? t('done') : isInProgress ? 'ACTIVE' : t('not_started_caps')}
                 </div>
 
-                <Link href={`/${locale}/dashboard/topic/${topic.topic_id}`}>
-                    <button className={cn(
-                        "text-sm font-semibold border rounded-lg transition-all px-4 py-2",
-                        topic.user_status === 'completed' ? "bg-background border-input text-foreground hover:bg-accent" :
-                            topic.user_status === 'in_progress' ? "bg-primary text-primary-foreground hover:bg-primary/90 border-transparent shadow-sm" :
-                                "bg-background border-border hover:border-primary hover:text-primary"
-                    )}>
-                        {topic.user_status === 'completed' ? t('actions.review') :
-                            topic.user_status === 'in_progress' ? t('actions.continue') :
-                                t('actions.start')}
-                    </button>
-                </Link>
+                <div className={cn(
+                    "px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 min-w-[80px] text-center whitespace-nowrap flex-shrink-0",
+                    isCompleted ? "bg-muted text-muted-foreground border border-border" :
+                    isInProgress ? "bg-primary text-white border border-primary shadow-[0_2px_10px_rgba(249,115,22,0.2)]" :
+                    "bg-background border border-border text-foreground group-hover:border-primary group-hover:text-primary group-active:scale-95"
+                )}>
+                    {isCompleted ? t('actions.review') : isInProgress ? t('actions.continue') : t('actions.start')}
+                </div>
             </div>
-        </div>
+        </Link>
     );
 }
 
-function ProjectItem({ project, t, locale }: { project: { user_status?: string, title?: string, description?: string | null, difficulty_level?: string, project_id: string }, t: ReturnType<typeof useTranslations>, locale: string }) {
+function ProjectItem({ project, t, locale }: { project: { user_status?: string, title?: string, description?: string | null, difficulty_level?: string, project_id: string, stage_order?: number }, t: ReturnType<typeof useTranslations>, locale: string }) {
+    const isCompleted = project.user_status === 'completed';
+    const isInProgress = project.user_status === 'in_progress';
+
     return (
         <div className={cn(
-            "relative overflow-hidden rounded-xl border p-1",
-            project.user_status === 'completed' ? "bg-muted/30 border-muted" : "bg-gradient-to-r from-primary via-primary/80 to-primary/50 p-[1px]"
+            "relative overflow-hidden rounded-3xl border transition-all duration-700",
+            isCompleted 
+                ? "border-success/20 bg-success/[0.03]" 
+                : "border-primary/30 bg-card shadow-[0_0_40px_rgba(249,115,22,0.05)]"
         )}>
-            <div className="absolute inset-0 bg-background/95 backdrop-blur-3xl rounded-xl z-0" />
+            {/* Glossy top accent for current */}
+            {!isCompleted && (
+                <div className="absolute top-0 left-0 right-0 h-[4px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-80" />
+            )}
 
-            <div className="relative z-10 flex flex-col sm:flex-row items-start gap-4 p-5 rounded-[10px]">
-                <div className={cn(
-                    "flex-shrink-0 p-4 rounded-xl",
-                    project.user_status === 'completed' ? "bg-muted/50 text-muted-foreground" : "bg-primary/10 text-primary"
-                )}>
-                    <Trophy className="w-8 h-8" />
-                </div>
-
-                <div className="flex-grow min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="default" className={cn(
-                            "uppercase tracking-wider text-[10px]",
-                            project.user_status === 'completed' ? "bg-muted text-muted-foreground" : ""
-                        )}>
-                            {t('milestone_project')}
-                        </Badge>
-                        {project.user_status === 'completed' && (
-                            <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 uppercase text-[10px] tracking-wider">
-                                {t('status.completed')}
-                            </Badge>
-                        )}
-                        {project.user_status === 'in_progress' && (
-                            <Badge variant="secondary" className="text-info bg-info/15 uppercase text-[10px] tracking-wider">
-                                {t('status.in_progress')}
-                            </Badge>
-                        )}
+            <div className="relative z-10 p-8 md:p-10 flex flex-col gap-8">
+                <div className="flex flex-col md:flex-row items-start gap-8">
+                    {/* Trophy Hub Icon - Square Box */}
+                    <div className={cn(
+                        "flex-shrink-0 flex items-center justify-center w-20 h-20 rounded-2xl border transition-all duration-700",
+                        isCompleted 
+                            ? "border-success/30 bg-success/10 text-success shadow-[0_0_20px_rgba(34,197,94,0.1)]" 
+                            : "border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(249,115,22,0.15)]"
+                    )}>
+                        <Trophy className={cn("w-10 h-10", !isCompleted && "animate-pulse")} />
                     </div>
 
-                    <h4 className="text-xl font-black tracking-tight">{project.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-2 line-clamp-2 leading-relaxed max-w-2xl">
-                        {project.description}
-                    </p>
-
-                    <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t pt-4">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <span className="font-medium uppercase tracking-wider text-[11px] text-foreground">
-                                {t('difficulty_label')}:
-                            </span>
-                            <span className={cn(
-                                "capitalize font-semibold",
-                                project.difficulty_level === 'beginner' && "text-success",
-                                project.difficulty_level === 'intermediate' && "text-warning",
-                                project.difficulty_level === 'advanced' && "text-destructive"
+                    <div className="flex-grow min-w-0">
+                        <div className="flex flex-wrap items-center gap-4 mb-4">
+                            <div className={cn(
+                                "px-3 py-1 rounded-md text-[10px] font-mono font-bold tracking-[0.2em] border",
+                                isCompleted 
+                                    ? "border-success/30 text-success bg-success/5" 
+                                    : "border-primary/40 text-primary bg-primary/10 shadow-[0_0_15px_rgba(249,115,22,0.2)]"
                             )}>
-                                {t(`difficulty.${project.difficulty_level}`, { fallback: project.difficulty_level || '' })}
-                            </span>
+                                {isCompleted ? 'COMPLETED // SYNCED' : t('milestone_project').toUpperCase()}
+                            </div>
+                            <div className="text-[10px] font-mono font-bold text-muted-foreground/60 uppercase tracking-[0.2em]">
+                                {t('difficulty_label')}: {t(`difficulty.${project.difficulty_level}`)}
+                            </div>
                         </div>
 
-                        <Link href={`/${locale}/dashboard/project/${project.project_id}`} className="w-full sm:w-auto">
-                            <button className={cn(
-                                "w-full sm:w-auto text-sm font-bold px-6 py-2.5 rounded-lg transition-all shadow-sm",
-                                project.user_status === 'completed' ? "border bg-background hover:bg-muted text-foreground" :
-                                    "bg-primary text-primary-foreground hover:bg-primary/95 hover:shadow-md hover:-translate-y-0.5"
-                            )}>
-                                {project.user_status === 'completed' ? t('actions.view_submission') :
-                                    project.user_status === 'in_progress' ? t('actions.continue_project') :
-                                        t('actions.start_project')}
-                            </button>
-                        </Link>
+                        <h4 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 uppercase italic decoration-primary/30 decoration-2 underline-offset-4">
+                            PROJECT: {project.title}
+                        </h4>
+                        <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-3xl">
+                            {project.description}
+                        </p>
                     </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-border/50">
+                    <div className="flex items-center gap-3">
+                         <span className={cn(
+                             "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
+                             isCompleted ? "text-success/60" : "text-primary/70"
+                         )}>
+                             ● {t('gates_stage', { stage: (project.stage_order || 0) + 1 })}
+                         </span>
+                    </div>
+
+                    <Link href={`/${locale}/dashboard/project/${project.project_id}`} className="w-full sm:w-auto">
+                        <button className={cn(
+                            "group relative w-full sm:w-auto px-10 py-4 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] transition-all duration-300 overflow-hidden",
+                            isCompleted 
+                                ? "bg-transparent border border-success/30 text-success hover:bg-success hover:text-white" 
+                                : "bg-primary text-white border border-primary shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_30px_rgba(249,115,22,0.5)] hover:-translate-y-1"
+                        )}>
+                            <span className="relative z-10">
+                                {isCompleted ? t('actions.view_submission') : isInProgress ? t('actions.continue_project') : t('actions.start_project')}
+                            </span>
+                            {!isCompleted && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[1200ms]" />
+                            )}
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>

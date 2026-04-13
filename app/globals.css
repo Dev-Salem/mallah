@@ -192,6 +192,15 @@
   animation: dotPulse 2s ease-in-out infinite;
 }
 
+/* Specific pulse for roadmap header dot as per spec */
+@keyframes headerPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+.animate-header-pulse {
+  animation: headerPulse 2s infinite;
+}
+
 /* Card entrance stagger */
 @keyframes cardEntrance {
   from { opacity: 0; transform: translateY(16px); }
