@@ -188,8 +188,10 @@ export default function FullEditor({ resume }: { resume: any }) {
               const summarySection = sections.find(s => s.section_type === "SUMMARY");
               const skillsSection = sections.find(s => s.section_type === "SKILLS");
               
-              const hasSummary = summarySection?.content?.text?.trim().length > 0;
-              const hasSkills = (skillsSection?.content?.skills?.length || 0) > 0;
+              const hasSummary = summarySection?.content?.text?.trim()?.length > 0;
+              const hasSkills = 
+                (skillsSection?.content?.included_skill_ids?.length || 0) > 0 || 
+                (skillsSection?.content?.manual_skills?.length || 0) > 0;
 
               if (!hasSummary || !hasSkills) {
                 toast.error(t("ExportGuardError"));
@@ -244,7 +246,7 @@ export default function FullEditor({ resume }: { resume: any }) {
       </div>
 
       <div className="flex-grow overflow-hidden px-4 md:px-8 pb-8">
-        <div className="h-full bg-card rounded-2xl shadow-xl border border-border overflow-hidden relative">
+        <div className="h-full bg-card rounded-2xl shadow-xl border border-border overflow-hidden relative flex flex-col">
 
           {activeTab === "edit" ? (
             <EditorFormPanel
@@ -254,7 +256,7 @@ export default function FullEditor({ resume }: { resume: any }) {
               onUpdate={(newSections: any[]) => setSections(newSections)}
             />
           ) : (
-            <div className="h-full overflow-auto p-8 bg-muted/20">
+            <div className="flex-1 overflow-auto p-8 bg-muted/20">
                <PreviewCard sections={sections} resumeInfo={resume} />
             </div>
           )}

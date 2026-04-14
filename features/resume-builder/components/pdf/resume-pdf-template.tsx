@@ -181,16 +181,16 @@ export const ResumePDFTemplate = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Skills</Text>
             {skills.map((item: any, i: number) => (
-              <Text key={i} style={{ marginBottom: 2 }}>
+              <View key={i} style={{ marginBottom: 2, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
                 {typeof item === "string" ? (
                   <Text style={styles.text}>{item}</Text>
                 ) : (
                   <>
                     <Text style={styles.skillLabel}>{item.name}</Text>
-                    <Text style={styles.text}> — {item.skills.join(", ")}</Text>
+                    <Text style={styles.text}> — {Array.isArray(item.skills) ? item.skills.join(", ") : ""}</Text>
                   </>
                 )}
-              </Text>
+              </View>
             ))}
           </View>
         ) : null}
@@ -247,7 +247,7 @@ export const ResumePDFTemplate = ({
                         {proj.title || "Untitled Project"}
                       </Text>
                     )}
-                    {proj.technologies?.length > 0 && (
+                    {Array.isArray(proj.technologies) && proj.technologies.length > 0 && (
                       <Text style={styles.dates}>
                         {" | "}
                         {proj.technologies.join(", ")}

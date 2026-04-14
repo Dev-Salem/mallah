@@ -88,7 +88,7 @@ export default function EditorFormPanel({
   const sectionContent = getSection(sections, activeSection).content;
 
   return (
-    <section className="flex-1 overflow-y-auto p-4 md:p-6 bg-muted/10 scrollbar-thin">
+    <section className="h-full w-full overflow-y-auto p-4 md:p-6 bg-muted/10 scrollbar-thin">
       <div className="max-w-3xl mx-auto pb-12">
         <div className="bg-card rounded-2xl border border-border/50 shadow-xl p-8 relative">
           {activeSection === "PERSONAL_INFO" && (
