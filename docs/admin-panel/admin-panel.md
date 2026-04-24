@@ -1,4 +1,4 @@
-# Mallah – Admin Panel
+# Mallah – Admin Panel v2
 
 ## 1. Purpose
 
@@ -15,8 +15,9 @@ codebase comments, sitemaps, or API responses.
 
 - **Task-oriented layout.** Admins visit to do something specific — create content, check stats,
   fix an issue. Every screen must make the most common task reachable in 2 clicks or fewer.
-- **Data density over decoration.** Tables, inline filters, and side-drawer editing over cards
-  and full-page transitions. Admins work with data — the UI should feel like a tool, not a product.
+- **Data density with HUD polish.** Tables, inline filters, and side-drawer editing — but wrapped
+  in the full Mallah Tactical HUD aesthetic. The panel is a tool, but it should feel like a
+  high-tech mission control system, not a generic Bootstrap admin template.
 - **Safe destructive actions.** Deleting or deactivating content that learners depend on requires
   a confirmation step that shows the real impact before proceeding.
 - **Audit everything.** Every content change, login, and account action is logged with who, what,
@@ -26,116 +27,301 @@ codebase comments, sitemaps, or API responses.
 
 ---
 
-## 3. Access & Security
+## 3. Tech Stack
 
-### 3.1 Admin URL — Obscured Entry Point
+| Layer          | Technology                                                              |
+|----------------|-------------------------------------------------------------------------|
+| Framework      | Next.js 16.1.6 — App Router (`/app` directory)                          |
+| Styling        | Tailwind CSS 4.0                                                         |
+| UI Components  | shadcn/ui (Radix UI primitives)                                          |
+| Icons          | Lucide React (consistent with learner app)                               |
+| Toasts         | Sonner (shadcn/ui integration) — used for all success/error feedback     |
+| State          | React Server Components where possible, client components for interactivity |
+| Data Fetching  | Server Actions + API routes under `/api/admin/`                           |
 
-The admin panel does not live at `/admin`. It lives at a randomized path set at deployment:
+---
+
+## 4. Visual Identity — Tactical HUD Theme
+
+The admin panel uses the **full Mallah Tactical HUD / Mission Control theme**. It shares the
+same design language as the learner-facing app — dark-first, glassmorphism, geometric overlays,
+animated scanlines, and high-tech UI glows.
+
+### 4.1 Core Palette (OKLCH)
+
+| Token       | Dark Mode (Primary)                          | Light Mode                  |
+|-------------|----------------------------------------------|-----------------------------|
+| Background  | `oklch(0.12 0.01 106)` — Deep Graphite       | `oklch(0.96 0.01 106)`      |
+| Primary     | `oklch(0.68 0.13 38.8)` — Mallah Orange      | `oklch(0.62 0.14 39)`       |
+| Foreground  | `oklch(0.94 0.01 106)` — Silver Gray         | `oklch(0.12 0.01 106)`      |
+| Muted       | `oklch(0.70 0.01 106)` — Subdued Steel       | `oklch(0.94 0.01 106)`      |
+| Accent      | `oklch(0.22 0.01 106)` — Darkened Slate      | `oklch(0.92 0.01 106)`      |
+
+**Status Colors:**
+- Success: Forest Emerald — `oklch(0.65 0.12 153)`
+- Warning: Tactical Amber — `oklch(0.78 0.13 70)`
+- Destructive: Alert Red — `oklch(0.55 0.18 25)`
+- Info: Digital Blue — `oklch(0.63 0.10 245)`
+
+**Dark Mode is the default and intended primary experience.** Light mode exists for
+accessibility but is not the design target.
+
+### 4.2 Typography
+
+| Context              | Font Family             | Usage                                            |
+|----------------------|-------------------------|--------------------------------------------------|
+| English / Universal  | Inter                   | All UI text — labels, headings, body, buttons     |
+| Arabic               | IBM Plex Sans Arabic    | Reserved for future localization                  |
+| Data / Metrics / Code| JetBrains Mono          | Stat card values, table numeric columns, timestamps, IDs, environment variables, audit log entries |
+
+### 4.3 Visual Effects (CSS Utilities)
+
+Applied throughout the admin panel — not optional or decorative-only.
+
+| Utility Class   | Effect                                                                 | Where Applied                                    |
+|-----------------|------------------------------------------------------------------------|--------------------------------------------------|
+| `.hud-grid`     | Geometric overlay with 30px grid-size, `color-mix` primary at 5% opacity | Page backgrounds, login page                     |
+| `.scanline`     | Vertical sweeping animation — "active monitoring" feel                 | Main content area background (subtle)            |
+| `.glass`        | `backdrop-filter: blur(12px)` + semi-transparent border (primary)      | Sidebar, cards, drawers, modals, login card      |
+| `.glow-border`  | Subtle outer glow using primary brand color                            | Active modules, focused inputs, hover states     |
+
+### 4.4 shadcn/ui Component Styling
+
+Every UI element maps to a specific shadcn/ui component with HUD customization:
+
+| UI Element                  | Component           | HUD Treatment                                                            |
+|-----------------------------|---------------------|--------------------------------------------------------------------------|
+| Stat cards                  | `Card`              | `.glass` bg, `.glow-border` on hover, JetBrains Mono values             |
+| Data tables                 | `Table`             | Striped rows (accent at 5%), sticky headers, horizontal scroll on mobile |
+| Side drawers                | `Sheet` (right)     | `.glass` bg, 480px width desktop, full-width mobile                      |
+| Confirmation modals         | `AlertDialog`       | `.glass` bg, destructive button for dangerous actions                    |
+| Dropdowns                   | `Select`            | Dark popover with `.glass`, orange on active item                        |
+| Toggles                     | `Switch`            | Orange when active, muted when off                                       |
+| Buttons (primary)           | `Button` default    | Mallah Orange bg, dark text                                              |
+| Buttons (destructive)       | `Button` destructive| Alert Red bg                                                             |
+| Buttons (ghost)             | `Button` ghost      | Transparent, orange text on hover                                        |
+| Text inputs                 | `Input`             | Dark bg, subtle border, orange focus ring                                |
+| Badges                      | `Badge`             | Green (active/verified), amber (pending/invited), red (blocked), muted (inactive/expired) |
+| Tooltips                    | `Tooltip`           | `.glass` popover                                                         |
+| Breadcrumbs                 | Custom + `Separator`| Muted text, orange for current segment                                   |
+| Warning banners             | `Alert` warning     | Tactical Amber left border + TriangleAlert icon                          |
+| Tabs                        | `Tabs`              | Orange underline active, muted inactive                                  |
+| Search inputs               | `Input` with icon   | Search icon prefix, muted placeholder                                    |
+| Pagination                  | `Pagination`        | Ghost buttons, orange current page                                       |
+| Success/error feedback      | `Sonner` toast      | Bottom-right position, auto-dismiss 4s for success, sticky for errors    |
+| Skeleton loading            | `Skeleton`          | Pulsing dark rectangles matching data shape                              |
+| Empty states                | Custom              | Centered muted text + icon + CTA button where applicable                 |
+
+### 4.5 Responsive Behavior
+
+Optimized for desktop (1280px+). Tablet supported. Mobile is functional but not primary.
+
+| Breakpoint       | Sidebar                              | Tables                   | Drawers          |
+|------------------|--------------------------------------|--------------------------|------------------|
+| Desktop ≥1280px  | Fixed 240px, always visible          | Full width               | 480px from right |
+| Tablet 768–1279  | 64px icon rail, click to expand      | Full width, dense        | 480px from right |
+| Mobile <768px    | Hamburger → overlay                  | Horizontal scroll        | Full width       |
+
+---
+
+## 5. Route Structure (Next.js App Router)
+
+```
+/app/[adminPath]/
+├── login/page.tsx                ← Admin login (public, no shell)
+├── setup/page.tsx                ← Set-password for invited admins (public, no shell)
+├── layout.tsx                    ← Admin shell: sidebar + content wrapper + auth check
+├── dashboard/page.tsx
+├── content/
+│   ├── paths/page.tsx
+│   ├── topics/page.tsx
+│   └── skills/page.tsx
+├── projects/page.tsx
+├── jobs/page.tsx
+├── learners/page.tsx
+├── audit-log/page.tsx            ← super only
+└── settings/page.tsx             ← super only
+```
+
+**Middleware behavior:**
+1. Check `[adminPath]` matches `process.env.ADMIN_PANEL_PATH` → if no: return 404.
+2. If path is `/login` or `/setup` → allow without session (these are public entry points).
+3. For all other paths: check valid admin session → if no session: return 404 (never redirect to login, never confirm the path exists).
+4. If session valid → proceed. Layout renders sidebar + content.
+
+---
+
+## 6. Access & Security
+
+### 6.1 Admin URL — Obscured Entry Point
 
 ```
 mallah.app/{ADMIN_PANEL_PATH}
 ```
 
-`ADMIN_PANEL_PATH` is an environment variable (e.g. `manage-c7x2k`) set once at deployment
-and never committed to source control or exposed in any response. Example full URLs:
-
-```
-mallah.app/manage-c7x2k
-mallah.app/manage-c7x2k/login
-mallah.app/manage-c7x2k/dashboard
-```
+`ADMIN_PANEL_PATH` is an environment variable (e.g. `manage-c7x2k`) set once at deployment.
 
 **Rules:**
-- The path is never hardcoded in any file — always read from `process.env.ADMIN_PANEL_PATH`.
-- If a request hits `/admin` or `/administrator` → return a standard 404. Do not redirect.
-- If a learner navigates to the correct admin URL without an admin session → return 404.
-  Never confirm the path exists with a login redirect.
-- The admin URL is excluded from the public sitemap and `robots.txt`.
+- Never hardcoded — always `process.env.ADMIN_PANEL_PATH`.
+- `/admin` or `/administrator` → 404. No redirect.
+- Correct path + no admin session → 404. Never confirm the path exists.
+- Excluded from sitemap and `robots.txt`.
 
-This is an additional barrier against automated scanners, not a substitute for authentication.
+### 6.2 Two Admin Levels
 
-### 3.2 Separate Admin Login Page
+| Level    | Can Do                                                                                 |
+|----------|----------------------------------------------------------------------------------------|
+| `normal` | Create, edit, deactivate content. View stats and learner list. Block/unblock learners. |
+| `super`  | Everything normal can do + delete content, manage admin accounts, view audit log, access Settings. |
 
-The admin login page lives at `mallah.app/{ADMIN_PANEL_PATH}/login`. It shares nothing
-with the learner login page — separate route, separate controller, separate UI.
+The first `super` admin is seeded directly in the database at deployment (bootstrapping protection).
 
-**Admin login page characteristics:**
-- Minimal styling — no Mallah learner branding, no marketing copy.
-- Email field, password field, and a "Sign In" button only.
-- No "Register", "Forgot Password", or "Back to home" links visible.
+### 6.3 Admin Level Visibility in the UI
 
-**Admin login process:**
-1. Admin enters email + password.
-2. Backend checks `users.email` match.
-3. Backend verifies `users.role = 'admin'` — if not, return generic error immediately.
-4. Backend verifies matching row in `admins` table.
-5. Backend verifies `users.status = 'active'` — blocked admins cannot log in.
-6. Verify password against `users.password_hash`.
-7. If all pass: issue a separate admin session token (scoped, not shared with learner sessions).
-8. Log successful login to `admin_audit_log`.
-9. Redirect to `/{ADMIN_PANEL_PATH}/dashboard`.
+| Location                     | Normal Admin Sees                    | Super Admin Sees                      |
+|------------------------------|--------------------------------------|---------------------------------------|
+| Sidebar footer               | Name + muted `ADMIN` badge           | Name + orange `SUPER` badge           |
+| Sidebar nav: Audit Log       | Hidden (absent)                      | Visible                               |
+| Sidebar nav: Settings        | Hidden (absent)                      | Visible                               |
+| Delete buttons (paths, etc.) | Hidden (absent)                      | Visible                               |
+| Dashboard: View Audit Log    | Hidden                               | Visible                               |
+| Direct URL to super route    | 403 page: "No permission" + back btn | Normal access                         |
 
-**On any failure:** return a single generic message — "Invalid credentials." Never reveal
-which step failed. Never reveal that a learner account was found at this email.
+---
 
-**Admin session rules:**
-- Sessions expire after **2 hours of inactivity** (shorter than learner sessions).
+## 7. Complete Flow: Admin Login
+
+### 7.1 Login Page (`/{ADMIN_PANEL_PATH}/login`)
+
+**Visual:** Deep Graphite background with `.hud-grid` overlay. Centered `.glass` card. Subtle `.scanline` on background. No Mallah logo, no tagline, no marketing, no product name. Just the form.
+
+**Fields:**
+- Email (`Input`, required)
+- Password (`Input` type password, required)
+- "Sign In" `Button` (primary, full width, `.glow-border` on focus)
+
+**No other links visible.** No Register, no Forgot Password, no Back to Home.
+
+**On submit (frontend):**
+1. Disable button, show spinner inside it.
+2. POST `/api/admin/auth/login` with `{ email, password }`.
+3. On success → redirect to `/{ADMIN_PANEL_PATH}/dashboard`.
+4. On failure → show inline error below the form: "Invalid credentials." (generic — never reveals which field was wrong or whether the email exists).
+5. Re-enable button.
+
+**Backend login steps (in exact order):**
+1. Check `users.email` match → if no match: return generic error.
+2. Check `users.role = 'admin'` → if not admin: return generic error (never reveal a learner account exists).
+3. Check `admins` table has matching row → if not: return generic error.
+4. Check `users.status = 'active'` → if blocked: return generic error.
+5. Verify password against `users.password_hash` → if wrong: return generic error.
+6. All pass: issue admin session token (scoped, separate from learner sessions).
+7. Log `admin_login` to `admin_audit_log` with IP address.
+8. Return success + redirect URL.
+
+**On any failure at any step:** return `{ error: "Invalid credentials." }`. Log `admin_login_failed` with email and IP.
+
+**Session rules:**
+- Expires after **2 hours of inactivity**.
 - No "Remember Me" option.
-- Every request to any `/api/admin/*` route re-validates the session and role server-side.
+- Every `/api/admin/*` request re-validates session + role server-side.
 
-### 3.3 Two Admin Levels
+### 7.2 Setup Page (`/{ADMIN_PANEL_PATH}/setup?token=...`)
 
-| Level    | Permissions                                                                           |
-|----------|---------------------------------------------------------------------------------------|
-| `normal` | Create, edit, and deactivate content. View stats and learner list.                    |
-| `super`  | Everything `normal` can do, plus: delete content, manage admin accounts, view audit log, access Settings. |
+Used by invited admins to set their password. Same visual treatment as login page.
 
-Only a `super` admin can create or deactivate other admin accounts. The first `super` admin
-account must be seeded directly in the database at deployment — it cannot be created through
-the UI (bootstrapping protection).
+**On load:**
+1. Extract `token` from URL params.
+2. GET `/api/admin/auth/invite/:token` to validate.
+3. If valid → show form with admin's email (read-only), password field, confirm password field, "Activate Account" button.
+4. If invalid/expired → show: "This invite link has expired or is invalid. Contact a super admin for a new invite." No login link shown (don't confirm the admin path exists).
+5. If already used → show: "This invite has already been used. You can sign in." + link to login page.
 
----
+**On submit:**
+1. POST `/api/admin/auth/setup` with `{ token, password }`.
+2. Backend validates token again, sets `password_hash`, marks invite `status = 'accepted'`, sets `accepted_at`.
+3. Logs `admin_invite_accepted`.
+4. Redirect to login page with `Sonner` toast: "Account activated. Sign in to continue."
 
-## 4. Admin Sidebar Navigation
+**Password requirements:** Same as learner — minimum 8 characters, at least one letter and one number.
 
-Fixed left sidebar. Icon + label. No deep nesting.
+### 7.3 Session Expiry
 
-```
-📊  Dashboard
-📚  Content
-    ├── Paths & Stages
-    ├── Topics & Resources
-    └── Skills Catalog
-🗂  Projects
-💼  Jobs                    ← new — weekly job feed management
-👥  Learners
-📋  Audit Log              ← super admin only
-⚙️  Settings               ← super admin only
-```
-
-- Content section is collapsible. Expanded by default.
-- Active page is visually highlighted.
-- Admin's display name and level shown at the bottom of the sidebar.
-- "Sign Out" button at the very bottom.
+When an admin's session expires mid-work:
+1. The next API call returns 401.
+2. Frontend redirects to `/{ADMIN_PANEL_PATH}/login`.
+3. Any unsaved form data is lost (no auto-save in v1).
+4. No "session expired" message — just the login page. Keep it silent.
 
 ---
 
-## 5. Admin Dashboard
+## 8. Admin Shell: Sidebar + Layout
 
-The first screen after login. Purpose: answer "Is everything healthy? What needs attention?"
+After login, the admin shell wraps all pages. It consists of a fixed left sidebar and a scrollable main content area.
 
-### 5.1 Platform Health Metrics (4 stat cards, top row)
+### 8.1 Sidebar Layout
 
-| Card                        | Value Source                                                       |
-|-----------------------------|--------------------------------------------------------------------|
-| Total Learners              | COUNT of `users` where `role = 'learner'` and `status = 'active'` |
-| Active This Week            | COUNT of distinct `user_id` with `last_accessed_at` in last 7 days (from `user_progress`) |
-| Topics Completed (30 days)  | COUNT of `user_progress` where `status = 'completed'` and `completed_at` in last 30 days |
-| Pending Skill Reviews       | COUNT of `skills` where `is_verified = false`                      |
+```
+┌─────────────────────────┐
+│  [Geometric mark/icon]  │  ← no Mallah text logo, just a small abstract icon
+├─────────────────────────┤
+│  ▸ Dashboard            │  ← LayoutDashboard icon
+│  ▸ Content        [▾]   │  ← BookOpen icon, collapsible section
+│     ├── Paths & Stages  │  ← Route icon
+│     ├── Topics          │  ← FileText icon
+│     └── Skills          │  ← Zap icon
+│  ▸ Projects             │  ← FolderKanban icon
+│  ▸ Jobs                 │  ← Briefcase icon
+│  ▸ Learners             │  ← Users icon
+│  ▸ Audit Log            │  ← ScrollText icon   ← HIDDEN for normal admins
+│  ▸ Settings             │  ← Settings icon      ← HIDDEN for normal admins
+├─────────────────────────┤
+│  Sara Ahmad             │  ← display name from `admins` table
+│  [SUPER]                │  ← Badge: orange for super, muted for normal
+│  [Sign Out]             │  ← LogOut icon + text
+└─────────────────────────┘
+```
 
-"Pending Skill Reviews" card links directly to Skills Catalog filtered to unverified.
+### 8.2 Sidebar Behavior
 
-### 5.2 Path Overview Table
+- `.glass` background on the entire sidebar.
+- Content section is collapsible, **expanded by default**.
+- Active page: **2–3px left-side accent border** (Mallah Orange) + filled icon.
+- Inactive: outline icon, no border.
+- "Sign Out" at the bottom → POST `/api/admin/auth/logout` → redirect to login.
+- Desktop: fixed 240px. Tablet: 64px icon rail (hover/click to expand). Mobile: hamburger overlay.
+
+---
+
+## 9. Dashboard (`/{ADMIN_PANEL_PATH}/dashboard`)
+
+First screen after login. Answers: "Is everything healthy? What needs attention?"
+
+### 9.1 Loading State
+
+On initial load, show `Skeleton` components matching the exact shape of:
+- 4 stat cards (rectangular placeholders)
+- Path table (3–4 row placeholders)
+- Activity feed (3–4 line placeholders)
+
+### 9.2 Platform Health Metrics (4 stat cards)
+
+Horizontal row of 4 `.glass` `Card` components with `.glow-border` on hover.
+
+| Card                        | Icon             | Value Source                                                       |
+|-----------------------------|------------------|--------------------------------------------------------------------|
+| Total Learners              | Users            | COUNT `users` WHERE `role = 'learner'` AND `status = 'active'`    |
+| Active This Week            | Activity         | COUNT DISTINCT `user_id` with `last_accessed_at` in last 7 days   |
+| Topics Completed (30d)      | CheckCircle      | COUNT `user_progress` WHERE `status = 'completed'` AND `completed_at` in last 30 days |
+| Pending Skill Reviews       | Clock            | COUNT `skills` WHERE `is_verified = false`                         |
+
+- Values in JetBrains Mono, large size.
+- Small muted label above each value.
+- "Pending Skill Reviews" is clickable → navigates to Skills Catalog filtered to `status = Pending`.
+
+### 9.3 Path Overview Table
+
+`Table` component with striped rows. Numeric columns in JetBrains Mono.
 
 | Path Name                       | Learners | Avg Completion % | Active This Week |
 |---------------------------------|----------|------------------|------------------|
@@ -144,506 +330,790 @@ The first screen after login. Purpose: answer "Is everything healthy? What needs
 | Cybersecurity & Ethical Hacking | 189      | 41%              | 43               |
 | Data Science & Machine Learning | 156      | 22%              | 38               |
 
-Avg Completion % = average of all learners' path completion percentages for that path,
-computed from `user_progress` and `topics`.
+Avg Completion % = average of all enrolled learners' path completion percentages.
 
-### 5.3 Quick Action Buttons
+### 9.4 Quick Action Buttons
 
-- `+ Add Topic` → navigates to Topics & Resources with creation drawer pre-opened
-- `+ Add Skill` → navigates to Skills Catalog with creation form pre-opened
-- `Review Pending Skills` → navigates to Skills Catalog filtered to `is_verified = false`
-- `View Audit Log` *(super admin only)*
+Row of `Button` (outline variant) with Lucide icons:
 
-### 5.4 Content Health Warnings
+| Button              | Action                                                             | Visibility |
+|---------------------|--------------------------------------------------------------------|------------|
+| `+ Add Topic`       | Navigate to Topics page with create drawer pre-opened              | All admins |
+| `+ Add Skill`       | Navigate to Skills page with create drawer pre-opened              | All admins |
+| Review Pending      | Navigate to Skills page filtered to `Pending`                      | All admins |
+| View Audit Log      | Navigate to Audit Log                                              | Super only |
 
-Below the stats, show automatic warnings for content issues:
+### 9.5 Content Health Warnings
 
-- Any path with 0 stages → "Frontend Development has no stages."
-- Any stage with 0 topics → "Stage: Advanced Topics (Cybersecurity) has no topics."
-- Any topic with 0 resources → "Topic: SQL Basics has no resources attached."
+`Alert` components (warning variant) with Tactical Amber left border. Each has a direct fix link.
 
-These are orange warning banners with a direct link to fix each one.
+Automatically generated for:
+- Path with 0 stages → "Frontend Development has no stages." → link: "Add Stage →"
+- Stage with 0 topics → "Stage: Advanced Topics (Cybersecurity) has no topics." → link: "Add Topic →"
+- Topic with 0 resources → "Topic: SQL Basics has no resources attached." → link: "Add Resource →"
 
-### 5.5 Recent Admin Activity Feed
+If no warnings: this section is hidden entirely (don't show an empty "All good" message).
 
-Last 10 entries from `admin_audit_log`, newest first:
+### 9.6 Recent Admin Activity Feed
 
-> Admin **sara@admin.com** deactivated Path: Backend Development — 2 hours ago
-> Admin **omar@admin.com** added Topic: React Hooks to Stage 3 (Frontend) — 5 hours ago
+Last 10 entries from `admin_audit_log`, newest first. Vertical timeline layout.
 
-Clicking any entry opens the relevant record (if it still exists).
+Each entry shows:
+- Admin email (bold, orange)
+- Action description (normal text)
+- Relative timestamp in JetBrains Mono ("2 hours ago", "Yesterday at 14:32")
+- Clicking an entry navigates to the relevant record (if it still exists). If deleted, show `Sonner` toast: "This record no longer exists."
 
----
-
-## 6. Content Management
-
-### 6.1 Paths & Stages
-
-#### Paths List
-
-Table of all paths (active and inactive):
-
-| Name                            | Status     | Stages | Learners | Actions             |
-|---------------------------------|------------|--------|----------|---------------------|
-| Frontend Development            | Active     | 5      | 412      | Edit · Deactivate   |
-| Full-Stack Web Development      | Active     | 6      | 231      | Edit · Deactivate   |
-| Cybersecurity & Ethical Hacking | Active     | 6      | 189      | Edit · Deactivate   |
-| Data Science & Machine Learning | Active     | 6      | 156      | Edit · Deactivate   |
-
-- `Edit` → side drawer: name, short description, `path_id` slug (read-only after creation), `is_active` toggle.
-- `Deactivate` → impact modal before proceeding:
-  > "412 learners are currently enrolled in this path. Deactivating prevents new enrollments
-  > but does not remove existing learner progress. Type the path name to confirm."
-- `+ New Path` button → side drawer: name, description, `path_id` slug (auto-generated from
-  name, editable before first save), `is_active` (default true).
-
-**Note on path slugs:** The four current path slugs (`frontend`, `fullstack`, `cybersecurity`,
-`datascience`) are referenced throughout the system. Do not rename them after learners have
-enrolled. The slug field is read-only in the edit drawer after creation.
-
-#### Stages Management (inside a Path)
-
-Clicking a path row opens its stage list in the same page:
-
-| Order | Stage Title              | Difficulty   | Topics | Learners in Stage | Actions                  |
-|-------|--------------------------|--------------|--------|-------------------|--------------------------|
-| 1     | Web Foundations          | Beginner     | 8      | 287               | Edit · Reorder · Delete  |
-| 2     | JavaScript Core          | Beginner     | 10     | 143               | Edit · Reorder · Delete  |
-| 3     | Git & Developer Tools    | Beginner     | 4      | 98                | Edit · Reorder · Delete  |
-
-- Drag-to-reorder → sends a single `PATCH /api/admin/stages/reorder` with the full new
-  `order_index` array. Applied atomically — partial reorders are not allowed.
-- **Reordering stages does not affect learner progress.** Progress is stored per `topic_id`,
-  not by position. Learners mid-stage are unaffected.
-- `Edit` → side drawer: title, description, difficulty, order_index.
-- `Delete` → blocked if any `user_progress` row exists for topics in this stage. Error:
-  "Cannot delete — [N] learners have progress in this stage. Deactivate the stage instead."
-- `+ Add Stage` → side drawer: title, description, difficulty, order (auto-appended to end).
+**Empty state:** "No recent activity." (shown for freshly deployed platforms)
 
 ---
 
-### 6.2 Topics & Resources
+## 10. Content Management
 
-**Navigation:** Content → Topics & Resources → select Path → select Stage → topic list.
+### 10.1 Paths & Stages (`/{ADMIN_PANEL_PATH}/content/paths`)
 
-Breadcrumb always visible: `Frontend Development / Stage 2 – JavaScript Core / Topics`
+#### Page Layout
+- Page title: "Paths & Stages"
+- `+ New Path` button (top right)
+- Paths table below
 
-#### Topics Table (within selected Stage)
+#### Paths Table
 
-| Order | Title                        | Time (min) | Difficulty   | Mandatory | Actions                  |
-|-------|------------------------------|------------|--------------|-----------|--------------------------|
-| 1     | Variables & Data Types       | 30         | Beginner     | Yes       | Edit · Reorder · Delete  |
-| 2     | Functions & Scope            | 45         | Beginner     | Yes       | Edit · Reorder · Delete  |
-| 3     | DOM Manipulation             | 60         | Beginner     | Yes       | Edit · Reorder · Delete  |
+| Column    | Type          | Notes                                  |
+|-----------|---------------|----------------------------------------|
+| Name      | Text          | Path display name                      |
+| Status    | `Badge`       | Green "Active" / Muted "Inactive"      |
+| Stages    | Number (Mono) | Count of stages in this path           |
+| Learners  | Number (Mono) | Count of enrolled learners             |
+| Actions   | Buttons       | Edit · Deactivate (+ Delete for super) |
 
-- Same reorder rules as stages — atomic PATCH, does not affect learner progress.
-- `Delete` → blocked if any `user_progress` row exists for this topic.
-- `+ Add Topic` → opens the topic side drawer (below).
+**Loading:** `Skeleton` rows (4 rows matching table shape).
+**Empty state:** "No paths created yet." + `+ New Path` button.
+
+#### Create Path (`+ New Path`)
+
+Opens `Sheet` (right side, 480px):
+- Title: "New Path"
+- Fields:
+  - Name (`Input`, required)
+  - Description (`Textarea`, max 500 chars)
+  - Path Slug (`Input`, auto-generated from name, editable before first save, lowercase + hyphens only)
+  - Active (`Switch`, default ON)
+- Footer: "Create Path" `Button` (primary) + "Cancel" `Button` (ghost)
+- **On submit:** POST `/api/admin/paths` → on success: `Sonner` toast "Path created" + close drawer + refresh table. On error: inline error message in drawer.
+- **Validation:** Name required, slug unique check against backend.
+
+#### Edit Path
+
+Opens `Sheet` with same fields as Create, pre-filled. Slug field is **read-only** (disabled `Input` with lock icon and `Tooltip`: "Slug cannot be changed after creation to preserve learner data").
+- **On submit:** PATCH `/api/admin/paths/:id` → `Sonner` toast "Path updated".
+
+#### Deactivate Path
+
+Click "Deactivate" → `AlertDialog`:
+- Title: "Deactivate [Path Name]?"
+- Body: "[N] learners are currently enrolled in this path. Deactivating prevents new enrollments but does not remove existing learner progress."
+- Confirm requires typing the path name exactly in an `Input` field.
+- Confirm `Button` (destructive) is disabled until name matches.
+- **On confirm:** PATCH `/api/admin/paths/:id` with `{ is_active: false }` → `Sonner` toast "Path deactivated" → log `path_deactivated`.
+
+#### Delete Path (Super Only)
+
+Only visible for super admins. Only enabled when 0 learners are enrolled.
+- If learners exist → `AlertDialog`: "Cannot delete — [N] learners are on this path. Deactivate instead."
+- If 0 learners → `AlertDialog`: "This will permanently delete [Path Name] and all its stages ([X]), topics ([Y]), and resources ([Z]). This cannot be undone." + type name to confirm.
+- **On confirm:** DELETE `/api/admin/paths/:id` → `Sonner` toast "Path deleted" → log `path_deleted`.
+
+#### Stages (Inline Expansion)
+
+Clicking a path row expands it inline to show stages for that path. Not a page navigation.
+
+**Stages table within expanded path:**
+
+| Column          | Type          | Notes                              |
+|-----------------|---------------|------------------------------------|
+| Order           | Number (Mono) | `order_index`, draggable handle    |
+| Stage Title     | Text          |                                    |
+| Difficulty      | `Badge`       | Beginner/Intermediate/Advanced     |
+| Topics          | Number (Mono) | Count                              |
+| Learners        | Number (Mono) | Learners with progress in stage    |
+| Actions         | Buttons       | Edit · Delete (super only)         |
+
+**Drag-to-reorder:**
+- Drag handle on the Order column.
+- On drop: PATCH `/api/admin/stages/reorder` with full `{ path_id, stage_ids: [...] }` array.
+- **Atomic:** if the request fails → revert to previous order visually + `Sonner` toast (error): "Reorder failed. Please try again."
+- Reordering does NOT affect learner progress (progress is stored per `topic_id`).
+
+**Create Stage:** `+ Add Stage` button → `Sheet` with: title, description, difficulty (`Select`), order (auto-appended).
+- **On submit:** POST `/api/admin/stages` → `Sonner` toast "Stage created".
+
+**Edit Stage:** `Sheet` with same fields, pre-filled. PATCH `/api/admin/stages/:id`.
+
+**Delete Stage (Super Only):**
+- If `user_progress` exists for any topic in this stage → `AlertDialog`: "Cannot delete — [N] learners have progress in this stage."
+- If no progress → `AlertDialog` with cascade warning: "This will also delete [X] topics and [Y] resources." + type name to confirm.
+
+---
+
+### 10.2 Topics & Resources (`/{ADMIN_PANEL_PATH}/content/topics`)
+
+#### Page Layout
+- Breadcrumb: `All Paths / [Path Name] / [Stage Title] / Topics`
+- Path `Select` dropdown → Stage `Select` dropdown (filtered by path) → Topics table
+- `+ Add Topic` button (top right, appears after stage is selected)
+
+**Initial state:** Path dropdown is pre-selected if navigated from Dashboard quick action. Otherwise, prompt: "Select a path and stage to manage topics."
+
+#### Topics Table
+
+| Column     | Type          | Notes                              |
+|------------|---------------|------------------------------------|
+| Order      | Number (Mono) | Draggable handle                   |
+| Title      | Text          |                                    |
+| Type       | `Badge`       | lesson, concept, project_milestone, etc. |
+| Time (min) | Number (Mono) | `estimated_time_min`               |
+| Difficulty | `Badge`       |                                    |
+| Mandatory  | `Badge`       | Green "Yes" / Muted "No"          |
+| Actions    | Buttons       | Edit · Delete (super only)         |
+
+**Drag-to-reorder:** Same atomic behavior as stages.
+**Empty state:** "No topics in this stage yet." + `+ Add Topic` button.
+**Search:** `Input` (search icon) above table — filters by topic title (client-side for <100 topics per stage).
 
 #### Topic Edit / Create Drawer
 
-A right-side drawer that slides in without leaving the topics list.
+`Sheet` (right, 480px). Scrollable content for long forms.
 
-**Core fields:**
-- Title (required)
-- Summary (textarea, max 500 chars)
-- Estimated time in minutes
-- Difficulty: Beginner / Intermediate / Advanced
-- Topic Type (required dropdown):
+**Section 1 — Core Fields:**
+- Title (`Input`, required)
+- Summary (`Textarea`, max 500 chars, character counter shown)
+- Estimated Time (`Input` number, minutes)
+- Difficulty (`Select`: Beginner / Intermediate / Advanced)
+- Topic Type (`Select`, required):
 
-| Value | Label shown to admin | Notes |
-|---|---|---|
-| `lesson` | Lesson | Standard learning topic |
-| `lesson_practice` | Lesson + Practice | Lesson with embedded hands-on exercise |
-| `lesson_lab` | Lesson + Lab | Cybersecurity path — produces a private write-up |
-| `concept` | Concept | Theory/conceptual, no hands-on |
-| `concept_practice` | Concept + Practice | Concept with short exercise |
-| `project_milestone` | Project (Milestone) | Gates next stage. Triggers `user_projects` write on completion. |
-| `project_capstone` | Project (Capstone) | Final graduation project. Same as milestone but also unlocks graduate badge. |
+| Value             | Label              | Notes                                              |
+|-------------------|--------------------|-----------------------------------------------------|
+| `lesson`          | Lesson             | Standard learning topic                              |
+| `lesson_practice` | Lesson + Practice  | Lesson with embedded hands-on exercise               |
+| `lesson_lab`      | Lesson + Lab       | Cybersecurity path — produces a private write-up     |
+| `concept`         | Concept            | Theory/conceptual, no hands-on                       |
+| `concept_practice`| Concept + Practice | Concept with short exercise                          |
+| `project_milestone`| Project (Milestone)| Gates next stage. Triggers `user_projects` on completion. |
+| `project_capstone`| Project (Capstone) | Final graduation project. Unlocks graduate badge.    |
 
-- Is Mandatory (toggle — non-mandatory topics don't count toward stage completion %)
-- Order index (auto-managed, adjustable)
+- Is Mandatory (`Switch` — OFF = doesn't count toward stage completion %)
+- Order Index (auto-managed, read-only display)
 
-**Resources sub-section (inside the same drawer):**
+**Section 2 — Resources (inside same drawer):**
 
-Ordered list of this topic's learning assets. Four resource types are supported: `INTERNAL_TEXT`, `VIDEO`, `ARTICLE`, `CERT`.
+Separator + "Resources" sub-heading + `+ Add Resource` button.
 
-| Order | Type            | Title                          | Preview                     | Actions        |
-|-------|-----------------|--------------------------------|-----------------------------|----------------|
-| 1     | INTERNAL_TEXT   | Introduction to Variables      | "In JavaScript, variables…" | Edit · Delete  |
-| 2     | VIDEO           | Fireship – JS Variables        | youtube.com/...             | Edit · Delete  |
-| 3     | ARTICLE         | MDN – var, let, const          | developer.mozilla.org/...   | Edit · Delete  |
-| 4     | CERT            | CompTIA Security+              | comptia.org/... · Paid      | Edit · Delete  |
+Resources listed as compact rows:
 
-- Resources are drag-to-reorder within the topic. **Exception: CERT resources always render last in the Topic Viewer regardless of their `order_index` here.**
-- `+ Add Resource` → inline form below the list:
-  - Type: `INTERNAL_TEXT` / `VIDEO` / `ARTICLE` / `CERT`
-  - Title
-  - URL (for VIDEO / ARTICLE / CERT) or Content textarea (for INTERNAL_TEXT)
-  - **CERT-only additional fields:** Provider (e.g. "CompTIA", "Google"), Cost Type (`free` / `paid` / `discounted`), Cost Note (free text, e.g. "~$330 — voucher available via path completion")
-  - Order (auto-appended, CERT resources always render last in the Topic Viewer regardless of order_index)
-- `Edit` → inline in the same row.
-- `Delete` → single confirmation. Resources are not individually progress-tracked so
-  deletion is always safe.
+| Order | Type Badge | Title              | Preview/URL                 | Actions       |
+|-------|------------|--------------------|-----------------------------|---------------|
+| 1     | TEXT       | Intro to Variables | "In JavaScript, var…"       | Edit · Delete |
+| 2     | VIDEO      | Fireship – JS Vars | youtube.com/...             | Edit · Delete |
+| 3     | ARTICLE    | MDN – let, const   | developer.mozilla.org/...   | Edit · Delete |
+| 4     | CERT       | CompTIA Security+  | comptia.org/... · Paid      | Edit · Delete |
 
-**Skills linked to this topic (inside the same drawer):**
+**Add Resource (inline form expands below list):**
+- Type (`Select`: INTERNAL_TEXT / VIDEO / ARTICLE / CERT)
+- Title (`Input`)
+- URL (`Input` — shown for VIDEO/ARTICLE/CERT) or Content (`Textarea` — shown for INTERNAL_TEXT)
+- **CERT-only fields (shown conditionally when type = CERT):**
+  - Provider (`Input`, e.g. "CompTIA", "Google")
+  - Cost Type (`Select`: free / paid / discounted)
+  - Cost Note (`Input`, e.g. "~$330 — voucher available via path completion")
+- "Add" `Button` → POST `/api/admin/topics/:id/resources` → `Sonner` toast "Resource added" → resource appears in list.
+- CERT resources render last in the learner's Topic Viewer regardless of order here.
 
-Controls which skills are unlocked when this topic is completed, and which topics the
-Opportunity Analyzer links to for missing skills.
+**Edit Resource:** Click Edit → row becomes editable inline. "Save" / "Cancel" buttons appear.
+**Delete Resource:** `AlertDialog` (simple confirm — resources aren't progress-tracked).
 
-- Multi-select from `skills` catalog (verified skills only, searchable dropdown)
-- Set `importance_level` per skill: Low / Medium / High
-- `importance_level = High` → Opportunity Analyzer prioritizes this topic when that skill
-  is missing from a learner's profile
-- Displayed as a tag list: `React [High] ×` `JavaScript [High] ×` `DOM API [Medium] ×`
+**Section 3 — Linked Skills (inside same drawer):**
+
+Separator + "Skills" sub-heading.
+
+- Searchable multi-select using `Command` component (searches verified skills only).
+- Selected skills shown as `Badge` tags with `×` remove button: `React ×` `JavaScript ×` `DOM API ×`
+- Skills are linked via `topic_skills` (just `topic_id` + `skill_id` — no `importance_level`).
+- The Opportunity Analyzer uses `skills.category` to prioritize which gaps are urgent.
+
+**Drawer footer:** "Save Topic" `Button` (primary) + "Cancel" `Button` (ghost).
+- **On save:** Creates/updates topic + resources + skill links in a single transaction.
+- `Sonner` toast: "Topic created" or "Topic updated".
+- Drawer closes, table refreshes.
 
 ---
 
-### 6.3 Skills Catalog
+### 10.3 Skills Catalog (`/{ADMIN_PANEL_PATH}/content/skills`)
+
+#### Page Layout
+- Page title: "Skills Catalog"
+- Filters row: Category (`Select`) + Status (`Select`: All / Verified / Pending)
+- Search: `Input` (search icon) — filters by skill name
+- `+ Add Skill` button (top right)
+- Skills table below
+- Bulk action bar (sticky, appears when pending skills are selected)
 
 #### Skills Table
 
-| Skill Name         | Category               | Verified     | In Topics | In Projects | Actions           |
-|--------------------|------------------------|--------------|-----------|-------------|-------------------|
-| React              | framework_library      | ✅ Verified   | 4         | 3           | Edit              |
-| PostgreSQL         | tool                   | ✅ Verified   | 3         | 2           | Edit              |
-| Burp Suite         | tool                   | ✅ Verified   | 2         | 1           | Edit              |
-| My Custom Skill    | other                  | ⏳ Pending    | 0         | 0           | Verify · Reject   |
+| Column      | Type          | Notes                                  |
+|-------------|---------------|----------------------------------------|
+| Checkbox    | Checkbox      | Only on Pending rows                   |
+| Skill Name  | Text          |                                        |
+| Category    | `Badge`       | framework_library, tool, etc.          |
+| Status      | `Badge`       | Green "Verified" / Amber "Pending"     |
+| In Topics   | Number (Mono) | Clickable → filtered view              |
+| In Projects | Number (Mono) | Clickable → filtered view              |
+| Actions     | Buttons       | Varies by status (see below)           |
 
-- "In Topics" / "In Projects" are usage counts — clicking opens a filtered view showing
-  which records reference this skill. Useful before renaming or deleting.
-- `Pending` = learner-submitted from the Portfolio Hub.
-- `Verify` → sets `is_verified = true`. Skill becomes available in all learner-facing dropdowns.
-- `Reject` → deletes the skill row. Safe because pending skills have 0 references by definition.
-- `Edit` → side drawer: name, category, description. `skill_id` is read-only.
+**Actions by status:**
+- Verified: Edit (+ Delete for super if 0 references)
+- Pending: Verify · Reject · Edit
 
-**Bulk actions for pending skills:**
-- Select multiple → "Verify Selected" or "Reject Selected"
+**Verify:** PATCH `/api/admin/skills/:id` with `{ is_verified: true }` → `Sonner` toast "Skill verified" → badge changes to green.
 
-**Filters:**
-- Category: All / `fundamentals` / `language` / `framework_library` / `tool` / `platform_service` / `practice` / `other`
-- Status: All / Verified / Pending
+**Reject:** `AlertDialog`: "Reject skill '[Name]'? This will permanently delete it." → DELETE `/api/admin/skills/:id` → `Sonner` toast "Skill rejected".
 
-**`+ Add Skill` button:**
-- Side drawer: name, category (dropdown: `fundamentals` / `language` / `framework_library` / `tool` / `platform_service` / `practice` / `other`), description (optional)
-- `is_verified = true` by default for admin-created skills
+**Bulk actions (pending skills):**
+- Select checkboxes on pending rows.
+- Sticky bar appears above table: "[N] selected" + "Verify Selected" `Button` + "Reject Selected" `Button` (destructive).
+- Verify Selected → PATCH each selected → `Sonner` toast "[N] skills verified".
+- Reject Selected → `AlertDialog` confirm → DELETE each → `Sonner` toast "[N] skills rejected".
+
+**Create Skill (`+ Add Skill`):** `Sheet` with:
+- Name (`Input`, required)
+- Category (`Select`: fundamentals / language / framework_library / tool / platform_service / practice / other)
+- Description (`Textarea`, optional)
+- `is_verified = true` by default (admin-created).
+- POST `/api/admin/skills` → `Sonner` toast "Skill created".
+- **Duplicate check:** if name already exists → inline error "A skill named [X] already exists."
+
+**Edit Skill:** `Sheet` with same fields. `skill_id` shown as read-only (JetBrains Mono, muted).
+
+**Delete Skill (Super Only):**
+- If referenced in `topic_skills` or `project_skills` → `AlertDialog`: "Cannot delete — this skill is used in [N] topics and [M] projects." Lists them.
+- If 0 references → `AlertDialog` with confirm.
+
+**Loading:** `Skeleton` rows.
+**Empty state:** "No skills in the catalog yet." + `+ Add Skill` button.
 
 ---
 
-## 7. Projects Management
+## 11. Projects Management (`/{ADMIN_PANEL_PATH}/projects`)
 
-Accessed via "Projects" in the sidebar. Manages platform-defined project templates that
-appear in learner roadmaps.
+#### Page Layout
+- Page title: "Projects"
+- Filters row: Path (`Select`) · Difficulty (`Select`) · Status (`Select`: Active / Inactive) · Source (`Select`: Platform / Learner-Created)
+- Search: `Input` — filters by project title
+- `+ Add Project` button (top right)
+- Projects table
 
 #### Projects Table
 
-| Title                        | Difficulty   | Stage                   | Active | Skills | Actions             |
-|------------------------------|--------------|-------------------------|--------|--------|---------------------|
-| Personal Portfolio Page      | Beginner     | Frontend / Stage 1      | Yes    | 3      | Edit · Deactivate   |
-| REST API Blog Backend        | Intermediate | Full-Stack / Stage 3    | Yes    | 5      | Edit · Deactivate   |
-| Network Recon Lab            | Beginner     | Cybersecurity / Stage 1 | Yes    | 4      | Edit · Deactivate   |
+| Column     | Type          | Notes                                  |
+|------------|---------------|----------------------------------------|
+| Title      | Text          |                                        |
+| Difficulty | `Badge`       |                                        |
+| Path/Stage | Text          | "Frontend / Stage 1"                  |
+| Source     | `Badge`       | Muted "Platform" or "Learner-Created"  |
+| Active     | `Badge`       | Green "Yes" / Muted "No"              |
+| Skills     | Number (Mono) | Count of linked skills                 |
+| Actions    | Buttons       | Edit · Deactivate (Platform only)      |
 
-**Filters:** Path · Difficulty · Active status · Source (Platform / UserCustom)
+- **Learner-Created rows** (`source = 'UserCustom'`): read-only. No Edit or Deactivate buttons. Muted `Badge`: "Learner-created" in the Source column.
+- **Platform rows** (`source = 'Platform'`): full edit + deactivate.
 
-- `Source = Platform` → admin-created, appears in learner roadmaps.
-- `Source = UserCustom` → learner-created. Visible as read-only rows for admin awareness.
-  Cannot be edited by admins.
-- `Deactivate` → removes project from future roadmap appearances. Learners who already
-  completed it keep their record.
-- `+ Add Project` → side drawer (same as edit).
+**Create Project (`+ Add Project`):** `Sheet` with:
+- Title (`Input`, required)
+- Description (`Textarea`, max 500 chars)
+- Difficulty (`Select`: Beginner / Intermediate / Advanced)
+- Linked Path (`Select` — lists all active paths)
+- Linked Stage (`Select` — **filtered by selected path**, resets when path changes)
+- Active (`Switch`, default ON)
+- Portfolio Visibility Default (`Switch` `is_public_default`, default ON)
+  - Label: "Show on learner portfolio by default"
+  - Helper text: "Turn OFF for cybersecurity labs and pentest projects."
+- **Skills section:**
+  - Searchable multi-select (`Command` component, verified skills only)
+  - Selected as `Badge` tags with `×`
+  - Linked via `project_skills` (just `project_id` + `skill_id` — no `importance_level`)
+- POST `/api/admin/projects` → `Sonner` toast "Project created".
 
-#### Project Edit / Create Drawer
+**Edit Project:** Same drawer, pre-filled. PATCH `/api/admin/projects/:id`.
 
-- Title (required)
-- Description (textarea, max 500 chars)
-- Difficulty: Beginner / Intermediate / Advanced
-- Linked Path (dropdown)
-- Linked Stage (dropdown, filtered by selected path)
-- `is_active` toggle
-- **Portfolio visibility default** (`is_public_default` toggle, default ON): Controls whether completed projects appear publicly on the learner's Portfolio Hub by default. Turn OFF for cybersecurity lab/pentest projects — learners' security write-ups should be private by default. Learners can always change their own visibility after completion.
+**Deactivate Project:** `AlertDialog`: "Deactivating removes this project from future roadmap appearances. [N] learners have already completed it — their records are preserved." → PATCH with `{ is_active: false }` → `Sonner` toast "Project deactivated".
 
-**Skills section:**
-- Multi-select from verified skills catalog
-- Set `importance_level` per skill (Low / Medium / High)
-- Saves to `project_skills`
-- These skills are unlocked in `user_skills` when a learner completes this project
-
----
-
-## 8. Jobs Monitor
-
-Accessed via "Jobs" in the sidebar. Read-only view for monitoring the automated weekly job feed. No publish/reject actions — jobs are fetched, published, and expired fully automatically.
-
-### 8.1 Jobs Dashboard
-
-4 stat cards — one per path:
-
-| Card | Value |
-|---|---|
-| Frontend | N live jobs · Last fetched [date] · Next fetch Monday |
-| Full-Stack | N live jobs · Last fetched [date] |
-| Cybersecurity | N live jobs · Last fetched [date] |
-| Data Science | N live jobs · Last fetched [date] |
-
-An amber `Alert` appears if any path's last fetch was more than 8 days ago (indicating the cron job may have failed): "Job fetch for [path] appears delayed. Check server logs."
-
-### 8.2 Jobs Table (Read-Only)
-
-Filterable by: Path · Status (published / expired)
-
-| Title | Company | Location | Path | Skills Extracted | Published | Expires |
-|---|---|---|---|---|---|---|
-| Frontend Developer | Noon | Riyadh | Frontend | React, TypeScript, Git | Mon 3 Apr | Mon 10 Apr |
-| React Engineer | STC | Remote (SA) | Frontend | React, Node.js | Mon 3 Apr | Mon 10 Apr |
-
-No action buttons. Admins can see what's live, verify skill extraction quality, and spot any anomalies.
-
-### 8.3 Audit Log Events for Jobs
-
-| Event | Description |
-|---|---|
-| `jobs_fetched` | Cron job fetched [N] jobs for [path] (automated) |
-| `jobs_expired` | [N] jobs expired automatically for [path] (automated) |
-| `job_fetch_failed` | Cron job failed to fetch jobs for [path] — see logs (automated) |
+**Loading:** `Skeleton` rows.
+**Empty state:** "No projects yet." + `+ Add Project` button.
 
 ---
 
-## 9. Learners View
+## 12. Jobs Monitor (`/{ADMIN_PANEL_PATH}/jobs`)
 
-Read-only. Admins can view learner data for platform health and support. The only write
-action available is block/unblock.
+**Entirely read-only.** Jobs are fetched, published, and expired automatically by a weekly cron job. No admin actions.
 
-**Filters:** Path · Status (active / blocked) · Onboarding complete (yes / no) · Last active
+### 12.1 Jobs Dashboard Cards
 
-#### Learners Table
+4 `.glass` `Card` components — one per path:
 
-| Name           | Email                | Path                  | Progress | Last Active  | Status  | Actions        |
-|----------------|----------------------|-----------------------|----------|--------------|---------|----------------|
-| Sara Ahmad     | sara@example.com     | Frontend Development  | 34%      | Today        | Active  | View · Block   |
-| Omar Khalil    | omar@example.com     | Data Science & ML     | 12%      | 5 days ago   | Active  | View · Block   |
-| Layla Hassan   | layla@example.com    | —                     | —        | 3 days ago   | Active  | View · Block   |
+| Card           | Content                                          |
+|----------------|--------------------------------------------------|
+| Frontend       | `[N]` live jobs · Last fetched: [date] · Next: Monday |
+| Full-Stack     | `[N]` live jobs · Last fetched: [date]           |
+| Cybersecurity  | `[N]` live jobs · Last fetched: [date]           |
+| Data Science   | `[N]` live jobs · Last fetched: [date]           |
 
-Layla Hassan shows `—` for path and progress because `onboarding_completed = false`.
+Values in JetBrains Mono. Dates in relative format ("3 days ago").
 
-#### Learner Detail View (read-only side drawer)
+**Stale fetch warning:** If any path's last fetch > 8 days ago → `Alert` (warning): "Job fetch for [Path] appears delayed. Check server logs."
 
-- Full name, email, `email_verified` status
-- Account status, registration date, last login date
-- Onboarding complete: Yes / No
-- Current path name (or "Not assigned")
-- Current stage title
-- Path progress %
-- Skills unlocked count, projects completed count
+### 12.2 Jobs Table
 
-**Not accessible to admins:** resume content, portfolio item details, chat/tutor history,
-raw onboarding answers, or AI recommendation data.
+Filters: Path (`Select`) · Status (`Select`: Published / Expired)
 
-#### Block / Unblock
+| Column           | Type          | Notes                              |
+|------------------|---------------|------------------------------------|
+| Title            | Text          | Job title                          |
+| Company          | Text          |                                    |
+| Location         | Text          |                                    |
+| Path             | `Badge`       | Which path this job maps to        |
+| Skills Extracted | `Badge` list  | Small badges per skill             |
+| Published        | Date (Mono)   |                                    |
+| Expires          | Date (Mono)   |                                    |
 
-- `Block` → confirmation modal → sets `users.status = 'blocked'` → logged in audit log.
-- `Unblock` → confirmation modal → sets `users.status = 'active'` → logged in audit log.
-- Blocked learners cannot log in and see: "Your account has been blocked. Contact support."
+No action buttons. This is monitoring only.
 
----
-
-## 10. Audit Log (Super Admin Only)
-
-Every action taken by any admin is recorded in `admin_audit_log`. The log is append-only —
-no admin, including super, can edit or delete entries.
-
-#### What Is Logged
-
-| Event Type              | Example Description                                                          |
-|-------------------------|------------------------------------------------------------------------------|
-| `admin_login`           | Admin sara@admin.com logged in from IP 41.x.x.x                             |
-| `admin_login_failed`    | Failed admin login attempt for email unknown@test.com from IP 41.x.x.x      |
-| `admin_created`         | Super admin created new admin account: omar@admin.com (level: normal)        |
-| `admin_deactivated`     | Super admin deactivated admin account: omar@admin.com                        |
-| `path_created`          | Admin sara created Path: Mobile Development (slug: mobile)                  |
-| `path_edited`           | Admin omar edited Path: Data Science — updated description                   |
-| `path_deactivated`      | Admin sara deactivated Path: Backend Development (47 learners enrolled)      |
-| `stage_created`         | Admin sara created Stage: Advanced React in Frontend path (order: 4)         |
-| `stage_deleted`         | Admin omar deleted Stage: Deprecated Module in Cybersecurity path            |
-| `topic_created`         | Admin sara created Topic: React Hooks in Stage 3 (Frontend)                  |
-| `topic_edited`          | Admin omar edited Topic: CSS Flexbox — updated estimated_time_min to 60      |
-| `topic_deleted`         | Admin sara deleted Topic: Old HTML Basics                                    |
-| `resource_added`        | Admin sara added VIDEO resource to Topic: React Hooks                        |
-| `resource_deleted`      | Admin omar deleted ARTICLE resource from Topic: Git Basics                   |
-| `skill_created`         | Admin omar created skill: LangChain (framework_library)                      |
-| `skill_verified`        | Admin sara verified learner-submitted skill: Tailwind CSS                    |
-| `skill_rejected`        | Admin omar rejected learner-submitted skill: "Cooding"                       |
-| `project_created`       | Admin sara created Project: REST API Blog Backend (Full-Stack / Stage 3)     |
-| `project_deactivated`   | Admin omar deactivated Project: Old Todo App                                 |
-| `learner_blocked`       | Admin sara blocked learner: omar@example.com (user_id: abc123)               |
-| `learner_unblocked`     | Admin sara unblocked learner: omar@example.com (user_id: abc123)             |
-
-#### Audit Log UI
-
-- Paginated table, 25 rows per page, newest first
-- Filters: admin email · event type · date range
-- Append-only — no edit or delete controls anywhere in the UI
-- Retained for minimum 90 days
-- `Export CSV` button (super admin only) — exports current filtered view
+**Loading:** `Skeleton` rows.
+**Empty state:** "No job listings yet. The weekly fetch runs every Monday."
 
 ---
 
-## 11. Settings (Super Admin Only)
+## 13. Learners View (`/{ADMIN_PANEL_PATH}/learners`)
 
-### 10.1 Admin Account Management
+Read-only view for platform health and support. Only write action: block/unblock.
 
-| Name           | Email               | Level   | Status   | Last Login   | Actions     |
-|----------------|---------------------|---------|----------|--------------|-------------|
-| Sara Ahmad     | sara@admin.com      | super   | Active   | Today        | —           |
-| Omar Khalil    | omar@admin.com      | normal  | Active   | 2 days ago   | Deactivate  |
+### 13.1 Learners Table
 
-- `+ Add Admin` → form: email, display name, admin level (normal / super).
-  Creates a `users` row (`role = 'admin'`) and `admins` row.
-  Sends a setup email to the new admin with a temporary password and login instructions.
-- `Deactivate` → sets `users.status = 'blocked'` for that admin.
-  - Cannot deactivate your own account.
-  - Cannot deactivate the last remaining active super admin.
-  - Deactivated admins remain in the table with "Blocked" status — never hard-deleted
-    (preserves audit log `admin_id` references).
+**Filters:** Path (`Select`) · Status (`Select`: Active / Blocked) · Onboarding (`Select`: Complete / Incomplete) · Search (`Input` — by name or email)
 
-### 10.2 Environment Reference (Read-only display)
+**Server-side pagination:** 25 rows per page. `Pagination` component at bottom.
 
-Displayed as a read-only info panel for super admins. Values come from server environment,
-cannot be changed from the UI.
+| Column      | Type          | Notes                                  |
+|-------------|---------------|----------------------------------------|
+| Name        | Text          | `first_name last_name`                 |
+| Email       | Text          | JetBrains Mono                         |
+| Path        | Text          | "—" if no path assigned                |
+| Progress    | Text (Mono)   | "—" if onboarding incomplete           |
+| Last Active | Text (Mono)   | Relative ("Today", "5 days ago")       |
+| Status      | `Badge`       | Green "Active" / Red "Blocked"         |
+| Actions     | Buttons       | View · Block/Unblock                   |
 
-| Variable                    | Purpose                                                    |
-|-----------------------------|------------------------------------------------------------|
-| `ADMIN_PANEL_PATH`          | The URL slug for the admin panel (e.g. `manage-c7x2k`)    |
-| `ADMIN_SESSION_TTL`         | Admin session inactivity timeout in seconds (default: 7200)|
-| `AUDIT_LOG_RETENTION_DAYS`  | How long audit log entries are retained (default: 90)      |
+**Loading:** `Skeleton` rows.
+**Empty state:** "No learners registered yet."
 
----
+### 13.2 Learner Detail (`Sheet` side drawer, read-only)
 
-## 12. Safe Deletion & Deactivation Rules
+Opened by clicking "View" on a learner row.
 
-The system never silently deletes content that learners depend on. Every destructive action
-shows a human-readable impact count before proceeding.
+**Displayed fields:**
+- Full name (heading)
+- Email (JetBrains Mono) + `Badge` for email_verified status
+- Account status `Badge` (Active/Blocked)
+- Registration date (JetBrains Mono)
+- Last login (JetBrains Mono, relative)
+- Onboarding complete: `Badge` (Yes/No)
+- Current path (or "Not assigned" muted)
+- Current stage
+- Path progress % (small progress bar, value in Mono)
+- Skills unlocked: count
+- Projects completed: count
 
-| Action               | Condition                                                         | Result                                                                         |
-|----------------------|-------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| Delete Path          | Any learner has `current_path_id = this path`                     | **Blocked.** "N learners are on this path. Deactivate instead."                |
-| Delete Path          | No learners on this path                                          | **Allowed** (super only). Cascades: deletes all stages, topics, resources.     |
-| Delete Stage         | Any `user_progress` row exists for topics in this stage           | **Blocked.** "N learners have progress here."                                  |
-| Delete Stage         | No learner progress in stage                                      | **Allowed** (super only). Cascades: deletes topics and resources.              |
-| Delete Topic         | Any `user_progress` row exists for this topic                     | **Blocked.** "N learners have accessed this topic."                            |
-| Delete Topic         | No learner progress for this topic                                | **Allowed** (super only).                                                      |
-| Delete Resource      | Always                                                            | **Allowed** (normal admin). Resources are not progress-tracked.                |
-| Delete Skill         | Referenced in `topic_skills` or `project_skills`                  | **Blocked.** Shows which topics/projects reference it.                         |
-| Delete Skill         | No references anywhere                                            | **Allowed** (super only).                                                      |
-| Deactivate Path      | Always                                                            | **Allowed.** Shows impact count. Existing progress preserved.                  |
-| Deactivate Project   | Always                                                            | **Allowed.** Learners who completed it keep their record.                      |
+**Not shown (privacy boundary):** resume content, portfolio details, chat history, onboarding answers, AI data.
 
-Cascade deletions must be explicit in the confirmation modal:
-> "This will also permanently delete 5 stages, 34 topics, and 87 resources. This cannot be undone."
+**No edit controls in this drawer** — admins cannot change learner data. Path changes are learner-only (via Profile Settings).
+
+### 13.3 Block / Unblock
+
+**Block:** Click "Block" → `AlertDialog`: "Block [Name]? They will be unable to log in and will see: 'Your account has been blocked. Contact support.'" → Confirm (destructive) → PATCH `/api/admin/learners/:id/status` with `{ status: 'blocked' }` → `Sonner` toast "[Name] blocked" → log `learner_blocked`.
+
+**Unblock:** Click "Unblock" → `AlertDialog`: "Unblock [Name]? They will be able to log in again." → Confirm → PATCH with `{ status: 'active' }` → `Sonner` toast "[Name] unblocked" → log `learner_unblocked`.
 
 ---
 
-## 13. States & Edge Cases
+## 14. Audit Log (`/{ADMIN_PANEL_PATH}/audit-log`) — Super Only
+
+Append-only record of every admin action. No edit or delete controls anywhere.
+
+### 14.1 Access Control
+
+- Sidebar item hidden for `normal` admins.
+- Direct URL access by `normal` admin → 403 page.
+
+### 14.2 Audit Log Table
+
+**Filters:** Admin email (`Input` search) · Event type (`Select`) · Date range (date picker with start/end)
+
+**Server-side pagination:** 25 rows per page, newest first.
+
+| Column     | Type          | Notes                              |
+|------------|---------------|------------------------------------|
+| Timestamp  | Date (Mono)   | Full datetime, server time         |
+| Admin      | Text          | Email, highlighted                 |
+| Event      | `Badge`       | Color-coded by event category      |
+| Description| Text          | Full human-readable description    |
+
+**Event badge colors:**
+- Login events: Info (blue)
+- Create events: Success (green)
+- Edit events: Warning (amber)
+- Delete/deactivate/block events: Destructive (red)
+- Invite events: Info (blue)
+
+**What is logged (complete list):**
+
+| Event Type              | Description Pattern                                                      |
+|-------------------------|--------------------------------------------------------------------------|
+| `admin_login`           | Admin [email] logged in from IP [x.x.x.x]                               |
+| `admin_login_failed`    | Failed admin login attempt for email [email] from IP [x.x.x.x]          |
+| `admin_invited`         | Super admin sent invite to [email] (level: [level])                      |
+| `admin_invite_accepted` | Admin [email] accepted invite and set password                           |
+| `admin_invite_expired`  | Invite for [email] expired (not accepted within 48 hours)                |
+| `admin_invite_revoked`  | Super admin revoked invite for [email]                                   |
+| `admin_invite_resent`   | Super admin resent invite to [email]                                     |
+| `admin_deactivated`     | Super admin deactivated admin account: [email]                           |
+| `path_created`          | Admin [email] created Path: [name] (slug: [slug])                        |
+| `path_edited`           | Admin [email] edited Path: [name] — updated [fields]                     |
+| `path_deactivated`      | Admin [email] deactivated Path: [name] ([N] learners enrolled)           |
+| `path_deleted`          | Admin [email] deleted Path: [name] (cascade: [N] stages, [N] topics)    |
+| `stage_created`         | Admin [email] created Stage: [title] in [path] (order: [N])             |
+| `stage_edited`          | Admin [email] edited Stage: [title] — updated [fields]                   |
+| `stage_deleted`         | Admin [email] deleted Stage: [title] in [path]                           |
+| `stage_reordered`       | Admin [email] reordered stages in [path]                                 |
+| `topic_created`         | Admin [email] created Topic: [title] in Stage [N] ([path])              |
+| `topic_edited`          | Admin [email] edited Topic: [title] — updated [fields]                   |
+| `topic_deleted`         | Admin [email] deleted Topic: [title]                                     |
+| `topic_reordered`       | Admin [email] reordered topics in Stage [N] ([path])                     |
+| `resource_added`        | Admin [email] added [TYPE] resource to Topic: [title]                    |
+| `resource_edited`       | Admin [email] edited [TYPE] resource in Topic: [title]                   |
+| `resource_deleted`      | Admin [email] deleted [TYPE] resource from Topic: [title]                |
+| `skill_created`         | Admin [email] created skill: [name] ([category])                         |
+| `skill_edited`          | Admin [email] edited skill: [name]                                       |
+| `skill_verified`        | Admin [email] verified learner-submitted skill: [name]                   |
+| `skill_rejected`        | Admin [email] rejected learner-submitted skill: [name]                   |
+| `skill_deleted`         | Admin [email] deleted skill: [name]                                      |
+| `project_created`       | Admin [email] created Project: [title] ([path] / Stage [N])             |
+| `project_edited`        | Admin [email] edited Project: [title]                                    |
+| `project_deactivated`   | Admin [email] deactivated Project: [title]                               |
+| `learner_blocked`       | Admin [email] blocked learner: [learner_email] (user_id: [id])          |
+| `learner_unblocked`     | Admin [email] unblocked learner: [learner_email] (user_id: [id])        |
+| `jobs_fetched`          | Cron job fetched [N] jobs for [path] (automated)                         |
+| `jobs_expired`          | [N] jobs expired automatically for [path] (automated)                    |
+| `job_fetch_failed`      | Cron job failed to fetch jobs for [path] — see logs (automated)          |
+
+### 14.3 Export
+
+`Export CSV` `Button` (outline) in the top right. Exports the **current filtered view** (respects active filters). Download triggers immediately as a `.csv` file.
+
+**Retention:** Minimum 90 days. Older entries may be archived but not deleted.
+
+---
+
+## 15. Settings (`/{ADMIN_PANEL_PATH}/settings`) — Super Only
+
+### 15.1 Access Control
+
+Same as Audit Log — hidden sidebar item for `normal`, 403 on direct URL.
+
+### 15.2 Admin Account Management
+
+**Page layout:** Admin accounts table + `+ Invite Admin` button (top right).
+
+#### Admin Accounts Table
+
+| Column     | Type          | Notes                                  |
+|------------|---------------|----------------------------------------|
+| Name       | Text          | Display name                           |
+| Email      | Text (Mono)   |                                        |
+| Level      | `Badge`       | Orange "SUPER" / Muted "NORMAL"        |
+| Status     | `Badge`       | Green "Active" / Amber "Invited" / Red "Blocked" / Muted "Expired" |
+| Last Login | Text (Mono)   | "—" for never-logged-in / invited      |
+| Actions    | Buttons       | Varies (see below)                     |
+
+**Actions by row state:**
+
+| Row State            | Actions Available                                |
+|----------------------|--------------------------------------------------|
+| Active admin (not you)| Deactivate                                      |
+| Active admin (you)   | — (no actions on your own row)                   |
+| Last active super    | Deactivate (disabled) + `Tooltip`                |
+| Invited (pending)    | Revoke Invite                                    |
+| Expired invite       | Resend Invite                                    |
+| Blocked admin        | — (remains in table for audit trail)             |
+
+#### Invite Admin (`+ Invite Admin`)
+
+`Sheet` with:
+- Email (`Input`, required)
+- Display Name (`Input`, required)
+- Admin Level (`Select`: normal / super)
+- "Send Invite" `Button` (primary)
+
+**On submit:**
+1. POST `/api/admin/settings/admins/invite`
+2. Backend creates `users` row (`role = 'admin'`, `status = 'active'`), `admins` row, generates invite token (48h expiry), stores hash in `admin_invites`, sends invite email.
+3. `Sonner` toast: "Invite sent to [email]"
+4. Log `admin_invited`.
+5. New row appears in table with "Invited" status.
+
+**The invite email contains:**
+- A link: `mallah.app/{ADMIN_PANEL_PATH}/setup?token=...`
+- This leads to the Set Password page (Section 7.2).
+- No temporary password is ever generated.
+
+#### Deactivate Admin
+
+- Click "Deactivate" → `AlertDialog`: "Deactivate [Name]'s admin account? They will no longer be able to log in."
+- Confirm (destructive) → PATCH `/api/admin/settings/admins/:id` → `Sonner` toast "[Name] deactivated" → log `admin_deactivated`.
+- Row remains in table with "Blocked" status (never hard-deleted — preserves audit log references).
+
+**Cannot deactivate yourself:** Deactivate button is hidden on your own row.
+
+**Cannot deactivate last super admin:** Deactivate button is **visible but disabled** (grayed out). `Tooltip` on hover: "Cannot deactivate — this is the last active super admin. Promote another admin to super first."
+
+#### Revoke Invite
+
+- Click "Revoke Invite" → `AlertDialog`: "Revoke invite for [email]? They will not be able to use the invite link."
+- Confirm → DELETE `/api/admin/settings/invites/:id` → marks invite `status = 'revoked'`, sets `users.status = 'blocked'`.
+- `Sonner` toast: "Invite revoked" → log `admin_invite_revoked`.
+
+#### Resend Invite
+
+- Click "Resend Invite" → generates new token (fresh 48h), sends new email, old token invalidated.
+- `Sonner` toast: "Invite resent to [email]" → log `admin_invite_resent`.
+
+### 15.3 Environment Reference
+
+Below the admin table. Read-only `.glass` `Card`.
+
+| Variable                    | Value                | Purpose                            |
+|-----------------------------|----------------------|------------------------------------|
+| `ADMIN_PANEL_PATH`          | `manage-c7x2k`      | Admin panel URL slug               |
+| `ADMIN_SESSION_TTL`         | `7200`               | Session timeout (seconds)          |
+| `AUDIT_LOG_RETENTION_DAYS`  | `90`                 | Audit log retention period         |
+
+Values in JetBrains Mono. Labels in Inter. Not editable — values come from `process.env`.
+
+---
+
+## 16. Safe Deletion & Deactivation Rules
+
+Every destructive action shows impact before proceeding via `AlertDialog`.
+
+| Action          | Condition                                    | Result                                                                    |
+|-----------------|----------------------------------------------|---------------------------------------------------------------------------|
+| Delete Path     | Learners enrolled (`current_path_id`)        | **Blocked.** "[N] learners are on this path. Deactivate instead."         |
+| Delete Path     | 0 learners                                   | **Allowed** (super). Cascades: stages + topics + resources.               |
+| Delete Stage    | `user_progress` exists in stage topics       | **Blocked.** "[N] learners have progress here."                           |
+| Delete Stage    | No progress                                  | **Allowed** (super). Cascades: topics + resources.                        |
+| Delete Topic    | `user_progress` exists                       | **Blocked.** "[N] learners have accessed this topic."                     |
+| Delete Topic    | No progress                                  | **Allowed** (super).                                                      |
+| Delete Resource | Always                                       | **Allowed** (any admin). Not progress-tracked.                            |
+| Delete Skill    | Referenced in `topic_skills`/`project_skills` | **Blocked.** Shows which topics/projects reference it.                    |
+| Delete Skill    | 0 references                                 | **Allowed** (super).                                                      |
+| Deactivate Path | Always                                       | **Allowed.** Shows learner count. Progress preserved.                     |
+| Deactivate Proj | Always                                       | **Allowed.** Completed records preserved.                                 |
+
+Cascade deletions state exact counts: "This will permanently delete [X] stages, [Y] topics, and [Z] resources."
+Confirm button is destructive + requires typing the entity name.
+
+---
+
+## 17. States & Edge Cases
 
 | Scenario                                         | Behavior                                                                               |
 |--------------------------------------------------|----------------------------------------------------------------------------------------|
-| Admin session expires mid-work                   | On next action, redirect to admin login. Unsaved form data is lost — no auto-save in v1. |
-| Normal admin accesses a super-only route         | Return 403. Show: "You don't have permission to view this."                            |
-| Two admins edit the same record simultaneously   | Last write wins. No conflict resolution in v1. Both edits appear in audit log.         |
-| Path has 0 stages                                | Shown in path list with `Stages: 0`. Dashboard flags it as a content warning.          |
-| Stage has 0 topics                               | Shown in stage list with `Topics: 0`. Flagged as incomplete.                           |
-| Topic has 0 resources                            | Allowed. Topic Viewer handles it with its defined fallback (summary + AI Tutor only).  |
-| Admin creates duplicate skill name               | Backend rejects: "A skill named [X] already exists."                                   |
-| Reorder fails mid-save (network error)           | Show error. Revert to previous order visually. Do not apply partial reorders.          |
-| All super admins are deactivated                 | Prevented by the "cannot deactivate last super admin" rule.                            |
-| Admin tries to edit a `UserCustom` project       | Edit controls are hidden. Row is read-only with a label: "Learner-created project."    |
+| Admin session expires mid-work                   | Next API call → 401 → redirect to login. Unsaved data lost. No auto-save in v1.       |
+| Normal admin accesses super-only route           | 403 page: centered "You don't have permission to view this page." + "Back to Dashboard" button. |
+| Two admins edit same record                      | Last write wins. No conflict resolution in v1. Both logged in audit log.               |
+| Path with 0 stages                               | Shown in table with `Stages: 0`. Dashboard content warning.                            |
+| Stage with 0 topics                              | Shown with `Topics: 0`. Dashboard content warning.                                     |
+| Topic with 0 resources                           | Allowed. Topic Viewer shows summary + AI Tutor fallback.                               |
+| Duplicate skill name                             | Backend rejects. Inline error: "A skill named [X] already exists."                     |
+| Reorder fails (network error)                    | Revert visually. `Sonner` toast (error): "Reorder failed. Please try again."           |
+| Last super admin deactivation                    | Button disabled + `Tooltip` explanation.                                               |
+| Edit a UserCustom project                        | Edit/Deactivate hidden. `Badge`: "Learner-created project."                            |
+| Invite link after 48 hours                       | "This invite link has expired. Contact a super admin."                                 |
+| Invite link already used                         | "This invite has already been used. You can sign in." + login link.                    |
+| Admin's own Settings row                         | Deactivate hidden. Cannot demote yourself.                                             |
+| Activity feed entry → deleted record             | `Sonner` toast: "This record no longer exists."                                        |
+| API returns 500                                  | `Sonner` toast (error): "Something went wrong. Please try again."                      |
+| Empty table after filters applied                | "No results match your filters." + "Clear filters" button.                             |
 
 ---
 
-## 14. Data Model — Admin-Specific Tables
+## 18. Data Model — Admin-Specific Tables
 
-The admin panel reads and writes core content tables (`paths`, `stages`, `topics`,
-`topic_resources`, `skills`, `topic_skills`, `projects`, `project_skills`) defined in the
-Roadmap & Topic Viewer spec. Two tables are admin-specific:
+The admin panel reads/writes core content tables (`paths`, `stages`, `topics`, `topic_resources`,
+`skills`, `topic_skills`, `projects`, `project_skills`) defined in the Roadmap & Topic Viewer spec.
+
+**Important: `topic_skills` and `project_skills` are simple join tables** with only `topic_id` + `skill_id`
+(or `project_id` + `skill_id`). There is no `importance_level` field. The Opportunity Analyzer uses
+`skills.category` to prioritize gaps — this is set once on the skill itself, not per-link.
+
+Three tables are admin-specific:
 
 ### `admins` table
-Defined in the Auth spec. Fields: `user_id` (FK → users), `display_name`, `admin_level` (normal / super).
+Defined in Auth spec: `user_id` (FK → users), `display_name`, `admin_level` (normal / super).
+
+### `admin_invites` table
+
+| Field          | Type      | Notes                                                        |
+|----------------|-----------|--------------------------------------------------------------|
+| `invite_id`    | UUID (PK) |                                                              |
+| `user_id`      | UUID (FK) | The invited admin's user record                              |
+| `token_hash`   | VARCHAR   | Hashed invite token (raw token never stored)                 |
+| `invited_by`   | UUID (FK) | The super admin who created the invite                       |
+| `status`       | ENUM      | `pending` / `accepted` / `expired` / `revoked`               |
+| `expires_at`   | TIMESTAMP | 48 hours from creation                                       |
+| `accepted_at`  | TIMESTAMP | NULL until accepted                                          |
+| `created_at`   | TIMESTAMP |                                                              |
+
+Expiry is checked lazily on access or by scheduled job. On resend: old token revoked, new row created.
 
 ### `admin_audit_log` table
 
 | Field          | Type      | Notes                                                       |
 |----------------|-----------|-------------------------------------------------------------|
 | `log_id`       | UUID (PK) |                                                             |
-| `admin_id`     | UUID (FK) | References `users.user_id` of the acting admin              |
-| `event_type`   | VARCHAR   | Snake_case identifier: `topic_created`, `learner_blocked`   |
-| `description`  | TEXT      | Human-readable full description of the action               |
-| `entity_type`  | VARCHAR   | `path` / `stage` / `topic` / `skill` / `project` / `user` / `admin` |
-| `entity_id`    | UUID      | ID of the record acted upon (nullable for login events)     |
+| `admin_id`     | UUID (FK) | Acting admin (NULL for automated events like cron jobs)     |
+| `event_type`   | VARCHAR   | Snake_case: `topic_created`, `learner_blocked`              |
+| `description`  | TEXT      | Human-readable full description                             |
+| `entity_type`  | VARCHAR   | `path`/`stage`/`topic`/`resource`/`skill`/`project`/`user`/`admin`/`invite`/`job` |
+| `entity_id`    | UUID      | Record acted upon (nullable for login/job events)           |
 | `ip_address`   | VARCHAR   |                                                             |
 | `created_at`   | TIMESTAMP | Server time, never client time                              |
 
-No `UPDATE` or `DELETE` is permitted on this table at the application level.
+**No UPDATE or DELETE permitted** on this table at the application level.
 
 ---
 
-## 15. API Routes
+## 19. API Routes
 
-All routes are prefixed `/api/admin/`. Every route verifies `users.role = 'admin'` and the
-required `admin_level` server-side on every request — never trusted from the token alone.
+All prefixed `/api/admin/`. Every route re-validates session + `admin_level` server-side.
 
-| Method | Route                                   | Action                                      | Level    |
-|--------|-----------------------------------------|---------------------------------------------|----------|
-| POST   | `/api/admin/auth/login`                 | Admin login                                 | public   |
-| POST   | `/api/admin/auth/logout`                | Admin logout + invalidate session           | normal   |
-| GET    | `/api/admin/dashboard`                  | Dashboard stats + content warnings          | normal   |
-| GET    | `/api/admin/paths`                      | List all paths                              | normal   |
-| POST   | `/api/admin/paths`                      | Create path                                 | normal   |
-| PATCH  | `/api/admin/paths/:id`                  | Edit path                                   | normal   |
-| DELETE | `/api/admin/paths/:id`                  | Delete path (if safe)                       | super    |
-| GET    | `/api/admin/paths/:id/stages`           | List stages for a path                      | normal   |
-| POST   | `/api/admin/stages`                     | Create stage                                | normal   |
-| PATCH  | `/api/admin/stages/:id`                 | Edit stage                                  | normal   |
-| PATCH  | `/api/admin/stages/reorder`             | Reorder all stages in a path (atomic)       | normal   |
-| DELETE | `/api/admin/stages/:id`                 | Delete stage (if safe)                      | super    |
-| GET    | `/api/admin/stages/:id/topics`          | List topics for a stage                     | normal   |
-| POST   | `/api/admin/topics`                     | Create topic                                | normal   |
-| PATCH  | `/api/admin/topics/:id`                 | Edit topic                                  | normal   |
-| PATCH  | `/api/admin/topics/reorder`             | Reorder all topics in a stage (atomic)      | normal   |
-| DELETE | `/api/admin/topics/:id`                 | Delete topic (if safe)                      | super    |
-| GET    | `/api/admin/topics/:id/resources`       | List resources for a topic                  | normal   |
-| POST   | `/api/admin/topics/:id/resources`       | Add resource to topic                       | normal   |
-| PATCH  | `/api/admin/resources/:id`              | Edit resource                               | normal   |
-| DELETE | `/api/admin/resources/:id`              | Delete resource                             | normal   |
-| PATCH  | `/api/admin/topics/:id/skills`          | Set skill links + importance for a topic    | normal   |
-| GET    | `/api/admin/skills`                     | List all skills (filterable)                | normal   |
-| POST   | `/api/admin/skills`                     | Create skill                                | normal   |
-| PATCH  | `/api/admin/skills/:id`                 | Edit or verify skill                        | normal   |
-| DELETE | `/api/admin/skills/:id`                 | Delete skill (if safe)                      | super    |
-| GET    | `/api/admin/projects`                   | List all projects (filterable)              | normal   |
-| POST   | `/api/admin/projects`                   | Create project                              | normal   |
-| PATCH  | `/api/admin/projects/:id`               | Edit project                                | normal   |
-| PATCH  | `/api/admin/projects/:id/skills`        | Set skill links + importance for a project  | normal   |
-| GET    | `/api/admin/jobs`                       | List all job listings (filterable, read-only) | normal   |
-| GET    | `/api/admin/learners/:id`               | Learner detail (read-only)                  | normal   |
-| PATCH  | `/api/admin/learners/:id/status`        | Block or unblock learner                    | normal   |
-| GET    | `/api/admin/audit-log`                  | View audit log (paginated, filterable)      | super    |
-| GET    | `/api/admin/audit-log/export`           | Export audit log as CSV                     | super    |
-| GET    | `/api/admin/settings/admins`            | List admin accounts                         | super    |
-| POST   | `/api/admin/settings/admins`            | Create admin account                        | super    |
-| PATCH  | `/api/admin/settings/admins/:id`        | Deactivate admin account                    | super    |
+### Auth (Public)
+
+| Method | Route                           | Action                          |
+|--------|----------------------------------|---------------------------------|
+| POST   | `/api/admin/auth/login`          | Admin login                     |
+| POST   | `/api/admin/auth/logout`         | Logout + invalidate session     |
+| POST   | `/api/admin/auth/setup`          | Set password from invite        |
+| GET    | `/api/admin/auth/invite/:token`  | Validate invite token           |
+
+### Dashboard
+
+| Method | Route                    | Action                              | Level  |
+|--------|--------------------------|-------------------------------------|--------|
+| GET    | `/api/admin/dashboard`   | Stats + warnings + activity feed    | normal |
+
+### Paths & Stages
+
+| Method | Route                            | Action                          | Level  |
+|--------|-----------------------------------|---------------------------------|--------|
+| GET    | `/api/admin/paths`                | List all paths                  | normal |
+| POST   | `/api/admin/paths`                | Create path                     | normal |
+| PATCH  | `/api/admin/paths/:id`            | Edit path                       | normal |
+| DELETE | `/api/admin/paths/:id`            | Delete path (if safe)           | super  |
+| GET    | `/api/admin/paths/:id/stages`     | List stages for path            | normal |
+| POST   | `/api/admin/stages`               | Create stage                    | normal |
+| PATCH  | `/api/admin/stages/:id`           | Edit stage                      | normal |
+| PATCH  | `/api/admin/stages/reorder`       | Atomic reorder (full array)     | normal |
+| DELETE | `/api/admin/stages/:id`           | Delete stage (if safe)          | super  |
+
+### Topics & Resources
+
+| Method | Route                            | Action                          | Level  |
+|--------|-----------------------------------|---------------------------------|--------|
+| GET    | `/api/admin/stages/:id/topics`    | List topics for stage           | normal |
+| POST   | `/api/admin/topics`               | Create topic                    | normal |
+| PATCH  | `/api/admin/topics/:id`           | Edit topic                      | normal |
+| PATCH  | `/api/admin/topics/reorder`       | Atomic reorder (full array)     | normal |
+| DELETE | `/api/admin/topics/:id`           | Delete topic (if safe)          | super  |
+| GET    | `/api/admin/topics/:id/resources` | List resources for topic        | normal |
+| POST   | `/api/admin/topics/:id/resources` | Add resource                    | normal |
+| PATCH  | `/api/admin/resources/:id`        | Edit resource                   | normal |
+| DELETE | `/api/admin/resources/:id`        | Delete resource                 | normal |
+| PATCH  | `/api/admin/topics/:id/skills`    | Set skill links for topic       | normal |
+
+### Skills
+
+| Method | Route                     | Action                    | Level  |
+|--------|---------------------------|---------------------------|--------|
+| GET    | `/api/admin/skills`       | List (filterable, search) | normal |
+| POST   | `/api/admin/skills`       | Create skill              | normal |
+| PATCH  | `/api/admin/skills/:id`   | Edit or verify            | normal |
+| DELETE | `/api/admin/skills/:id`   | Delete (if safe)          | super  |
+
+### Projects
+
+| Method | Route                              | Action                          | Level  |
+|--------|-------------------------------------|---------------------------------|--------|
+| GET    | `/api/admin/projects`               | List (filterable, search)       | normal |
+| POST   | `/api/admin/projects`               | Create project                  | normal |
+| PATCH  | `/api/admin/projects/:id`           | Edit project                    | normal |
+| PATCH  | `/api/admin/projects/:id/skills`    | Set skill links for project     | normal |
+
+### Jobs
+
+| Method | Route                | Action                   | Level  |
+|--------|----------------------|--------------------------|--------|
+| GET    | `/api/admin/jobs`    | List (filterable, read-only) | normal |
+
+### Learners
+
+| Method | Route                              | Action                    | Level  |
+|--------|-------------------------------------|---------------------------|--------|
+| GET    | `/api/admin/learners`               | List (paginated, filtered, searchable) | normal |
+| GET    | `/api/admin/learners/:id`           | Learner detail (read-only)| normal |
+| PATCH  | `/api/admin/learners/:id/status`    | Block or unblock          | normal |
+
+### Audit Log (Super Only)
+
+| Method | Route                        | Action                    | Level  |
+|--------|------------------------------|---------------------------|--------|
+| GET    | `/api/admin/audit-log`       | List (paginated, filtered)| super  |
+| GET    | `/api/admin/audit-log/export`| Export CSV                 | super  |
+
+### Settings (Super Only)
+
+| Method | Route                                   | Action                    | Level  |
+|--------|-----------------------------------------|---------------------------|--------|
+| GET    | `/api/admin/settings/admins`            | List admins + invites     | super  |
+| POST   | `/api/admin/settings/admins/invite`     | Send invite               | super  |
+| POST   | `/api/admin/settings/admins/:id/resend` | Resend expired invite     | super  |
+| PATCH  | `/api/admin/settings/admins/:id`        | Deactivate admin          | super  |
+| DELETE | `/api/admin/settings/invites/:id`       | Revoke invite             | super  |
 
 ---
 
-## 16. Integration Points
+## 20. Integration Points
 
-- **Auth module** — admin login uses the same `users` table but a completely separate
-  endpoint, controller, and session scope. Admin and learner sessions are never mixed.
-- **Roadmap & Topic Viewer** — all content created by admins (paths, stages, topics,
-  resources, `topic_skills`) is consumed directly. Changes take effect immediately on
-  learners' next page load.
-- **Portfolio Hub** — learner-submitted skills (`is_verified = false`) surface in the
-  Skills Catalog for admin review. Verified skills become available in all learner dropdowns.
-- **Opportunity Analyzer** — `topic_skills.importance_level` set by admins directly controls which topics the Opportunity Analyzer prioritizes when a learner is missing a skill. The Jobs Monitor provides visibility into the automated `job_listings` feed that powers the Opportunity Analyzer's weekly job board.
-- **Resume Builder** — `project_skills` set by admins feeds into the Resume Builder's
-  path-specific ATS keyword scoring system.
-- **Dashboard (learner)** — the admin dashboard aggregates from the same `user_progress`,
-  `user_skills`, and `learners` tables that the learner dashboard reads individually.
+- **Auth module** — admin login uses the same `users` table but separate endpoint, controller,
+  and session scope. Admin and learner sessions are never mixed. Invite flow creates `users`
+  rows with `role = 'admin'`.
+- **Roadmap & Topic Viewer** — all content created by admins is consumed directly. Changes
+  take effect on learners' next page load. `topic_skills` links (no `importance_level`) drive
+  skill unlocks on topic completion.
+- **Portfolio Hub** — learner-submitted skills (`is_verified = false`) surface in Skills Catalog
+  for admin review. Verified skills become available in all learner-facing dropdowns.
+- **Opportunity Analyzer** — uses `skills.category` (set once on the skill by admins) to
+  prioritize which skill gaps are most urgent. Jobs Monitor provides visibility into the
+  automated `job_listings` feed.
+- **Resume Builder** — `project_skills` links set by admins feed into the Resume Builder's
+  path-specific ATS keyword scoring.
+- **Dashboard (learner)** — admin dashboard aggregates from the same `user_progress`,
+  `user_skills`, and `learners` tables the learner dashboard reads individually.

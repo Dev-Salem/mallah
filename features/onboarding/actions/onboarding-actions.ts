@@ -1,13 +1,11 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { onboardingFormDataSchema, onboardingDraftSchema } from "../types";
+import { onboardingFormDataSchema } from "../types";
 import type { OnboardingFormData, OnboardingDraft, OnboardingResult, PathId } from "../types";
 import { VELOCITY_MAP } from "../constants";
 import {
     generatePathRecommendation,
-    buildInterestVector,
-    computeReadinessLevel,
 } from "../services/ai-service";
 import { RoadmapService } from "@/features/roadmap/services/roadmap-service";
 
@@ -45,10 +43,13 @@ export async function saveOnboardingDraftAction(
                 ? VELOCITY_MAP[draft.weeklyHoursCategory]
                 : undefined,
             raw_interests: draft.interests,
-            interest_vector: draft.interests ? buildInterestVector(draft.interests) : undefined,
             confidence_snapshot: draft.confidenceItems,
             readiness_level: draft.confidenceItems
-                ? computeReadinessLevel(draft.confidenceItems)
+                ? draft.confidenceItems.reduce((acc, item) => {
+                    if (item.level === "comfortable") return acc + 2;
+                    if (item.level === "tried") return acc + 1;
+                    return acc;
+                  }, 0)
                 : undefined,
             ai_language_pref: draft.aiLanguagePref,
             ai_detail_level: draft.aiDetailLevel,
@@ -73,9 +74,10 @@ export async function saveOnboardingDraftAction(
             if (insertError || !insertRow) throw insertError;
             return { success: true, onboardingId: insertRow.onboarding_id };
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("saveOnboardingDraftAction error:", error);
-        return { success: false, error: error.message || "Failed to save draft." };
+        const message = error instanceof Error ? error.message : "Failed to save draft.";
+        return { success: false, error: message };
     }
 }
 
@@ -117,9 +119,10 @@ export async function getOnboardingDraftAction(): Promise<
                 currentStep: data.current_step,
             },
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("getOnboardingDraftAction error:", error);
-        return { success: false, error: error.message || "Failed to fetch draft." };
+        const message = error instanceof Error ? error.message : "Failed to fetch draft.";
+        return { success: false, error: message };
     }
 }
 
@@ -145,9 +148,6 @@ export async function submitOnboardingAction(
 
         // 3. Derive computed fields
         const learningVelocity = VELOCITY_MAP[data.weeklyHoursCategory];
-        const interestVector = buildInterestVector(data.interests);
-        const readinessLevel = computeReadinessLevel(data.confidenceItems);
-
         // 4. Find existing draft to update or insert fresh
         const { data: existing } = await supabase
             .from("onboarding_responses")
@@ -164,9 +164,12 @@ export async function submitOnboardingAction(
             weekly_hours_category: data.weeklyHoursCategory,
             learning_velocity: learningVelocity,
             raw_interests: data.interests,
-            interest_vector: interestVector,
             confidence_snapshot: data.confidenceItems,
-            readiness_level: readinessLevel,
+            readiness_level: data.confidenceItems.reduce((acc, item) => {
+                if (item.level === "comfortable") return acc + 2;
+                if (item.level === "tried") return acc + 1;
+                return acc;
+            }, 0),
             ai_language_pref: data.aiLanguagePref,
             ai_detail_level: data.aiDetailLevel,
             completed_at: new Date().toISOString(),
@@ -213,7 +216,11 @@ export async function submitOnboardingAction(
             user_id: user.id,
             onboarding_id: onboardingId,
             recommended_path_id: recommendation.recommended_path_id,
-            confidence_score: recommendation.match_score,
+            match_score: recommendation.match_score,
+            base_score: recommendation.base_score,
+            ai_adjustment: recommendation.ai_adjustment,
+            adjustment_reason: recommendation.adjustment_reason,
+            fallback_used: recommendation.fallback_used,
             reasons: recommendation.reasons,
             alternatives: recommendation.alternatives,
             plan_2_weeks: null,
@@ -231,9 +238,15 @@ export async function submitOnboardingAction(
                 recommendation,
             },
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("submitOnboardingAction error:", error);
-        return { success: false, error: error.message || "An unexpected error occurred." };
+        let message = "An unexpected error occurred.";
+        if (error instanceof Error) {
+            message = error.message;
+        } else if (error && typeof error === "object" && "message" in error && typeof (error as Record<string, unknown>).message === "string") {
+            message = (error as Record<string, unknown>).message as string;
+        }
+        return { success: false, error: message };
     }
 }
 
@@ -310,7 +323,7 @@ export async function acceptPathAction(
             .eq("onboarding_id", onboardingId);
 
         return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("acceptPathAction error:", error);
         return { success: false, error: "An unexpected error occurred." };
     }

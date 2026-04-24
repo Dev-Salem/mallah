@@ -89,11 +89,15 @@ export interface InterestVector {
 export interface AIRecommendationResponse {
   recommended_path_id: PathId;
   match_score: number;
+  base_score: number;
+  ai_adjustment: number;
+  adjustment_reason: string | null;
   reasons: string[];
   alternatives: Array<{
     path_id: PathId;
     reason: string;
   }>;
+  fallback_used: boolean;
 }
 
 export interface OnboardingResult {

@@ -9,123 +9,57 @@ export const PATH_CONTENT: Record<
         oneLiner: string;
         whatYoullLearn: string;
         skills: string[];
-        projects: string[];
+        projects: Array<{ title: string; subtitle: string }>;
         careers: string[];
     }
 > = {
     frontend: {
         name: "Frontend Development",
-        oneLiner: "Build websites and web apps that real people use — from layout to interaction.",
+        oneLiner: "Create professional, responsive web interfaces and user-facing applications.",
         whatYoullLearn:
-            "Design and build responsive, accessible interfaces using modern web technologies. By the end of this path you'll be able to build complete, deployable web applications and connect them to external APIs.",
-        skills: [
-            "HTML5 & Semantic Markup",
-            "CSS3, Flexbox, Grid",
-            "JavaScript (ES6+)",
-            "TypeScript (basics)",
-            "React",
-            "Responsive Design",
-            "Git & GitHub",
-            "REST API consumption",
-            "Web Performance & Accessibility basics",
-        ],
+            "Master the art of building fast, accessible, and beautiful user interfaces. You'll learn to translate designs into code and handle complex state management in modern web apps.",
+        skills: ["React & Next.js", "Tailwind CSS", "TypeScript", "Responsive UI", "Web Performance"],
         projects: [
-            "Personal portfolio website",
-            "Movie or product search app connected to a public API",
-            "E-commerce product page with cart functionality",
+            { title: "Personal Brand Portfolio", subtitle: "High-performance site with smooth transitions" },
+            { title: "Dynamic Product Engine", subtitle: "E-commerce interface with real-time updates" },
         ],
-        careers: [
-            "Junior Frontend Developer",
-            "UI Developer",
-            "Frontend Engineer",
-            "Freelance Web Developer",
-        ],
+        careers: ["Frontend Engineer", "UI Developer", "React Specialist"],
     },
     fullstack: {
         name: "Full-Stack Web Development",
-        oneLiner: "Build complete web products — front to back — entirely on your own.",
+        oneLiner: "Engineer complete, scalable products from database to browser.",
         whatYoullLearn:
-            "Design and build both the user-facing side and the server-side logic of web applications. By the end of this path you'll be able to design, build, and deploy a full working product from scratch without depending on anyone else.",
-        skills: [
-            "HTML, CSS, JavaScript (ES6+)",
-            "React (frontend)",
-            "Node.js & Express (backend)",
-            "REST API design and implementation",
-            "PostgreSQL or MongoDB",
-            "Authentication & Authorization (JWT)",
-            "Git & GitHub",
-            "Basic cloud deployment",
-            "Docker basics",
-        ],
+            "Design, build, and deploy entire web systems. You'll learn how to architecturalize backends, manage databases, and create seamless frontend experiences.",
+        skills: ["Next.js & Node.js", "PostgreSQL", "Auth Systems", "Server Actions", "API Design"],
         projects: [
-            "Blog REST API with full CRUD operations",
-            "Social app with user authentication and a live feed",
-            "Deployed SaaS-style dashboard with real data",
+            { title: "SaaS Workflow Manager", subtitle: "Complete CRUD with auth and real-time data" },
+            { title: "Social Learning Engine", subtitle: "Complex state and relational database logic" },
         ],
-        careers: [
-            "Full-Stack Developer",
-            "Web Application Developer",
-            "Backend Developer",
-            "Freelance Product Developer",
-            "Startup Engineer",
-        ],
+        careers: ["Full-Stack Engineer", "Product Engineer", "Startup Developer"],
     },
     cybersecurity: {
-        name: "Cybersecurity & Ethical Hacking",
-        oneLiner:
-            "Find vulnerabilities in systems before the bad actors do — legally and professionally.",
+        name: "Cybersecurity & Security Engineering",
+        oneLiner: "Protect digital infrastructure and defend systems against vulnerabilities.",
         whatYoullLearn:
-            "Understand how systems are attacked, practice identifying weaknesses in controlled environments, and build the skills needed to protect real infrastructure. By the end of this path you'll be able to conduct basic penetration tests and participate in real bug bounty programs.",
-        skills: [
-            "Networking fundamentals (TCP/IP, DNS, HTTP, firewalls)",
-            "Linux command line",
-            "Python or Bash scripting (basic automation)",
-            "OWASP Top 10 web vulnerabilities",
-            "Penetration testing methodology",
-            "Tools: Nmap, Burp Suite, Metasploit, Wireshark, Kali Linux",
-            "CTF (Capture The Flag) problem-solving",
-            "Basic cryptography concepts",
-        ],
+            "Dive into network security, web application testing, and digital forensics. You'll learn to secure systems and think from a defensive and offensive engineering perspective.",
+        skills: ["Network Security", "Ethical Hacking", "Linux Systems", "Python Scripting", "Pentesting"],
         projects: [
-            "Home hacking lab (virtual machines, Kali Linux, practice targets)",
-            "Web application vulnerability report on a practice target",
-            "First bug bounty or CTF submission on a public platform",
+            { title: "Security Lab Environment", subtitle: "Virtual infrastructure for threat modeling" },
+            { title: "Vulnerability Audit Report", subtitle: "Professional pentest on a target app" },
         ],
-        careers: [
-            "Junior Penetration Tester",
-            "SOC Analyst",
-            "Security Analyst",
-            "Bug Bounty Hunter",
-        ],
+        careers: ["Security Analyst", "Penetration Tester", "SOC Engineer"],
     },
     datascience: {
-        name: "Data Science & Machine Learning",
-        oneLiner: "Turn raw data into decisions — and build AI-powered products.",
+        name: "Data Science & AI Engineering",
+        oneLiner: "Analyze complex datasets and build intelligent, data-driven systems.",
         whatYoullLearn:
-            "Work with real datasets, build and evaluate machine learning models, and eventually integrate AI APIs into working applications. By the end of this path you'll be able to analyze data, train basic models, and build simple AI-powered tools.",
-        skills: [
-            "Python (core language for the entire path)",
-            "SQL (data querying and manipulation)",
-            "pandas & NumPy (data handling)",
-            "Matplotlib & Seaborn (visualization)",
-            "Statistics & probability fundamentals",
-            "Machine learning basics: regression, classification, clustering (scikit-learn)",
-            "Model evaluation and validation",
-            "Working with AI APIs (OpenAI, HuggingFace)",
-            "Jupyter Notebooks",
-        ],
+            "Master data analysis, statistical modeling, and machine learning. You'll learn to build predictive models and integrate AI into modern software solutions.",
+        skills: ["Python (Pandas/NumPy)", "SQL & Data Modeling", "Machine Learning", "AI API Integration", "Visualization"],
         projects: [
-            "Exploratory data analysis report on a real-world dataset",
-            "Spam classifier or sentiment analysis model",
-            "LLM-powered Q&A app built with an AI API",
+            { title: "Predictive Market Analyzer", subtitle: "ML model applied to real-world trends" },
+            { title: "Intelligent Assistant Hub", subtitle: "LLM-powered automation tool" },
         ],
-        careers: [
-            "Data Analyst",
-            "Junior Data Scientist",
-            "ML Engineer (entry level)",
-            "AI Product Developer",
-            "Business Intelligence Analyst",
-        ],
+        careers: ["Data Scientist", "ML Engineer", "Data Analyst"],
     },
 };
 
@@ -134,33 +68,33 @@ export const PATH_CONTENT: Record<
 export const INTEREST_SIGNALS: InterestSignal[] = [
     {
         id: "visual-building",
-        statement: "I enjoy building things people can see and use.",
-        pathWeights: { frontend: 3, fullstack: 1, cybersecurity: 0, datascience: 0 },
+        statement: "I enjoy building things people can see and interact with.",
+        pathWeights: { frontend: 1.0, fullstack: 0.8, cybersecurity: 0.0, datascience: 0.2 },
     },
     {
         id: "puzzles-weaknesses",
-        statement: "I like solving puzzles and finding system weaknesses.",
-        pathWeights: { frontend: 0, fullstack: 0, cybersecurity: 3, datascience: 1 },
+        statement: "I'm drawn to finding hidden flaws in systems.",
+        pathWeights: { frontend: 0.0, fullstack: 0.3, cybersecurity: 1.0, datascience: 0.2 },
     },
     {
         id: "numbers-data",
-        statement: "I enjoy working with numbers, patterns, and data.",
-        pathWeights: { frontend: 0, fullstack: 0, cybersecurity: 0, datascience: 3 },
+        statement: "I enjoy working with data, patterns, and numbers.",
+        pathWeights: { frontend: 0.0, fullstack: 0.2, cybersecurity: 0.2, datascience: 1.0 },
     },
     {
         id: "logic-systems",
-        statement: "I prefer building the logic and systems behind applications.",
-        pathWeights: { frontend: 0, fullstack: 3, cybersecurity: 1, datascience: 0 },
+        statement: "I like understanding how things work under the hood.",
+        pathWeights: { frontend: 0.2, fullstack: 0.9, cybersecurity: 0.7, datascience: 0.4 },
     },
 ];
 
 // ─── Confidence Statements (Step 5) ───
 
 export const CONFIDENCE_STATEMENTS = [
-    { key: "git", statement: "I have used Git before." },
-    { key: "api", statement: "I understand what an API is." },
-    { key: "program", statement: "I wrote a small program before." },
-    { key: "project", statement: "I built any project (even a simple one)." },
+    { key: "git", statement: "Using Git (version control)" },
+    { key: "api", statement: "What an API is and how it works" },
+    { key: "program", statement: "Writing basic code in any language" },
+    { key: "project", statement: "Building and shipping any project" },
 ] as const;
 
 // ─── Velocity Mapping ───
@@ -172,26 +106,25 @@ export const VELOCITY_MAP: Record<WeeklyHours, LearningVelocity> = {
     "13+": "fast",
 };
 
-// ─── Milestone Estimates (weeks to first milestone project) ───
-
 export const MILESTONE_WEEKS: Record<WeeklyHours, number> = {
-    "0-3": 10,
-    "4-7": 6,
-    "8-12": 4,
-    "13+": 3,
+    "0-3": 24,
+    "4-7": 16,
+    "8-12": 10,
+    "13+": 6,
 };
 
 // ─── Match Score Labels ───
 
-export const MATCH_LABELS: Array<{ min: number; max: number; label: string }> = [
-    { min: 0, max: 34, label: "Weak match" },
-    { min: 35, max: 54, label: "Possible fit" },
-    { min: 55, max: 74, label: "Good match" },
-    { min: 75, max: 89, label: "Strong match" },
-    { min: 90, max: 100, label: "Excellent match" },
+export const MATCH_LABELS: Array<{ min: number; max: number; label: string; color: string }> = [
+    { min: 0, max: 34, label: "Weak signal", color: "destructive" },
+    { min: 35, max: 54, label: "Possible fit", color: "warning" },
+    { min: 55, max: 74, label: "Good match", color: "warning" },
+    { min: 75, max: 89, label: "Strong match", color: "success" },
+    { min: 90, max: 100, label: "Exceptional fit", color: "success" },
 ];
 
-export function getMatchLabel(score: number): string {
+export function getMatchLabel(score: number): { label: string; color: string } {
     const entry = MATCH_LABELS.find((e) => score >= e.min && score <= e.max);
-    return entry?.label ?? "Unknown";
+    return entry ?? { label: "Unknown", color: "muted" };
 }
+

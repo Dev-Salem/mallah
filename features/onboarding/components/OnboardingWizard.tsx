@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import type { OnboardingFormData, OnboardingDraft, WizardStep, BackgroundType, PrimaryGoal, WeeklyHours, AILanguage, AIDetailLevel, ConfidenceItem, AIRecommendationResponse, PathId } from "../types";
 import { WIZARD_STEPS } from "../types";
 import { submitOnboardingAction, acceptPathAction, saveOnboardingDraftAction } from "../actions/onboarding-actions";
@@ -15,13 +16,13 @@ import StepConfidence from "./StepConfidence";
 import StepPreferences from "./StepPreferences";
 import StepLoading from "./StepLoading";
 import StepRecommendation from "./StepRecommendation";
+import { cn } from "@/lib/utils";
 
 interface OnboardingWizardProps {
     initialDraft?: OnboardingDraft | null;
 }
 
 export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps) {
-    const t = useTranslations("Onboarding");
     const router = useRouter();
 
     const [currentStep, setCurrentStep] = useState<WizardStep>((initialDraft?.currentStep as WizardStep) || "intro");
@@ -121,108 +122,128 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
         }
     }, [onboardingId, router]);
 
+    const isResultStep = currentStep === "recommendation" || currentStep === "manual-selection";
+
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-            {/* HUD Background */}
-            <div className="absolute inset-0 hud-grid" />
-            <div className="absolute inset-0 noise" />
+        <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-background">
+            {/* HUD Background - Full Viewport */}
+            <div className="fixed inset-0 pointer-events-none">
+                <div className="absolute inset-0 hud-grid opacity-20" />
+                <div className="absolute inset-0 noise opacity-[0.03]" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-primary/5" />
+            </div>
 
             {/* Progress bar */}
-            {currentStep !== "intro" && currentStep !== "loading" && (
+            {!isResultStep && currentStep !== "intro" && currentStep !== "loading" && (
                 <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted">
-                    <div
-                        className="h-full bg-primary transition-all duration-500 ease-out"
-                        style={{ width: `${progressPercent}%` }}
+                    <motion.div
+                        className="h-full bg-primary"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progressPercent}%` }}
+                        transition={{ type: "spring", stiffness: 50, damping: 20 }}
                     />
                 </div>
             )}
 
             {/* Wizard content */}
-            <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-8">
-                {currentStep === "intro" && (
-                    <StepIntro onStart={() => setCurrentStep("identity")} />
-                )}
+            <div className={cn(
+                "relative z-10 w-full mx-auto px-4 py-12 transition-all duration-700 ease-in-out",
+                isResultStep ? "max-w-6xl" : "max-w-2xl"
+            )}>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={currentStep}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                    >
+                        {currentStep === "intro" && (
+                            <StepIntro onStart={() => setCurrentStep("identity")} />
+                        )}
 
-                {currentStep === "identity" && (
-                    <StepIdentity
-                        value={formData.backgroundType}
-                        onSelect={(val: BackgroundType) => {
-                            setFormData((prev) => ({ ...prev, backgroundType: val }));
-                            goNext();
-                        }}
-                    />
-                )}
+                        {currentStep === "identity" && (
+                            <StepIdentity
+                                value={formData.backgroundType}
+                                onSelect={(val: BackgroundType) => {
+                                    setFormData((prev) => ({ ...prev, backgroundType: val }));
+                                    goNext();
+                                }}
+                            />
+                        )}
 
-                {currentStep === "goal" && (
-                    <StepGoal
-                        value={formData.primaryGoal}
-                        onSelect={(val: PrimaryGoal) => {
-                            setFormData((prev) => ({ ...prev, primaryGoal: val }));
-                            goNext();
-                        }}
-                        onBack={goBack}
-                    />
-                )}
+                        {currentStep === "goal" && (
+                            <StepGoal
+                                value={formData.primaryGoal}
+                                onSelect={(val: PrimaryGoal) => {
+                                    setFormData((prev) => ({ ...prev, primaryGoal: val }));
+                                    goNext();
+                                }}
+                                onBack={goBack}
+                            />
+                        )}
 
-                {currentStep === "commitment" && (
-                    <StepCommitment
-                        value={formData.weeklyHoursCategory}
-                        onSelect={(val: WeeklyHours) => {
-                            setFormData((prev) => ({ ...prev, weeklyHoursCategory: val }));
-                            goNext();
-                        }}
-                        onBack={goBack}
-                    />
-                )}
+                        {currentStep === "commitment" && (
+                            <StepCommitment
+                                value={formData.weeklyHoursCategory}
+                                onSelect={(val: WeeklyHours) => {
+                                    setFormData((prev) => ({ ...prev, weeklyHoursCategory: val }));
+                                    goNext();
+                                }}
+                                onBack={goBack}
+                            />
+                        )}
 
-                {currentStep === "interests" && (
-                    <StepInterests
-                        selected={formData.interests || []}
-                        onSubmit={(vals: string[]) => {
-                            setFormData((prev) => ({ ...prev, interests: vals }));
-                            goNext();
-                        }}
-                        onBack={goBack}
-                    />
-                )}
+                        {currentStep === "interests" && (
+                            <StepInterests
+                                selected={formData.interests || []}
+                                onSubmit={(vals: string[]) => {
+                                    setFormData((prev) => ({ ...prev, interests: vals }));
+                                    goNext();
+                                }}
+                                onBack={goBack}
+                            />
+                        )}
 
-                {currentStep === "confidence" && (
-                    <StepConfidence
-                        items={formData.confidenceItems || []}
-                        onSubmit={(items: ConfidenceItem[]) => {
-                            setFormData((prev) => ({ ...prev, confidenceItems: items }));
-                            goNext();
-                        }}
-                        onBack={goBack}
-                    />
-                )}
+                        {currentStep === "confidence" && (
+                            <StepConfidence
+                                items={formData.confidenceItems || []}
+                                onSubmit={(items: ConfidenceItem[]) => {
+                                    setFormData((prev) => ({ ...prev, confidenceItems: items }));
+                                    goNext();
+                                }}
+                                onBack={goBack}
+                            />
+                        )}
 
-                {currentStep === "preferences" && (
-                    <StepPreferences
-                        language={formData.aiLanguagePref}
-                        detail={formData.aiDetailLevel}
-                        onSubmit={(lang: AILanguage, detail: AIDetailLevel) => {
-                            setFormData((prev) => ({
-                                ...prev,
-                                aiLanguagePref: lang,
-                                aiDetailLevel: detail,
-                            }));
-                            handleSubmit({ aiLanguagePref: lang, aiDetailLevel: detail });
-                        }}
-                        onBack={goBack}
-                    />
-                )}
+                        {currentStep === "preferences" && (
+                            <StepPreferences
+                                language={formData.aiLanguagePref}
+                                detail={formData.aiDetailLevel}
+                                onSubmit={(lang: AILanguage, detail: AIDetailLevel) => {
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        aiLanguagePref: lang,
+                                        aiDetailLevel: detail,
+                                    }));
+                                    handleSubmit({ aiLanguagePref: lang, aiDetailLevel: detail });
+                                }}
+                                onBack={goBack}
+                            />
+                        )}
 
-                {currentStep === "loading" && <StepLoading />}
+                        {currentStep === "loading" && <StepLoading />}
 
-                {(currentStep === "recommendation" || currentStep === "manual-selection") && (
-                    <StepRecommendation
-                        recommendation={recommendation}
-                        isManualMode={currentStep === "manual-selection"}
-                        error={error}
-                        onAccept={handleAcceptPath}
-                    />
-                )}
+                        {isResultStep && (
+                            <StepRecommendation
+                                recommendation={recommendation}
+                                isManualMode={currentStep === "manual-selection"}
+                                error={error}
+                                onAccept={handleAcceptPath}
+                            />
+                        )}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     );

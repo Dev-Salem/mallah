@@ -1,71 +1,132 @@
 import OpenAI from "openai";
-import type { OnboardingFormData, AIRecommendationResponse, InterestVector, PathId } from "../types";
+import type { 
+    OnboardingFormData, 
+    AIRecommendationResponse, 
+    PathId, 
+    LearningVelocity 
+} from "../types";
 import { PATH_IDS } from "../types";
-import { INTEREST_SIGNALS } from "../constants";
+import { INTEREST_SIGNALS, VELOCITY_MAP } from "../constants";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-function buildInterestVector(selectedIds: string[]): InterestVector {
+/**
+ * Deterministically computes the base scores for all paths.
+ * Formula (v3): 40% Interest + 25% Goal + 20% Readiness + 15% Commitment
+ */
+export function calculateBaseScores(data: OnboardingFormData): Record<PathId, number> {
+    const scores: Record<PathId, number> = { frontend: 0, fullstack: 0, cybersecurity: 0, datascience: 0 };
 
-    const vector: InterestVector = { frontend: 0, fullstack: 0, cybersecurity: 0, datascience: 0 };
+    // 1. Interest Signal (40%)
+    const interestWeights: Record<PathId, number> = { frontend: 0, fullstack: 0, cybersecurity: 0, datascience: 0 };
+    
+    // Spec: interest_score[path] = interest_raw[path] / interest_max[path]
+    // Max possible interest sum for each path across all statements in spec:
+    // frontend: 1.2, fullstack: 2.2, cybersecurity: 1.9, datascience: 1.8
+    const interestMax: Record<PathId, number> = { frontend: 1.2, fullstack: 2.2, cybersecurity: 1.9, datascience: 1.8 };
 
     for (const signal of INTEREST_SIGNALS) {
-        if (selectedIds.includes(signal.id)) {
+        if (data.interests.includes(signal.id)) {
             for (const pathId of PATH_IDS) {
-                vector[pathId] += signal.pathWeights[pathId];
+                interestWeights[pathId] += (signal.pathWeights[pathId] || 0);
             }
         }
     }
-    return vector;
-}
 
-function computeReadinessLevel(
-    confidenceItems: Array<{ key: string; level: string }>
-): number {
-    let score = 0;
-    for (const item of confidenceItems) {
-        if (item.level === "comfortable") score += 1;
-        else if (item.level === "tried") score += 0.5;
+    // 2. Goal Fit (25%)
+    const goalMatrix: Record<string, Record<PathId, number>> = {
+        job: { frontend: 0.9, fullstack: 1.0, cybersecurity: 0.8, datascience: 0.8 },
+        freelance: { frontend: 1.0, fullstack: 0.9, cybersecurity: 0.4, datascience: 0.5 },
+        startup: { frontend: 0.7, fullstack: 1.0, cybersecurity: 0.3, datascience: 0.7 },
+        exploring: { frontend: 0.8, fullstack: 0.8, cybersecurity: 0.7, datascience: 0.7 },
+    };
+
+    // 3. Readiness Fit (20%)
+    // Spec: readiness_score[path] = 1.0 - max(0, complexity_baseline[path] - normalized_readiness)
+    const complexityBaseline: Record<PathId, number> = {
+        frontend: 0.3,
+        fullstack: 0.5,
+        cybersecurity: 0.6,
+        datascience: 0.55,
+    };
+    const rawReadiness = data.confidenceItems.reduce((acc, item) => {
+        if (item.level === "comfortable") return acc + 2;
+        if (item.level === "tried") return acc + 1;
+        return acc;
+    }, 0);
+    const normalizedReadiness = rawReadiness / 8;
+
+    // 4. Commitment Fit (15%)
+    const velocity = VELOCITY_MAP[data.weeklyHoursCategory];
+    const commitmentMatrix: Record<LearningVelocity, Record<PathId, number>> = {
+        slow: { frontend: 1.0, fullstack: 0.6, cybersecurity: 0.5, datascience: 0.6 },
+        normal: { frontend: 1.0, fullstack: 1.0, cybersecurity: 0.9, datascience: 1.0 },
+        fast: { frontend: 1.0, fullstack: 1.0, cybersecurity: 1.0, datascience: 1.0 },
+    };
+
+    // Calculate final scores
+    for (const path of PATH_IDS) {
+        const interestScore = data.interests.length > 0 
+            ? Math.min(1, interestWeights[path] / interestMax[path])
+            : 0.5;
+
+        const goalScore = goalMatrix[data.primaryGoal][path];
+        const readinessScore = 1.0 - Math.max(0, complexityBaseline[path] - normalizedReadiness);
+        const commitmentScore = commitmentMatrix[velocity][path];
+
+        const baseScore = (
+            interestScore * 0.40 +
+            goalScore * 0.25 +
+            readinessScore * 0.20 +
+            commitmentScore * 0.15
+        ) * 100;
+
+        scores[path] = Math.round(baseScore);
     }
-    return Math.min(3, Math.round(score));
+
+    return scores;
 }
 
 export async function generatePathRecommendation(
     data: OnboardingFormData
 ): Promise<AIRecommendationResponse | null> {
-    const interestVector = buildInterestVector(data.interests);
-    const readinessLevel = computeReadinessLevel(data.confidenceItems);
+    const baseScores = calculateBaseScores(data);
+    
+    // Sort paths by score to find the top recommendation
+    const sortedPaths = (Object.entries(baseScores) as [PathId, number][])
+        .sort((a, b) => b[1] - a[1]);
+    
+    const recommendedPathId = sortedPaths[0][0];
+    const baseRecommendedScore = sortedPaths[0][1];
 
-    const prompt = `You are Mallah's AI Career Path Advisor. Analyze the learner profile below and recommend the single best-fit learning path.
+    const prompt = `You are Mallah's Expert Career Advisor. Your goal is to guide the learner toward their ideal tech career path.
 
 ## Learner Profile
 - Background: ${data.backgroundType}
-- Primary Goal: ${data.primaryGoal}
-- Weekly Hours: ${data.weeklyHoursCategory}
-- Interest Signals (higher = more interest):
-  - Frontend: ${interestVector.frontend}
-  - Full-Stack: ${interestVector.fullstack}
-  - Cybersecurity: ${interestVector.cybersecurity}
-  - Data Science: ${interestVector.datascience}
-- Confidence Snapshot: ${JSON.stringify(data.confidenceItems)}
-- Readiness Level (0-3): ${readinessLevel}
+- Career Goal: ${data.primaryGoal}
+- Time Commitment: ${data.weeklyHoursCategory}
+- Interests: ${data.interests.join(", ")}
+- Readiness Indicator: ${data.confidenceItems.map(i => `${i.key} (${i.level})`).join(", ")}
 
-## Available Paths
-1. frontend — Frontend Development (building visual web interfaces)
-2. fullstack — Full-Stack Web Development (client + server engineering)
-3. cybersecurity — Cybersecurity & Ethical Hacking (security, pen-testing)
-4. datascience — Data Science & Machine Learning (data analysis, ML models)
+## Initial Analysis (Deterministic Scores)
+- Frontend: ${baseScores.frontend}%
+- Full-Stack: ${baseScores.fullstack}%
+- Cybersecurity: ${baseScores.cybersecurity}%
+- Data Science: ${baseScores.datascience}%
 
-## Instructions
-- Pick the BEST path for this learner based on their specific answers.
-- Give a match_score (0-100) reflecting how well the learner's profile fits the recommended path.
-- Provide 2-3 reasons that directly reference the learner's actual answers.
-- Suggest 1-2 alternative paths with a reason each.
-- Only use these path IDs: frontend, fullstack, cybersecurity, datascience.
+Recommended Path: ${recommendedPathId}
+Base Score: ${baseRecommendedScore}
 
-Return ONLY valid JSON, no explanation text.`;
+## Mission
+1. Review the recommended path and its base score.
+2. You may adjust the score by up to ±10 points based on your professional judgment of the learner's signals.
+3. Provide 2-3 specific, encouraging reasons for this recommendation. Each reason must refer to a specific answer from the learner.
+4. Suggest 1-2 secondary paths with a brief rationale for each.
+5. Use a professional, inspiring SaaS tone. Avoid military or overly tactical language.
+
+Return structured JSON according to the schema.`;
 
     const responseFormat = {
         type: "json_schema" as const,
@@ -75,14 +136,13 @@ Return ONLY valid JSON, no explanation text.`;
             schema: {
                 type: "object",
                 properties: {
-                    recommended_path_id: {
-                        type: "string",
-                        enum: ["frontend", "fullstack", "cybersecurity", "datascience"],
-                    },
-                    match_score: { type: "integer" },
+                    final_score: { type: "integer" },
+                    adjustment_reason: { type: ["string", "null"] },
                     reasons: {
                         type: "array",
                         items: { type: "string" },
+                        minItems: 2,
+                        maxItems: 3
                     },
                     alternatives: {
                         type: "array",
@@ -98,46 +158,67 @@ Return ONLY valid JSON, no explanation text.`;
                             required: ["path_id", "reason"],
                             additionalProperties: false,
                         },
+                        minItems: 1,
+                        maxItems: 2
                     },
                 },
-                required: ["recommended_path_id", "match_score", "reasons", "alternatives"],
+                required: ["final_score", "adjustment_reason", "reasons", "alternatives"],
                 additionalProperties: false,
             },
         },
     };
 
-    for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-            const completion = await openai.chat.completions.create({
-                model: "gpt-4o-mini",
-                messages: [{ role: "user", content: prompt }],
-                response_format: responseFormat,
-                temperature: 0.4,
-                max_tokens: 500,
-            });
+    try {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }],
+            response_format: responseFormat,
+            temperature: 0.5,
+        });
 
-            const content = completion.choices[0]?.message?.content;
-            if (!content) continue;
+        const content = completion.choices[0]?.message?.content;
+        if (!content) throw new Error("No AI response");
 
-            const parsed: AIRecommendationResponse = JSON.parse(content);
-
-            // Validate path IDs
-            if (!PATH_IDS.includes(parsed.recommended_path_id as PathId)) continue;
-            for (const alt of parsed.alternatives) {
-                if (!PATH_IDS.includes(alt.path_id as PathId)) continue;
-            }
-
-            // Clamp match_score
-            parsed.match_score = Math.max(0, Math.min(100, parsed.match_score));
-
-            return parsed;
-        } catch (error) {
-            console.error(`AI recommendation attempt ${attempt + 1} failed:`, error);
-            if (attempt === 1) return null;
+        const aiOutput = JSON.parse(content);
+        
+        // v3 Logic: Clamp final_score to ±10 of base score
+        let finalScore = aiOutput.final_score;
+        const diff = finalScore - baseRecommendedScore;
+        if (Math.abs(diff) > 10) {
+            finalScore = baseRecommendedScore + (diff > 0 ? 10 : -10);
         }
-    }
+        finalScore = Math.max(0, Math.min(100, finalScore));
 
-    return null;
+        return {
+            recommended_path_id: recommendedPathId,
+            match_score: finalScore,
+            base_score: baseRecommendedScore,
+            ai_adjustment: finalScore - baseRecommendedScore,
+            adjustment_reason: aiOutput.adjustment_reason,
+            reasons: aiOutput.reasons,
+            alternatives: aiOutput.alternatives,
+            fallback_used: false
+        };
+    } catch (error) {
+        console.error("AI recommendation failed, using fallback:", error);
+        
+        // Fallback Logic (v3)
+        return {
+            recommended_path_id: recommendedPathId,
+            match_score: baseRecommendedScore,
+            base_score: baseRecommendedScore,
+            ai_adjustment: 0,
+            adjustment_reason: null,
+            reasons: [
+                `Based on your interest in ${data.interests[0] || 'solving technical challenges'}, this path aligns perfectly with your goals.`,
+                `Your commitment of ${data.weeklyHoursCategory} hours per week provides a solid foundation for growth in ${recommendedPathId}.`
+            ],
+            alternatives: sortedPaths.slice(1, 3).map(([id]) => ({
+                path_id: id,
+                reason: "This path also aligns well with your profile and career objectives."
+            })),
+            fallback_used: true
+        } as AIRecommendationResponse;
+    }
 }
 
-export { buildInterestVector, computeReadinessLevel };

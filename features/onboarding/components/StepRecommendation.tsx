@@ -6,8 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import type { AIRecommendationResponse, PathId } from "../types";
 import { PATH_IDS } from "../types";
 import { PATH_CONTENT, getMatchLabel } from "../constants";
-import { CheckCircle2, ArrowRight, Sparkles, Target, Book, Briefcase, Code2 } from "lucide-react";
+import { CheckCircle2, ArrowRight, Sparkles, Briefcase, Code2, Layers, Cpu, Info } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface StepRecommendationProps {
     recommendation: AIRecommendationResponse | null;
@@ -33,187 +35,304 @@ export default function StepRecommendation({
         await onAccept(pathId);
     };
 
+    // SVG Ring constants
+    const radius = 60;
+    const circumference = 2 * Math.PI * radius;
+
     // AI recommendation view
     if (recommendation && !showAllPaths) {
         const path = PATH_CONTENT[recommendation.recommended_path_id];
         const matchLabel = getMatchLabel(recommendation.match_score);
+        const offset = circumference - (recommendation.match_score / 100) * circumference;
 
         return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {/* Match score header */}
-                <div className="text-center space-y-3">
-                    <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2">
-                        <Target className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium">
-                            {recommendation.match_score}% — {matchLabel}
-                        </span>
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-6xl mx-auto space-y-8"
+            >
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row items-center gap-8 md:items-start text-center md:text-left">
+                    {/* SVG Score Ring */}
+                    <div className="relative shrink-0 w-40 h-40 flex items-center justify-center">
+                        <svg className="w-full h-full -rotate-90">
+                            <circle
+                                cx="80"
+                                cy="80"
+                                r={radius}
+                                className="stroke-muted fill-none"
+                                strokeWidth="8"
+                            />
+                            <motion.circle
+                                cx="80"
+                                cy="80"
+                                r={radius}
+                                className="stroke-primary fill-none"
+                                strokeWidth="8"
+                                strokeDasharray={circumference}
+                                initial={{ strokeDashoffset: circumference }}
+                                animate={{ strokeDashoffset: offset }}
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <span className="text-4xl font-bold text-primary">{recommendation.match_score}%</span>
+                            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold px-2 text-center leading-tight">
+                                {matchLabel.label}
+                            </span>
+                        </div>
                     </div>
-                    <h2 className="text-2xl font-bold">{path.name}</h2>
-                    <p className="text-muted-foreground">{path.oneLiner}</p>
-                </div>
 
-                {/* Why this fits you (AI-generated) */}
-                <div className="glass rounded-xl p-5 space-y-3">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                        <Sparkles className="w-4 h-4" />
-                        {t("recommendation.whyFits")}
-                    </div>
-                    <ul className="space-y-2">
-                        {recommendation.reasons.map((reason, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm">
-                                <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                                <span>{reason}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                {/* What you'll learn (pre-defined) */}
-                <div className="glass rounded-xl p-5 space-y-3">
-                    <div className="flex items-center gap-2 text-sm font-semibold">
-                        <Book className="w-4 h-4" />
-                        {t("recommendation.whatYoullLearn")}
-                    </div>
-                    <p className="text-sm text-muted-foreground">{path.whatYoullLearn}</p>
-                </div>
-
-                {/* Skills */}
-                <div className="glass rounded-xl p-5 space-y-3">
-                    <div className="flex items-center gap-2 text-sm font-semibold">
-                        <Code2 className="w-4 h-4" />
-                        {t("recommendation.skills")}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {path.skills.map((skill) => (
-                            <Badge key={skill} variant="secondary" className="text-xs">
-                                {skill}
+                    <div className="flex-1 space-y-4">
+                        <div>
+                            <Badge variant="outline" className="mb-2 text-primary border-primary/20 bg-primary/5 uppercase tracking-widest text-[10px]">
+                                {t("recommendation.matchLabel")}
                             </Badge>
-                        ))}
-                    </div>
-                </div>
+                            <h2 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                                {path.name}
+                            </h2>
+                            <p className="text-xl text-muted-foreground mt-2 font-medium">
+                                {path.oneLiner}
+                            </p>
+                        </div>
 
-                {/* Projects */}
-                <div className="glass rounded-xl p-5 space-y-3">
-                    <p className="text-sm font-semibold">{t("recommendation.projects")}</p>
-                    <ol className="space-y-2 list-decimal list-inside">
-                        {path.projects.map((proj) => (
-                            <li key={proj} className="text-sm text-muted-foreground">{proj}</li>
-                        ))}
-                    </ol>
-                </div>
-
-                {/* Careers */}
-                <div className="glass rounded-xl p-5 space-y-3">
-                    <div className="flex items-center gap-2 text-sm font-semibold">
-                        <Briefcase className="w-4 h-4" />
-                        {t("recommendation.careers")}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {path.careers.map((career) => (
-                            <Badge key={career} variant="outline" className="text-xs">
-                                {career}
-                            </Badge>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Alternatives */}
-                {recommendation.alternatives.length > 0 && (
-                    <div className="glass rounded-xl p-5 space-y-3">
-                        <p className="text-sm font-semibold">{t("recommendation.alternatives")}</p>
-                        {recommendation.alternatives.map((alt) => (
-                            <div key={alt.path_id} className="flex items-start gap-2 text-sm">
-                                <ArrowRight className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                                <div>
-                                    <span className="font-medium">
-                                        {PATH_CONTENT[alt.path_id as PathId]?.name}
-                                    </span>
-                                    <span className="text-muted-foreground"> — {alt.reason}</span>
-                                </div>
+                        {/* Hybrid Breakdown (Base vs AI) */}
+                        <div className="flex flex-wrap gap-4 items-center justify-center md:justify-start">
+                            <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground glass px-3 py-1.5 rounded-full border border-white/5">
+                                <Cpu className="w-3.5 h-3.5" />
+                                <span>Deterministic: {recommendation.base_score}%</span>
                             </div>
-                        ))}
+                            {recommendation.ai_adjustment !== 0 && (
+                                <div className={cn(
+                                    "flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-full border border-white/5",
+                                    recommendation.ai_adjustment > 0 ? "bg-emerald-500/10 text-emerald-400" : "bg-orange-500/10 text-orange-400"
+                                )}>
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                    <span>AI Logic: {recommendation.ai_adjustment > 0 ? "+" : ""}{recommendation.ai_adjustment}%</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                )}
+                </div>
 
-                {/* Action buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Left Column: Why This Path */}
+                    <div className="space-y-6">
+                        <section className="glass p-6 rounded-2xl border border-white/5 space-y-4 relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+                               <Sparkles className="w-16 h-16 text-primary" />
+                           </div>
+                            <div className="flex items-center gap-2 text-sm font-semibold text-primary uppercase tracking-wider">
+                                <Info className="w-4 h-4" />
+                                {t("recommendation.whyFits")}
+                            </div>
+                            <div className="space-y-4">
+                                {recommendation.adjustment_reason && (
+                                    <p className="text-sm font-medium italic text-muted-foreground leading-relaxed border-l-2 border-primary/20 pl-4 py-1">
+                                        &quot;{recommendation.adjustment_reason}&quot;
+                                    </p>
+                                )}
+                                <ul className="space-y-3">
+                                    {recommendation.reasons.map((reason, i) => (
+                                        <motion.li 
+                                            key={i} 
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: i * 0.1 }}
+                                            className="flex items-start gap-3 text-sm"
+                                        >
+                                            <div className="mt-1 p-0.5 rounded-full bg-primary/20">
+                                                <CheckCircle2 className="w-3 h-3 text-primary shrink-0" />
+                                            </div>
+                                            <span className="text-foreground/90">{reason}</span>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </section>
+
+                        <section className="glass p-6 rounded-2xl border border-white/5 space-y-4">
+                            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                                <Layers className="w-4 h-4" />
+                                {t("recommendation.projects")}
+                            </div>
+                            <div className="grid grid-cols-1 gap-2">
+                                {path.projects.map((proj, i) => (
+                                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.05] transition-colors">
+                                        <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                                            0{i + 1}
+                                        </div>
+                                        <span className="text-sm font-medium">{proj.title}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Right Column: Outcomes & Skills */}
+                    <div className="space-y-6">
+                        <section className="glass p-6 rounded-2xl border border-white/5 space-y-4">
+                            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                                <Briefcase className="w-4 h-4" />
+                                {t("recommendation.careers")}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {path.careers.map((career) => (
+                                    <Badge key={career} variant="outline" className="text-xs px-3 py-1 bg-white/[0.02] border-white/10 hover:border-primary/40 transition-colors">
+                                        {career}
+                                    </Badge>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="glass p-6 rounded-2xl border border-white/5 space-y-4">
+                            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                                <Code2 className="w-4 h-4" />
+                                {t("recommendation.skills")}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {path.skills.map((skill) => (
+                                    <Badge key={skill} variant="secondary" className="text-xs px-3 py-1 bg-primary/10 text-primary border-none">
+                                        {skill}
+                                    </Badge>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Alternatives Section */}
+                        <AnimatePresence>
+                        {recommendation.alternatives.length > 0 && (
+                            <motion.section 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="glass p-6 rounded-2xl border border-white/5 space-y-4"
+                            >
+                                <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                                    {t("recommendation.alternatives")}
+                                </div>
+                                <div className="space-y-4">
+                                    {recommendation.alternatives.map((alt) => (
+                                        <div key={alt.path_id} className="group cursor-help">
+                                            <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                                                <div className="w-1 h-1 rounded-full bg-primary" />
+                                                {PATH_CONTENT[alt.path_id as PathId]?.name}
+                                            </div>
+                                            <p className="text-[11px] text-muted-foreground mt-1 pl-3 leading-relaxed opacity-70">
+                                                {alt.reason}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </motion.section>
+                        )}
+                        </AnimatePresence>
+                    </div>
+                </div>
+
+                {/* Bottom Actions */}
+                <div className="flex flex-col md:flex-row gap-4 pt-6">
                     <Button
                         size="lg"
-                        className="flex-1 glow-border gap-2"
+                        className="flex-1 h-16 text-lg font-bold glow-border bg-primary hover:bg-primary/90 text-primary-foreground group"
                         onClick={() => handleAccept(recommendation.recommended_path_id)}
                         disabled={accepting}
                     >
                         {accepting && selectedPath === recommendation.recommended_path_id ? (
-                            <span className="animate-pulse">{t("recommendation.accepting")}</span>
+                            <span className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-current animate-ping" />
+                                {t("recommendation.accepting")}
+                            </span>
                         ) : (
                             <>
                                 {t("recommendation.startButton")}
-                                <ArrowRight className="w-4 h-4" />
+                                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </>
                         )}
                     </Button>
                     <Button
                         variant="outline"
                         size="lg"
+                        className="h-16 px-8 text-muted-foreground hover:text-foreground glass border-white/10"
                         onClick={() => setShowAllPaths(true)}
                         disabled={accepting}
                     >
                         {t("recommendation.chooseDifferent")}
                     </Button>
                 </div>
-            </div>
+            </motion.div>
         );
     }
 
-    // Manual path selection (AI failed or user chose different)
+    // Manual path selection
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold">{t("manual.title")}</h2>
-                <p className="text-muted-foreground text-sm">{t("manual.subtitle")}</p>
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full max-w-4xl mx-auto space-y-8"
+        >
+            <div className="text-center space-y-4">
+                <h2 className="text-3xl font-extrabold tracking-tight">{t("manual.title")}</h2>
+                <p className="text-muted-foreground text-lg">{t("manual.subtitle")}</p>
                 {error && (
-                    <p className="text-sm text-destructive">{error}</p>
+                    <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm text-destructive font-medium inline-block mx-auto">
+                        {error}
+                    </div>
                 )}
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-                {PATH_IDS.map((pathId) => {
+                {PATH_IDS.map((pathId, idx) => {
                     const path = PATH_CONTENT[pathId];
                     return (
-                        <button
+                        <motion.button
                             key={pathId}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 }}
                             onClick={() => handleAccept(pathId)}
                             disabled={accepting}
-                            className={`
-                glass rounded-xl p-5 text-start transition-all duration-200
-                hover:glow-border cursor-pointer
-                ${accepting && selectedPath === pathId ? "glow-border" : ""}
-              `}
+                            className={cn(
+                                "glass group relative flex flex-col md:flex-row md:items-center justify-between p-6 rounded-2xl text-start transition-all duration-300 border border-white/5 hover:border-primary/40",
+                                accepting && selectedPath === pathId ? "glow-border ring-1 ring-primary/50" : ""
+                            )}
                         >
-                            <h3 className="font-semibold">{path.name}</h3>
-                            <p className="text-sm text-muted-foreground mt-1">{path.oneLiner}</p>
-                            <div className="flex flex-wrap gap-1 mt-3">
-                                {path.skills.slice(0, 4).map((skill) => (
-                                    <Badge key={skill} variant="secondary" className="text-xs">
-                                        {skill}
-                                    </Badge>
-                                ))}
-                                {path.skills.length > 4 && (
-                                    <Badge variant="secondary" className="text-xs">
-                                        +{path.skills.length - 4}
-                                    </Badge>
-                                )}
+                            <div className="space-y-2 flex-1">
+                                <div className="flex items-center gap-3">
+                                    <h3 className="text-xl font-bold">{path.name}</h3>
+                                    <div className="hidden md:block w-8 h-[1px] bg-white/10 group-hover:bg-primary transition-colors" />
+                                </div>
+                                <p className="text-sm text-muted-foreground font-medium">{path.oneLiner}</p>
+                                <div className="flex flex-wrap gap-2 pt-1">
+                                    {path.skills.slice(0, 4).map((skill) => (
+                                        <Badge key={skill} variant="secondary" className="text-[10px] bg-white/5 hover:bg-white/10 transition-colors">
+                                            {skill}
+                                        </Badge>
+                                    ))}
+                                    {path.skills.length > 4 && (
+                                        <span className="text-[10px] text-muted-foreground font-mono">+{path.skills.length - 4}</span>
+                                    )}
+                                </div>
                             </div>
-                        </button>
+
+                            <div className="mt-4 md:mt-0 flex items-center justify-end">
+                                <div className="w-10 h-10 rounded-full bg-white/5 group-hover:bg-primary/20 flex items-center justify-center transition-all">
+                                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                                </div>
+                            </div>
+                        </motion.button>
                     );
                 })}
             </div>
 
             {recommendation && (
-                <Button variant="ghost" onClick={() => setShowAllPaths(false)}>
-                    {t("manual.backToRecommendation")}
-                </Button>
+                <div className="flex justify-center pt-4">
+                    <Button variant="ghost" className="text-muted-foreground hover:text-primary" onClick={() => setShowAllPaths(false)}>
+                        <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+                        {t("manual.backToRecommendation")}
+                    </Button>
+                </div>
             )}
-        </div>
+        </motion.div>
     );
 }

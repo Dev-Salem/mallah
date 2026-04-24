@@ -395,99 +395,101 @@
     "back": "Back",
     "continue": "Continue",
     "intro": {
-      "title": "Let's Chart Your Course",
-      "subtitle": "Answer 6 quick questions and get your personalized learning path — powered by AI.",
-      "promise": "⏱ Takes about 3 minutes. Your answers help us build the perfect roadmap for you.",
-      "startButton": "Start"
+      "title": "Find Your Perfect Path",
+      "subtitle": "Answer a few questions to get your personalized career roadmap, powered by AI.",
+      "promise": "⏱ Takes about 2 minutes. Your answers help us tailor the perfect learning journey for you.",
+      "startButton": "Start My Journey"
     },
     "identity": {
-      "question": "Where are you starting from?",
+      "question": "Where are you in your career?",
       "options": {
-        "student": "Student",
-        "fresh_grad": "Fresh Graduate",
+        "student": "Current Student",
+        "fresh_grad": "Recent Graduate",
         "career_shifter": "Career Shifter",
-        "no_tech": "No Tech Background"
+        "no_tech": "Starting from Scratch"
       }
     },
     "goal": {
-      "question": "What do you want first?",
+      "question": "What's your primary goal?",
       "options": {
-        "job": "Get a Full-Time Job",
-        "freelance": "Freelance",
-        "startup": "Build My Own Project",
-        "exploring": "Just Exploring"
+        "job": "Land a Full-Time Role",
+        "freelance": "Start Freelancing",
+        "startup": "Build My Own Startup",
+        "exploring": "Explore the Possibilities"
       }
     },
     "commitment": {
-      "question": "How many hours per week can you seriously commit?",
+      "question": "How much time can you commit?",
       "options": {
-        "0-3": "0–3 hours",
-        "4-7": "4–7 hours",
-        "8-12": "8–12 hours",
-        "13+": "13+ hours"
+        "0-3": "Light (0–3 hrs/week)",
+        "4-7": "Steady (4–7 hrs/week)",
+        "8-12": "Serious (8–12 hrs/week)",
+        "13+": "Aggressive (13+ hrs/week)"
       },
-      "preview": "At this pace, you could reach your first milestone project in approximately {weeks} weeks."
+      "preview": "At this pace, you'll reach your first major project in about {weeks} weeks."
     },
     "interests": {
-      "question": "What excites you most?",
-      "hint": "Select all that apply — or skip if unsure.",
+      "question": "What interests you most?",
+      "hint": "Select all that apply to help us refine your path.",
       "signals": {
-        "visual-building": "I enjoy building things people can see and use.",
-        "puzzles-weaknesses": "I like solving puzzles and finding system weaknesses.",
-        "numbers-data": "I enjoy working with numbers, patterns, and data.",
-        "logic-systems": "I prefer building the logic and systems behind applications."
+        "visual-building": "Building visual apps & interfaces",
+        "puzzles-weaknesses": "Solving puzzles & security",
+        "numbers-data": "Working with data & patterns",
+        "logic-systems": "Building core logic & backends"
       }
     },
     "confidence": {
-      "question": "Quick skill check",
-      "hint": "No wrong answers — this helps us calibrate your starting point.",
+      "question": "Tell us about your experience",
+      "hint": "There are no wrong answers — this just helps us set the right pace.",
       "statements": {
-        "git": "I have used Git before.",
-        "api": "I understand what an API is.",
-        "program": "I wrote a small program before.",
-        "project": "I built any project (even a simple one)."
+        "git": "I have used Git before",
+        "api": "I know what an API is",
+        "program": "I've written basic code before",
+        "project": "I've built a project from start to finish"
       },
       "levels": {
-        "never": "Never",
-        "tried": "Tried",
+        "never": "New to this",
+        "tried": "Tried it",
         "comfortable": "Comfortable"
       }
     },
     "preferences": {
-      "title": "AI Assistant Preferences",
-      "languageQuestion": "Preferred AI assistant language?",
+      "title": "Learning Preferences",
+      "languageQuestion": "What language do you prefer for AI guidance?",
       "languages": {
         "arabic": "Arabic",
         "english": "English",
-        "mix": "Mix"
+        "mix": "Bilingual (Mixed)"
       },
-      "detailQuestion": "Preferred answer style?",
+      "detailQuestion": "How detailed should the explanations be?",
       "details": {
-        "short": "Short",
+        "short": "Quick & Direct",
         "balanced": "Balanced",
-        "detailed": "Detailed"
+        "detailed": "Thorough & Deep"
       },
-      "submit": "Get My Recommendation"
+      "submit": "See My Path"
     },
     "loading": {
-      "title": "Analyzing Your Profile...",
-      "subtitle": "Our AI is matching your answers to the best career path. This takes a few seconds."
+      "title": "Building Your Profile...",
+      "subtitle": "Analyzing your signals to match you with the best career path. One moment..."
     },
     "recommendation": {
-      "whyFits": "Why this fits you",
-      "whatYoullLearn": "What you'll learn to do",
-      "skills": "Skills you'll gain",
-      "projects": "Projects you'll build",
-      "careers": "Where this path leads",
-      "alternatives": "Other paths to consider",
-      "startButton": "Start This Path",
-      "chooseDifferent": "Choose a Different Path",
-      "accepting": "Setting up..."
+      "matchScore": "{score}% Match",
+      "matchLabel": "Path Recommendation",
+      "whyFits": "Why this is a great fit",
+      "whatYoullLearn": "What you'll master",
+      "skills": "Key Skills",
+      "projects": "Core Projects",
+      "careers": "Career Potential",
+      "alternatives": "Alternative Paths",
+      "startButton": "Launch My Journey",
+      "chooseDifferent": "Explore Other Paths",
+      "accepting": "Saving your path..."
     },
     "manual": {
-      "title": "Choose Your Path",
-      "subtitle": "Pick the learning track that interests you most.",
-      "backToRecommendation": "← Back to AI Recommendation"
+      "title": "All Career Paths",
+      "subtitle": "Choose the direction that excites you most.",
+      "backToRecommendation": "← Back to My Recommendation"
     }
   },
   "PortfolioHub": {
