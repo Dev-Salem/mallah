@@ -70,6 +70,7 @@ export async function getDashboardSummary(
         next_topic_id: null as string | null,
         next_topic_title: "Your first lesson",
         next_topic_estimated_time_min: null as number | null,
+        next_topic_estimated_time_text: null as string | null,
         remaining_topics_in_stage: 0,
     };
 
@@ -147,11 +148,11 @@ export async function getDashboardSummary(
             ? Math.round((totalCompletedPathItems / totalPathItems) * 100)
             : 0;
 
-        // Set next topic labels
         if (nextTopic) {
             topicsData.next_topic_id = nextTopic.topic_id;
             topicsData.next_topic_title = nextTopic.title;
             topicsData.next_topic_estimated_time_min = nextTopic.estimated_time_min;
+            topicsData.next_topic_estimated_time_text = nextTopic.estimated_time_text;
         } else if (nextProject) {
             topicsData.next_topic_id = nextProject.project_id;
             topicsData.next_topic_title = nextProject.title;
@@ -405,9 +406,11 @@ function computeMission(
 
     // Priority 4: Inactive for ≥ 7 days
     if (daysSinceLastActive !== null && daysSinceLastActive >= 7 && nextTopic) {
-        const timeNote = nextTopic.estimated_time_min
-            ? ` It only takes ${nextTopic.estimated_time_min} minutes.`
-            : "";
+        const timeNote = nextTopic.estimated_time_text
+            ? ` It only takes ${nextTopic.estimated_time_text}.`
+            : nextTopic.estimated_time_min
+                ? ` It only takes ${nextTopic.estimated_time_min} minutes.`
+                : "";
         return {
             type: "GetBackOnTrack",
             title: "Ready to Pick Up Where You Left Off?",

@@ -354,7 +354,7 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                         {topic.title}
                     </h4>
                     <span className="text-[11px] text-muted-foreground font-mono font-bold uppercase tracking-wider">
-                        {topic.estimated_time_min} {t('minutes')}
+                        {topic.estimated_time_text || `${topic.estimated_time_min} ${t('minutes')}`}
                     </span>
                 </div>
             </div>

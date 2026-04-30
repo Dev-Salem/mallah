@@ -25,6 +25,7 @@ export interface Topic {
     summary?: string | null;
     topic_type: 'concept' | 'lesson' | 'lesson_lab' | 'project_milestone' | 'project_capstone';
     estimated_time_min: number;
+    estimated_time_text?: string | null;
     difficulty_level: 'beginner' | 'intermediate' | 'advanced';
     order_index: number;
     user_status?: 'not_started' | 'in_progress' | 'completed'; // Joined from user_progress

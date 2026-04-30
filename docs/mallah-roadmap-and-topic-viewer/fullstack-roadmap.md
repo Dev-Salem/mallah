@@ -51,7 +51,7 @@ Certificate block format:
 
 ### Topic 1.1 — How the Web Works + Dev Environment Setup
 **Type:** Concept + Setup
-**Estimated Time:** 1 hr
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** How browsers, servers, and HTTP work. Install VS Code, Node.js, Git. Set up a project folder. Understand what full-stack means — frontend (browser), backend (server), database.
@@ -73,7 +73,7 @@ Certificate block format:
 
 ### Topic 1.2 — HTML & Semantic Markup
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** HTML structure, semantic tags (nav, section, article, footer), forms, tables. Build meaningful markup — not div soup.
@@ -92,7 +92,7 @@ Certificate block format:
 
 ### Topic 1.3 — CSS, Flexbox & Tailwind
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** CSS selectors, box model, Flexbox, responsive basics. Then Tailwind CSS: utility-first approach. Build layouts fast with Tailwind.
@@ -113,7 +113,7 @@ Certificate block format:
 
 ### Topic 1.4 — JavaScript Core: Variables, Functions, Arrays & Objects
 **Type:** Lesson + Practice
-**Estimated Time:** 3 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Beginner
 
 **Description:** Variables (`let`, `const`), data types, conditionals, loops, functions (declarations, expressions, arrow functions), arrays and their key methods (`map`, `filter`, `reduce`), objects and destructuring.
@@ -132,7 +132,7 @@ Certificate block format:
 
 ### Topic 1.5 — Async JavaScript: Promises, Fetch & async/await
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Synchronous vs asynchronous execution. Callbacks problem. Promises. `async/await`. Fetch API. Error handling with `try/catch`. This is the foundation of every API call you'll ever make.
@@ -152,7 +152,7 @@ Certificate block format:
 
 ### Topic 1.6 — Git & GitHub Professional Workflow
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** `git init`, `add`, `commit`, `push`, branching, merging, pull requests. Feature branch workflow. Writing good commit messages. `.gitignore` — especially for `.env` files.
@@ -210,7 +210,7 @@ Certificate block format:
 
 ### Topic 2.1 — React: Components, Props & JSX
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why React? Component-based architecture. JSX. Create a React app with Vite. Reusable components. Props: passing and receiving data down the tree.
@@ -230,7 +230,7 @@ Certificate block format:
 
 ### Topic 2.2 — State, useState & useEffect
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** `useState` for local component state. Re-render cycle. Controlled inputs. `useEffect` for side effects and data fetching. Dependency array. Loading and error states.
@@ -250,7 +250,7 @@ Certificate block format:
 
 ### Topic 2.3 — React Router & Multi-Page Apps
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** React Router v6. `<Routes>`, `<Route>`, `<Link>`, `useNavigate`, `useParams`. Dynamic routes. Nested routing.
@@ -269,7 +269,7 @@ Certificate block format:
 
 ### Topic 2.4 — TypeScript for React
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Intermediate
 
 **Description:** TypeScript basics: types, interfaces, generics. Typing React props, state, and API responses. Converting a JavaScript React project to TypeScript. No `any`.
@@ -288,7 +288,7 @@ Certificate block format:
 
 ### Topic 2.5 — Forms, Validation & Context API
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Controlled forms in React. React Hook Form for complex validation. Context API for global state (theme, auth). localStorage persistence.
@@ -307,7 +307,7 @@ Certificate block format:
 
 ### Topic 2.6 — Next.js: SSR, App Router & API Routes
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Next.js App Router. Server Components vs Client Components. File-based routing. `fetch` with caching. Dynamic routes. Next.js API routes as a simple backend. SEO with `metadata`.
@@ -369,7 +369,7 @@ Certificate block format:
 
 ### Topic 3.1 — Node.js Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is Node.js? The event loop and non-blocking I/O. Running JS on the server. Node's built-in modules: `fs`, `path`, `os`, `http`. `npm` and `package.json`. `nodemon` for auto-restart.
@@ -388,7 +388,7 @@ Certificate block format:
 
 ### Topic 3.2 — Express.js: Routing & Middleware
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Express.js setup. Routes: `GET`, `POST`, `PUT`, `DELETE`. Route parameters and query strings. Middleware: what it is, how it chains. Built-in middleware: `express.json()`, `express.static()`. Custom middleware (logger, error handler).
@@ -407,7 +407,7 @@ Certificate block format:
 
 ### Topic 3.3 — REST API Design Principles
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** REST constraints and conventions. Resource naming (nouns, plural). HTTP methods mapped to CRUD. Status codes (200, 201, 400, 401, 403, 404, 409, 500). Request/response structure. API versioning basics.
@@ -427,7 +427,7 @@ Certificate block format:
 
 ### Topic 3.4 — Input Validation & Error Handling
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why validate on the server (never trust client input). Zod for TypeScript-first schema validation. Validating request body, params, and query. Global error handling middleware in Express. Distinguishing operational errors from programmer errors.
@@ -447,7 +447,7 @@ Certificate block format:
 
 ### Topic 3.5 — TypeScript on the Backend
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Set up TypeScript in an Express project. Type Express request/response objects. Type middleware. Share types between frontend and backend. `tsconfig.json` for Node.js.
@@ -467,7 +467,7 @@ Certificate block format:
 
 ### Topic 3.6 — Environment Variables & Configuration
 **Type:** Lesson + Practice
-**Estimated Time:** 1 hr
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** `.env` files and `dotenv`. Environment-specific config (development vs production). What goes in `.env` vs hardcoded config. `process.env` access patterns. Validating required env vars on startup.
@@ -522,7 +522,7 @@ Certificate block format:
 
 ### Topic 4.1 — Relational Databases & SQL Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is a relational database? Tables, columns, rows, primary keys, foreign keys. SQL basics: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `WHERE`, `ORDER BY`, `LIMIT`. Joins: `INNER JOIN`, `LEFT JOIN`. Install PostgreSQL locally. Use pgAdmin or TablePlus.
@@ -542,7 +542,7 @@ Certificate block format:
 
 ### Topic 4.2 — Prisma ORM: Schema & Migrations
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is an ORM? Prisma setup with PostgreSQL. `schema.prisma`: models, field types, relations. `prisma migrate dev` to create and manage migrations. Prisma Studio for visual data inspection.
@@ -562,7 +562,7 @@ Certificate block format:
 
 ### Topic 4.3 — CRUD Operations with Prisma Client
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Prisma Client: `findMany`, `findUnique`, `create`, `update`, `delete`. Filtering with `where`. Selecting specific fields. Including related data (`include`). Pagination with `take` and `skip`.
@@ -582,7 +582,7 @@ Certificate block format:
 
 ### Topic 4.4 — Database Relations & Advanced Queries
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** One-to-many and many-to-many relations in Prisma. `include` for eager loading. Nested writes (`create` with related data in one query). Transactions for multi-step operations. Filtering on related models.
@@ -602,7 +602,7 @@ Certificate block format:
 
 ### Topic 4.5 — Database Seeding & Migrations in Production
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Writing a Prisma seed script. Running seeds in development. Migration strategies for production (never `prisma migrate dev` in prod). Using `prisma migrate deploy`. Managing migration history.
@@ -661,7 +661,7 @@ Certificate block format:
 
 ### Topic 5.1 — Authentication vs Authorization & Password Hashing
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Authentication (who are you?) vs authorization (what can you do?). Password storage: why plain text is catastrophic, what hashing is, why salting matters. Implement `bcrypt` for password hashing.
@@ -681,7 +681,7 @@ Certificate block format:
 
 ### Topic 5.2 — JWT Authentication: Login & Protected Routes
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Intermediate
 
 **Description:** How JWT works: header, payload, signature. Signing a token on login. Verifying a token on protected routes. Auth middleware. Access tokens and refresh tokens. Token expiry.
@@ -701,7 +701,7 @@ Certificate block format:
 
 ### Topic 5.3 — Refresh Tokens & Secure Token Storage
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** Access token vs refresh token pattern. Storing refresh tokens in the database. Rotating refresh tokens on each use. `POST /auth/refresh`. Secure cookie storage (HttpOnly, Secure, SameSite). Logout: invalidating refresh tokens.
@@ -720,7 +720,7 @@ Certificate block format:
 
 ### Topic 5.4 — Role-Based Authorization (RBAC)
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** User roles (admin, user, moderator). Role field in the User model. Authorization middleware that checks roles. Protecting routes by role. Returning `403 Forbidden` vs `401 Unauthorized`.
@@ -777,7 +777,7 @@ Certificate block format:
 
 ### Topic 6.1 — Connecting React to Your API
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** CORS configuration in Express. Axios vs fetch in React. Axios interceptors for attaching auth tokens to requests. Handling 401 responses (auto-redirect to login). Environment variables in Next.js for API URLs.
@@ -797,7 +797,7 @@ Certificate block format:
 
 ### Topic 6.2 — Auth State in the Frontend
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Storing access tokens in memory (not localStorage). Storing refresh tokens in HttpOnly cookies. Auth Context in React. Persisting auth across page refresh (silent refresh). Protected routes in React Router.
@@ -817,7 +817,7 @@ Certificate block format:
 
 ### Topic 6.3 — File Uploads & Storage
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Handling file uploads with Multer in Express. Storing files on Cloudinary (free tier). Returning a public URL. Frontend file input and preview. Updating a user's avatar.
@@ -837,7 +837,7 @@ Certificate block format:
 
 ### Topic 6.4 — Real-Time Features with WebSockets
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** HTTP polling vs WebSockets vs Server-Sent Events. Socket.io setup on Express. Emitting and receiving events. Broadcasting to rooms. When to use WebSockets vs REST.
@@ -857,7 +857,7 @@ Certificate block format:
 
 ### Topic 6.5 — Search, Filtering & Pagination
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Full-text search with Prisma (`contains`, `mode: 'insensitive'`). Cursor-based vs offset pagination. Compound filtering (multiple `where` conditions). Sorting. Building a reusable query builder.
@@ -923,7 +923,7 @@ Certificate block format:
 
 ### Topic 7.1 — Docker: Containerising Your App
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** What Docker solves ("it works on my machine"). Images vs containers. `Dockerfile` for Node.js. `docker-compose.yml` for multi-service local setup (Node + PostgreSQL). Building and running containers. `.dockerignore`.
@@ -942,7 +942,7 @@ Certificate block format:
 
 ### Topic 7.2 — GitHub Actions: CI/CD Pipelines
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is CI/CD? GitHub Actions: workflows, jobs, steps, runners. Build a pipeline that: runs tests, lints code, and blocks merge if checks fail. Deployment pipeline: auto-deploy to Railway/Render on push to `main`.
@@ -962,7 +962,7 @@ Certificate block format:
 
 ### Topic 7.3 — Monitoring, Logging & Error Tracking
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Structured logging with `pino` or `winston`. Log levels (error, warn, info, debug). Request logging middleware. Error tracking with Sentry (free tier). Health check endpoint `GET /health`. Uptime monitoring basics.
@@ -982,7 +982,7 @@ Certificate block format:
 
 ### Topic 7.4 — Performance: Caching & Query Optimization
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** Database indexes and when to add them. The N+1 query problem and how to fix it with Prisma. HTTP caching headers. Redis for application-level caching (basic). Analyzing slow queries.
@@ -1041,7 +1041,7 @@ Certificate block format:
 
 ### Topic 8.1 — API Testing with Vitest & Supertest
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** Why test APIs? Integration testing with Supertest. Setting up a test database (separate from dev). Testing auth routes, CRUD routes, validation errors. Test coverage basics.
@@ -1060,7 +1060,7 @@ Certificate block format:
 
 ### Topic 8.2 — Advanced TypeScript: Generics & Utility Types
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Generic functions and types. TypeScript utility types: `Partial`, `Required`, `Pick`, `Omit`, `Record`. Discriminated unions. Type guards. Using generics to write reusable API response wrappers.
@@ -1079,7 +1079,7 @@ Certificate block format:
 
 ### Topic 8.3 — Rate Limiting, Security Headers & OWASP Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Rate limiting with `express-rate-limit`. Security headers with `helmet`. Input sanitisation. OWASP Top 10 overview: injection, broken auth, sensitive data exposure, security misconfiguration. Practical checklist.
@@ -1098,7 +1098,7 @@ Certificate block format:
 
 ### Topic 8.4 — Emails, Background Jobs & Queues
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** Sending transactional emails with Resend (free tier). Email verification on registration. Password reset flow. Background job concepts — why long tasks shouldn't block HTTP responses. Introduction to BullMQ for job queues (optional).

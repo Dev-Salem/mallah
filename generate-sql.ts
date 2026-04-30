@@ -45,8 +45,8 @@ function generateSql() {
 
                 sql += `  DECLARE\n    ${topicVar}_id uuid;\n`;
                 sql += `  BEGIN\n`;
-                sql += `    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)\n`;
-                sql += `    VALUES (${stageVar}_id, '${topic.title.replace(/'/g, "''")}', '${topic.description.replace(/'/g, "''")}', '${tType}', ${topic.estimatedTime}, '${sanitizedDiff}', ${topic.orderIndex})\n`;
+                sql += `    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)\n`;
+                sql += `    VALUES (${stageVar}_id, '${topic.title.replace(/'/g, "''")}', '${topic.description.replace(/'/g, "''")}', '${tType}', ${topic.estimatedTime}, '${topic.estimatedTimeText.replace(/'/g, "''")}', '${sanitizedDiff}', ${topic.orderIndex})\n`;
                 sql += `    RETURNING topic_id INTO ${topicVar}_id;\n\n`;
 
                 // Resources

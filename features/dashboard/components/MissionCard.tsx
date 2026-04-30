@@ -10,9 +10,10 @@ import type { DashboardMission } from '../types';
 interface MissionCardProps {
     mission: DashboardMission;
     estimatedTime?: number | null;
+    estimatedTimeText?: string | null;
 }
 
-export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
+export function MissionCard({ mission, estimatedTime, estimatedTimeText }: MissionCardProps) {
     const locale = useLocale();
     const isArabic = locale === 'ar';
 
@@ -53,12 +54,12 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
                 </p>
 
                 {/* Estimated time - Tactical Pill */}
-                {estimatedTime && (
+                {(estimatedTimeText || estimatedTime) && (
                     <div className={cn(
                         "inline-flex items-center text-xs font-mono text-primary uppercase mb-6 px-2 py-0.5 bg-primary/5 border border-primary/10 font-bold",
                         !isArabic && "tracking-widest"
                     )}>
-                        Est. {estimatedTime} min
+                        Est. {estimatedTimeText || `${estimatedTime} min`}
                     </div>
                 )}
 

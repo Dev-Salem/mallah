@@ -48,18 +48,18 @@ export function GreetingBar({ learner, path, stage, paceStatus }: GreetingBarPro
                     "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-muted-foreground uppercase",
                     !isArabic && "tracking-[0.12em]"
                 )}>
-                    <div className="flex items-center gap-1.5 font-bold">
-                        <span className="opacity-50">Path:</span>
+                    <div className="flex items-center gap-1.5 font-black">
+                        <span className="text-muted-foreground/70">Path:</span>
                         <span className="text-foreground">{path.path_display_name}</span>
                     </div>
-                    <span className="opacity-20">·</span>
-                    <div className="flex items-center gap-1.5 font-bold">
-                        <span className="opacity-50">Stage:</span>
+                    <span className="text-primary/40 font-black">·</span>
+                    <div className="flex items-center gap-1.5 font-black">
+                        <span className="text-muted-foreground/70">Stage:</span>
                         <span className="text-foreground">{stage.current_stage_title}</span>
                     </div>
-                    <span className="opacity-20">·</span>
-                    <div className="flex items-center gap-1.5 font-bold">
-                        <span className="opacity-50">Goal:</span>
+                    <span className="text-primary/40 font-black">·</span>
+                    <div className="flex items-center gap-1.5 font-black">
+                        <span className="text-muted-foreground/70">Goal:</span>
                         <span className="text-foreground">{goalLabel}</span>
                     </div>
                 </div>

@@ -40,11 +40,14 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
         <div className="flex items-center gap-3">
                 <div className="relative">
                     <Flame className={cn(
-                        "w-8 h-8 shrink-0 transition-colors",
+                        "w-8 h-8 shrink-0 transition-all duration-300",
                         isStreakActive 
-                            ? "text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.6)] animate-pulse" 
-                            : "text-muted-foreground/50"
+                            ? "text-orange-500 drop-shadow-[0_0_12px_rgba(249,115,22,0.8)] animate-pulse scale-110" 
+                            : "text-muted-foreground/30 border-orange-500/10"
                     )} />
+                    {!isStreakActive && (
+                        <Flame className="w-8 h-8 absolute inset-0 text-orange-500/5 blur-[1px]" />
+                    )}
                     {isStreakActive && (
                         <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full animate-pulse" />
                     )}
@@ -59,25 +62,25 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
                                 {pace.streak_days}
                             </span>
                             <span className={cn(
-                                "text-xs font-mono text-primary/80 uppercase font-bold",
+                                "text-xs font-mono text-primary uppercase font-bold",
                                 !isArabic && "tracking-widest"
                             )}>
-                                day streak ignited
+                                Day Streak Active
                             </span>
                         </div>
                     ) : (
                         <div className="flex flex-col">
                             <span className={cn(
-                                "text-sm font-bold text-muted-foreground",
+                                "text-sm font-bold text-muted-foreground/80",
                                 !isArabic && "tracking-tight"
                             )}>
                                 {isArabic ? "ابدأ سلسلة نشاطك" : "Start your streak"}
                             </span>
                             <span className={cn(
-                                "text-xs font-mono text-muted-foreground uppercase",
+                                "text-xs font-mono text-muted-foreground/60 uppercase font-bold",
                                 !isArabic && "tracking-wider"
                             )}>
-                                {isArabic ? "لا يوجد نشاط مسجل اليوم" : "No activity logged today"}
+                                {isArabic ? "لا يوجد نشاط مسجل اليوم" : "Ready for action"}
                             </span>
                         </div>
                     )}
@@ -87,10 +90,10 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
             {/* Weekly Sessions */}
             <div>
                 <div className={cn(
-                    "text-xs font-mono text-muted-foreground uppercase mb-2",
+                    "text-xs font-mono text-foreground uppercase mb-3 font-bold",
                     !isArabic && "tracking-[0.15em]"
                 )}>
-                    This week
+                    Weekly Progress
                 </div>
 
                 {/* Day dots */}
@@ -114,8 +117,8 @@ export function PaceMomentumStrip({ pace }: PaceMomentumStripProps) {
                 </div>
 
                 {/* Session count */}
-                <div className="text-xs text-muted-foreground">
-                    {pace.sessions_this_week} of {pace.target_sessions_per_week} sessions
+                <div className="text-sm text-foreground font-medium mt-2">
+                    {pace.sessions_this_week} of {pace.target_sessions_per_week} sessions completed
                 </div>
             </div>
 

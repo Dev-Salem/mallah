@@ -53,7 +53,7 @@ Certificate block format:
 
 ### Topic 1.1 — How Networks Work: The OSI & TCP/IP Models
 **Type:** Concept + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** The OSI 7-layer model and TCP/IP 4-layer model. What each layer does. Data encapsulation. IP addresses (IPv4, IPv6), subnetting basics (CIDR notation). DNS, DHCP, ARP — what they do and why they matter to security. Ports: well-known, registered, dynamic.
@@ -72,7 +72,7 @@ Certificate block format:
 
 ### Topic 1.2 — Protocols That Matter for Security: HTTP, HTTPS, DNS, FTP, SSH, SMTP
 **Type:** Concept + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** How HTTP/HTTPS work: request-response, methods (GET/POST/PUT/DELETE), headers, cookies, status codes. How HTTPS/TLS protects traffic. DNS as an attack vector (DNS poisoning, DNS hijacking). FTP plaintext dangers. SSH key-based auth. SMTP and email attack vectors. How to read network packets.
@@ -92,7 +92,7 @@ Certificate block format:
 
 ### Topic 1.3 — Operating Systems: Windows & Linux Security Architecture
 **Type:** Concept + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Windows security model: NTFS permissions, User Account Control (UAC), Windows Registry, Active Directory basics, Windows Event Logs, PowerShell. Linux security model: users/groups, permissions (rwx), sudo, /etc/passwd and /etc/shadow, processes, cron jobs. Why both matter to ethical hackers.
@@ -112,7 +112,7 @@ Certificate block format:
 
 ### Topic 1.4 — Virtualisation & Building Your Home Lab
 **Type:** Setup + Practice
-**Estimated Time:** 3 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Why a home lab? Virtualisation: VirtualBox (free) or VMware. Setting up Kali Linux as an attacker machine. Setting up intentionally vulnerable VMs: Metasploitable2, DVWA (Damn Vulnerable Web Application). Network isolation: internal network vs NAT vs bridged. Snapshots for safe practice.
@@ -132,7 +132,7 @@ Certificate block format:
 
 ### Topic 1.5 — The Ethical Hacking Framework: Methodology & Legal Foundations
 **Type:** Concept
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1–1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** The five phases of ethical hacking: Reconnaissance → Scanning → Gaining Access → Maintaining Access → Covering Tracks. Scope and rules of engagement. Types of pentesting: black box, grey box, white box. Legal frameworks: Computer Fraud and Abuse Act (US), Computer Misuse Act (UK), and equivalent. Bug bounty programs: what they are, how they work, what legal protections they provide. CVE, CWE, CVSS scoring.
@@ -152,7 +152,7 @@ Certificate block format:
 
 ### Topic 1.6 — Python & Bash for Security Scripting
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Why scripting matters for security professionals. Bash: for loops, conditionals, variables, reading files, piping, cron. Python: file handling, `socket` module, `requests` library, subprocess, parsing JSON. Automating repetitive security tasks. Writing a simple port scanner in Python.
@@ -208,7 +208,7 @@ Certificate block format:
 
 ### Topic 2.1 — Linux Command Line Deep Dive
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** File system navigation: `ls`, `cd`, `pwd`, `find`, `locate`. File operations: `cp`, `mv`, `rm`, `mkdir`, `cat`, `less`, `head`, `tail`. Text processing: `grep`, `awk`, `sed`, `cut`, `sort`, `uniq`. Piping and redirection. Process management: `ps`, `top`, `htop`, `kill`. Package management: `apt`. Wildcards and regular expressions.
@@ -228,7 +228,7 @@ Certificate block format:
 
 ### Topic 2.2 — Linux File Permissions, Users & Privilege Escalation Concepts
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** `chmod`, `chown`, `chgrp`. SUID, SGID, sticky bit. `/etc/passwd`, `/etc/shadow` — structure and what hashed passwords look like. `sudo` configuration (`/etc/sudoers`). Weak sudo rules as a privilege escalation vector. `crontab` misuse. World-writable directories.
@@ -248,7 +248,7 @@ Certificate block format:
 
 ### Topic 2.3 — Bash Scripting for Security Automation
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Variables, conditionals, loops, functions, arguments. Reading input. File I/O. Running system commands from scripts. Error handling. Practical security use cases: log parsing, automated scanning, alerting.
@@ -268,7 +268,7 @@ Certificate block format:
 
 ### Topic 2.4 — Networking Tools: Netcat, SSH Tunnelling & Port Forwarding
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Netcat ("the Swiss Army knife"): connecting, listening, file transfer, bind and reverse shells. SSH: key generation, agent forwarding, local port forwarding (`-L`), remote port forwarding (`-R`), dynamic SOCKS proxy (`-D`). Why these matter for penetration testers (pivoting, tunnelling through firewalls).
@@ -288,7 +288,7 @@ Certificate block format:
 
 ### Topic 2.5 — Python for Offensive Security
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** `socket` for raw network connections. `requests` for HTTP interaction and fuzzing. `scapy` for packet crafting. Regular expressions for parsing tool output. Writing a basic vulnerability scanner. Automating Burp Suite via its API.
@@ -342,7 +342,7 @@ Certificate block format:
 
 ### Topic 3.1 — The CIA Triad & Security Principles
 **Type:** Concept
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1–1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Confidentiality, Integrity, Availability — and what attacks on each look like. Authentication vs Authorisation vs Accounting (AAA). Least privilege, defence in depth, separation of duties. Attack types: active vs passive, insider vs outsider. NIST Cybersecurity Framework 2.0: Identify, Protect, Detect, Respond, Recover.
@@ -361,7 +361,7 @@ Certificate block format:
 
 ### Topic 3.2 — Cryptography: Encryption, Hashing & TLS
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Symmetric encryption: AES — how it works, key sizes, modes (CBC, GCM). Asymmetric encryption: RSA, elliptic curve — public/private key pairs, key exchange. Hashing: SHA-256, MD5 (deprecated) — properties, salting, rainbow tables. Digital signatures. TLS handshake step by step. PKI: certificates, CAs, certificate chains.
@@ -381,7 +381,7 @@ Certificate block format:
 
 ### Topic 3.3 — Common Attack Patterns: OWASP Top 10 Overview
 **Type:** Concept + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Overview of OWASP Top 10 2021: Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Authentication Failures, Software Integrity Failures, Logging Failures, SSRF. What each means practically and how each is exploited.
@@ -401,7 +401,7 @@ Certificate block format:
 
 ### Topic 3.4 — Threat Modelling & Vulnerability Management
 **Type:** Concept + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** STRIDE threat model (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege). Vulnerability scanning vs penetration testing. CVE and NVD databases. CVSS scoring: base, temporal, environmental. Reading vulnerability advisories. Responsible disclosure process.
@@ -421,7 +421,7 @@ Certificate block format:
 
 ### Topic 3.5 — Password Security: Hashing, Cracking & Best Practices
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** How password hashes are stored. Hash types: MD5, NTLM, SHA-1, bcrypt, Argon2. Rainbow tables. Dictionary attacks vs brute force vs rule-based attacks. John the Ripper basics. Hashcat basics. `rockyou.txt` wordlist. Password managers and MFA as defences.
@@ -473,7 +473,7 @@ Certificate block format:
 
 ### Topic 4.1 — Nmap: Network Scanning & Enumeration
 **Type:** Lesson + Lab
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Nmap scan types: TCP SYN (`-sS`), TCP connect (`-sT`), UDP (`-sU`). OS detection (`-O`). Service version detection (`-sV`). Nmap Scripting Engine (NSE): using and writing scripts. Timing and stealth: `-T0` through `-T5`. Output formats: normal, XML, grepable. Scanning from TryHackMe vs home lab.
@@ -493,7 +493,7 @@ Certificate block format:
 
 ### Topic 4.2 — Wireshark: Packet Capture & Traffic Analysis
 **Type:** Lesson + Lab
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Capturing traffic (interface selection, capture filters). Display filters: `ip.addr`, `tcp.port`, `http`, `dns`. Following TCP streams. Protocol dissection: HTTP, DNS, FTP (seeing plaintext credentials). Exporting objects (files from HTTP captures). Identifying suspicious patterns: port scans, brute force, C2 beacons.
@@ -513,7 +513,7 @@ Certificate block format:
 
 ### Topic 4.3 — Enumeration: SMB, FTP, SSH, SMTP & Web Services
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Service enumeration beyond port scanning. SMB: `enum4linux`, `smbclient`, null sessions, share enumeration. FTP: anonymous login, banner grabbing. SSH: version fingerprinting, user enumeration. SMTP: `VRFY` and `EXPN` for user enumeration. Web: HTTP header analysis, directory brute-forcing with Gobuster.
@@ -533,7 +533,7 @@ Certificate block format:
 
 ### Topic 4.4 — Vulnerability Scanning with OpenVAS & Nikto
 **Type:** Lesson + Lab
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Automated vulnerability scanners vs manual penetration testing. OpenVAS/Greenbone: setting up, running a full scan, interpreting results. Nikto for web server scanning. False positives and why scanners aren't enough. Integrating scanner results into a pentest workflow.
@@ -553,7 +553,7 @@ Certificate block format:
 
 ### Topic 4.5 — Wireless Security Fundamentals
 **Type:** Concept + Lab (optional hardware)
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** WiFi security protocols: WEP (broken), WPA2-Personal, WPA2-Enterprise, WPA3. Evil twin attacks. WPA2 handshake capture and offline dictionary attack concept. Aircrack-ng overview. Rogue access points. Protecting wireless networks. **Note:** Practise only on your own wireless network or in a contained lab setup. Never scan or attack networks you don't own.
@@ -612,7 +612,7 @@ Certificate block format:
 
 ### Topic 5.1 — Burp Suite: Web Proxy & Interception
 **Type:** Lesson + Lab
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Burp Suite architecture: Proxy, Scanner, Intruder, Repeater, Decoder, Comparer, Sequencer. Intercepting HTTP/HTTPS traffic. Editing requests. Sending to Repeater for manual testing. Using Intruder for automated fuzzing. Burp's passive scanner in Community Edition. Setting up FoxyProxy.
@@ -632,7 +632,7 @@ Certificate block format:
 
 ### Topic 5.2 — SQL Injection: Detection, Exploitation & Defence
 **Type:** Lesson + Lab
-**Estimated Time:** 3 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Intermediate
 
 **Description:** How SQL injection works: unsanitised input becomes part of a query. Types: classic (error-based), blind (boolean and time-based), union-based, out-of-band. Manual testing with Burp Repeater. SQLMap for automated exploitation. Impact: data theft, authentication bypass, RCE (in some cases). Defence: parameterised queries (prepared statements), ORMs, WAFs.
@@ -653,7 +653,7 @@ Certificate block format:
 
 ### Topic 5.3 — Cross-Site Scripting (XSS): Reflected, Stored & DOM
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** How XSS works: injecting JavaScript into a page that other users see. Types: reflected (requires a link), stored (persists in the database, affects all users), DOM-based (client-side only). Real impact: session cookie theft, keylogging, credential harvesting, malware delivery. BeEF framework overview. Defence: output encoding, Content Security Policy (CSP).
@@ -673,7 +673,7 @@ Certificate block format:
 
 ### Topic 5.4 — Authentication & Session Attacks
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Insecure Direct Object References (IDOR). Session hijacking using stolen cookies. Broken authentication: credential stuffing, weak lockout policies, predictable session tokens. CSRF: forging requests as a logged-in user. Insecure "remember me" implementations. JWT attacks: `none` algorithm, weak secret brute-forcing.
@@ -693,7 +693,7 @@ Certificate block format:
 
 ### Topic 5.5 — File Inclusion, Upload & Command Injection
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Local File Inclusion (LFI): reading arbitrary files. Remote File Inclusion (RFI): executing remote code. Directory traversal (`../../../etc/passwd`). Insecure file upload: bypassing extension checks to upload PHP webshells. Command injection: injecting OS commands via web parameters (`; ls -la`). Server-Side Template Injection (SSTI) overview.
@@ -713,7 +713,7 @@ Certificate block format:
 
 ### Topic 5.6 — API Security Testing
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** REST API security: testing endpoints, authentication bypass, mass assignment, excessive data exposure. GraphQL security: introspection, batching attacks. API documentation as an attack map (Swagger/OpenAPI). Broken Object Level Authorisation (BOLA — API-specific IDOR). Fuzzing API parameters.
@@ -774,7 +774,7 @@ Certificate block format:
 
 ### Topic 6.1 — Metasploit Framework
 **Type:** Lesson + Lab
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Metasploit architecture: modules (exploits, payloads, auxiliaries, post). `msfconsole` workflow. Searching for exploits. `show options`, `set`, `run`. Meterpreter shell. Staged vs stageless payloads. MSFvenom for payload generation. Using Metasploit responsibly.
@@ -794,7 +794,7 @@ Certificate block format:
 
 ### Topic 6.2 — Windows Privilege Escalation
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Windows privesc: unquoted service paths, weak service permissions, always install elevated, token impersonation, pass-the-hash, Mimikatz (theory and lab use). WinPEAS automated enumeration. UAC bypass techniques. Scheduled tasks as privesc vectors.
@@ -814,7 +814,7 @@ Certificate block format:
 
 ### Topic 6.3 — Linux Privilege Escalation
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Linux privesc: SUID binaries, sudo misconfigurations, cron job abuse, writable `/etc/passwd`, PATH hijacking, kernel exploits, Docker breakouts. LinPEAS/Linux Smart Enumeration. Capabilities abuse.
@@ -834,7 +834,7 @@ Certificate block format:
 
 ### Topic 6.4 — Active Directory Attacks (Introduction)
 **Type:** Lesson + Lab
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** What Active Directory is and why it's the crown jewel of corporate networks. Kerberos authentication basics. Attack techniques: Pass-the-Hash, Pass-the-Ticket, Kerberoasting, AS-REP Roasting, LDAP enumeration with BloodHound, DCSync. BloodHound for attack path visualisation.
@@ -854,7 +854,7 @@ Certificate block format:
 
 ### Topic 6.5 — Post-Exploitation: Persistence, Pivoting & Covering Tracks
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Post-exploitation goals: maintain access, move laterally, exfiltrate data. Persistence: adding backdoor users, scheduled tasks, startup scripts, Meterpreter persistence. Pivoting: using a compromised host as a jump point to reach otherwise inaccessible networks. Covering tracks: clearing logs (and why this is usually detected). Data exfiltration techniques.
@@ -911,7 +911,7 @@ Certificate block format:
 
 ### Topic 7.1 — Security Operations & SIEM
 **Type:** Lesson + Lab
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** What is a SOC (Security Operations Centre)? Security Information and Event Management (SIEM). Log sources: Windows Event Logs, Linux syslog, network logs, application logs. Log analysis fundamentals. Splunk basics (free tier) or Elastic Stack (ELK). Correlation rules. Writing detection rules for attacks you've already performed (Nmap scans, brute force, exploitation).
@@ -931,7 +931,7 @@ Certificate block format:
 
 ### Topic 7.2 — Incident Response
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** The incident response lifecycle: Preparation → Identification → Containment → Eradication → Recovery → Lessons Learned. Indicators of Compromise (IoCs). Triage: triaging alert queue, distinguishing true positives from false positives. Memory forensics intro. Disk forensics intro. Writing an incident response plan.
@@ -951,7 +951,7 @@ Certificate block format:
 
 ### Topic 7.3 — Defensive Hardening: Firewalls, IDS/IPS & Zero Trust
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Firewalls: stateful vs stateless, rule ordering, network segmentation. IDS vs IPS: signature-based vs anomaly-based. Snort/Suricata rule writing. Zero Trust Architecture: "never trust, always verify." Microsegmentation. Secure configuration baselines: CIS Benchmarks. Defence in depth.
@@ -971,7 +971,7 @@ Certificate block format:
 
 ### Topic 7.4 — Threat Intelligence & the MITRE ATT&CK Framework
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is cyber threat intelligence? Tactical, operational, strategic intelligence. IoC types: hashes, IPs, domains, TTPs. MITRE ATT&CK: tactics, techniques, sub-techniques, groups, software. Using ATT&CK Navigator to map detections. Threat hunting basics. OSINT for threat intelligence.
@@ -1046,7 +1046,7 @@ Certificate block format:
 
 ### Topic 8.2 — Bug Bounty Hunting: Getting Started
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** How bug bounty programs work: in-scope vs out-of-scope, responsible disclosure, reward tiers. Top platforms: HackerOne, Bugcrowd, Intigriti. Choosing a program. Recon for bug bounty: subdomain enumeration (Subfinder, Amass), OSINT techniques, identifying attack surface. What gets rewarded vs what gets duplicated or won't-fixed.
@@ -1066,7 +1066,7 @@ Certificate block format:
 
 ### Topic 8.3 — Reverse Engineering & Binary Exploitation Basics
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Introduction to reverse engineering: what it is, when it's needed. Static analysis: strings, file type identification, disassembly with Ghidra (free). Dynamic analysis: running in a sandbox. Basic buffer overflow concept: stack layout, overwriting the return address. picoCTF and PWN challenges for practice.
@@ -1085,7 +1085,7 @@ Certificate block format:
 
 ### Topic 8.4 — Cloud Security Fundamentals
 **Type:** Lesson + Lab
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Cloud security shared responsibility model. AWS security basics: IAM policies, S3 bucket misconfigurations, EC2 security groups, CloudTrail logging. Common cloud misconfigurations: public S3 buckets, overly permissive IAM roles, exposed metadata endpoints. AWS free tier for practice. Cloud pentesting tools: Pacu, Scout Suite.

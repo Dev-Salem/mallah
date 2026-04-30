@@ -36,7 +36,7 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
             <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-primary" />
                 <span className={cn(
-                    "text-xs font-mono text-muted-foreground uppercase font-black",
+                    "text-xs font-mono text-foreground uppercase font-black",
                     !isArabic && "tracking-[0.2em]"
                 )}>
                     Performance Analysis
@@ -53,7 +53,7 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
                         Overall Path
                     </span>
                     <span className="text-xs font-mono text-muted-foreground font-bold">
-                        {topics.completed_topics} / {topics.total_mandatory_topics} <span className="opacity-50">LESSONS</span>
+                        {topics.completed_topics} / {topics.total_mandatory_topics} <span className="text-muted-foreground/60">LESSONS</span>
                     </span>
                 </div>
                 <div className="h-2 bg-muted/30 overflow-hidden border border-primary/5">
@@ -70,7 +70,7 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
                     <span className="text-xs font-mono text-muted-foreground uppercase font-bold">
                         Current: <span className="text-foreground">{stage.current_stage_title}</span>
                     </span>
-                    <span className="text-xs font-mono text-muted-foreground">
+                    <span className="text-xs font-mono text-muted-foreground font-bold">
                         {stage.stage_completed_topics} / {stage.stage_total_topics} topics
                     </span>
                 </div>
@@ -84,10 +84,10 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
 
             {/* Forecast Line */}
             {estimatedDays && estimatedDays > 0 && (
-                <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground font-medium">
-                    <div className="w-1 h-1 rounded-full bg-primary/40" />
+                <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground font-bold">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                     <p>
-                        Completion Estimate: <span className="text-foreground font-bold">{estimatedDays} days</span> at current velocity.
+                        Completion Estimate: <span className="text-foreground font-black">{estimatedDays} days</span> at current velocity.
                     </p>
                 </div>
             )}

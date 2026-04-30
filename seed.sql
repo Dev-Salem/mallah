@@ -11,8 +11,8 @@ BEGIN
   DECLARE
     topic_frontend_1_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'How the Web Works', '', 'concept', 45, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'How the Web Works', '', 'concept', 60, '1 hr', 'beginner', 1)
     RETURNING topic_id INTO topic_frontend_1_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -29,8 +29,8 @@ BEGIN
   DECLARE
     topic_frontend_1_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'HTML Structure & Semantics', '', 'lesson', 2, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'HTML Structure & Semantics', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_frontend_1_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -45,8 +45,8 @@ BEGIN
   DECLARE
     topic_frontend_1_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'HTML Forms & Tables', '', 'lesson', 1, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'HTML Forms & Tables', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_frontend_1_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -61,8 +61,8 @@ BEGIN
   DECLARE
     topic_frontend_1_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'Intro to CSS: Selectors, Colors & Typography', '', 'lesson', 2, 'beginner', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'Intro to CSS: Selectors, Colors & Typography', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 4)
     RETURNING topic_id INTO topic_frontend_1_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -77,8 +77,8 @@ BEGIN
   DECLARE
     topic_frontend_1_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'The Box Model', '', 'lesson', 1, 'beginner', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'The Box Model', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 5)
     RETURNING topic_id INTO topic_frontend_1_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -95,8 +95,8 @@ BEGIN
   DECLARE
     topic_frontend_1_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'CSS Positioning & Display', '', 'lesson', 2, 'beginner', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'CSS Positioning & Display', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 6)
     RETURNING topic_id INTO topic_frontend_1_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -111,8 +111,8 @@ BEGIN
   DECLARE
     topic_frontend_1_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'PROJECT: Personal Profile Page', '', 'project_milestone', 4, 'beginner', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_1_id, 'PROJECT: Personal Profile Page', '', 'project_milestone', 300, '4–6 hrs', 'beginner', 7)
     RETURNING topic_id INTO topic_frontend_1_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -143,8 +143,8 @@ BEGIN
   DECLARE
     topic_frontend_2_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_2_id, 'Flexbox', '', 'lesson', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_2_id, 'Flexbox', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_frontend_2_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -161,8 +161,8 @@ BEGIN
   DECLARE
     topic_frontend_2_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_2_id, 'CSS Grid', '', 'lesson', 2, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_2_id, 'CSS Grid', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_frontend_2_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -179,8 +179,8 @@ BEGIN
   DECLARE
     topic_frontend_2_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_2_id, 'Responsive Design & Media Queries', '', 'lesson', 2, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_2_id, 'Responsive Design & Media Queries', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_frontend_2_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -195,8 +195,8 @@ BEGIN
   DECLARE
     topic_frontend_2_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_2_id, 'Tailwind CSS', '', 'lesson', 2, 'beginner', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_2_id, 'Tailwind CSS', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 4)
     RETURNING topic_id INTO topic_frontend_2_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -211,8 +211,8 @@ BEGIN
   DECLARE
     topic_frontend_2_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_2_id, 'CSS Animations & Transitions', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_2_id, 'CSS Animations & Transitions', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_frontend_2_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -227,8 +227,8 @@ BEGIN
   DECLARE
     topic_frontend_2_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_2_id, 'PROJECT: Responsive Landing Page', '', 'project_milestone', 6, 'beginner', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_2_id, 'PROJECT: Responsive Landing Page', '', 'project_milestone', 420, '6–8 hrs', 'beginner', 6)
     RETURNING topic_id INTO topic_frontend_2_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -259,8 +259,8 @@ BEGIN
   DECLARE
     topic_frontend_3_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'JavaScript Basics', '', 'lesson', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'JavaScript Basics', '', 'lesson', 270, '4–5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_frontend_3_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -275,8 +275,8 @@ BEGIN
   DECLARE
     topic_frontend_3_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'Functions & Scope', '', 'lesson', 2, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'Functions & Scope', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_frontend_3_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -291,8 +291,8 @@ BEGIN
   DECLARE
     topic_frontend_3_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'Arrays & Objects', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'Arrays & Objects', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_frontend_3_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -307,8 +307,8 @@ BEGIN
   DECLARE
     topic_frontend_3_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'The DOM: Selecting & Manipulating Elements', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'The DOM: Selecting & Manipulating Elements', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_frontend_3_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -323,8 +323,8 @@ BEGIN
   DECLARE
     topic_frontend_3_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'Events & User Interaction', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'Events & User Interaction', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_frontend_3_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -339,8 +339,8 @@ BEGIN
   DECLARE
     topic_frontend_3_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'Async JavaScript: Promises & Fetch', '', 'lesson', 2, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'Async JavaScript: Promises & Fetch', '', 'lesson', 270, '4–5 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_frontend_3_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -357,8 +357,8 @@ BEGIN
   DECLARE
     topic_frontend_3_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'Local Storage & State', '', 'lesson', 1, 'intermediate', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'Local Storage & State', '', 'lesson', 210, '3–4 hrs', 'intermediate', 7)
     RETURNING topic_id INTO topic_frontend_3_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -373,8 +373,8 @@ BEGIN
   DECLARE
     topic_frontend_3_8_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_3_id, 'PROJECT: Interactive Quiz App', '', 'project_milestone', 8, 'intermediate', 8)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_3_id, 'PROJECT: Interactive Quiz App', '', 'project_milestone', 600, '8–12 hrs', 'intermediate', 8)
     RETURNING topic_id INTO topic_frontend_3_8_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -403,8 +403,8 @@ BEGIN
   DECLARE
     topic_frontend_4_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_4_id, 'Git & GitHub Fundamentals', '', 'lesson', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_4_id, 'Git & GitHub Fundamentals', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_frontend_4_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -421,8 +421,8 @@ BEGIN
   DECLARE
     topic_frontend_4_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_4_id, 'GitHub Workflow: Branches & Pull Requests', '', 'lesson', 1, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_4_id, 'GitHub Workflow: Branches & Pull Requests', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_frontend_4_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -439,8 +439,8 @@ BEGIN
   DECLARE
     topic_frontend_4_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_4_id, 'Browser DevTools Deep Dive', '', 'lesson', 2, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_4_id, 'Browser DevTools Deep Dive', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_frontend_4_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -455,8 +455,8 @@ BEGIN
   DECLARE
     topic_frontend_4_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_4_id, 'Deployment: Vercel, Netlify & GitHub Pages', '', 'lesson', 1, 'beginner', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_4_id, 'Deployment: Vercel, Netlify & GitHub Pages', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 4)
     RETURNING topic_id INTO topic_frontend_4_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -473,8 +473,8 @@ BEGIN
   DECLARE
     topic_frontend_4_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_4_id, 'PROJECT: Live Portfolio Site v1', '', 'project_milestone', 6, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_4_id, 'PROJECT: Live Portfolio Site v1', '', 'project_milestone', 420, '6–8 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_frontend_4_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -511,8 +511,8 @@ BEGIN
   DECLARE
     topic_frontend_5_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'Why React? Components & JSX', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'Why React? Components & JSX', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_frontend_5_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -529,8 +529,8 @@ BEGIN
   DECLARE
     topic_frontend_5_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'State & useState Hook', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'State & useState Hook', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_frontend_5_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -545,8 +545,8 @@ BEGIN
   DECLARE
     topic_frontend_5_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'useEffect & Data Fetching', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'useEffect & Data Fetching', '', 'lesson', 270, '4–5 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_frontend_5_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -563,8 +563,8 @@ BEGIN
   DECLARE
     topic_frontend_5_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'Lists, Keys & Conditional Rendering', '', 'lesson', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'Lists, Keys & Conditional Rendering', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_frontend_5_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -579,8 +579,8 @@ BEGIN
   DECLARE
     topic_frontend_5_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'React Router: Multi-Page Apps', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'React Router: Multi-Page Apps', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_frontend_5_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -595,8 +595,8 @@ BEGIN
   DECLARE
     topic_frontend_5_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'Forms & Validation in React', '', 'lesson', 2, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'Forms & Validation in React', '', 'lesson', 210, '3–4 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_frontend_5_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -611,8 +611,8 @@ BEGIN
   DECLARE
     topic_frontend_5_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'Context API & Global State', '', 'lesson', 2, 'intermediate', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'Context API & Global State', '', 'lesson', 210, '3–4 hrs', 'intermediate', 7)
     RETURNING topic_id INTO topic_frontend_5_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -627,8 +627,8 @@ BEGIN
   DECLARE
     topic_frontend_5_8_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_5_id, 'PROJECT: Task Manager App', '', 'project_milestone', 10, 'intermediate', 8)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_5_id, 'PROJECT: Task Manager App', '', 'project_milestone', 720, '10–14 hrs', 'intermediate', 8)
     RETURNING topic_id INTO topic_frontend_5_8_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -659,8 +659,8 @@ BEGIN
   DECLARE
     topic_frontend_6_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'TypeScript for React Developers', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'TypeScript for React Developers', '', 'lesson', 330, '5–6 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_frontend_6_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -675,8 +675,8 @@ BEGIN
   DECLARE
     topic_frontend_6_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'Next.js: Routing, SSR & the App Router', '', 'lesson', 3, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'Next.js: Routing, SSR & the App Router', '', 'lesson', 330, '5–6 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_frontend_6_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -691,8 +691,8 @@ BEGIN
   DECLARE
     topic_frontend_6_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'API Routes & Server Actions', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'API Routes & Server Actions', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_frontend_6_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -709,8 +709,8 @@ BEGIN
   DECLARE
     topic_frontend_6_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'Tailwind CSS at Scale & Component Libraries', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'Tailwind CSS at Scale & Component Libraries', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_frontend_6_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -725,8 +725,8 @@ BEGIN
   DECLARE
     topic_frontend_6_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'State Management with Zustand', '', 'lesson', 1, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'State Management with Zustand', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_frontend_6_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -741,8 +741,8 @@ BEGIN
   DECLARE
     topic_frontend_6_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'React Query: Server State & Caching', '', 'lesson', 2, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'React Query: Server State & Caching', '', 'lesson', 210, '3–4 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_frontend_6_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -759,8 +759,8 @@ BEGIN
   DECLARE
     topic_frontend_6_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_6_id, 'PROJECT: Full-Featured Web App', '', 'project_milestone', 14, 'advanced', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_6_id, 'PROJECT: Full-Featured Web App', '', 'project_milestone', 1020, '14–20 hrs', 'advanced', 7)
     RETURNING topic_id INTO topic_frontend_6_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -795,8 +795,8 @@ BEGIN
   DECLARE
     topic_frontend_7_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_7_id, 'Web Performance Fundamentals', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_7_id, 'Web Performance Fundamentals', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_frontend_7_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -811,8 +811,8 @@ BEGIN
   DECLARE
     topic_frontend_7_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_7_id, 'Web Accessibility (a11y)', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_7_id, 'Web Accessibility (a11y)', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_frontend_7_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -827,8 +827,8 @@ BEGIN
   DECLARE
     topic_frontend_7_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_7_id, 'SEO for Frontend Developers', '', 'lesson', 1, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_7_id, 'SEO for Frontend Developers', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_frontend_7_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -843,8 +843,8 @@ BEGIN
   DECLARE
     topic_frontend_7_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_7_id, 'Testing Basics: Vitest & React Testing Library', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_7_id, 'Testing Basics: Vitest & React Testing Library', '', 'lesson', 270, '4–5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_frontend_7_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -859,8 +859,8 @@ BEGIN
   DECLARE
     topic_frontend_7_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_7_id, 'PROJECT: Final Portfolio (Polished)', '', 'project_milestone', 10, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_frontend_7_id, 'PROJECT: Final Portfolio (Polished)', '', 'project_milestone', 780, '10–16 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_frontend_7_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -897,8 +897,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'How the Web Works + Dev Environment Setup', '', 'concept', 1, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'How the Web Works + Dev Environment Setup', '', 'concept', 120, '1.5–2.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_fullstack_1_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -919,8 +919,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'HTML & Semantic Markup', '', 'lesson', 1, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'HTML & Semantic Markup', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_fullstack_1_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -935,8 +935,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'CSS, Flexbox & Tailwind', '', 'lesson', 2, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'CSS, Flexbox & Tailwind', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_fullstack_1_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -955,8 +955,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'JavaScript Core: Variables, Functions, Arrays & Objects', '', 'lesson', 3, 'beginner', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'JavaScript Core: Variables, Functions, Arrays & Objects', '', 'lesson', 270, '4–5 hrs', 'beginner', 4)
     RETURNING topic_id INTO topic_fullstack_1_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -971,8 +971,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'Async JavaScript: Promises, Fetch & async/await', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'Async JavaScript: Promises, Fetch & async/await', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_fullstack_1_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -989,8 +989,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'Git & GitHub Professional Workflow', '', 'lesson', 1, 'beginner', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'Git & GitHub Professional Workflow', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 6)
     RETURNING topic_id INTO topic_fullstack_1_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1007,8 +1007,8 @@ BEGIN
   DECLARE
     topic_fullstack_1_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_1_id, 'PROJECT: Static Portfolio Page', '', 'project_milestone', 4, 'beginner', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_1_id, 'PROJECT: Static Portfolio Page', '', 'project_milestone', 300, '4–6 hrs', 'beginner', 7)
     RETURNING topic_id INTO topic_fullstack_1_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1045,8 +1045,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'React: Components, Props & JSX', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'React: Components, Props & JSX', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_fullstack_2_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1063,8 +1063,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'State, useState & useEffect', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'State, useState & useEffect', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_fullstack_2_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1081,8 +1081,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'React Router & Multi-Page Apps', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'React Router & Multi-Page Apps', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_fullstack_2_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1097,8 +1097,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'TypeScript for React', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'TypeScript for React', '', 'lesson', 330, '5–6 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_fullstack_2_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1113,8 +1113,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'Forms, Validation & Context API', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'Forms, Validation & Context API', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_fullstack_2_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1129,8 +1129,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'Next.js: SSR, App Router & API Routes', '', 'lesson', 2, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'Next.js: SSR, App Router & API Routes', '', 'lesson', 210, '3–4 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_fullstack_2_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1145,8 +1145,8 @@ BEGIN
   DECLARE
     topic_fullstack_2_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_2_id, 'PROJECT: Frontend-Only SPA', '', 'project_milestone', 8, 'intermediate', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_2_id, 'PROJECT: Frontend-Only SPA', '', 'project_milestone', 540, '8–10 hrs', 'intermediate', 7)
     RETURNING topic_id INTO topic_fullstack_2_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1181,8 +1181,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'Node.js Fundamentals', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'Node.js Fundamentals', '', 'lesson', 270, '4–5 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_fullstack_3_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1197,8 +1197,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'Express.js: Routing & Middleware', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'Express.js: Routing & Middleware', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_fullstack_3_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1213,8 +1213,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'REST API Design Principles', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'REST API Design Principles', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_fullstack_3_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1231,8 +1231,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'Input Validation & Error Handling', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'Input Validation & Error Handling', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_fullstack_3_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1249,8 +1249,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'TypeScript on the Backend', '', 'lesson', 1, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'TypeScript on the Backend', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_fullstack_3_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1267,8 +1267,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'Environment Variables & Configuration', '', 'lesson', 1, 'beginner', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'Environment Variables & Configuration', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 6)
     RETURNING topic_id INTO topic_fullstack_3_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1283,8 +1283,8 @@ BEGIN
   DECLARE
     topic_fullstack_3_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_3_id, 'PROJECT: REST API Server', '', 'project_milestone', 8, 'intermediate', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_3_id, 'PROJECT: REST API Server', '', 'project_milestone', 600, '8–12 hrs', 'intermediate', 7)
     RETURNING topic_id INTO topic_fullstack_3_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1317,8 +1317,8 @@ BEGIN
   DECLARE
     topic_fullstack_4_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_4_id, 'Relational Databases & SQL Basics', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_4_id, 'Relational Databases & SQL Basics', '', 'lesson', 270, '4–5 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_fullstack_4_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1335,8 +1335,8 @@ BEGIN
   DECLARE
     topic_fullstack_4_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_4_id, 'Prisma ORM: Schema & Migrations', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_4_id, 'Prisma ORM: Schema & Migrations', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_fullstack_4_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1353,8 +1353,8 @@ BEGIN
   DECLARE
     topic_fullstack_4_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_4_id, 'CRUD Operations with Prisma Client', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_4_id, 'CRUD Operations with Prisma Client', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_fullstack_4_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1371,8 +1371,8 @@ BEGIN
   DECLARE
     topic_fullstack_4_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_4_id, 'Database Relations & Advanced Queries', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_4_id, 'Database Relations & Advanced Queries', '', 'lesson', 270, '4–5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_fullstack_4_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1389,8 +1389,8 @@ BEGIN
   DECLARE
     topic_fullstack_4_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_4_id, 'Database Seeding & Migrations in Production', '', 'lesson', 1, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_4_id, 'Database Seeding & Migrations in Production', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_fullstack_4_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1407,8 +1407,8 @@ BEGIN
   DECLARE
     topic_fullstack_4_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_4_id, 'PROJECT: Database-Backed API', '', 'project_milestone', 8, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_4_id, 'PROJECT: Database-Backed API', '', 'project_milestone', 600, '8–12 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_fullstack_4_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1443,8 +1443,8 @@ BEGIN
   DECLARE
     topic_fullstack_5_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_5_id, 'Authentication vs Authorization & Password Hashing', '', 'lesson', 1, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_5_id, 'Authentication vs Authorization & Password Hashing', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_fullstack_5_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1461,8 +1461,8 @@ BEGIN
   DECLARE
     topic_fullstack_5_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_5_id, 'JWT Authentication: Login & Protected Routes', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_5_id, 'JWT Authentication: Login & Protected Routes', '', 'lesson', 330, '5–6 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_fullstack_5_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1479,8 +1479,8 @@ BEGIN
   DECLARE
     topic_fullstack_5_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_5_id, 'Refresh Tokens & Secure Token Storage', '', 'lesson', 2, 'advanced', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_5_id, 'Refresh Tokens & Secure Token Storage', '', 'lesson', 270, '4–5 hrs', 'advanced', 3)
     RETURNING topic_id INTO topic_fullstack_5_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1495,8 +1495,8 @@ BEGIN
   DECLARE
     topic_fullstack_5_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_5_id, 'Role-Based Authorization (RBAC)', '', 'lesson', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_5_id, 'Role-Based Authorization (RBAC)', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_fullstack_5_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1511,8 +1511,8 @@ BEGIN
   DECLARE
     topic_fullstack_5_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_5_id, 'PROJECT: Auth System', '', 'project_milestone', 8, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_5_id, 'PROJECT: Auth System', '', 'project_milestone', 600, '8–12 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_fullstack_5_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1545,8 +1545,8 @@ BEGIN
   DECLARE
     topic_fullstack_6_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_6_id, 'Connecting React to Your API', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_6_id, 'Connecting React to Your API', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_fullstack_6_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1563,8 +1563,8 @@ BEGIN
   DECLARE
     topic_fullstack_6_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_6_id, 'Auth State in the Frontend', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_6_id, 'Auth State in the Frontend', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_fullstack_6_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1581,8 +1581,8 @@ BEGIN
   DECLARE
     topic_fullstack_6_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_6_id, 'File Uploads & Storage', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_6_id, 'File Uploads & Storage', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_fullstack_6_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1599,8 +1599,8 @@ BEGIN
   DECLARE
     topic_fullstack_6_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_6_id, 'Real-Time Features with WebSockets', '', 'lesson', 2, 'advanced', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_6_id, 'Real-Time Features with WebSockets', '', 'lesson', 330, '5–6 hrs', 'advanced', 4)
     RETURNING topic_id INTO topic_fullstack_6_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1617,8 +1617,8 @@ BEGIN
   DECLARE
     topic_fullstack_6_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_6_id, 'Search, Filtering & Pagination', '', 'lesson', 1, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_6_id, 'Search, Filtering & Pagination', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_fullstack_6_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1635,8 +1635,8 @@ BEGIN
   DECLARE
     topic_fullstack_6_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_6_id, 'PROJECT: Full-Stack App v1', '', 'project_milestone', 14, 'advanced', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_6_id, 'PROJECT: Full-Stack App v1', '', 'project_milestone', 1020, '14–20 hrs', 'advanced', 6)
     RETURNING topic_id INTO topic_fullstack_6_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1675,8 +1675,8 @@ BEGIN
   DECLARE
     topic_fullstack_7_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_7_id, 'Docker: Containerising Your App', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_7_id, 'Docker: Containerising Your App', '', 'lesson', 270, '4–5 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_fullstack_7_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1691,8 +1691,8 @@ BEGIN
   DECLARE
     topic_fullstack_7_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_7_id, 'GitHub Actions: CI/CD Pipelines', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_7_id, 'GitHub Actions: CI/CD Pipelines', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_fullstack_7_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1709,8 +1709,8 @@ BEGIN
   DECLARE
     topic_fullstack_7_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_7_id, 'Monitoring, Logging & Error Tracking', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_7_id, 'Monitoring, Logging & Error Tracking', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_fullstack_7_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1727,8 +1727,8 @@ BEGIN
   DECLARE
     topic_fullstack_7_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_7_id, 'Performance: Caching & Query Optimization', '', 'lesson', 2, 'advanced', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_7_id, 'Performance: Caching & Query Optimization', '', 'lesson', 270, '4–5 hrs', 'advanced', 4)
     RETURNING topic_id INTO topic_fullstack_7_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1745,8 +1745,8 @@ BEGIN
   DECLARE
     topic_fullstack_7_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_7_id, 'PROJECT: Production-Ready App', '', 'project_milestone', 8, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_7_id, 'PROJECT: Production-Ready App', '', 'project_milestone', 600, '8–12 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_fullstack_7_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1781,8 +1781,8 @@ BEGIN
   DECLARE
     topic_fullstack_8_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_8_id, 'API Testing with Vitest & Supertest', '', 'lesson', 2, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_8_id, 'API Testing with Vitest & Supertest', '', 'lesson', 270, '4–5 hrs', 'advanced', 1)
     RETURNING topic_id INTO topic_fullstack_8_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1797,8 +1797,8 @@ BEGIN
   DECLARE
     topic_fullstack_8_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_8_id, 'Advanced TypeScript: Generics & Utility Types', '', 'lesson', 1, 'advanced', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_8_id, 'Advanced TypeScript: Generics & Utility Types', '', 'lesson', 330, '5–6 hrs', 'advanced', 2)
     RETURNING topic_id INTO topic_fullstack_8_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1813,8 +1813,8 @@ BEGIN
   DECLARE
     topic_fullstack_8_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_8_id, 'Rate Limiting, Security Headers & OWASP Basics', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_8_id, 'Rate Limiting, Security Headers & OWASP Basics', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_fullstack_8_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1829,8 +1829,8 @@ BEGIN
   DECLARE
     topic_fullstack_8_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_8_id, 'Emails, Background Jobs & Queues', '', 'lesson', 2, 'advanced', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_8_id, 'Emails, Background Jobs & Queues', '', 'lesson', 270, '4–5 hrs', 'advanced', 4)
     RETURNING topic_id INTO topic_fullstack_8_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1845,8 +1845,8 @@ BEGIN
   DECLARE
     topic_fullstack_8_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_8_id, 'Capstone Planning & Architecture', '', 'lesson', 2, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_8_id, 'Capstone Planning & Architecture', '', 'lesson', 120, '2 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_fullstack_8_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1861,8 +1861,8 @@ BEGIN
   DECLARE
     topic_fullstack_8_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_fullstack_8_id, 'PROJECT: Capstone Full-Stack Product', '', 'project_capstone', 30, 'advanced', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_fullstack_8_id, 'PROJECT: Capstone Full-Stack Product', '', 'project_capstone', 2400, '30–50 hrs', 'advanced', 6)
     RETURNING topic_id INTO topic_fullstack_8_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1885,8 +1885,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'How Networks Work: The OSI & TCP/IP Models', '', 'concept', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'How Networks Work: The OSI & TCP/IP Models', '', 'concept', 120, '1.5–2.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_cybersecurity_1_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1901,8 +1901,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'Protocols That Matter for Security: HTTP, HTTPS, DNS, FTP, SSH, SMTP', '', 'concept', 2, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Protocols That Matter for Security: HTTP, HTTPS, DNS, FTP, SSH, SMTP', '', 'concept', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_cybersecurity_1_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1919,8 +1919,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'Operating Systems: Windows & Linux Security Architecture', '', 'concept', 2, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Operating Systems: Windows & Linux Security Architecture', '', 'concept', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_cybersecurity_1_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1937,8 +1937,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'Virtualisation & Building Your Home Lab', '', 'lesson', 3, 'beginner', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Virtualisation & Building Your Home Lab', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 4)
     RETURNING topic_id INTO topic_cybersecurity_1_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1955,8 +1955,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'The Ethical Hacking Framework: Methodology & Legal Foundations', '', 'concept', 1, 'beginner', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'The Ethical Hacking Framework: Methodology & Legal Foundations', '', 'concept', 75, '1–1.5 hrs', 'beginner', 5)
     RETURNING topic_id INTO topic_cybersecurity_1_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1973,8 +1973,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'Python & Bash for Security Scripting', '', 'lesson', 2, 'beginner', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'Python & Bash for Security Scripting', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 6)
     RETURNING topic_id INTO topic_cybersecurity_1_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -1993,8 +1993,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_1_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_1_id, 'PROJECT: Home Lab Setup & Documentation', '', 'project_milestone', 4, 'beginner', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_1_id, 'PROJECT: Home Lab Setup & Documentation', '', 'project_milestone', 300, '4–6 hrs', 'beginner', 7)
     RETURNING topic_id INTO topic_cybersecurity_1_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2025,8 +2025,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_2_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_2_id, 'Linux Command Line Deep Dive', '', 'lesson', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Linux Command Line Deep Dive', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_cybersecurity_2_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2043,8 +2043,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_2_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_2_id, 'Linux File Permissions, Users & Privilege Escalation Concepts', '', 'lesson', 1, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Linux File Permissions, Users & Privilege Escalation Concepts', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_cybersecurity_2_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2061,8 +2061,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_2_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_2_id, 'Bash Scripting for Security Automation', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Bash Scripting for Security Automation', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_cybersecurity_2_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2079,8 +2079,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_2_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_2_id, 'Networking Tools: Netcat, SSH Tunnelling & Port Forwarding', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Networking Tools: Netcat, SSH Tunnelling & Port Forwarding', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_cybersecurity_2_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2097,8 +2097,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_2_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_2_id, 'Python for Offensive Security', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'Python for Offensive Security', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_cybersecurity_2_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2115,8 +2115,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_2_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_2_id, 'PROJECT: Bash Automation Toolkit', '', 'project_milestone', 6, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_2_id, 'PROJECT: Bash Automation Toolkit', '', 'project_milestone', 420, '6–8 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_cybersecurity_2_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2147,8 +2147,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_3_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_3_id, 'The CIA Triad & Security Principles', '', 'concept', 1, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'The CIA Triad & Security Principles', '', 'concept', 75, '1–1.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_cybersecurity_3_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2163,8 +2163,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_3_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_3_id, 'Cryptography: Encryption, Hashing & TLS', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Cryptography: Encryption, Hashing & TLS', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_cybersecurity_3_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2181,8 +2181,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_3_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_3_id, 'Common Attack Patterns: OWASP Top 10 Overview', '', 'concept', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Common Attack Patterns: OWASP Top 10 Overview', '', 'concept', 270, '4–5 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_cybersecurity_3_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2199,8 +2199,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_3_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_3_id, 'Threat Modelling & Vulnerability Management', '', 'concept', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Threat Modelling & Vulnerability Management', '', 'concept', 120, '1.5–2.5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_cybersecurity_3_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2217,8 +2217,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_3_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_3_id, 'Password Security: Hashing, Cracking & Best Practices', '', 'lesson_lab', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'Password Security: Hashing, Cracking & Best Practices', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_cybersecurity_3_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2235,8 +2235,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_3_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_3_id, 'PROJECT: Security Audit Report', '', 'project_milestone', 6, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_3_id, 'PROJECT: Security Audit Report', '', 'project_milestone', 420, '6–8 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_cybersecurity_3_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2265,8 +2265,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_4_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_4_id, 'Nmap: Network Scanning & Enumeration', '', 'lesson_lab', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Nmap: Network Scanning & Enumeration', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_cybersecurity_4_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2283,8 +2283,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_4_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_4_id, 'Wireshark: Packet Capture & Traffic Analysis', '', 'lesson_lab', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Wireshark: Packet Capture & Traffic Analysis', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_cybersecurity_4_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2301,8 +2301,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_4_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_4_id, 'Enumeration: SMB, FTP, SSH, SMTP & Web Services', '', 'lesson_lab', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Enumeration: SMB, FTP, SSH, SMTP & Web Services', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_cybersecurity_4_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2319,8 +2319,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_4_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_4_id, 'Vulnerability Scanning with OpenVAS & Nikto', '', 'lesson_lab', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Vulnerability Scanning with OpenVAS & Nikto', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_cybersecurity_4_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2337,8 +2337,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_4_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_4_id, 'Wireless Security Fundamentals', '', 'concept', 1, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'Wireless Security Fundamentals', '', 'concept', 270, '4–5 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_cybersecurity_4_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2353,8 +2353,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_4_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_4_id, 'PROJECT: Network Recon Lab', '', 'project_milestone', 8, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_4_id, 'PROJECT: Network Recon Lab', '', 'project_milestone', 540, '8–10 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_cybersecurity_4_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2387,8 +2387,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'Burp Suite: Web Proxy & Interception', '', 'lesson_lab', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'Burp Suite: Web Proxy & Interception', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_cybersecurity_5_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2405,8 +2405,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'SQL Injection: Detection, Exploitation & Defence', '', 'lesson_lab', 3, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'SQL Injection: Detection, Exploitation & Defence', '', 'lesson_lab', 330, '5–6 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_cybersecurity_5_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2425,8 +2425,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'Cross-Site Scripting (XSS): Reflected, Stored & DOM', '', 'lesson_lab', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'Cross-Site Scripting (XSS): Reflected, Stored & DOM', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_cybersecurity_5_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2443,8 +2443,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'Authentication & Session Attacks', '', 'lesson_lab', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'Authentication & Session Attacks', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_cybersecurity_5_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2461,8 +2461,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'File Inclusion, Upload & Command Injection', '', 'lesson_lab', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'File Inclusion, Upload & Command Injection', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_cybersecurity_5_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2479,8 +2479,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'API Security Testing', '', 'lesson_lab', 2, 'advanced', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'API Security Testing', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 6)
     RETURNING topic_id INTO topic_cybersecurity_5_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2497,8 +2497,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_5_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_5_id, 'PROJECT: Web Pentest Report', '', 'project_milestone', 12, 'advanced', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_5_id, 'PROJECT: Web Pentest Report', '', 'project_milestone', 810, '12–15 hrs', 'advanced', 7)
     RETURNING topic_id INTO topic_cybersecurity_5_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2535,8 +2535,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_6_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_6_id, 'Metasploit Framework', '', 'lesson_lab', 2, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Metasploit Framework', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 1)
     RETURNING topic_id INTO topic_cybersecurity_6_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2553,8 +2553,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_6_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_6_id, 'Windows Privilege Escalation', '', 'lesson_lab', 2, 'advanced', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Windows Privilege Escalation', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 2)
     RETURNING topic_id INTO topic_cybersecurity_6_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2571,8 +2571,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_6_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_6_id, 'Linux Privilege Escalation', '', 'lesson_lab', 2, 'advanced', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Linux Privilege Escalation', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 3)
     RETURNING topic_id INTO topic_cybersecurity_6_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2589,8 +2589,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_6_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_6_id, 'Active Directory Attacks (Introduction)', '', 'lesson_lab', 2, 'advanced', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Active Directory Attacks (Introduction)', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 4)
     RETURNING topic_id INTO topic_cybersecurity_6_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2607,8 +2607,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_6_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_6_id, 'Post-Exploitation: Persistence, Pivoting & Covering Tracks', '', 'lesson_lab', 2, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'Post-Exploitation: Persistence, Pivoting & Covering Tracks', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_cybersecurity_6_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2625,8 +2625,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_6_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_6_id, 'PROJECT: Full Pentest Simulation', '', 'project_milestone', 12, 'advanced', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_6_id, 'PROJECT: Full Pentest Simulation', '', 'project_milestone', 840, '12–16 hrs', 'advanced', 6)
     RETURNING topic_id INTO topic_cybersecurity_6_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2663,8 +2663,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_7_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_7_id, 'Security Operations & SIEM', '', 'lesson_lab', 2, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Security Operations & SIEM', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 1)
     RETURNING topic_id INTO topic_cybersecurity_7_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2681,8 +2681,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_7_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_7_id, 'Incident Response', '', 'lesson_lab', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Incident Response', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_cybersecurity_7_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2699,8 +2699,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_7_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_7_id, 'Defensive Hardening: Firewalls, IDS/IPS & Zero Trust', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Defensive Hardening: Firewalls, IDS/IPS & Zero Trust', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_cybersecurity_7_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2717,8 +2717,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_7_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_7_id, 'Threat Intelligence & the MITRE ATT&CK Framework', '', 'lesson', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'Threat Intelligence & the MITRE ATT&CK Framework', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_cybersecurity_7_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2735,8 +2735,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_7_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_7_id, 'PROJECT: SOC Analyst Lab', '', 'project_milestone', 8, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_7_id, 'PROJECT: SOC Analyst Lab', '', 'project_milestone', 600, '8–12 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_cybersecurity_7_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2769,8 +2769,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_8_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_8_id, 'Capture the Flag (CTF) Competitions', '', 'lesson', 0, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Capture the Flag (CTF) Competitions', '', 'lesson', 0, 'Ongoing', 'advanced', 1)
     RETURNING topic_id INTO topic_cybersecurity_8_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2785,8 +2785,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_8_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_8_id, 'Bug Bounty Hunting: Getting Started', '', 'lesson', 2, 'advanced', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Bug Bounty Hunting: Getting Started', '', 'lesson', 270, '4–5 hrs', 'advanced', 2)
     RETURNING topic_id INTO topic_cybersecurity_8_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2803,8 +2803,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_8_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_8_id, 'Reverse Engineering & Binary Exploitation Basics', '', 'lesson_lab', 2, 'advanced', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Reverse Engineering & Binary Exploitation Basics', '', 'lesson_lab', 330, '5–6 hrs', 'advanced', 3)
     RETURNING topic_id INTO topic_cybersecurity_8_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2819,8 +2819,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_8_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_8_id, 'Cloud Security Fundamentals', '', 'lesson_lab', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'Cloud Security Fundamentals', '', 'lesson_lab', 270, '4–5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_cybersecurity_8_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2835,8 +2835,8 @@ BEGIN
   DECLARE
     topic_cybersecurity_8_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_cybersecurity_8_id, 'PROJECT: Public CTF Write-Up + Bug Bounty Report', '', 'project_capstone', 0, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_cybersecurity_8_id, 'PROJECT: Public CTF Write-Up + Bug Bounty Report', '', 'project_capstone', 1500, 'Ongoing (20–30 hrs over the stage)', 'advanced', 5)
     RETURNING topic_id INTO topic_cybersecurity_8_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2859,8 +2859,8 @@ BEGIN
   DECLARE
     topic_datascience_1_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'Python Basics & the Data Science Environment', '', 'lesson', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'Python Basics & the Data Science Environment', '', 'lesson', 210, '3–4 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_datascience_1_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2877,8 +2877,8 @@ BEGIN
   DECLARE
     topic_datascience_1_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'NumPy: The Foundation of Numerical Python', '', 'lesson', 2, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'NumPy: The Foundation of Numerical Python', '', 'lesson', 210, '3–4 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_datascience_1_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2895,8 +2895,8 @@ BEGIN
   DECLARE
     topic_datascience_1_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'Pandas Part 1: Loading, Inspecting & Selecting Data', '', 'lesson', 2, 'beginner', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'Pandas Part 1: Loading, Inspecting & Selecting Data', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 3)
     RETURNING topic_id INTO topic_datascience_1_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2911,8 +2911,8 @@ BEGIN
   DECLARE
     topic_datascience_1_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'Pandas Part 2: Transforming, Grouping & Aggregating', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'Pandas Part 2: Transforming, Grouping & Aggregating', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_datascience_1_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2927,8 +2927,8 @@ BEGIN
   DECLARE
     topic_datascience_1_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'Python for Data Science: Functions, Comprehensions & OOP Basics', '', 'lesson', 1, 'beginner', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'Python for Data Science: Functions, Comprehensions & OOP Basics', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 5)
     RETURNING topic_id INTO topic_datascience_1_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2943,8 +2943,8 @@ BEGIN
   DECLARE
     topic_datascience_1_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'Working with Files, APIs & Data Sources', '', 'lesson', 1, 'beginner', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'Working with Files, APIs & Data Sources', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 6)
     RETURNING topic_id INTO topic_datascience_1_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2961,8 +2961,8 @@ BEGIN
   DECLARE
     topic_datascience_1_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_1_id, 'PROJECT: Data Exploration Script', '', 'project_milestone', 5, 'beginner', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_1_id, 'PROJECT: Data Exploration Script', '', 'project_milestone', 360, '5–7 hrs', 'beginner', 7)
     RETURNING topic_id INTO topic_datascience_1_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -2995,8 +2995,8 @@ BEGIN
   DECLARE
     topic_datascience_2_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_2_id, 'Data Cleaning: Missing Values, Duplicates & Outliers', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_2_id, 'Data Cleaning: Missing Values, Duplicates & Outliers', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_datascience_2_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3013,8 +3013,8 @@ BEGIN
   DECLARE
     topic_datascience_2_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_2_id, 'Data Reshaping & Merging', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_2_id, 'Data Reshaping & Merging', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_datascience_2_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3031,8 +3031,8 @@ BEGIN
   DECLARE
     topic_datascience_2_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_2_id, 'Time Series Data with Pandas', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_2_id, 'Time Series Data with Pandas', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_2_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3049,8 +3049,8 @@ BEGIN
   DECLARE
     topic_datascience_2_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_2_id, 'SQL for Data Scientists', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_2_id, 'SQL for Data Scientists', '', 'lesson', 270, '4–5 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_datascience_2_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3065,8 +3065,8 @@ BEGIN
   DECLARE
     topic_datascience_2_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_2_id, 'Advanced Pandas: Performance & Best Practices', '', 'lesson', 1, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_2_id, 'Advanced Pandas: Performance & Best Practices', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_datascience_2_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3083,8 +3083,8 @@ BEGIN
   DECLARE
     topic_datascience_2_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_2_id, 'PROJECT: Messy Data → Clean Insights', '', 'project_milestone', 8, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_2_id, 'PROJECT: Messy Data → Clean Insights', '', 'project_milestone', 540, '8–10 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_datascience_2_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3115,8 +3115,8 @@ BEGIN
   DECLARE
     topic_datascience_3_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_3_id, 'Matplotlib: The Foundation of Python Visualisation', '', 'lesson', 2, 'beginner', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_3_id, 'Matplotlib: The Foundation of Python Visualisation', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 1)
     RETURNING topic_id INTO topic_datascience_3_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3131,8 +3131,8 @@ BEGIN
   DECLARE
     topic_datascience_3_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_3_id, 'Seaborn: Statistical Visualisation', '', 'lesson', 1, 'beginner', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_3_id, 'Seaborn: Statistical Visualisation', '', 'lesson', 120, '1.5–2.5 hrs', 'beginner', 2)
     RETURNING topic_id INTO topic_datascience_3_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3147,8 +3147,8 @@ BEGIN
   DECLARE
     topic_datascience_3_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_3_id, 'Plotly: Interactive Visualisation', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_3_id, 'Plotly: Interactive Visualisation', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_3_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3163,8 +3163,8 @@ BEGIN
   DECLARE
     topic_datascience_3_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_3_id, 'The EDA Framework: A Structured Approach', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_3_id, 'The EDA Framework: A Structured Approach', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_datascience_3_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3179,8 +3179,8 @@ BEGIN
   DECLARE
     topic_datascience_3_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_3_id, 'Feature Engineering Basics', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_3_id, 'Feature Engineering Basics', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_datascience_3_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3197,8 +3197,8 @@ BEGIN
   DECLARE
     topic_datascience_3_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_3_id, 'PROJECT: EDA Report', '', 'project_milestone', 8, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_3_id, 'PROJECT: EDA Report', '', 'project_milestone', 600, '8–12 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_datascience_3_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3231,8 +3231,8 @@ BEGIN
   DECLARE
     topic_datascience_4_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_4_id, 'Descriptive Statistics & Distributions', '', 'lesson', 2, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_4_id, 'Descriptive Statistics & Distributions', '', 'lesson', 210, '3–4 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_datascience_4_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3249,8 +3249,8 @@ BEGIN
   DECLARE
     topic_datascience_4_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_4_id, 'Hypothesis Testing', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_4_id, 'Hypothesis Testing', '', 'lesson', 270, '4–5 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_datascience_4_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3265,8 +3265,8 @@ BEGIN
   DECLARE
     topic_datascience_4_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_4_id, 'Correlation, Causation & Regression Basics', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_4_id, 'Correlation, Causation & Regression Basics', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_4_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3283,8 +3283,8 @@ BEGIN
   DECLARE
     topic_datascience_4_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_4_id, 'Probability for Machine Learning', '', 'lesson', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_4_id, 'Probability for Machine Learning', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_datascience_4_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3301,8 +3301,8 @@ BEGIN
   DECLARE
     topic_datascience_4_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_4_id, 'A/B Testing & Experimentation', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_4_id, 'A/B Testing & Experimentation', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_datascience_4_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3319,8 +3319,8 @@ BEGIN
   DECLARE
     topic_datascience_4_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_4_id, 'PROJECT: Statistical Analysis Report', '', 'project_milestone', 8, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_4_id, 'PROJECT: Statistical Analysis Report', '', 'project_milestone', 540, '8–10 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_datascience_4_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3349,8 +3349,8 @@ BEGIN
   DECLARE
     topic_datascience_5_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'The Machine Learning Framework', '', 'concept', 1, 'intermediate', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'The Machine Learning Framework', '', 'concept', 105, '1.5–2 hrs', 'intermediate', 1)
     RETURNING topic_id INTO topic_datascience_5_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3365,8 +3365,8 @@ BEGIN
   DECLARE
     topic_datascience_5_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'Scikit-learn API & Preprocessing', '', 'lesson', 2, 'intermediate', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'Scikit-learn API & Preprocessing', '', 'lesson', 210, '3–4 hrs', 'intermediate', 2)
     RETURNING topic_id INTO topic_datascience_5_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3383,8 +3383,8 @@ BEGIN
   DECLARE
     topic_datascience_5_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'Classification: Logistic Regression, Decision Trees & KNN', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'Classification: Logistic Regression, Decision Trees & KNN', '', 'lesson', 330, '5–6 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_5_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3401,8 +3401,8 @@ BEGIN
   DECLARE
     topic_datascience_5_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'Regression: Linear, Ridge, Lasso & Evaluation', '', 'lesson', 2, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'Regression: Linear, Ridge, Lasso & Evaluation', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_datascience_5_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3419,8 +3419,8 @@ BEGIN
   DECLARE
     topic_datascience_5_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'Unsupervised Learning: Clustering & Dimensionality Reduction', '', 'lesson', 2, 'intermediate', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'Unsupervised Learning: Clustering & Dimensionality Reduction', '', 'lesson', 210, '3–4 hrs', 'intermediate', 5)
     RETURNING topic_id INTO topic_datascience_5_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3437,8 +3437,8 @@ BEGIN
   DECLARE
     topic_datascience_5_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'Model Selection, Evaluation & Avoiding Overfitting', '', 'lesson', 2, 'intermediate', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'Model Selection, Evaluation & Avoiding Overfitting', '', 'lesson', 210, '3–4 hrs', 'intermediate', 6)
     RETURNING topic_id INTO topic_datascience_5_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3455,8 +3455,8 @@ BEGIN
   DECLARE
     topic_datascience_5_7_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_5_id, 'PROJECT: Predictive Model', '', 'project_milestone', 12, 'advanced', 7)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_5_id, 'PROJECT: Predictive Model', '', 'project_milestone', 840, '12–16 hrs', 'advanced', 7)
     RETURNING topic_id INTO topic_datascience_5_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3489,8 +3489,8 @@ BEGIN
   DECLARE
     topic_datascience_6_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_6_id, 'Ensemble Methods: Random Forest & Gradient Boosting', '', 'lesson', 2, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_6_id, 'Ensemble Methods: Random Forest & Gradient Boosting', '', 'lesson', 330, '5–6 hrs', 'advanced', 1)
     RETURNING topic_id INTO topic_datascience_6_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3507,8 +3507,8 @@ BEGIN
   DECLARE
     topic_datascience_6_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_6_id, 'Model Interpretability & Fairness', '', 'lesson', 2, 'advanced', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_6_id, 'Model Interpretability & Fairness', '', 'lesson', 270, '4–5 hrs', 'advanced', 2)
     RETURNING topic_id INTO topic_datascience_6_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3523,8 +3523,8 @@ BEGIN
   DECLARE
     topic_datascience_6_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_6_id, 'Handling Imbalanced Datasets', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_6_id, 'Handling Imbalanced Datasets', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_6_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3541,8 +3541,8 @@ BEGIN
   DECLARE
     topic_datascience_6_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_6_id, 'Feature Selection & Dimensionality Reduction', '', 'lesson', 1, 'intermediate', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_6_id, 'Feature Selection & Dimensionality Reduction', '', 'lesson', 210, '3–4 hrs', 'intermediate', 4)
     RETURNING topic_id INTO topic_datascience_6_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3559,8 +3559,8 @@ BEGIN
   DECLARE
     topic_datascience_6_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_6_id, 'Time Series Forecasting', '', 'lesson', 2, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_6_id, 'Time Series Forecasting', '', 'lesson', 270, '4–5 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_datascience_6_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3577,8 +3577,8 @@ BEGIN
   DECLARE
     topic_datascience_6_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_6_id, 'PROJECT: Kaggle Competition Entry', '', 'project_milestone', 15, 'advanced', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_6_id, 'PROJECT: Kaggle Competition Entry', '', 'project_milestone', 1050, '15–20 hrs', 'advanced', 6)
     RETURNING topic_id INTO topic_datascience_6_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3611,8 +3611,8 @@ BEGIN
   DECLARE
     topic_datascience_7_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_7_id, 'Neural Networks from Scratch', '', 'lesson', 2, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_7_id, 'Neural Networks from Scratch', '', 'lesson', 330, '5–6 hrs', 'advanced', 1)
     RETURNING topic_id INTO topic_datascience_7_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3629,8 +3629,8 @@ BEGIN
   DECLARE
     topic_datascience_7_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_7_id, 'PyTorch Fundamentals', '', 'lesson', 2, 'advanced', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_7_id, 'PyTorch Fundamentals', '', 'lesson', 330, '5–6 hrs', 'advanced', 2)
     RETURNING topic_id INTO topic_datascience_7_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3647,8 +3647,8 @@ BEGIN
   DECLARE
     topic_datascience_7_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_7_id, 'Text Processing & NLP Fundamentals', '', 'lesson', 2, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_7_id, 'Text Processing & NLP Fundamentals', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_7_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3665,8 +3665,8 @@ BEGIN
   DECLARE
     topic_datascience_7_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_7_id, 'Transfer Learning & Transformers (Practical)', '', 'lesson', 2, 'advanced', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_7_id, 'Transfer Learning & Transformers (Practical)', '', 'lesson', 330, '5–6 hrs', 'advanced', 4)
     RETURNING topic_id INTO topic_datascience_7_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3685,8 +3685,8 @@ BEGIN
   DECLARE
     topic_datascience_7_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_7_id, 'Convolutional Neural Networks (Image Classification)', '', 'lesson', 2, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_7_id, 'Convolutional Neural Networks (Image Classification)', '', 'lesson', 270, '4–5 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_datascience_7_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3703,8 +3703,8 @@ BEGIN
   DECLARE
     topic_datascience_7_6_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_7_id, 'PROJECT: Text Classifier', '', 'project_milestone', 12, 'advanced', 6)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_7_id, 'PROJECT: Text Classifier', '', 'project_milestone', 840, '12–16 hrs', 'advanced', 6)
     RETURNING topic_id INTO topic_datascience_7_6_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3737,8 +3737,8 @@ BEGIN
   DECLARE
     topic_datascience_8_1_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_8_id, 'MLflow: Experiment Tracking & Model Registry', '', 'lesson', 2, 'advanced', 1)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_8_id, 'MLflow: Experiment Tracking & Model Registry', '', 'lesson', 270, '4–5 hrs', 'advanced', 1)
     RETURNING topic_id INTO topic_datascience_8_1_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3755,8 +3755,8 @@ BEGIN
   DECLARE
     topic_datascience_8_2_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_8_id, 'Deploying ML Models as APIs', '', 'lesson', 2, 'advanced', 2)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_8_id, 'Deploying ML Models as APIs', '', 'lesson', 270, '4–5 hrs', 'advanced', 2)
     RETURNING topic_id INTO topic_datascience_8_2_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3773,8 +3773,8 @@ BEGIN
   DECLARE
     topic_datascience_8_3_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_8_id, 'Building Interactive Data Apps with Streamlit', '', 'lesson', 1, 'intermediate', 3)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_8_id, 'Building Interactive Data Apps with Streamlit', '', 'lesson', 210, '3–4 hrs', 'intermediate', 3)
     RETURNING topic_id INTO topic_datascience_8_3_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3791,8 +3791,8 @@ BEGIN
   DECLARE
     topic_datascience_8_4_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_8_id, 'Data Pipelines & Automation', '', 'lesson', 1, 'advanced', 4)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_8_id, 'Data Pipelines & Automation', '', 'lesson', 270, '4–5 hrs', 'advanced', 4)
     RETURNING topic_id INTO topic_datascience_8_4_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -3809,8 +3809,8 @@ BEGIN
   DECLARE
     topic_datascience_8_5_id uuid;
   BEGIN
-    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_datascience_8_id, 'PROJECT: Capstone', '', 'project_capstone', 30, 'advanced', 5)
+    INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, estimated_time_text, difficulty_level, order_index)
+    VALUES (stage_datascience_8_id, 'PROJECT: Capstone', '', 'project_capstone', 2400, '30–50 hrs', 'advanced', 5)
     RETURNING topic_id INTO topic_datascience_8_5_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)

@@ -45,6 +45,7 @@ export interface DashboardTopics {
     next_topic_id: string | null;
     next_topic_title: string;
     next_topic_estimated_time_min: number | null;
+    next_topic_estimated_time_text: string | null;
     remaining_topics_in_stage: number;
 }
 

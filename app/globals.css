@@ -146,7 +146,7 @@
     border-color: var(--border);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow, text-shadow, opacity;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow, text-shadow, opacity, transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms !important;
   }

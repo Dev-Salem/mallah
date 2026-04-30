@@ -51,7 +51,7 @@ Rules:
 
 ### Topic 1.1 — How the Web Works
 **Type:** Concept
-**Estimated Time:** 45 min
+**Estimated Time:** 1 hr
 **Difficulty:** Beginner
 
 **Description:** Understand what happens when you type a URL. Covers browsers, servers, HTTP requests/responses, and the roles of HTML, CSS, and JavaScript.
@@ -71,7 +71,7 @@ Rules:
 
 ### Topic 1.2 — HTML Structure & Semantics
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Write proper HTML with semantic tags: headings, paragraphs, lists, images, links, nav, section, article, footer. Understand why semantic HTML matters for SEO and accessibility.
@@ -90,7 +90,7 @@ Rules:
 
 ### Topic 1.3 — HTML Forms & Tables
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Build forms with inputs, labels, selects, checkboxes, radios, and buttons. Build a data table. Understand the form submission flow and input types.
@@ -109,7 +109,7 @@ Rules:
 
 ### Topic 1.4 — Intro to CSS: Selectors, Colors & Typography
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Link a stylesheet to HTML. Apply colors, fonts, sizes, weight, spacing. Understand selectors: element, class, ID, pseudo-class (`:hover`, `:focus`). Understand the cascade and specificity.
@@ -128,7 +128,7 @@ Rules:
 
 ### Topic 1.5 — The Box Model
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Deep dive into margin, padding, border, width, height, box-sizing. Use browser DevTools to inspect and debug box model issues live in the browser.
@@ -148,7 +148,7 @@ Rules:
 
 ### Topic 1.6 — CSS Positioning & Display
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Understand static, relative, absolute, fixed, sticky positioning. Understand block vs inline vs inline-block display. Build layered UI elements and a navbar that sticks on scroll.
@@ -199,7 +199,7 @@ Rules:
 
 ### Topic 2.1 — Flexbox
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Understand the flex container and flex items model. Learn all key properties: `display: flex`, `flex-direction`, `justify-content`, `align-items`, `flex-wrap`, `gap`. Build common UI patterns with Flexbox.
@@ -219,7 +219,7 @@ Rules:
 
 ### Topic 2.2 — CSS Grid
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Understand grid containers, grid tracks, `grid-template-columns/rows`, `grid-area`, `gap`, and auto-placement. Know when to use Grid vs Flexbox.
@@ -239,7 +239,7 @@ Rules:
 
 ### Topic 2.3 — Responsive Design & Media Queries
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Mobile-first design approach. Write media queries for different breakpoints. Use relative units (%, em, rem, vw, vh). Test layouts on mobile, tablet, and desktop.
@@ -258,7 +258,7 @@ Rules:
 
 ### Topic 2.4 — Tailwind CSS
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Set up Tailwind in a project. Learn utility-first CSS. Build layouts, style typography, add spacing and color using Tailwind classes. Understand why utility-first exists and when it shines.
@@ -277,7 +277,7 @@ Rules:
 
 ### Topic 2.5 — CSS Animations & Transitions
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** CSS transitions for hover states. `@keyframes` animations. Transform (scale, rotate, translate). Timing functions (ease, ease-in-out, cubic-bezier). Micro-interactions: spinners, button presses, fades.
@@ -331,7 +331,7 @@ Rules:
 
 ### Topic 3.1 — JavaScript Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Beginner
 
 **Description:** Variables (`let`, `const`), data types, operators, conditionals (`if/else`, ternary), loops (`for`, `while`). Write JS in a file linked to HTML — not just the console.
@@ -350,7 +350,7 @@ Rules:
 
 ### Topic 3.2 — Functions & Scope
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Function declarations vs expressions vs arrow functions. Parameters, return values, default values. Call stack, local vs global scope, and closures at a basic level.
@@ -369,7 +369,7 @@ Rules:
 
 ### Topic 3.3 — Arrays & Objects
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Array methods: `map`, `filter`, `reduce`, `find`, `forEach`. Object creation, property access, destructuring, spread/rest operator. Work with arrays of objects — the universal data format of frontend development.
@@ -388,7 +388,7 @@ Rules:
 
 ### Topic 3.4 — The DOM: Selecting & Manipulating Elements
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** `querySelector`, `querySelectorAll`, `getElementById`. Change text content, innerHTML, styles. Create, insert, and remove elements dynamically. Understand the DOM tree structure.
@@ -407,7 +407,7 @@ Rules:
 
 ### Topic 3.5 — Events & User Interaction
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** `addEventListener`, event types (click, input, keydown, submit, mouseover). Event object: `e.target`, `e.preventDefault()`. Event delegation for dynamic lists. Client-side form validation.
@@ -426,7 +426,7 @@ Rules:
 
 ### Topic 3.6 — Async JavaScript: Promises & Fetch
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Synchronous vs asynchronous execution. Callbacks problem. Promises: `.then()`, `.catch()`. `async/await` syntax. Fetch API to call a real REST API and display data on the page.
@@ -446,7 +446,7 @@ Rules:
 
 ### Topic 3.7 — Local Storage & State
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** `localStorage.setItem/getItem/removeItem`. `JSON.stringify/parse` to store objects. Persist UI state across page reloads. Understand what "state" means in a frontend context.
@@ -499,7 +499,7 @@ Rules:
 
 ### Topic 4.1 — Git & GitHub Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** `git init`, `add`, `commit`, `status`, `log`. Branching: `git branch`, `git switch`, `git merge`. Understand HEAD, staging area, working directory. Push to GitHub. Write descriptive commit messages.
@@ -519,7 +519,7 @@ Rules:
 
 ### Topic 4.2 — GitHub Workflow: Branches & Pull Requests
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Feature branch workflow. Create branches for each feature. Open a pull request (PR), write a PR description, merge it. Resolve a merge conflict deliberately (create one and fix it).
@@ -539,7 +539,7 @@ Rules:
 
 ### Topic 4.3 — Browser DevTools Deep Dive
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Elements panel: inspect and live-edit HTML/CSS. Console: `console.log/warn/error/table`, reading error messages. Network tab: inspect fetch requests, headers, status codes. Lighthouse: run a performance and accessibility audit.
@@ -558,7 +558,7 @@ Rules:
 
 ### Topic 4.4 — Deployment: Vercel, Netlify & GitHub Pages
 **Type:** Lesson + Practice
-**Estimated Time:** 1 hr
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Deploy static sites to GitHub Pages. Deploy to Vercel and Netlify via GitHub repository integration. Understand environment variables, build commands, and custom domains.
@@ -616,7 +616,7 @@ Rules:
 
 ### Topic 5.1 — Why React? Components & JSX
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** What problems does React solve over vanilla JS? Component-based architecture. JSX syntax. Create your first React app with Vite. Build reusable components. Pass data via props.
@@ -636,7 +636,7 @@ Rules:
 
 ### Topic 5.2 — State & useState Hook
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why does React need its own state system? `useState`: declare, read, update. The re-render cycle. Controlled inputs (input value driven by state). Lifting state up to a parent component.
@@ -655,7 +655,7 @@ Rules:
 
 ### Topic 5.3 — useEffect & Data Fetching
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** `useEffect` for side effects. Dependency array: when effects run. Cleanup functions. Fetch API inside a component. Handle loading state, error state, and empty state.
@@ -675,7 +675,7 @@ Rules:
 
 ### Topic 5.4 — Lists, Keys & Conditional Rendering
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Render arrays with `.map()`. Why keys matter and what makes a good key. Conditional rendering patterns: ternary, `&&` operator, early return. Avoid common rendering mistakes.
@@ -694,7 +694,7 @@ Rules:
 
 ### Topic 5.5 — React Router: Multi-Page Apps
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Install React Router v6. BrowserRouter, Routes, Route, Link, useNavigate, useParams. Build multi-page apps with dynamic routes.
@@ -713,7 +713,7 @@ Rules:
 
 ### Topic 5.6 — Forms & Validation in React
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Controlled form components in React. Multi-field forms with a single state object. Client-side validation with inline error messages. Introduction to React Hook Form for complex forms.
@@ -732,7 +732,7 @@ Rules:
 
 ### Topic 5.7 — Context API & Global State
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Prop drilling problem. `createContext`, `useContext`, Provider pattern. When to use Context vs local state. Build a theme switcher and a global cart state using Context.
@@ -788,7 +788,7 @@ Rules:
 
 ### Topic 6.1 — TypeScript for React Developers
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why TypeScript? Types, interfaces, type inference. Typing props, state, API responses, function signatures. Common TS patterns in React. No `any`.
@@ -807,7 +807,7 @@ Rules:
 
 ### Topic 6.2 — Next.js: Routing, SSR & the App Router
 **Type:** Lesson + Practice
-**Estimated Time:** 3 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is Next.js and why use it over bare React? App Router. File-based routing. Server Components vs Client Components. `fetch` with caching in Next.js. Dynamic routes. SEO benefits.
@@ -826,7 +826,7 @@ Rules:
 
 ### Topic 6.3 — API Routes & Server Actions
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Next.js API routes. Build simple server-side endpoints. Server Actions for form submission. Call external APIs from the server to hide API keys from the client.
@@ -846,7 +846,7 @@ Rules:
 
 ### Topic 6.4 — Tailwind CSS at Scale & Component Libraries
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Tailwind in a Next.js project. Build reusable component abstractions with Tailwind. Introduction to shadcn/ui — install and customize components to match your design system.
@@ -865,7 +865,7 @@ Rules:
 
 ### Topic 6.5 — State Management with Zustand
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Problems with Context at scale. Zustand: create a store, define state and actions, use selectors to prevent unnecessary re-renders. When to use Zustand vs Context.
@@ -884,7 +884,7 @@ Rules:
 
 ### Topic 6.6 — React Query: Server State & Caching
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Client state (UI) vs server state (data from APIs). `useQuery` for fetching, `useMutation` for writes. Caching, background refetching, stale time. Why React Query replaces manual `useEffect` + `useState` for data fetching.
@@ -947,7 +947,7 @@ Rules:
 
 ### Topic 7.1 — Web Performance Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Core Web Vitals: LCP, CLS, INP. Lighthouse audits in DevTools. Code splitting, lazy loading with `React.lazy` + `Suspense`, `next/image` for optimized images. Eliminate render-blocking resources.
@@ -966,7 +966,7 @@ Rules:
 
 ### Topic 7.2 — Web Accessibility (a11y)
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why accessibility matters (legal requirements, business case, ethics). Semantic HTML's role. ARIA labels and roles when semantics aren't enough. Keyboard navigation testing. Color contrast ratios. Test with the axe DevTools browser extension.
@@ -985,7 +985,7 @@ Rules:
 
 ### Topic 7.3 — SEO for Frontend Developers
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Meta tags (title, description). Open Graph tags for social sharing. Dynamic metadata in Next.js using the `metadata` export and `generateMetadata`. Canonical URLs. Sitemap basics.
@@ -1004,7 +1004,7 @@ Rules:
 
 ### Topic 7.4 — Testing Basics: Vitest & React Testing Library
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why test? Unit tests with Vitest. Component tests with React Testing Library. Query elements the way users would (by role, label, text). Write tests for a component and a utility function.

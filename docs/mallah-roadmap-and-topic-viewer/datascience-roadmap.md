@@ -51,7 +51,7 @@ Certificate block format:
 
 ### Topic 1.1 — Python Basics & the Data Science Environment
 **Type:** Lesson + Setup
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Beginner
 
 **Description:** What data science is and isn't. Set up the data science environment: Anaconda or Python + pip, Jupyter Notebooks (local) and Kaggle Notebooks (cloud, free GPU). Variables, data types, control flow, functions. Python's interactive execution model — why Jupyter is perfect for data work.
@@ -71,7 +71,7 @@ Certificate block format:
 
 ### Topic 1.2 — NumPy: The Foundation of Numerical Python
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Beginner
 
 **Description:** Why NumPy? Arrays vs Python lists (speed, vectorisation). Creating arrays, indexing, slicing, reshaping. Mathematical operations: element-wise, broadcasting. `np.mean`, `np.std`, `np.sum`, `np.where`. Linear algebra basics.
@@ -91,7 +91,7 @@ Certificate block format:
 
 ### Topic 1.3 — Pandas Part 1: Loading, Inspecting & Selecting Data
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** The DataFrame and Series — the core data structures. Loading data: CSV, Excel, JSON, from URLs. Inspecting: `.head()`, `.info()`, `.describe()`, `.shape`, `.dtypes`. Selecting: column selection, `.loc`, `.iloc`, boolean indexing, query strings.
@@ -110,7 +110,7 @@ Certificate block format:
 
 ### Topic 1.4 — Pandas Part 2: Transforming, Grouping & Aggregating
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Adding and modifying columns. Applying functions: `.apply()`, `.map()`, vectorised string operations. Grouping with `.groupby()`. Aggregations: `sum`, `mean`, `count`, `agg`. Sorting. Handling missing values: `.isna()`, `.fillna()`, `.dropna()`.
@@ -129,7 +129,7 @@ Certificate block format:
 
 ### Topic 1.5 — Python for Data Science: Functions, Comprehensions & OOP Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Writing reusable functions. Default arguments, `*args`, `**kwargs`. List comprehensions, dict comprehensions. Lambda functions. Basic OOP: classes and methods (enough to understand Scikit-learn's API pattern). Type hints for data science code.
@@ -148,7 +148,7 @@ Certificate block format:
 
 ### Topic 1.6 — Working with Files, APIs & Data Sources
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Reading from CSV, Excel, JSON, Parquet. Writing cleaned data back out. Fetching data from REST APIs with `requests`. Web scraping basics with `BeautifulSoup` (just enough to get data). Reading from Google Sheets (public). The data science data sourcing toolkit.
@@ -202,7 +202,7 @@ Certificate block format:
 
 ### Topic 2.1 — Data Cleaning: Missing Values, Duplicates & Outliers
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Types of missing data: MCAR, MAR, MNAR. Strategies: drop, impute (mean/median/mode/forward-fill/KNN). Detecting duplicates and deciding what to drop. Outlier detection: IQR method, Z-score, visualisation. When to remove outliers vs keep them.
@@ -222,7 +222,7 @@ Certificate block format:
 
 ### Topic 2.2 — Data Reshaping & Merging
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Merging DataFrames: `merge`, `join` (inner, left, right, outer). Concatenating. Pivot tables and `pivot_table`. `melt` (wide to long). `stack` and `unstack`. Multi-level indexes. When to use each.
@@ -242,7 +242,7 @@ Certificate block format:
 
 ### Topic 2.3 — Time Series Data with Pandas
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** DateTime index. Parsing dates with `pd.to_datetime`. Resampling: daily to monthly, hourly to weekly. Rolling averages. Shifting and differencing. Time zone handling. Plotting time series.
@@ -262,7 +262,7 @@ Certificate block format:
 
 ### Topic 2.4 — SQL for Data Scientists
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** SQL basics to advanced queries: SELECT, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT. Joins: INNER, LEFT, RIGHT. Subqueries. CTEs (WITH clauses). Window functions: ROW_NUMBER, RANK, LAG, LEAD, SUM OVER PARTITION. NULL handling. SQLite in Python with `sqlite3` and Pandas.
@@ -281,7 +281,7 @@ Certificate block format:
 
 ### Topic 2.5 — Advanced Pandas: Performance & Best Practices
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Pandas performance: vectorised operations vs `.apply()` (and when to use each). `pd.Categorical` for memory savings. Chaining with `.pipe()`. Method chaining for readability. Reading large files in chunks. `dtypes` optimisation to reduce memory.
@@ -337,7 +337,7 @@ Certificate block format:
 
 ### Topic 3.1 — Matplotlib: The Foundation of Python Visualisation
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** The Figure/Axes architecture. Basic charts: line, bar, scatter, histogram, pie. Customisation: titles, labels, legends, colours, grid, fonts. Subplots. Saving figures (PNG, PDF). Object-oriented vs pyplot API.
@@ -356,7 +356,7 @@ Certificate block format:
 
 ### Topic 3.2 — Seaborn: Statistical Visualisation
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Seaborn's philosophy: statistical graphics with less code. Distribution plots: `histplot`, `kdeplot`, `boxplot`, `violinplot`. Relationship plots: `scatterplot`, `lineplot`, `regplot`. Categorical plots: `barplot`, `countplot`, `stripplot`. Pair plots. Heatmaps. Themes and palettes.
@@ -375,7 +375,7 @@ Certificate block format:
 
 ### Topic 3.3 — Plotly: Interactive Visualisation
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why interactive charts? Plotly Express vs Plotly Graph Objects. Interactive scatter, bar, line, choropleth maps, sunburst charts. Hover tooltips. Exporting to HTML. Basic Plotly Dash intro (or Streamlit + Plotly integration).
@@ -394,7 +394,7 @@ Certificate block format:
 
 ### Topic 3.4 — The EDA Framework: A Structured Approach
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** A systematic EDA process: univariate → bivariate → multivariate analysis. Formulating questions before plotting. Feature relationships and correlation (Pearson, Spearman). Distribution shapes and what they mean. Skewness, kurtosis. Simpson's Paradox — why group-level insights can contradict individual-level data.
@@ -413,7 +413,7 @@ Certificate block format:
 
 ### Topic 3.5 — Feature Engineering Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is feature engineering? Deriving new features from existing ones. Binning continuous variables. Encoding categorical variables: label encoding, one-hot encoding, ordinal encoding, target encoding. Interaction features. Log transformations for skewed distributions.
@@ -468,7 +468,7 @@ Certificate block format:
 
 ### Topic 4.1 — Descriptive Statistics & Distributions
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Measures of central tendency and spread. Probability distributions: normal, binomial, Poisson, uniform. The Central Limit Theorem — why it matters for everything downstream. Sampling: random, stratified, systematic. Confidence intervals intuitively.
@@ -488,7 +488,7 @@ Certificate block format:
 
 ### Topic 4.2 — Hypothesis Testing
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Intermediate
 
 **Description:** The logic of hypothesis testing. Null hypothesis, p-value, Type I and II errors, statistical power. Tests: t-test (one sample, two sample, paired), chi-square test of independence, ANOVA. When to use each. Effect size vs statistical significance. The p-value misconception.
@@ -507,7 +507,7 @@ Certificate block format:
 
 ### Topic 4.3 — Correlation, Causation & Regression Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Pearson and Spearman correlation. The correlation ≠ causation principle and examples. Confounders. Simple linear regression: OLS, coefficients interpretation, R², residuals. Multiple linear regression. `statsmodels` for statistical regression (vs Scikit-learn which is ML-first).
@@ -527,7 +527,7 @@ Certificate block format:
 
 ### Topic 4.4 — Probability for Machine Learning
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Bayes' theorem intuitively. Prior, likelihood, posterior. Naive Bayes classifier concept. Information theory: entropy, information gain (used in decision trees). Log-likelihood. Why machine learning loss functions are rooted in probability.
@@ -547,7 +547,7 @@ Certificate block format:
 
 ### Topic 4.5 — A/B Testing & Experimentation
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is A/B testing? Experimental design: control/treatment, randomization. Sample size calculation. Running a t-test on A/B results. Multiple testing correction (Bonferroni, FDR). Practical pitfalls: novelty effect, peeking problem, Simpson's Paradox in experiments.
@@ -599,7 +599,7 @@ Certificate block format:
 
 ### Topic 5.1 — The Machine Learning Framework
 **Type:** Lesson + Concept
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 1.5–2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Supervised vs unsupervised vs reinforcement learning. Classification vs regression. The ML workflow: define problem → collect data → explore → engineer features → train model → evaluate → deploy. Train/validation/test split and why it matters. Bias-variance tradeoff intuitively.
@@ -618,7 +618,7 @@ Certificate block format:
 
 ### Topic 5.2 — Scikit-learn API & Preprocessing
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Scikit-learn's consistent API: `fit`, `transform`, `predict`, `fit_transform`. `Pipeline` and `ColumnTransformer`. Preprocessing: `StandardScaler`, `MinMaxScaler`, `LabelEncoder`, `OneHotEncoder`. `SimpleImputer`. Why fit on train only — and never on test.
@@ -638,7 +638,7 @@ Certificate block format:
 
 ### Topic 5.3 — Classification: Logistic Regression, Decision Trees & KNN
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Intermediate
 
 **Description:** Logistic regression: sigmoid function, decision boundary, probability interpretation. Decision trees: splits, information gain, overfitting. K-Nearest Neighbours: distance metrics, choosing K. Model evaluation for classification: accuracy, precision, recall, F1, AUC-ROC, confusion matrix. Cross-validation.
@@ -658,7 +658,7 @@ Certificate block format:
 
 ### Topic 5.4 — Regression: Linear, Ridge, Lasso & Evaluation
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Linear regression for prediction. Polynomial regression. Regularisation: Ridge (L2) and Lasso (L1) — when and why. Hyperparameter tuning with `GridSearchCV`. Regression evaluation: MAE, MSE, RMSE, R². Residual analysis.
@@ -678,7 +678,7 @@ Certificate block format:
 
 ### Topic 5.5 — Unsupervised Learning: Clustering & Dimensionality Reduction
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** K-Means clustering: algorithm, choosing K (elbow method, silhouette score). DBSCAN: density-based clustering for non-spherical shapes. PCA: principal components, variance explained, 2D visualisation of high-dimensional data. t-SNE for visualisation.
@@ -698,7 +698,7 @@ Certificate block format:
 
 ### Topic 5.6 — Model Selection, Evaluation & Avoiding Overfitting
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Cross-validation variants: K-fold, stratified K-fold, time-series split. Learning curves: diagnosing overfitting vs underfitting. Hyperparameter tuning: `GridSearchCV`, `RandomizedSearchCV`. Model selection: when complexity helps vs hurts. Baseline models and why you need them.
@@ -757,7 +757,7 @@ Certificate block format:
 
 ### Topic 6.1 — Ensemble Methods: Random Forest & Gradient Boosting
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Bagging vs boosting. Random Forests: how they work, feature importance, out-of-bag error. Gradient Boosting: the algorithm intuition. XGBoost, LightGBM, CatBoost: differences, when to use each. Hyperparameter tuning for boosting algorithms.
@@ -777,7 +777,7 @@ Certificate block format:
 
 ### Topic 6.2 — Model Interpretability & Fairness
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** Why interpretability matters (regulation, trust, debugging). SHAP values: global and local explanations. LIME for any black-box model. Partial Dependence Plots. Model fairness: detecting bias across demographic groups. Equal opportunity vs equalised odds.
@@ -796,7 +796,7 @@ Certificate block format:
 
 ### Topic 6.3 — Handling Imbalanced Datasets
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why accuracy fails on imbalanced data. Oversampling: SMOTE. Undersampling: RandomUnderSampler. Class weights. Threshold tuning. Evaluation metrics for imbalanced problems: Precision-Recall curve, Average Precision, Matthews Correlation Coefficient.
@@ -816,7 +816,7 @@ Certificate block format:
 
 ### Topic 6.4 — Feature Selection & Dimensionality Reduction
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Filter methods: correlation-based selection, chi-square test. Wrapper methods: recursive feature elimination (RFE). Embedded methods: Lasso regularisation, tree-based importance. PCA for dimensionality reduction before modelling. Feature selection pipeline in Scikit-learn.
@@ -836,7 +836,7 @@ Certificate block format:
 
 ### Topic 6.5 — Time Series Forecasting
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** Time series ML: lag features, rolling features, seasonality encoding. Prophet for trend/seasonality modelling (Meta's library, simple and powerful). ARIMA basics. Proper time series cross-validation (no future leakage). Evaluation: MAE, RMSE, MAPE.
@@ -891,7 +891,7 @@ Certificate block format:
 
 ### Topic 7.1 — Neural Networks from Scratch
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** The perceptron. Multilayer networks. Forward pass: weighted sum + activation functions (ReLU, sigmoid, softmax). Backpropagation intuition (no full calculus required). Loss functions: cross-entropy, MSE. Gradient descent: batch, mini-batch, stochastic. Implement a 2-layer network in pure NumPy.
@@ -911,7 +911,7 @@ Certificate block format:
 
 ### Topic 7.2 — PyTorch Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 2.5 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** Tensors: creation, operations, GPU vs CPU. Autograd: automatic differentiation. Building models with `nn.Module`. Custom datasets and `DataLoader`. Training loop: forward pass → loss → backward → update. Model saving and loading.
@@ -931,7 +931,7 @@ Certificate block format:
 
 ### Topic 7.3 — Text Processing & NLP Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Text preprocessing: tokenization, lowercasing, stopword removal, stemming/lemmatization. Bag of Words, TF-IDF. Word embeddings: Word2Vec intuition, pre-trained embeddings. `spaCy` for NLP tasks. Named Entity Recognition. Sentiment analysis as a classification problem.
@@ -951,7 +951,7 @@ Certificate block format:
 
 ### Topic 7.4 — Transfer Learning & Transformers (Practical)
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 5–6 hrs
 **Difficulty:** Advanced
 
 **Description:** What is transfer learning? Using pre-trained models from HuggingFace. `transformers` library: tokenizers, pre-trained models, fine-tuning for text classification. BERT for sentiment analysis. When to fine-tune vs when to use embeddings as features.
@@ -972,7 +972,7 @@ Certificate block format:
 
 ### Topic 7.5 — Convolutional Neural Networks (Image Classification)
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** How CNNs work: convolutions, filters, pooling, feature maps. Architecture overview: LeNet, VGG, ResNet. Transfer learning for images: using pre-trained ResNet from `torchvision.models`. Data augmentation. Training a classifier on custom images.
@@ -1027,7 +1027,7 @@ Certificate block format:
 
 ### Topic 8.1 — MLflow: Experiment Tracking & Model Registry
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** What is MLOps? The reproducibility problem in ML. MLflow: tracking experiments (params, metrics, artifacts). Model registry: versioning, staging, production. Comparing runs. Logging Scikit-learn and XGBoost models.
@@ -1047,7 +1047,7 @@ Certificate block format:
 
 ### Topic 8.2 — Deploying ML Models as APIs
 **Type:** Lesson + Practice
-**Estimated Time:** 2 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** FastAPI for serving ML models. Request/response schema with Pydantic. Loading saved models at startup. Prediction endpoint. Input validation. Containerising with Docker. Deploying to a cloud service (Render free tier or Railway).
@@ -1067,7 +1067,7 @@ Certificate block format:
 
 ### Topic 8.3 — Building Interactive Data Apps with Streamlit
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 3–4 hrs
 **Difficulty:** Intermediate
 
 **Description:** Advanced Streamlit: multi-page apps, session state, caching (`@st.cache_data`), forms, file uploaders, charting with Plotly + Streamlit. Deploying to Streamlit Cloud. Building dashboards for non-technical stakeholders.
@@ -1087,7 +1087,7 @@ Certificate block format:
 
 ### Topic 8.4 — Data Pipelines & Automation
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5 hrs
+**Estimated Time:** 4–5 hrs
 **Difficulty:** Advanced
 
 **Description:** What is a data pipeline? ETL vs ELT. Scheduling Python scripts. `schedule` library for simple cron-like jobs. Introduction to Apache Airflow (concepts only — DAGs, tasks, scheduling). Data validation in pipelines with Great Expectations or Pydantic.

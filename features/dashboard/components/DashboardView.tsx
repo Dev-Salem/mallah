@@ -38,6 +38,7 @@ export function DashboardView({ summary, recentActivity }: DashboardViewProps) {
                         <MissionCard
                             mission={summary.mission}
                             estimatedTime={summary.topics.next_topic_estimated_time_min}
+                            estimatedTimeText={summary.topics.next_topic_estimated_time_text}
                         />
                     </div>
 

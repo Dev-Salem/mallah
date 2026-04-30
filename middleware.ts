@@ -26,6 +26,15 @@ function isPublicRoute(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   try {
+    // ─── BYPASS: Server Action requests must not be intercepted ───
+    // Next.js Server Actions use internal POST requests with a 'next-action' header.
+    // If the middleware applies intl rewrites or auth redirects to these requests,
+    // the RSC payload is corrupted, causing "An unexpected response was received from the server".
+    if (request.headers.has('next-action')) {
+      const { response } = await updateSession(request);
+      return response;
+    }
+
     const pathname = request.nextUrl.pathname;
 
     // ─── SECURITY: Block common admin path scanners ───

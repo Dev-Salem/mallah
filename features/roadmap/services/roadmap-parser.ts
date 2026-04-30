@@ -13,6 +13,7 @@ export interface ParsedTopic {
     title: string;
     type: string;
     estimatedTime: number;
+    estimatedTimeText: string;
     difficulty: string;
     description: string;
     practicalOutput: string;
@@ -72,8 +73,32 @@ export class RoadmapParser {
                 const body = tSection.substring(tFirstLineBreak);
 
                 const type = body.match(/\*\*Type:\*\* (.+)/)?.[1]?.trim() || "lesson";
-                const estTimeMatch = body.match(/\*\*Estimated Time:\*\* (\d+)/);
-                const estTime = estTimeMatch ? parseInt(estTimeMatch[1]) : 0;
+                
+                const estTimeFullMatch = body.match(/\*\*Estimated Time:\*\* (.+)/);
+                const estimatedTimeText = estTimeFullMatch ? estTimeFullMatch[1].trim() : "";
+                
+                // Intelligent numeric extraction for minutes
+                let estimatedTime = 0;
+                if (estimatedTimeText) {
+                    const hrsRangeMatch = estimatedTimeText.match(/(\d+\.?\d*)\s*(?:-|–)\s*(\d+\.?\d*)\s*hrs/);
+                    const singleHrMatch = estimatedTimeText.match(/(\d+\.?\d*)\s*hrs?/);
+                    const minMatch = estimatedTimeText.match(/(\d+)\s*mins?/);
+                    
+                    if (hrsRangeMatch) {
+                        const minVal = parseFloat(hrsRangeMatch[1]);
+                        const maxVal = parseFloat(hrsRangeMatch[2]);
+                        estimatedTime = Math.round(((minVal + maxVal) / 2) * 60);
+                    } else if (singleHrMatch) {
+                        estimatedTime = Math.round(parseFloat(singleHrMatch[1]) * 60);
+                    } else if (minMatch) {
+                        estimatedTime = parseInt(minMatch[1]);
+                    } else {
+                        // Fallback to simple digit extraction
+                        const simpleDigits = estimatedTimeText.match(/(\d+)/);
+                        estimatedTime = simpleDigits ? parseInt(simpleDigits[1]) : 0;
+                    }
+                }
+
                 const difficulty = body.match(/\*\*Difficulty:\*\* (.+)/)?.[1]?.trim().toLowerCase() || "beginner";
 
                 const descMatch = body.match(/\*\*Description:\*\* ([\s\S]+?)\n\n/);
@@ -146,7 +171,8 @@ export class RoadmapParser {
                     orderIndex: topicOrder,
                     title: topicTitle,
                     type,
-                    estimatedTime: estTime,
+                    estimatedTime,
+                    estimatedTimeText,
                     difficulty,
                     description,
                     practicalOutput,
@@ -200,6 +226,7 @@ export class RoadmapParser {
                         summary: topic.description,
                         topic_type: tType,
                         estimated_time_min: topic.estimatedTime,
+                        estimated_time_text: topic.estimatedTimeText,
                         difficulty_level: topic.difficulty as 'beginner' | 'intermediate' | 'advanced',
                         order_index: topic.orderIndex
                     }, { onConflict: "stage_id, order_index" })
