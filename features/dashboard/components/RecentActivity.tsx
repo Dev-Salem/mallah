@@ -36,7 +36,7 @@ export function RecentActivity({ items }: RecentActivityProps) {
         <div>
             {/* Label */}
             <div className={cn(
-                "text-[9px] font-mono text-muted-foreground/30 uppercase mb-3",
+                "text-xs font-mono text-muted-foreground uppercase mb-3",
                 !isArabic && "tracking-[0.2em]"
             )}>
                 Recent Activity
@@ -49,12 +49,12 @@ export function RecentActivity({ items }: RecentActivityProps) {
                     return (
                         <div
                             key={i}
-                            className="flex items-center gap-3 px-3 py-2 text-muted-foreground/40 hover:bg-white/5 transition-colors"
+                            className="flex items-center gap-3 px-3 py-2 text-muted-foreground hover:bg-white/5 transition-colors"
                         >
                             <Icon className="w-3.5 h-3.5 shrink-0 text-primary/30" />
                             <span className="text-xs truncate flex-1">{item.title}</span>
                             <span className={cn(
-                                "text-[9px] font-mono text-muted-foreground/25 shrink-0",
+                                "text-xs font-mono text-muted-foreground/80 shrink-0",
                                 !isArabic && "tracking-wide"
                             )}>
                                 {formatTimeAgo(item.timestamp)}

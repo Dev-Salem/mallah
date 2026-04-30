@@ -36,7 +36,7 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
             <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-primary" />
                 <span className={cn(
-                    "text-[9px] font-mono text-muted-foreground uppercase font-black",
+                    "text-xs font-mono text-muted-foreground uppercase font-black",
                     !isArabic && "tracking-[0.2em]"
                 )}>
                     Performance Analysis
@@ -47,12 +47,12 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
             <div>
                 <div className="flex items-center justify-between mb-2">
                     <span className={cn(
-                        "text-[10px] font-mono text-foreground uppercase font-bold",
+                        "text-xs font-mono text-foreground uppercase font-bold",
                         !isArabic && "tracking-wide"
                     )}>
                         Overall Path
                     </span>
-                    <span className="text-[10px] font-mono text-muted-foreground font-bold">
+                    <span className="text-xs font-mono text-muted-foreground font-bold">
                         {topics.completed_topics} / {topics.total_mandatory_topics} <span className="opacity-50">LESSONS</span>
                     </span>
                 </div>
@@ -67,10 +67,10 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
             {/* Stage Progress Bar */}
             <div className="pt-2 border-t border-primary/5">
                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono text-muted-foreground uppercase font-bold">
+                    <span className="text-xs font-mono text-muted-foreground uppercase font-bold">
                         Current: <span className="text-foreground">{stage.current_stage_title}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-muted-foreground opacity-60">
+                    <span className="text-xs font-mono text-muted-foreground">
                         {stage.stage_completed_topics} / {stage.stage_total_topics} topics
                     </span>
                 </div>
@@ -84,7 +84,7 @@ export function ProgressZone({ path, stage, topics, velocity }: ProgressZoneProp
 
             {/* Forecast Line */}
             {estimatedDays && estimatedDays > 0 && (
-                <div className="flex items-center gap-2 pt-2 text-[10px] text-muted-foreground font-medium">
+                <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground font-medium">
                     <div className="w-1 h-1 rounded-full bg-primary/40" />
                     <p>
                         Completion Estimate: <span className="text-foreground font-bold">{estimatedDays} days</span> at current velocity.

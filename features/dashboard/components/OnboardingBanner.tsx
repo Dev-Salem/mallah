@@ -37,7 +37,7 @@ export function OnboardingBanner({ banner }: OnboardingBannerProps) {
             {/* Dismiss button */}
             <button
                 onClick={handleDismiss}
-                className="absolute top-3 end-3 p-1 text-muted-foreground/40 hover:text-white transition-colors"
+                className="absolute top-3 end-3 p-1 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Dismiss banner"
             >
                 <X className="w-4 h-4" />
@@ -47,7 +47,7 @@ export function OnboardingBanner({ banner }: OnboardingBannerProps) {
             <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className={cn(
-                    "text-[10px] font-mono text-primary uppercase font-bold",
+                    "text-xs font-mono text-primary uppercase font-bold",
                     !isArabic && "tracking-[0.2em]"
                 )}>
                     Here&apos;s your personalized starter plan
@@ -69,7 +69,7 @@ export function OnboardingBanner({ banner }: OnboardingBannerProps) {
             {/* First milestone */}
             {banner.first_milestone && (
                 <p className={cn(
-                    "text-[10px] font-mono text-muted-foreground/60 uppercase mb-5",
+                    "text-xs font-mono text-muted-foreground uppercase mb-5",
                     !isArabic && "tracking-wide"
                 )}>
                     First milestone: <span className="text-white/70">{banner.first_milestone}</span>
@@ -79,7 +79,7 @@ export function OnboardingBanner({ banner }: OnboardingBannerProps) {
             {/* CTA */}
             <Link href="/dashboard/roadmap">
                 <Button className={cn(
-                    "h-10 px-6 rounded-none uppercase font-mono text-[11px] font-bold gap-2 group/btn",
+                    "h-10 px-6 rounded-none uppercase font-mono text-xs font-bold gap-2 group/btn",
                     !isArabic && "tracking-[0.15em]"
                 )}>
                     Start My First Lesson

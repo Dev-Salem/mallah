@@ -61,7 +61,7 @@ export function DashboardView({ summary, recentActivity }: DashboardViewProps) {
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 px-1">
                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_var(--primary)]" />
-                            <span className="text-[10px] font-mono font-black uppercase text-muted-foreground tracking-widest">
+                            <span className="text-xs font-mono font-black uppercase text-muted-foreground tracking-widest">
                                 Status & Readiness
                             </span>
                         </div>

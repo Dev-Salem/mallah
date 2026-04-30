@@ -74,7 +74,7 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
                     key={tile.label}
                     href={tile.href}
                     className={cn(
-                        "block relative border p-4 transition-all duration-300 group bg-dashboard-card-bg shadow-sm hover:shadow-md hover:border-primary/20",
+                        "block relative border p-4 transition-colors group bg-dashboard-card-bg shadow-sm hover:shadow-md hover:border-primary/20",
                         tile.warning
                             ? "border-amber-500/30 bg-amber-500/5 border-s-4 border-s-amber-500"
                             : "border-primary/10"
@@ -93,7 +93,7 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
                         <div className="min-w-0 flex-1">
                             {/* Label */}
                             <div className={cn(
-                                "text-[9px] font-mono text-muted-foreground uppercase mb-1 font-bold",
+                                "text-xs font-mono text-muted-foreground uppercase mb-1 font-bold",
                                 !isArabic && "tracking-[0.15em]"
                             )}>
                                 {tile.label}
@@ -108,7 +108,7 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
                             </div>
 
                             {/* Sub-label */}
-                            <div className="text-[10px] text-muted-foreground font-medium leading-relaxed opacity-80">
+                            <div className="text-xs text-muted-foreground font-medium leading-relaxed">
                                 {tile.subLabel}
                             </div>
                         </div>

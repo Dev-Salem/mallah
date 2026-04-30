@@ -17,7 +17,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
     const isArabic = locale === 'ar';
 
     return (
-        <div className="relative border border-primary/20 bg-dashboard-card-bg p-6 lg:p-8 overflow-hidden group shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/30">
+        <div className="relative border border-primary/20 bg-dashboard-card-bg p-6 lg:p-8 overflow-hidden group shadow-sm transition-colors hover:shadow-md hover:border-primary/30">
             {/* Background accent */}
             <div className="absolute top-4 end-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 <Crosshair className="w-24 h-24 text-primary" />
@@ -32,7 +32,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
                 <div className="flex items-center gap-2 mb-4">
                     <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--primary)]" />
                     <span className={cn(
-                        "text-[9px] font-mono text-primary uppercase font-bold",
+                        "text-xs font-mono text-primary uppercase font-bold",
                         !isArabic && "tracking-[0.3em]"
                     )}>
                         Today&apos;s Mission
@@ -55,7 +55,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
                 {/* Estimated time - Tactical Pill */}
                 {estimatedTime && (
                     <div className={cn(
-                        "inline-flex items-center text-[10px] font-mono text-primary uppercase mb-6 px-2 py-0.5 bg-primary/5 border border-primary/10 font-bold",
+                        "inline-flex items-center text-xs font-mono text-primary uppercase mb-6 px-2 py-0.5 bg-primary/5 border border-primary/10 font-bold",
                         !isArabic && "tracking-widest"
                     )}>
                         Est. {estimatedTime} min
@@ -81,7 +81,7 @@ export function MissionCard({ mission, estimatedTime }: MissionCardProps) {
                 {/* Context line */}
                 {mission.context_line && (
                     <p className={cn(
-                        "text-[10px] font-mono text-muted-foreground uppercase mt-6 opacity-60 font-bold",
+                        "text-xs font-mono text-muted-foreground uppercase mt-6 font-bold",
                         !isArabic && "tracking-wide"
                     )}>
                         // {mission.context_line} //

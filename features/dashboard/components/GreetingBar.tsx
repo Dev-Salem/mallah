@@ -45,7 +45,7 @@ export function GreetingBar({ learner, path, stage, paceStatus }: GreetingBarPro
 
                 {/* Context strip - Tactical Breadcrumbs */}
                 <div className={cn(
-                    "flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-mono text-muted-foreground uppercase",
+                    "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-muted-foreground uppercase",
                     !isArabic && "tracking-[0.12em]"
                 )}>
                     <div className="flex items-center gap-1.5 font-bold">
@@ -67,7 +67,7 @@ export function GreetingBar({ learner, path, stage, paceStatus }: GreetingBarPro
 
             {/* Status badge */}
             <div className={cn(
-                "text-[10px] font-mono uppercase font-black px-3 py-1.5 border shrink-0 self-start shadow-sm",
+                "text-xs font-mono uppercase font-black px-3 py-1.5 border shrink-0 self-start shadow-sm",
                 badgeColor,
                 !isArabic && "tracking-widest"
             )}>
