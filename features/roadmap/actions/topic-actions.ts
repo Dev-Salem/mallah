@@ -72,6 +72,40 @@ export async function markTopicCompleteAction(topicId: string): Promise<{ succes
         return { success: false, error: error.message };
     }
 
+    // Handle skill acquisition
+    const { data: topicSkills } = await supabase
+        .from('topic_skills')
+        .select('skill_id')
+        .eq('topic_id', topicId);
+
+    if (topicSkills && topicSkills.length > 0) {
+        const skillIds = topicSkills.map(ts => ts.skill_id);
+        const { data: existingSkills } = await supabase
+            .from('user_skills')
+            .select('skill_id, level')
+            .eq('user_id', user.id)
+            .in('skill_id', skillIds);
+            
+        const existingSkillMap = new Map(existingSkills?.map(s => [s.skill_id, s.level]) || []);
+        
+        const finalSkillUpserts = topicSkills.map(ts => {
+            const currentLevel = existingSkillMap.get(ts.skill_id);
+            let nextLevel = 'beginner';
+            if (currentLevel === 'beginner') nextLevel = 'intermediate';
+            if (currentLevel === 'intermediate' || currentLevel === 'advanced') nextLevel = currentLevel; // Don't downgrade
+            
+            return {
+                user_id: user.id,
+                skill_id: ts.skill_id,
+                level: currentLevel ? nextLevel : 'beginner',
+                source: 'roadmap',
+                last_updated_at: new Date().toISOString()
+            };
+        });
+
+        await supabase.from('user_skills').upsert(finalSkillUpserts, { onConflict: 'user_id, skill_id' });
+    }
+
     return { success: true };
 }
 

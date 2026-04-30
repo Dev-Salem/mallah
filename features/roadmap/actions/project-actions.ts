@@ -88,6 +88,85 @@ export async function submitProjectAction(
         return { success: false, error: error.message };
     }
 
+    // 2. Skill acquisition
+    const { data: projectSkills } = await supabase
+        .from('project_skills')
+        .select('skill_id')
+        .eq('project_id', projectId);
+
+    if (projectSkills && projectSkills.length > 0) {
+        const skillIds = projectSkills.map(ps => ps.skill_id);
+        const { data: existingSkills } = await supabase
+            .from('user_skills')
+            .select('skill_id, level')
+            .eq('user_id', user.id)
+            .in('skill_id', skillIds);
+            
+        const existingSkillMap = new Map(existingSkills?.map(s => [s.skill_id, s.level]) || []);
+        
+        const finalSkillUpserts = projectSkills.map(ps => {
+            const currentLevel = existingSkillMap.get(ps.skill_id);
+            let nextLevel = 'beginner';
+            if (currentLevel === 'beginner') nextLevel = 'intermediate';
+            if (currentLevel === 'intermediate' || currentLevel === 'advanced') nextLevel = currentLevel;
+            
+            return {
+                user_id: user.id,
+                skill_id: ps.skill_id,
+                level: currentLevel ? nextLevel : 'beginner',
+                source: 'project',
+                last_updated_at: new Date().toISOString()
+            };
+        });
+
+        await supabase.from('user_skills').upsert(finalSkillUpserts, { onConflict: 'user_id, skill_id' });
+    }
+
+    // 3. Stage unlock logic
+    const { data: currentProject } = await supabase
+        .from('projects')
+        .select('stage_id')
+        .eq('project_id', projectId)
+        .single();
+        
+    if (currentProject?.stage_id) {
+        const { data: currentStage } = await supabase
+            .from('stages')
+            .select('path_id, order_index')
+            .eq('stage_id', currentProject.stage_id)
+            .single();
+            
+        if (currentStage) {
+            const { data: nextStage } = await supabase
+                .from('stages')
+                .select('stage_id')
+                .eq('path_id', currentStage.path_id)
+                .gt('order_index', currentStage.order_index)
+                .order('order_index', { ascending: true })
+                .limit(1)
+                .single();
+                
+            if (nextStage) {
+                const { data: nextProjects } = await supabase
+                    .from('projects')
+                    .select('project_id, is_public_default')
+                    .eq('stage_id', nextStage.stage_id);
+                    
+                if (nextProjects && nextProjects.length > 0) {
+                    const nextProjectInserts = nextProjects.map(p => ({
+                        user_id: user.id,
+                        project_id: p.project_id,
+                        status: 'available',
+                        is_public: p.is_public_default !== false,
+                        created_at: new Date().toISOString()
+                    }));
+                    
+                    await supabase.from('user_projects').upsert(nextProjectInserts, { onConflict: 'user_id, project_id' });
+                }
+            }
+        }
+    }
+
     return { success: true };
 }
 
