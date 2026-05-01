@@ -56,6 +56,7 @@ export interface OpportunityAnalysisResult {
     match_score: number;
     job_title: string | null;
     company_name: string | null;
+    location: string | null;
     seniority_level: string | null;
     raw_jd_text: string;
     extracted_skills: {

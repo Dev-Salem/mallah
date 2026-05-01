@@ -10,6 +10,7 @@ import {
   Briefcase,
   Settings,
   ChevronRight,
+  ClipboardList,
   Menu,
   X,
 } from 'lucide-react';
@@ -82,11 +83,20 @@ export function Sidebar() {
         : false
     },
     { key: 'opportunityAnalyzer', href: '/dashboard/opportunities', icon: Briefcase, label: t('opportunityAnalyzer') },
+    { 
+      key: 'applicationTracker', 
+      href: '/dashboard/tracker', 
+      icon: ClipboardList, 
+      label: t('Tracker.title'),
+      showDot: sidebarData?.hasActiveApplications ?? false,
+      dotColor: 'bg-amber-500'
+    },
   ];
 
   const mobileTabItems = [
     { key: 'dashboard', href: '/dashboard', icon: Home, label: 'Dashboard' },
     { key: 'roadmap', href: '/dashboard/roadmap', icon: Map, label: 'Roadmap' },
+    { key: 'tracker', href: '/dashboard/tracker', icon: ClipboardList, label: 'Tracker' },
     { key: 'skillsHub', href: '/dashboard/portfolio', icon: Layers, label: 'Portfolio' },
     { key: 'resumeBuilder', href: '/dashboard/resume-builder', icon: FileText, label: 'Resume' },
     { key: 'more', href: '#', icon: Menu, label: 'More' },

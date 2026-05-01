@@ -253,6 +253,63 @@
           "archive": "Saved"
         }
       }
+    },
+    "Tracker": {
+      "title": "Application Tracker",
+      "addApplication": "Add Application",
+      "editApplication": "Edit Application",
+      "deleteApplication": "Delete Application",
+      "deleteConfirm": "Are you sure you want to delete this application? This action cannot be undone.",
+      "searchPlaceholder": "Search by company or role...",
+      "sortBy": "Sort by",
+      "sortOptions": {
+        "newest": "Newest First",
+        "oldest": "Oldest First",
+        "stage": "Stage (A-Z)"
+      },
+      "stages": {
+        "all": "All",
+        "saved": "Saved",
+        "applied": "Applied",
+        "in_review": "In Review",
+        "interviewing": "Interviewing",
+        "offer": "Offer Received",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "withdrawn": "Withdrawn"
+      },
+      "fields": {
+        "company": "Company Name",
+        "role": "Job Title",
+        "location": "Location",
+        "stage": "Application Stage",
+        "date": "Date",
+        "dateApplied": "Date Applied",
+        "dateSaved": "Date Saved",
+        "url": "Job Posting Link",
+        "notes": "Notes",
+        "notesPlaceholder": "Add interview notes, next steps, or key contacts..."
+      },
+      "import": {
+        "title": "Import from Analysis",
+        "description": "Auto-fill using a saved analysis from the Opportunity Analyzer.",
+        "browse": "Browse",
+        "select": "Select an analysis",
+        "noAnalyses": "No saved analyses found. Analyze a role first."
+      },
+      "empty": {
+        "title": "No Applications Found",
+        "description": "Start tracking your job search by adding your first application manually or importing it from an analysis.",
+        "filterTitle": "No {stage} Applications",
+        "filterDescription": "Try a different filter or add a new application."
+      },
+      "actions": {
+        "save": "Save Application",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "confirmDelete": "Confirm Delete",
+        "viewAnalysis": "View Analysis"
+      }
     }
   },
   "Roadmap": {

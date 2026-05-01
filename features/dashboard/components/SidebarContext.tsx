@@ -10,6 +10,7 @@ export interface SidebarContextData {
     firstName: string;
     resumeStatus: 'not_created' | 'in_progress' | 'ready';
     unlockedSkillsCount: number;
+    hasActiveApplications: boolean;
 }
 
 const SidebarContext = createContext<SidebarContextData | null>(null);

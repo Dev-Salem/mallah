@@ -45,6 +45,14 @@ async function getSidebarData(userId: string): Promise<SidebarContextData | null
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId);
 
+  // Active applications for tracker dot
+  const { data: activeApps } = await supabase
+    .from("application_tracker")
+    .select("application_id")
+    .eq("user_id", userId)
+    .in("stage", ["interviewing", "offer"])
+    .limit(1);
+
   return {
     pathDisplayName,
     pathCompletionPercent,
@@ -53,6 +61,7 @@ async function getSidebarData(userId: string): Promise<SidebarContextData | null
     firstName: learner.first_name,
     resumeStatus: "not_created",
     unlockedSkillsCount: skillCount ?? 0,
+    hasActiveApplications: (activeApps?.length ?? 0) > 0,
   };
 }
 
