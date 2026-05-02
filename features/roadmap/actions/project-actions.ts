@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { revalidatePath } from 'next/cache';
 import { Project, UserProjectSubmission } from '../types';
 
 export async function getProjectAction(projectId: string): Promise<(Project & { submission?: UserProjectSubmission }) | null> {
@@ -76,11 +77,11 @@ export async function submitProjectAction(
             github_url: data.github_url || null,
             demo_url: data.demo_url || null,
             personal_note: data.personal_note || null,
-            public_portfolio: data.public_portfolio || false,
+            is_public: data.public_portfolio || false,
             thumbnail_url: data.thumbnail_url || null,
-            tech_stack_tags: data.tech_stack_tags || null,
+            tech_tags: data.tech_stack_tags || null,
             status: 'completed',
-            updated_at: new Date().toISOString()
+            completed_at: new Date().toISOString()
         }, { onConflict: 'user_id, project_id' });
 
     if (error) {
@@ -167,6 +168,87 @@ export async function submitProjectAction(
         }
     }
 
+    revalidatePath('/dashboard/roadmap');
+    return { success: true };
+}
+
+export async function skipProjectAction(projectId: string): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { success: false, error: 'Unauthorized' };
+    }
+
+    // Get project default visibility to satisfy NOT NULL constraint
+    const { data: project } = await supabase
+        .from('projects')
+        .select('is_public_default')
+        .eq('project_id', projectId)
+        .single();
+
+    const { error } = await supabase
+        .from('user_projects')
+        .upsert({
+            user_id: user.id,
+            project_id: projectId,
+            status: 'waiting',
+            is_public: project?.is_public_default ?? true,
+            skipped: true,
+            skipped_at: new Date().toISOString()
+        }, { onConflict: 'user_id, project_id' });
+
+    if (error) {
+        console.error('Error skipping project:', error);
+        return { success: false, error: error.message };
+    }
+
+    // Trigger stage unlock logic
+    const { data: currentProject } = await supabase
+        .from('projects')
+        .select('stage_id')
+        .eq('project_id', projectId)
+        .single();
+        
+    if (currentProject?.stage_id) {
+        const { data: currentStage } = await supabase
+            .from('stages')
+            .select('path_id, order_index')
+            .eq('stage_id', currentProject.stage_id)
+            .single();
+            
+        if (currentStage) {
+            const { data: nextStage } = await supabase
+                .from('stages')
+                .select('stage_id')
+                .eq('path_id', currentStage.path_id)
+                .gt('order_index', currentStage.order_index)
+                .order('order_index', { ascending: true })
+                .limit(1)
+                .single();
+                
+            if (nextStage) {
+                const { data: nextProjects } = await supabase
+                    .from('projects')
+                    .select('project_id, is_public_default')
+                    .eq('stage_id', nextStage.stage_id);
+                    
+                if (nextProjects && nextProjects.length > 0) {
+                    const nextProjectInserts = nextProjects.map(p => ({
+                        user_id: user.id,
+                        project_id: p.project_id,
+                        status: 'available',
+                        is_public: p.is_public_default !== false,
+                        created_at: new Date().toISOString()
+                    }));
+                    
+                    await supabase.from('user_projects').upsert(nextProjectInserts, { onConflict: 'user_id, project_id' });
+                }
+            }
+        }
+    }
+
+    revalidatePath('/dashboard/roadmap');
     return { success: true };
 }
 

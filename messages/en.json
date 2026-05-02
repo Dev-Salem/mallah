@@ -322,6 +322,8 @@
     "active_status": "Active",
     "gates_stage": "GATES STAGE {stage}",
     "unlock_notice": "COMPLETE STAGE {stage} PROJECT TO UNLOCK",
+    "waiting_notice": "SKIPPED: SUBMIT LATER",
+    "skipped_status": "SKIPPED",
     "done": "DONE",
     "in_progress_caps": "IN PROGRESS",
     "not_started_caps": "NOT STARTED",
@@ -363,6 +365,7 @@
       "review": "Review",
       "start_project": "Start Project",
       "continue_project": "Continue Project",
+      "resume_project": "Resume Project",
       "view_submission": "View Submission"
     },
     "milestone_project": "Milestone Project",
@@ -445,7 +448,13 @@
     "hoursAmount": "{count} hours",
     "grade": "Grade",
     "urlRequired": "Submission URL is required.",
-    "submitError": "Failed to submit. Try again."
+    "submitError": "Failed to submit. Try again.",
+    "skipped": "Skipped & Waiting",
+    "skippedMessage": "You've chosen to submit this project later.",
+    "skippedExplanation": "You can now proceed to the next stage of your roadmap. This project will remain in your 'waiting' list until you are ready to submit it.",
+    "submitNow": "Submit Now",
+    "skipAndSubmitLater": "Skip & Submit Later",
+    "skipError": "Failed to skip project. Please try again."
   },
   "Onboarding": {
     "stepLabel": "Step {step} of {total}",

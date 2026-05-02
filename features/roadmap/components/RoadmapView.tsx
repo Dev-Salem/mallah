@@ -35,7 +35,7 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
 
     roadmap.stages.forEach((stage, idx) => {
         const stageTopicsCompleted = stage.topics.filter(t => t.user_status === 'completed').length;
-        const projectCompleted = stage.project?.user_status === 'completed' ? 1 : 0;
+        const projectCompleted = (stage.project?.user_status === 'completed' || stage.project?.user_status === 'waiting') ? 1 : 0;
         completedTopics += (stageTopicsCompleted + projectCompleted);
 
         // Find first non-completed stage (current active)
@@ -167,45 +167,47 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                 {/* Vertical Spine Line */}
                 <div className="absolute left-[19px] md:left-[24px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-primary/30 to-transparent opacity-20 dark:opacity-40" />
 
-                {roadmap.stages.map((stage, index) => {
-                    const isCompleted = !stage.topics.some(t => t.user_status !== 'completed') &&
-                        (!stage.project || stage.project.user_status === 'completed');
-                    const state = !stage.is_unlocked ? 'locked' : isCompleted ? 'completed' : 'current';
+                <Accordion type="multiple" defaultValue={roadmap.stages.filter(s => s.is_unlocked && !s.topics.every(t => t.user_status === 'completed')).map(s => s.stage_id)} className="contents">
+                    {roadmap.stages.map((stage, index) => {
+                        const isCompleted = !stage.topics.some(t => t.user_status !== 'completed') &&
+                            (!stage.project || stage.project.user_status === 'completed' || stage.project.user_status === 'waiting');
+                        const state = !stage.is_unlocked ? 'locked' : isCompleted ? 'completed' : 'current';
 
-                    return (
-                        <div key={stage.stage_id} className="contents">
-                            {/* Timeline Node - Stage Number Circle */}
-                            <div className="relative flex flex-col items-center pt-8">
-                                <div 
-                                    className={cn(
-                                        "z-20 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 text-[10px] md:text-xs font-mono font-bold transition-all duration-700",
-                                        state === 'completed' ? "bg-success border-success text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]" :
-                                        state === 'current' ? "bg-primary border-primary text-white shadow-[0_0_25px_rgba(249,115,22,0.5)] scale-110" :
-                                        "bg-muted border-border text-muted-foreground opacity-60"
-                                    )}
-                                >
-                                    {String(index + 1).padStart(2, '0')}
-                                </div>
-                                {index === 0 && (
-                                    <div className="absolute -top-1 text-[9px] font-mono text-primary/60 uppercase tracking-widest text-center">
-                                        START
+                        return (
+                            <AccordionItem key={stage.stage_id} value={stage.stage_id} className="contents border-none">
+                                {/* Timeline Node - Stage Number Circle */}
+                                <div className="relative flex flex-col items-center pt-8">
+                                    <div 
+                                        className={cn(
+                                            "z-20 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 text-[10px] md:text-xs font-mono font-bold transition-all duration-700",
+                                            state === 'completed' ? "bg-success border-success text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]" :
+                                            state === 'current' ? "bg-primary border-primary text-white shadow-[0_0_25px_rgba(249,115,22,0.5)] scale-110" :
+                                            "bg-muted border-border text-muted-foreground opacity-60"
+                                        )}
+                                    >
+                                        {String(index + 1).padStart(2, '0')}
                                     </div>
-                                )}
-                            </div>
+                                    {index === 0 && (
+                                        <div className="absolute -top-1 text-[9px] font-mono text-primary/60 uppercase tracking-widest text-center">
+                                            START
+                                        </div>
+                                    )}
+                                </div>
 
-                            {/* Stage Content Card */}
-                            <div className="pb-16 group">
-                                <StageCard
-                                    stage={stage}
-                                    t={t}
-                                    locale={locale}
-                                    state={state}
-                                    isFirst={index === 0}
-                                />
-                            </div>
-                        </div>
-                    );
-                })}
+                                {/* Stage Content Card */}
+                                <div className="pb-16 group">
+                                    <StageCard
+                                        stage={stage}
+                                        t={t}
+                                        locale={locale}
+                                        state={state}
+                                        isFirst={index === 0}
+                                    />
+                                </div>
+                            </AccordionItem>
+                        );
+                    })}
+                </Accordion>
             </div>
         </div>
     );
@@ -231,9 +233,9 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
             )}
 
             {/* Stage Header */}
-            <div className="relative z-10 flex flex-col gap-6">
+            <AccordionTrigger className="hover:no-underline p-0 relative z-10 flex flex-col gap-6 items-stretch">
                 <div className="flex items-center justify-between gap-6">
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 text-left">
                         <div className="flex items-center gap-3">
                             <span className={cn(
                                 "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
@@ -290,11 +292,11 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                         />
                     </div>
                 )}
-            </div>
+            </AccordionTrigger>
 
             {/* Stage Content - Restricted if locked */}
             {state !== 'locked' ? (
-                <div className="relative z-10 flex flex-col gap-6">
+                <AccordionContent className="relative z-10 flex flex-col gap-6 pt-6">
                     <div className="flex flex-col gap-3">
                         {stage.topics.filter(t => !t.topic_type.startsWith('project_')).map(topic => (
                             <TopicItem key={topic.topic_id} topic={topic} t={t} locale={locale} />
@@ -306,7 +308,7 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                             <ProjectItem project={{ ...stage.project, stage_order: stage.order_index }} t={t} locale={locale} />
                          </div>
                     )}
-                </div>
+                </AccordionContent>
             ) : (
                 /* Unlock Notice Footer for Locked Stage */
                 <div className="mt-4 pt-6 border-t border-border/20 flex items-center gap-3 text-muted-foreground/40 font-mono font-bold text-[10px] uppercase tracking-[0.15em]">
@@ -415,6 +417,7 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
 
 function ProjectItem({ project, t, locale }: { project: { user_status?: string, title?: string, description?: string | null, difficulty_level?: string, project_id: string, stage_order?: number }, t: ReturnType<typeof useTranslations>, locale: string }) {
     const isCompleted = project.user_status === 'completed';
+    const isWaiting = project.user_status === 'waiting';
     const isInProgress = project.user_status === 'in_progress';
 
     return (
@@ -422,10 +425,12 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
             "relative overflow-hidden rounded-3xl border transition-all duration-700",
             isCompleted 
                 ? "border-success/20 bg-success/[0.03]" 
+                : isWaiting
+                ? "border-warning/20 bg-warning/[0.03]"
                 : "border-primary/30 bg-card shadow-[0_0_40px_rgba(249,115,22,0.05)]"
         )}>
             {/* Glossy top accent for current */}
-            {!isCompleted && (
+            {(!isCompleted && !isWaiting) && (
                 <div className="absolute top-0 left-0 right-0 h-[4px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-80" />
             )}
 
@@ -433,23 +438,22 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                 <div className="flex flex-col md:flex-row items-start gap-8">
                     {/* Trophy Hub Icon - Square Box */}
                     <div className={cn(
-                        "flex-shrink-0 flex items-center justify-center w-20 h-20 rounded-2xl border transition-all duration-700",
                         isCompleted 
                             ? "border-success/30 bg-success/10 text-success shadow-[0_0_20px_rgba(34,197,94,0.1)]" 
+                            : isWaiting
+                            ? "border-warning/30 bg-warning/10 text-warning"
                             : "border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(249,115,22,0.15)]"
                     )}>
-                        <Trophy className={cn("w-10 h-10", !isCompleted && "animate-pulse")} />
+                        <Trophy className={cn("w-10 h-10", (!isCompleted && !isWaiting) && "animate-pulse")} />
                     </div>
 
                     <div className="flex-grow min-w-0">
                         <div className="flex flex-wrap items-center gap-4 mb-4">
                             <div className={cn(
                                 "px-3 py-1 rounded-md text-[10px] font-mono font-bold tracking-[0.2em] border",
-                                isCompleted 
-                                    ? "border-success/30 text-success bg-success/5" 
-                                    : "border-primary/40 text-primary bg-primary/10 shadow-[0_0_15px_rgba(249,115,22,0.2)]"
+                                isCompleted ? 'COMPLETED // SYNCED' : isWaiting ? t('skipped_status').toUpperCase() : t('milestone_project').toUpperCase()
                             )}>
-                                {isCompleted ? 'COMPLETED // SYNCED' : t('milestone_project').toUpperCase()}
+                                {isCompleted ? 'COMPLETED // SYNCED' : isWaiting ? t('skipped_status').toUpperCase() : t('milestone_project').toUpperCase()}
                             </div>
                             <div className="text-[10px] font-mono font-bold text-muted-foreground/60 uppercase tracking-[0.2em]">
                                 {t('difficulty_label')}: {t(`difficulty.${project.difficulty_level}`)}
@@ -457,7 +461,7 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                         </div>
 
                         <h4 className="text-2xl md:text-3xl font-bold tracking-tight mb-3 uppercase italic decoration-primary/30 decoration-2 underline-offset-4">
-                            PROJECT: {project.title}
+                            {project.title}
                         </h4>
                         <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-3xl">
                             {project.description}
@@ -469,9 +473,9 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                     <div className="flex items-center gap-3">
                          <span className={cn(
                              "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
-                             isCompleted ? "text-success/60" : "text-primary/70"
+                             isCompleted ? "text-success/60" : isWaiting ? "text-warning/60" : "text-primary/70"
                          )}>
-                             ● {t('gates_stage', { stage: (project.stage_order || 0) + 1 })}
+                             ● {isWaiting ? t('waiting_notice') : t('gates_stage', { stage: (project.stage_order || 0) + 1 })}
                          </span>
                     </div>
 
@@ -480,12 +484,14 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                             "group relative w-full sm:w-auto px-10 py-4 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] transition-all duration-300 overflow-hidden",
                             isCompleted 
                                 ? "bg-transparent border border-success/30 text-success hover:bg-success hover:text-white" 
+                                : isWaiting
+                                ? "bg-transparent border border-warning/30 text-warning hover:bg-warning hover:text-white"
                                 : "bg-primary text-white border border-primary shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_30px_rgba(249,115,22,0.5)] hover:-translate-y-1"
                         )}>
                             <span className="relative z-10">
-                                {isCompleted ? t('actions.view_submission') : isInProgress ? t('actions.continue_project') : t('actions.start_project')}
+                                {isCompleted ? t('actions.view_submission') : isWaiting ? t('actions.resume_project') : isInProgress ? t('actions.continue_project') : t('actions.start_project')}
                             </span>
-                            {!isCompleted && (
+                            {(!isCompleted && !isWaiting) && (
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[1200ms]" />
                             )}
                         </button>

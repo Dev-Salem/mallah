@@ -6,7 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { ArrowLeft, Trophy, ExternalLink, Link as LinkIcon, Edit2, CheckCircle2, Github, BookOpen, AlertCircle, ChevronRight, X } from 'lucide-react';
 import { Project, Skill, UserProjectSubmission } from '../types';
-import { submitProjectAction } from '../actions/project-actions';
+import { submitProjectAction, skipProjectAction } from '../actions/project-actions';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -21,7 +21,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
     const router = useRouter();
 
     const [isPending, startTransition] = React.useTransition();
-    const [isEditing, setIsEditing] = React.useState(!project.submission || project.submission.status !== 'completed');
+    const [isEditing, setIsEditing] = React.useState(!project.submission || (project.submission.status !== 'completed' && project.submission.status !== 'waiting'));
 
     // Form fields
     const [githubUrl, setGithubUrl] = React.useState(project.submission?.github_url || '');
@@ -54,7 +54,21 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
         });
     };
 
+    const handleSkip = () => {
+        setError('');
+        startTransition(async () => {
+            const res = await skipProjectAction(project.project_id);
+            if (res.success) {
+                setIsEditing(false);
+                router.refresh();
+            } else {
+                setError(res.error || t('skipError'));
+            }
+        });
+    };
+
     const isCompleted = project.user_status === 'completed';
+    const isWaiting = project.user_status === 'waiting';
 
     return (
         <div className="h-full w-full max-w-[1400px] mx-auto flex flex-col xl:flex-row gap-8 py-8 px-4 sm:px-6">
@@ -243,6 +257,39 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                 </div>
                             </div>
                         </div>
+                    ) : (isWaiting && !isEditing) ? (
+                        <div className="space-y-6 flex-1 flex flex-col justify-between">
+                            <div className="space-y-6">
+                                <div className="bg-warning/10 border border-warning/20 text-warning p-4 rounded-xl flex items-start gap-3 mb-6">
+                                    <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                                    <div>
+                                        <div className="font-bold mb-1">{t('skipped')}</div>
+                                        <div className="text-sm opacity-90">
+                                            {t('skippedMessage')}
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    {t('skippedExplanation')}
+                                </p>
+                            </div>
+
+                            <div className="pt-6 mt-6 border-t flex flex-col gap-3">
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors"
+                                >
+                                    <Edit2 className="w-4 h-4" />
+                                    {t('submitNow')}
+                                </button>
+                                <Link
+                                    href={`/${locale}/dashboard/roadmap`}
+                                    className="w-full px-4 py-3 border border-border text-muted-foreground font-bold rounded-xl hover:bg-accent hover:text-foreground transition-colors flex items-center justify-center gap-2"
+                                >
+                                    {t('nextStage')} <ChevronRight className="w-4 h-4" />
+                                </Link>
+                            </div>
+                        </div>
                     ) : (
                         <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between">
                             <div className="space-y-5">
@@ -314,25 +361,49 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                 )}
                             </div>
 
-                            <div className="pt-6 mt-6 border-t flex items-center justify-end gap-3">
-                                {isCompleted && (
+                            <div className="pt-6 mt-6 border-t flex flex-col gap-3">
+                                <div className="flex items-center gap-3">
+                                    {isCompleted && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsEditing(false)}
+                                            className="px-4 py-2.5 text-sm font-bold text-muted-foreground hover:bg-muted rounded-xl transition-colors flex items-center gap-2 w-full justify-center"
+                                            disabled={isPending}
+                                        >
+                                            <X className="w-4 h-4" /> {t('cancel')}
+                                        </button>
+                                    )}
+                                    <button
+                                        type="submit"
+                                        disabled={isPending}
+                                        className="w-full px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                    >
+                                        <CheckCircle2 className="w-5 h-5" />
+                                        {isPending ? t('saving') : (isCompleted ? t('updateProject') : t('markComplete'))}
+                                    </button>
+                                </div>
+
+                                {!isCompleted && !isWaiting && (
+                                    <button
+                                        type="button"
+                                        onClick={handleSkip}
+                                        disabled={isPending}
+                                        className="w-full px-6 py-3 border border-border text-muted-foreground font-bold rounded-xl hover:bg-accent hover:text-foreground transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                    >
+                                        <ChevronRight className="w-5 h-5" />
+                                        {t('skipAndSubmitLater')}
+                                    </button>
+                                )}
+                                
+                                {isWaiting && (
                                     <button
                                         type="button"
                                         onClick={() => setIsEditing(false)}
-                                        className="px-4 py-2.5 text-sm font-bold text-muted-foreground hover:bg-muted rounded-xl transition-colors flex items-center gap-2 w-full justify-center"
-                                        disabled={isPending}
+                                        className="w-full px-4 py-3 border border-border text-muted-foreground font-bold rounded-xl hover:bg-accent hover:text-foreground transition-colors flex items-center justify-center gap-2"
                                     >
-                                        <X className="w-4 h-4" /> {t('cancel')}
+                                        {t('cancel')}
                                     </button>
                                 )}
-                                <button
-                                    type="submit"
-                                    disabled={isPending}
-                                    className="w-full px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-                                >
-                                    <CheckCircle2 className="w-5 h-5" />
-                                    {isPending ? t('saving') : (isCompleted ? t('updateProject') : t('markComplete'))}
-                                </button>
                             </div>
                         </form>
                     )}

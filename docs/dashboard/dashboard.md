@@ -63,13 +63,12 @@ The app shell wraps all learner-facing pages. It is not part of the dashboard co
 | Dashboard | Home | Filled icon + accent left border | None |
 | My Roadmap | Map/Route | Filled icon + accent left border | None |
 | Portfolio Hub | Layers/Grid | Filled icon + accent left border | None |
-| Resume Builder | Document | Filled icon + accent left border | Amber dot if `resume_status = not_created` AND `unlocked_skills_count ≥ 5` |
+| Resume Builder | Document | Filled icon + accent left border | - |
 | Opportunity Analyzer | Briefcase | Filled icon + accent left border | None |
 | Settings | Gear | Filled icon + accent left border | None |
 
 **Active state:** The currently active page shows a filled icon variant and a 2–3px left-side accent border. All inactive items show outline icon variants.
 
-**Resume Builder dot:** A subtle amber dot appears on the Resume Builder nav item if `resume_status = not_created` AND `unlocked_skills_count ≥ 5`. This surfaces the "build your resume" signal passively without any alert. The dot disappears once `resume_status` moves to `in_progress`.
 
 ### 3.3 Path Mini-Status (Sidebar Footer Area)
 
@@ -424,7 +423,7 @@ Compact icon + label link row below the Progress Zone. Visually subtle — must 
 |---|---|---|
 | View Full Roadmap | Map/Route | None |
 | Portfolio Hub | Layers/Grid | None |
-| Resume Builder | Document | Amber dot if `resume_status = not_created` AND `unlocked_skills_count ≥ 5` |
+| Resume Builder | Document | - |
 | Opportunity Analyzer | Briefcase | None |
 
 **Icons are required.** Use the same icon set as the sidebar. The 16px icons allow the row to be scanned instantly without reading all four labels.

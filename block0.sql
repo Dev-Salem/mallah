@@ -110,7 +110,7 @@ BEGIN
     topic_frontend_1_7_id uuid;
   BEGIN
     INSERT INTO public.topics (stage_id, title, summary, topic_type, estimated_time_min, difficulty_level, order_index)
-    VALUES (stage_frontend_1_id, 'PROJECT: Personal Profile Page', '', 'project_milestone', 4, 'beginner', 7)
+    VALUES (stage_frontend_1_id, 'Personal Profile Page', '', 'project_milestone', 4, 'beginner', 7)
     RETURNING topic_id INTO topic_frontend_1_7_id;
 
     INSERT INTO public.topic_resources (topic_id, resource_type, title, url, content, order_index)
@@ -125,7 +125,7 @@ BEGIN
     INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_frontend_1_7_id, 'css') ON CONFLICT DO NOTHING;
     INSERT INTO public.skills (skill_id, name, category) VALUES ('chrome_devtools', 'Chrome DevTools', 'tool') ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name;
     INSERT INTO public.topic_skills (topic_id, skill_id) VALUES (topic_frontend_1_7_id, 'chrome_devtools') ON CONFLICT DO NOTHING;
-    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_frontend_1_id, 'PROJECT: Personal Profile Page', '', 'beginner') ON CONFLICT DO NOTHING;
+    INSERT INTO public.projects (stage_id, title, description, difficulty_level) VALUES (stage_frontend_1_id, 'Personal Profile Page', '', 'beginner') ON CONFLICT DO NOTHING;
   END;
 END $$;
 

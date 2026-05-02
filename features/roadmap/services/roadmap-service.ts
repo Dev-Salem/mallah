@@ -89,7 +89,7 @@ export class RoadmapService {
                 } as Project;
 
                 // Set condition for next stage
-                previousStageProjectCompleted = project.user_status === 'completed';
+                previousStageProjectCompleted = project.user_status === 'completed' || project.user_status === 'waiting';
             } else {
                 // If no project in this stage, next stage is automatically unlocked
                 previousStageProjectCompleted = true;
@@ -122,7 +122,7 @@ export class RoadmapService {
             .select(`
                 stage_id,
                 topics (topic_id),
-                projects (project_id)
+                projects (project_id, is_public_default)
             `)
             .eq('path_id', pathId);
 
@@ -149,7 +149,8 @@ export class RoadmapService {
                     projectProgressRows.push({
                         user_id: userId,
                         project_id: project.project_id,
-                        status: 'available'
+                        status: 'available',
+                        is_public: project.is_public_default ?? true
                     });
                 }
             }

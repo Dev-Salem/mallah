@@ -322,6 +322,8 @@
     "active_status": "نشط",
     "gates_stage": "بوابات المرحلة {stage}",
     "unlock_notice": "أكمل مشروع المرحلة {stage} لفتح القفل",
+    "waiting_notice": "تم التخطي: التسليم لاحقاً",
+    "skipped_status": "تم التخطي",
     "done": "تم الإنجاز",
     "in_progress_caps": "قيد التقدم",
     "not_started_caps": "لم يبدأ",
@@ -363,6 +365,7 @@
       "review": "مراجعة",
       "start_project": "ابدأ المشروع",
       "continue_project": "متابعة المشروع",
+      "resume_project": "استئناف المشروع",
       "view_submission": "عرض التسليم"
     },
     "milestone_project": "مشروع رئيسي",
@@ -445,7 +448,13 @@
     "hoursAmount": "{count} ساعات",
     "grade": "الدرجة",
     "urlRequired": "رابط التسليم مطلوب.",
-    "submitError": "فشل التسليم. حاول مرة أخرى."
+    "submitError": "فشل التسليم. حاول مرة أخرى.",
+    "skipped": "تم التخطي وبانتظار التسليم",
+    "skippedMessage": "لقد اخترت تسليم هذا المشروع لاحقاً.",
+    "skippedExplanation": "يمكنك الآن الانتقال للمرحلة التالية في خارطة طريقك. سيبقى هذا المشروع في حالة 'بانتظار التسليم' حتى تكون جاهزاً لرفعه.",
+    "submitNow": "تسليم الآن",
+    "skipAndSubmitLater": "تخطي وتسليم لاحقاً",
+    "skipError": "فشل تخطي المشروع. يرجى المحاولة مرة أخرى."
   },
   "Onboarding": {
     "stepLabel": "الخطوة {step} من {total}",

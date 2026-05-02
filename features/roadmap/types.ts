@@ -41,7 +41,7 @@ export interface Project {
     difficulty_level: 'beginner' | 'intermediate' | 'advanced';
     thumbnail_url?: string | null;
     is_public_default: boolean;
-    user_status?: 'available' | 'in_progress' | 'completed'; // Joined from user_projects
+    user_status?: 'available' | 'in_progress' | 'completed' | 'waiting'; // Joined from user_projects
 }
 
 export interface UserProjectSubmission {
@@ -54,7 +54,7 @@ export interface UserProjectSubmission {
     public_portfolio?: boolean;
     thumbnail_url?: string | null;
     tech_stack_tags?: string[] | null;
-    status: 'in_progress' | 'completed';
+    status: 'in_progress' | 'completed' | 'waiting';
     feedback?: string | null;
     grade?: number | null;
     updated_at?: string;
