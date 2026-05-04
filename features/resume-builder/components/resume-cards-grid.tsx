@@ -24,14 +24,6 @@ import {
   deleteResumeAction,
   cloneResumeAction,
 } from "@/features/resume-builder/actions/resume-actions";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription, 
-  DialogFooter 
-} from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -58,13 +50,11 @@ import { cn } from "@/lib/utils";
 export default function ResumeCardsGrid({ initialData = [] }: { initialData: any[] }) {
   const t = useTranslations("ResumeBuilder");
   const router = useRouter();
+  const [cloningId, setCloningId] = useState<string | null>(null);
   const [isCreatingGeneral, setIsCreatingGeneral] = useState(false);
-  const [isNamingGeneral, setIsNamingGeneral] = useState(false);
-  const [generalResumeTitle, setGeneralResumeTitle] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-  const [cloningId, setCloningId] = useState<string | null>(null);
 
   // Personalization modal state
   const [tailorBaseResume, setTailorBaseResume] = useState<{
@@ -99,20 +89,14 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   };
 
   const handleCreateGeneral = async () => {
-    if (!generalResumeTitle.trim()) {
-      setIsNamingGeneral(true);
-      return;
-    }
     setIsCreatingGeneral(true);
     try {
-      const resume = await createGeneralResumeAction(generalResumeTitle);
+      const resume = await createGeneralResumeAction("General Resume");
       router.push(`/dashboard/resume-builder/${resume.resume_id}`);
     } catch (err: any) {
       toast.error(err.message || "Failed to create resume");
     } finally {
       setIsCreatingGeneral(false);
-      setIsNamingGeneral(false);
-      setGeneralResumeTitle("");
     }
   };
 
@@ -130,7 +114,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   };
 
   const resumes = initialData;
-  const isAtLimit = resumes.length >= 3;
+  const isAtLimit = resumes.length >= 6;
   const bestAts = resumes.length > 0 ? Math.max(...resumes.map(r => r.ats_score || 0)) : 0;
 
   return (
@@ -267,58 +251,6 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
             ))}
           </div>
         )}
-
-        {/* Create General Resume Dialog */}
-        <Dialog open={isNamingGeneral} onOpenChange={(open) => {
-          if (!open) {
-            setIsNamingGeneral(false);
-            setGeneralResumeTitle("");
-          }
-        }}>
-          <DialogContent className="rounded-3xl border border-primary/20 bg-background shadow-2xl p-8 max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                  <Plus className="w-5 h-5 text-primary" />
-                </div>
-                {t("NewResume")}
-              </DialogTitle>
-              <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest pt-2">
-                {t("ResumeTitle")}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <Input
-                value={generalResumeTitle}
-                onChange={(e) => setGeneralResumeTitle(e.target.value)}
-                placeholder={t("ResumeTitlePlaceholder")}
-                className="h-12 rounded-xl border-primary/20 focus:border-primary/50 focus:ring-primary/10 bg-muted/20 font-bold"
-                onKeyDown={(e) => e.key === "Enter" && handleCreateGeneral()}
-                autoFocus
-              />
-            </div>
-            <DialogFooter className="gap-2 pt-2">
-              <Button
-                variant="ghost"
-                onClick={() => setIsNamingGeneral(false)}
-                className="rounded-xl h-12 px-6 text-muted-foreground font-bold uppercase tracking-widest text-[10px]"
-              >
-                {t("Cancel")}
-              </Button>
-              <Button
-                onClick={handleCreateGeneral}
-                disabled={!generalResumeTitle.trim() || isCreatingGeneral}
-                className="rounded-xl h-12 px-8 font-black uppercase tracking-widest text-[10px] bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 min-w-[120px]"
-              >
-                {isCreatingGeneral ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  t("CreateGeneral")
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && closeDeleteDialog()}>

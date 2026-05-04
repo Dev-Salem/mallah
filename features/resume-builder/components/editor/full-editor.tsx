@@ -13,6 +13,7 @@ import {
   Sparkles,
   Target,
   ChevronRight,
+  Edit3,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -20,7 +21,8 @@ import { buildSectionNavItems, type SectionType } from "./section-nav";
 import EditorFormPanel from "./editor-form-panel";
 import ATSModal, { type ATSBreakdown, type ATSHint } from "./ats-modal";
 import PreviewCard from "../live-preview/preview-card";
-import { saveResumeAction } from "@/features/resume-builder/actions/resume-actions";
+import { saveResumeAction, updateResumeTitleAction } from "@/features/resume-builder/actions/resume-actions";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 // New components
@@ -41,6 +43,8 @@ export default function FullEditor({ resume }: { resume: any }) {
 
   /* ── State ────────────────────────────────────────────────────────────────── */
   const [isSaving, setIsSaving] = useState(false);
+  const [resumeTitle, setResumeTitle] = useState(resume.title || "");
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [sections, setSections] = useState<any[]>(resume.resume_sections || []);
   const [atsScore, setAtsScore] = useState<number | null>(resume.ats_score);
   const [hints, setHints] = useState<ATSHint[]>([]);
@@ -76,6 +80,23 @@ export default function FullEditor({ resume }: { resume: any }) {
       toast.error(t("SaveFailed"));
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleTitleSave = async () => {
+    setIsEditingTitle(false);
+    if (resumeTitle === resume.title) return;
+    if (!resumeTitle.trim()) {
+      setResumeTitle(resume.title || "");
+      return;
+    }
+
+    try {
+      await updateResumeTitleAction(resume.resume_id, resumeTitle);
+      toast.success(t("SaveSuccess"));
+    } catch {
+      toast.error(t("SaveFailed"));
+      setResumeTitle(resume.title || "");
     }
   };
 
@@ -119,10 +140,25 @@ export default function FullEditor({ resume }: { resume: any }) {
           </Link>
           
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-               <h1 className="text-xl font-bold tracking-tight text-foreground max-w-sm truncate">
-                {resume.title || t("UntitledResume")}
-              </h1>
+            <div className="flex items-center gap-2 group/title">
+              {isEditingTitle ? (
+                <Input
+                  value={resumeTitle}
+                  onChange={(e) => setResumeTitle(e.target.value)}
+                  onBlur={handleTitleSave}
+                  onKeyDown={(e) => e.key === "Enter" && handleTitleSave()}
+                  className="h-8 py-0 px-2 text-xl font-bold border-primary/20 bg-transparent focus:bg-accent/50 w-auto min-w-[200px]"
+                  autoFocus
+                />
+              ) : (
+                <h1 
+                  className="text-xl font-bold tracking-tight text-foreground max-w-sm truncate cursor-pointer hover:text-primary transition-colors flex items-center gap-2"
+                  onClick={() => setIsEditingTitle(true)}
+                >
+                  {resumeTitle || t("UntitledResume")}
+                  <Edit3 className="w-3.5 h-3.5 opacity-0 group-hover/title:opacity-50" />
+                </h1>
+              )}
             {isJobBased && (
               <div className={cn(
                 "px-2 py-0.5 rounded-lg text-xs font-bold border",

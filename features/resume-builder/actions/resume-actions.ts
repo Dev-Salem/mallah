@@ -152,7 +152,7 @@ export async function aiImproveAction(
 
 export async function cloneResumeAction(resumeId: string, newTitle: string) {
   const existing = await fetchResumes();
-  if (existing.length >= 3) {
+  if (existing.length >= 6) {
     throw new Error("Resume limit reached. Delete a resume to create a new one.");
   }
   const cloned = await cloneResume(resumeId, newTitle);
@@ -162,6 +162,18 @@ export async function cloneResumeAction(resumeId: string, newTitle: string) {
 
 export async function deleteResumeAction(resumeId: string) {
   await deleteResume(resumeId);
+  revalidatePath("/dashboard/resume-builder");
+}
+
+export async function updateResumeTitleAction(resumeId: string, title: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("resumes")
+    .update({ title, last_updated_at: new Date().toISOString() })
+    .eq("resume_id", resumeId);
+    
+  if (error) throw new Error(error.message);
+  revalidatePath(`/resume-builder/${resumeId}`);
   revalidatePath("/dashboard/resume-builder");
 }
 
@@ -176,7 +188,7 @@ export async function tailorForJobAction(
 ): Promise<{ newResumeId: string; whatChanged: WhatChangedSummary }> {
   // 1. Guard: check resume count
   const existing = await fetchResumes();
-  if (existing.length >= 3) {
+  if (existing.length >= 6) {
     throw new Error("Resume limit reached. Delete a resume to create a new one.");
   }
 
