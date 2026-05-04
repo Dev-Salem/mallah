@@ -51,7 +51,7 @@ Certificate block format:
 
 ### Topic 1.1 — How the Web Works + Dev Environment Setup
 **Type:** Concept + Setup
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1 hr
 **Difficulty:** Beginner
 
 **Description:** How browsers, servers, and HTTP work. Install VS Code, Node.js, Git. Set up a project folder. Understand what full-stack means — frontend (browser), backend (server), database.
@@ -73,7 +73,7 @@ Certificate block format:
 
 ### Topic 1.2 — HTML & Semantic Markup
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** HTML structure, semantic tags (nav, section, article, footer), forms, tables. Build meaningful markup — not div soup.
@@ -92,7 +92,7 @@ Certificate block format:
 
 ### Topic 1.3 — CSS, Flexbox & Tailwind
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** CSS selectors, box model, Flexbox, responsive basics. Then Tailwind CSS: utility-first approach. Build layouts fast with Tailwind.
@@ -113,7 +113,7 @@ Certificate block format:
 
 ### Topic 1.4 — JavaScript Core: Variables, Functions, Arrays & Objects
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 3 hrs
 **Difficulty:** Beginner
 
 **Description:** Variables (`let`, `const`), data types, conditionals, loops, functions (declarations, expressions, arrow functions), arrays and their key methods (`map`, `filter`, `reduce`), objects and destructuring.
@@ -132,7 +132,7 @@ Certificate block format:
 
 ### Topic 1.5 — Async JavaScript: Promises, Fetch & async/await
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Synchronous vs asynchronous execution. Callbacks problem. Promises. `async/await`. Fetch API. Error handling with `try/catch`. This is the foundation of every API call you'll ever make.
@@ -152,7 +152,7 @@ Certificate block format:
 
 ### Topic 1.6 — Git & GitHub Professional Workflow
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** `git init`, `add`, `commit`, `push`, branching, merging, pull requests. Feature branch workflow. Writing good commit messages. `.gitignore` — especially for `.env` files.
@@ -175,7 +175,13 @@ Certificate block format:
 **Difficulty:** Beginner
 **Estimated Time:** 4–6 hrs
 
-**Description:** Build and deploy a personal portfolio page using HTML, Tailwind CSS, and vanilla JavaScript.
+**Description:** Build and deploy a personal portfolio page using HTML, Tailwind CSS, and vanilla JavaScript. Every full-stack developer starts somewhere. This is your starting point — a real URL, a real GitHub repo, and a page that fetches real data. It's deliberately simple so you can focus on the process: write → commit → deploy → iterate.
+
+**Learning Objectives:**
+- Build a structured, responsive HTML page styled with Tailwind utility classes
+- Fetch and display live data from a public API using the Fetch API
+- Establish a proper Git commit workflow from day one
+- Deploy a site to a live URL through a CI/CD-connected platform
 
 **Requirements:**
 - Semantic HTML throughout
@@ -186,6 +192,21 @@ Certificate block format:
 - Fetches and displays data from one public API (e.g. GitHub profile stats via GitHub API)
 - Clean Git history (5+ commits) on GitHub
 - Deployed live on Vercel or Netlify
+
+**Evaluation Criteria:**
+- HTML uses semantic elements correctly — no `<div>` where semantic alternatives exist
+- Tailwind used for all styling — no separate CSS file unless necessary for global resets
+- API fetch works and displays real data (not hardcoded mock)
+- Git history shows at least 5 meaningful commits — not a single "initial commit"
+- Deployed URL is live and loads correctly
+- Form submits without error (Formspree confirmation received)
+
+**Stretch Goals:**
+- Add a skills section with animated progress bars (CSS only)
+- Pull your latest GitHub repos via the GitHub API and render them as project cards
+- Add a theme toggle (dark/light) that persists in localStorage
+
+**Employer Signal:** A public GitHub repo with clean commits and a live deployed URL tells a hiring team you understand the basics of professional software delivery — version control, deployment, and working with external APIs.
 
 **Skills Demonstrated:**
 - HTML (`language`) — `beginner`
@@ -210,7 +231,7 @@ Certificate block format:
 
 ### Topic 2.1 — React: Components, Props & JSX
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why React? Component-based architecture. JSX. Create a React app with Vite. Reusable components. Props: passing and receiving data down the tree.
@@ -230,7 +251,7 @@ Certificate block format:
 
 ### Topic 2.2 — State, useState & useEffect
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** `useState` for local component state. Re-render cycle. Controlled inputs. `useEffect` for side effects and data fetching. Dependency array. Loading and error states.
@@ -250,7 +271,7 @@ Certificate block format:
 
 ### Topic 2.3 — React Router & Multi-Page Apps
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** React Router v6. `<Routes>`, `<Route>`, `<Link>`, `useNavigate`, `useParams`. Dynamic routes. Nested routing.
@@ -269,7 +290,7 @@ Certificate block format:
 
 ### Topic 2.4 — TypeScript for React
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** TypeScript basics: types, interfaces, generics. Typing React props, state, and API responses. Converting a JavaScript React project to TypeScript. No `any`.
@@ -288,7 +309,7 @@ Certificate block format:
 
 ### Topic 2.5 — Forms, Validation & Context API
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Controlled forms in React. React Hook Form for complex validation. Context API for global state (theme, auth). localStorage persistence.
@@ -307,7 +328,7 @@ Certificate block format:
 
 ### Topic 2.6 — Next.js: SSR, App Router & API Routes
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Next.js App Router. Server Components vs Client Components. File-based routing. `fetch` with caching. Dynamic routes. Next.js API routes as a simple backend. SEO with `metadata`.
@@ -329,13 +350,19 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–10 hrs
 
-**Description:** Build a fully-featured, multi-page single-page application in Next.js with TypeScript and Tailwind. This is your most complete frontend project so far.
+**Description:** Build a fully-featured, multi-page single-page application in Next.js with TypeScript and Tailwind. This is your last purely frontend project — from Stage 3 onward, everything has a backend. Make it count: a finished, deployed app with a real use case you'd actually open again.
 
 **Suggested Ideas (learner picks one):**
 - Movie discovery app (TMDB API)
 - Recipe finder (Spoonacular API)
 - Crypto dashboard (CoinGecko API — free)
 - Tech news aggregator (NewsAPI)
+
+**Learning Objectives:**
+- Build a multi-page Next.js app with dynamic routing and real API data
+- Write TypeScript across an entire project — not just in isolated examples
+- Protect an API key by routing requests through a Next.js API route
+- Handle loading, error, and empty states on all async data fetches
 
 **Requirements:**
 - Next.js with App Router + TypeScript (0 `any`)
@@ -346,6 +373,21 @@ Certificate block format:
 - Loading and error states on all data fetches
 - Responsive + accessible (>85 Lighthouse accessibility score)
 - Deployed on Vercel with a clean README
+
+**Evaluation Criteria:**
+- TypeScript used correctly throughout — no `any`, API responses are typed
+- API key is server-side only — not visible in client-side code or the public repo
+- Dynamic routes work via direct URL access (not just internal navigation)
+- Loading state shown while fetch is in progress, error state shown on failure
+- Search/filter/sort is functional and doesn't break on edge cases (empty results, special characters)
+- Lighthouse accessibility score >85 on deployed URL
+
+**Stretch Goals:**
+- Add a favorites system with localStorage persistence
+- Add infinite scroll or pagination on a data-heavy page
+- Write at least 3 unit tests for utility functions using Vitest
+
+**Employer Signal:** A deployed Next.js app with TypeScript, protected API keys, and proper async state handling shows you understand the client-server boundary — the core concept every full-stack developer must internalize.
 
 **Skills Demonstrated:**
 - React (`framework_library`) — `advanced`
@@ -369,7 +411,7 @@ Certificate block format:
 
 ### Topic 3.1 — Node.js Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is Node.js? The event loop and non-blocking I/O. Running JS on the server. Node's built-in modules: `fs`, `path`, `os`, `http`. `npm` and `package.json`. `nodemon` for auto-restart.
@@ -388,7 +430,7 @@ Certificate block format:
 
 ### Topic 3.2 — Express.js: Routing & Middleware
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Express.js setup. Routes: `GET`, `POST`, `PUT`, `DELETE`. Route parameters and query strings. Middleware: what it is, how it chains. Built-in middleware: `express.json()`, `express.static()`. Custom middleware (logger, error handler).
@@ -407,7 +449,7 @@ Certificate block format:
 
 ### Topic 3.3 — REST API Design Principles
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** REST constraints and conventions. Resource naming (nouns, plural). HTTP methods mapped to CRUD. Status codes (200, 201, 400, 401, 403, 404, 409, 500). Request/response structure. API versioning basics.
@@ -427,7 +469,7 @@ Certificate block format:
 
 ### Topic 3.4 — Input Validation & Error Handling
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why validate on the server (never trust client input). Zod for TypeScript-first schema validation. Validating request body, params, and query. Global error handling middleware in Express. Distinguishing operational errors from programmer errors.
@@ -447,7 +489,7 @@ Certificate block format:
 
 ### Topic 3.5 — TypeScript on the Backend
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Set up TypeScript in an Express project. Type Express request/response objects. Type middleware. Share types between frontend and backend. `tsconfig.json` for Node.js.
@@ -467,7 +509,7 @@ Certificate block format:
 
 ### Topic 3.6 — Environment Variables & Configuration
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1 hr
 **Difficulty:** Beginner
 
 **Description:** `.env` files and `dotenv`. Environment-specific config (development vs production). What goes in `.env` vs hardcoded config. `process.env` access patterns. Validating required env vars on startup.
@@ -489,7 +531,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–12 hrs
 
-**Description:** Build a complete, well-structured REST API server in Node.js + Express + TypeScript. Data stored in memory (arrays) — database comes in Stage 4.
+**Description:** Build a complete, well-structured REST API server in Node.js + Express + TypeScript. Data stored in memory (arrays) — database comes in Stage 4. This project is about server architecture, not data persistence. By keeping the storage simple, you stay focused on what matters: correct REST design, input validation, and error handling.
+
+**Learning Objectives:**
+- Design a RESTful API with proper resource naming, HTTP methods, and status codes
+- Validate all incoming request data with Zod before it touches any business logic
+- Build a global error handling middleware that catches and formats all errors consistently
+- Document an API clearly enough that someone else could use it from the README alone
 
 **Requirements (pick a domain — e.g. a blog, a job board, or an inventory system):**
 - At least 3 resources (e.g. Users, Posts, Comments) with full CRUD
@@ -500,6 +548,21 @@ Certificate block format:
 - Environment variables via `.env` + `dotenv`
 - Tested manually — all routes verified in Thunder Client or Postman with a saved collection
 - GitHub repo with clean commits and a README documenting every endpoint
+
+**Evaluation Criteria:**
+- REST conventions are correct: `GET /posts`, `POST /posts`, `GET /posts/:id`, `PUT /posts/:id`, `DELETE /posts/:id` — no verb-in-URL patterns
+- Every route has Zod validation — no unvalidated user input reaches business logic
+- HTTP status codes are correct: 200 vs 201 vs 204, 400 vs 404 vs 409 vs 500
+- Global error handler catches all thrown errors — no unhandled promise rejections
+- TypeScript is used correctly across all route handlers and middleware
+- README documents all endpoints: method, URL, request body schema, response shape, and status codes
+
+**Stretch Goals:**
+- Add request logging middleware (log method, URL, status, response time on every request)
+- Add rate limiting on POST routes using `express-rate-limit`
+- Add a Postman collection JSON file to the repo so evaluators can import and test instantly
+
+**Employer Signal:** A well-documented REST API with correct HTTP conventions, Zod validation, and a global error handler shows you understand server-side architecture fundamentals — not just "Express exists."
 
 **Skills Demonstrated:**
 - Node.js (`platform_service`) — `beginner`
@@ -522,7 +585,7 @@ Certificate block format:
 
 ### Topic 4.1 — Relational Databases & SQL Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is a relational database? Tables, columns, rows, primary keys, foreign keys. SQL basics: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `WHERE`, `ORDER BY`, `LIMIT`. Joins: `INNER JOIN`, `LEFT JOIN`. Install PostgreSQL locally. Use pgAdmin or TablePlus.
@@ -542,7 +605,7 @@ Certificate block format:
 
 ### Topic 4.2 — Prisma ORM: Schema & Migrations
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is an ORM? Prisma setup with PostgreSQL. `schema.prisma`: models, field types, relations. `prisma migrate dev` to create and manage migrations. Prisma Studio for visual data inspection.
@@ -562,7 +625,7 @@ Certificate block format:
 
 ### Topic 4.3 — CRUD Operations with Prisma Client
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Prisma Client: `findMany`, `findUnique`, `create`, `update`, `delete`. Filtering with `where`. Selecting specific fields. Including related data (`include`). Pagination with `take` and `skip`.
@@ -582,7 +645,7 @@ Certificate block format:
 
 ### Topic 4.4 — Database Relations & Advanced Queries
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** One-to-many and many-to-many relations in Prisma. `include` for eager loading. Nested writes (`create` with related data in one query). Transactions for multi-step operations. Filtering on related models.
@@ -602,7 +665,7 @@ Certificate block format:
 
 ### Topic 4.5 — Database Seeding & Migrations in Production
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Writing a Prisma seed script. Running seeds in development. Migration strategies for production (never `prisma migrate dev` in prod). Using `prisma migrate deploy`. Managing migration history.
@@ -625,7 +688,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–12 hrs
 
-**Description:** Extend your Stage 3 REST API with a real PostgreSQL database via Prisma.
+**Description:** Extend your Stage 3 REST API with a real PostgreSQL database via Prisma. This is where the API becomes real — not because it's more complex, but because the data actually persists. You'll also encounter the messiness that a real database introduces: migrations, relations, seed data, and pagination.
+
+**Learning Objectives:**
+- Design a relational database schema with multiple models and meaningful relations
+- Use Prisma to perform all CRUD operations including filtering, including relations, and pagination
+- Write and run database migrations that are safe to commit and deploy
+- Seed a database with realistic fake data using Faker.js
 
 **Requirements:**
 - PostgreSQL + Prisma with at least 3 models and 2 relations
@@ -636,6 +705,21 @@ Certificate block format:
 - TypeScript throughout
 - Pagination on all list endpoints (`?page=1&limit=10`)
 - Database migrations committed to the repo
+
+**Evaluation Criteria:**
+- Prisma schema defines relations correctly — foreign keys, `@relation` attributes, join tables for many-to-many
+- Seed script populates all models with realistic data and runs cleanly from `prisma db seed`
+- All list endpoints support pagination (`page` + `limit` query params) and return total count
+- Many-to-many filtering works correctly (e.g. filter posts by tag, filter users by role)
+- Zod schemas match the Prisma model shapes — no fields validated that don't exist in DB
+- Migrations are committed and migration history is clean
+
+**Stretch Goals:**
+- Add a search endpoint with PostgreSQL full-text search (`pg_trgm` extension or Prisma `contains`)
+- Add soft delete (`deletedAt` timestamp) instead of hard delete on at least one model
+- Add a migration that alters an existing table (add a column, change a constraint)
+
+**Employer Signal:** Database modeling and ORM proficiency is the #1 differentiator between frontend developers who "also do some backend" and actual full-stack developers. A clean Prisma schema with proper relations, migrations, and seed data shows you understand data architecture.
 - All endpoints documented in README
 - Deployed on Railway or Render (free tier) with a hosted PostgreSQL instance
 
@@ -661,7 +745,7 @@ Certificate block format:
 
 ### Topic 5.1 — Authentication vs Authorization & Password Hashing
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Authentication (who are you?) vs authorization (what can you do?). Password storage: why plain text is catastrophic, what hashing is, why salting matters. Implement `bcrypt` for password hashing.
@@ -681,7 +765,7 @@ Certificate block format:
 
 ### Topic 5.2 — JWT Authentication: Login & Protected Routes
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** How JWT works: header, payload, signature. Signing a token on login. Verifying a token on protected routes. Auth middleware. Access tokens and refresh tokens. Token expiry.
@@ -701,7 +785,7 @@ Certificate block format:
 
 ### Topic 5.3 — Refresh Tokens & Secure Token Storage
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Access token vs refresh token pattern. Storing refresh tokens in the database. Rotating refresh tokens on each use. `POST /auth/refresh`. Secure cookie storage (HttpOnly, Secure, SameSite). Logout: invalidating refresh tokens.
@@ -720,7 +804,7 @@ Certificate block format:
 
 ### Topic 5.4 — Role-Based Authorization (RBAC)
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** User roles (admin, user, moderator). Role field in the User model. Authorization middleware that checks roles. Protecting routes by role. Returning `403 Forbidden` vs `401 Unauthorized`.
@@ -742,7 +826,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 8–12 hrs
 
-**Description:** Build a complete, production-grade authentication system and integrate it into your Stage 4 API.
+**Description:** Build a complete, production-grade authentication system and integrate it into your Stage 4 API. Authentication is the most security-critical code you'll write in this path. A bug here doesn't break a feature — it exposes every user's account. This project is deliberately strict about implementation quality.
+
+**Learning Objectives:**
+- Implement the full access + refresh token lifecycle: issue, verify, rotate, and invalidate
+- Store passwords and refresh tokens as hashes — never as plain text or reversible values
+- Write auth middleware that cleanly separates authentication from authorization
+- Document an auth flow clearly enough that a frontend developer can integrate it from the README alone
 
 **Requirements:**
 - `POST /auth/register` — email + password, hashed with bcrypt
@@ -755,6 +845,21 @@ Certificate block format:
 - Input validation with Zod on all auth routes
 - All tokens use environment variable secrets (not hardcoded)
 - README documents the full auth flow with example requests
+
+**Evaluation Criteria:**
+- Passwords are hashed with bcrypt (work factor ≥10) — no plain text storage anywhere
+- Refresh tokens are stored as hashed values in the DB — the raw token is never persisted
+- Token rotation is implemented: using a refresh token invalidates it and issues a new one
+- Auth middleware attaches `req.user` and returns 401 if token is missing or invalid
+- RBAC middleware returns 403 (not 401) for authenticated users who lack the required role
+- No secrets, API keys, or tokens appear in the GitHub repo (checked via `.env.example` pattern)
+
+**Stretch Goals:**
+- Add email verification on register (use Resend or Nodemailer with Mailtrap for testing)
+- Add rate limiting on auth routes (max 5 login attempts per IP per minute)
+- Add a `GET /admin/users` endpoint with pagination that only admins can access
+
+**Employer Signal:** A correctly implemented JWT auth system with bcrypt, token rotation, and RBAC is the standard authentication pattern at most companies. Demonstrating you can build it securely — not just functionally — is the difference between a junior and a developer who can be trusted with user data.
 
 **Skills Demonstrated:**
 - Authentication (`practice`) — `advanced`
@@ -777,7 +882,7 @@ Certificate block format:
 
 ### Topic 6.1 — Connecting React to Your API
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** CORS configuration in Express. Axios vs fetch in React. Axios interceptors for attaching auth tokens to requests. Handling 401 responses (auto-redirect to login). Environment variables in Next.js for API URLs.
@@ -797,7 +902,7 @@ Certificate block format:
 
 ### Topic 6.2 — Auth State in the Frontend
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Storing access tokens in memory (not localStorage). Storing refresh tokens in HttpOnly cookies. Auth Context in React. Persisting auth across page refresh (silent refresh). Protected routes in React Router.
@@ -817,7 +922,7 @@ Certificate block format:
 
 ### Topic 6.3 — File Uploads & Storage
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Handling file uploads with Multer in Express. Storing files on Cloudinary (free tier). Returning a public URL. Frontend file input and preview. Updating a user's avatar.
@@ -837,7 +942,7 @@ Certificate block format:
 
 ### Topic 6.4 — Real-Time Features with WebSockets
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** HTTP polling vs WebSockets vs Server-Sent Events. Socket.io setup on Express. Emitting and receiving events. Broadcasting to rooms. When to use WebSockets vs REST.
@@ -857,7 +962,7 @@ Certificate block format:
 
 ### Topic 6.5 — Search, Filtering & Pagination
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Full-text search with Prisma (`contains`, `mode: 'insensitive'`). Cursor-based vs offset pagination. Compound filtering (multiple `where` conditions). Sorting. Building a reusable query builder.
@@ -880,13 +985,19 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 14–20 hrs
 
-**Description:** Build the first version of a complete full-stack application: a Next.js frontend connected to an Express + PostgreSQL backend, with auth, real data, and deployment.
+**Description:** Build the first version of a complete full-stack application: a Next.js frontend connected to an Express + PostgreSQL backend, with auth, real data, and deployment. Two deployed services, one real product. This is the first project in the path where someone who doesn't know you're a learner can sign up and use what you built.
 
 **Suggested Domain (learner picks one):**
 - Blog platform (posts, comments, users, tags)
 - Job board (companies, listings, applications)
 - Project management tool (boards, tasks, users)
 - E-commerce catalog (products, categories, carts)
+
+**Learning Objectives:**
+- Connect a Next.js frontend to an Express backend with correct CORS configuration and auth token handling
+- Integrate the full JWT auth flow on the frontend: login, token storage, protected routes, silent refresh
+- Deploy two separate services (frontend on Vercel, backend on Railway/Render) and make them communicate correctly in production
+- Write a monorepo README that links everything together and explains how to run the project locally
 
 **Requirements:**
 - Next.js frontend + Express + TypeScript backend as separate projects in a monorepo
@@ -898,6 +1009,21 @@ Certificate block format:
 - Auth context in the frontend with protected routes
 - Both services deployed (frontend on Vercel, backend on Railway/Render)
 - Single README at monorepo root linking to both live URLs
+
+**Evaluation Criteria:**
+- Both frontend and backend URLs are live and the app is fully functional end-to-end (registration, login, CRUD operations all work on the deployed version)
+- Access token is stored in memory (not localStorage), refresh token in HttpOnly cookie
+- CORS is configured to allow only the frontend's domain — not `*`
+- File uploads work in production (Cloudinary URL returned and displayed)
+- Search and pagination work on the deployed API — not just locally
+- README documents: what the app does, how to run it locally, environment variables needed, live URLs
+
+**Stretch Goals:**
+- Add real-time features with WebSockets (Socket.io) — notifications, live comment counts
+- Add an admin dashboard page with user management (admin role required)
+- Write integration tests for at least 3 API endpoints using Supertest
+
+**Employer Signal:** A live full-stack app with two deployed services, JWT auth, file uploads, and a clean monorepo structure is the exact portfolio entry that senior engineers look for when reviewing a junior candidate. It proves you can ship something complete, not just build isolated components.
 
 **Skills Demonstrated:**
 - React (`framework_library`) — `advanced`
@@ -923,7 +1049,7 @@ Certificate block format:
 
 ### Topic 7.1 — Docker: Containerising Your App
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** What Docker solves ("it works on my machine"). Images vs containers. `Dockerfile` for Node.js. `docker-compose.yml` for multi-service local setup (Node + PostgreSQL). Building and running containers. `.dockerignore`.
@@ -942,7 +1068,7 @@ Certificate block format:
 
 ### Topic 7.2 — GitHub Actions: CI/CD Pipelines
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is CI/CD? GitHub Actions: workflows, jobs, steps, runners. Build a pipeline that: runs tests, lints code, and blocks merge if checks fail. Deployment pipeline: auto-deploy to Railway/Render on push to `main`.
@@ -962,7 +1088,7 @@ Certificate block format:
 
 ### Topic 7.3 — Monitoring, Logging & Error Tracking
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Structured logging with `pino` or `winston`. Log levels (error, warn, info, debug). Request logging middleware. Error tracking with Sentry (free tier). Health check endpoint `GET /health`. Uptime monitoring basics.
@@ -982,7 +1108,7 @@ Certificate block format:
 
 ### Topic 7.4 — Performance: Caching & Query Optimization
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Database indexes and when to add them. The N+1 query problem and how to fix it with Prisma. HTTP caching headers. Redis for application-level caching (basic). Analyzing slow queries.
@@ -1005,7 +1131,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 8–12 hrs
 
-**Description:** Take your Stage 6 full-stack app and make it production-ready.
+**Description:** Take your Stage 6 full-stack app and make it production-ready. The app already works — this project is about making it reliable, observable, and automatically deployable. These are the operational skills that separate developers who build things from developers who run things.
+
+**Learning Objectives:**
+- Containerize a Node.js + PostgreSQL stack with Docker and docker-compose
+- Set up a GitHub Actions CI/CD pipeline that automatically runs checks on PRs and deploys on merge
+- Integrate Sentry and structured logging so you're alerted when things break in production
+- Identify and fix N+1 query patterns and add database indexes that speed up real queries
 
 **Requirements:**
 - Docker + docker-compose for local development
@@ -1018,6 +1150,21 @@ Certificate block format:
 - N+1 queries identified and fixed
 - All environment variables documented in `.env.example`
 - Performance: API responds in under 200ms for typical endpoints (measured with Thunder Client or a script)
+
+**Evaluation Criteria:**
+- `docker compose up` starts the full stack (API + DB) with no manual steps beyond creating a `.env`
+- GitHub Actions CI workflow runs on pull requests and blocks merge on type check or lint failures
+- Sentry is integrated — a test error thrown manually appears in the Sentry dashboard
+- `GET /health` returns `200` with database connection status
+- At least 2 meaningful indexes exist in the Prisma schema (not just on primary keys that are auto-indexed)
+- N+1 patterns are resolved — Prisma `include` used where previously there were loops of queries
+
+**Stretch Goals:**
+- Add Redis caching on one high-traffic endpoint and measure the latency improvement
+- Write a `load-test.js` script using k6 or autocannon and document the results in the README
+- Add a GitHub Actions workflow that runs integration tests against a test database before deploying
+
+**Employer Signal:** CI/CD, containerization, error tracking, and query optimization are table stakes at any engineering team that operates at scale. A portfolio project with these configured — not just mentioned — demonstrates you can operate in a real engineering environment from day one.
 
 **Skills Demonstrated:**
 - Docker (`tool`) — `beginner`
@@ -1041,7 +1188,7 @@ Certificate block format:
 
 ### Topic 8.1 — API Testing with Vitest & Supertest
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Why test APIs? Integration testing with Supertest. Setting up a test database (separate from dev). Testing auth routes, CRUD routes, validation errors. Test coverage basics.
@@ -1060,7 +1207,7 @@ Certificate block format:
 
 ### Topic 8.2 — Advanced TypeScript: Generics & Utility Types
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Advanced
 
 **Description:** Generic functions and types. TypeScript utility types: `Partial`, `Required`, `Pick`, `Omit`, `Record`. Discriminated unions. Type guards. Using generics to write reusable API response wrappers.
@@ -1079,7 +1226,7 @@ Certificate block format:
 
 ### Topic 8.3 — Rate Limiting, Security Headers & OWASP Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Rate limiting with `express-rate-limit`. Security headers with `helmet`. Input sanitisation. OWASP Top 10 overview: injection, broken auth, sensitive data exposure, security misconfiguration. Practical checklist.
@@ -1098,7 +1245,7 @@ Certificate block format:
 
 ### Topic 8.4 — Emails, Background Jobs & Queues
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Sending transactional emails with Resend (free tier). Email verification on registration. Password reset flow. Background job concepts — why long tasks shouldn't block HTTP responses. Introduction to BullMQ for job queues (optional).
@@ -1140,7 +1287,13 @@ Certificate block format:
 **Estimated Time:** 30–50 hrs
 **Note:** This is the graduation project. It represents the full capability of a junior full-stack developer.
 
-**Description:** Build a complete, original, full-stack web application from your technical spec. The domain should be something you genuinely care about — it will show.
+**Description:** Build a complete, original, full-stack web application from your technical spec. The domain should be something you genuinely care about — it will show. This is what employers will actually look at. Not your certificates, not your course completion. When a hiring manager searches your name, this is what should come up. Build it like you're proud to demo it in a 30-minute interview.
+
+**Learning Objectives:**
+- Design, plan, and build a full-stack product end-to-end from a self-written technical spec
+- Apply every production pattern from the path — auth, testing, CI/CD, monitoring, security — in a single coherent codebase
+- Write a README so complete that a developer who's never met you can clone, run, and understand the project
+- Make and justify architectural decisions independently — not by following a tutorial
 
 **Requirements:**
 - Original idea — not a tutorial clone, not "another todo app"
@@ -1159,6 +1312,21 @@ Certificate block format:
 - Rate limiting + security headers
 - Both services deployed and live
 - Comprehensive README with: architecture diagram, setup instructions, environment variables documented, API reference, live URLs, screenshots
+
+**Evaluation Criteria:**
+- App is live — both frontend and backend URLs are deployed and functional
+- Original idea — not a tutorial clone or a copy of another project in the suggestions list
+- README includes: architecture diagram, all environment variables, API reference (at least for auth + main CRUD), setup instructions that work, live URLs, and screenshots
+- Test suite passes cleanly (`npm test` with 10+ meaningful integration tests)
+- GitHub Actions CI workflow is green on the main branch
+- Security checklist: Helmet, rate limiting on auth routes, input validation on all endpoints, no secrets in the repo
+
+**Stretch Goals:**
+- Build and launch a product landing page for your capstone (separate from the app itself)
+- Add analytics and write a post-launch retrospective ("what I built, what broke, what I'd do differently")
+- Open-source the project with a contributing guide and accept a real PR from another developer
+
+**Employer Signal:** A capstone with an architecture diagram, passing tests, CI/CD, monitoring, and a live URL is the strongest possible portfolio signal a junior full-stack developer can send. It tells every part of the hiring team — engineering, product, and management — that you can own a project from idea to production.
 
 **Skills Demonstrated:**
 - All path skills — at their maximum level

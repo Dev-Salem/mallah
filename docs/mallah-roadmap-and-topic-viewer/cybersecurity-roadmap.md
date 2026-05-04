@@ -53,7 +53,7 @@ Certificate block format:
 
 ### Topic 1.1 — How Networks Work: The OSI & TCP/IP Models
 **Type:** Concept + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** The OSI 7-layer model and TCP/IP 4-layer model. What each layer does. Data encapsulation. IP addresses (IPv4, IPv6), subnetting basics (CIDR notation). DNS, DHCP, ARP — what they do and why they matter to security. Ports: well-known, registered, dynamic.
@@ -72,7 +72,7 @@ Certificate block format:
 
 ### Topic 1.2 — Protocols That Matter for Security: HTTP, HTTPS, DNS, FTP, SSH, SMTP
 **Type:** Concept + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** How HTTP/HTTPS work: request-response, methods (GET/POST/PUT/DELETE), headers, cookies, status codes. How HTTPS/TLS protects traffic. DNS as an attack vector (DNS poisoning, DNS hijacking). FTP plaintext dangers. SSH key-based auth. SMTP and email attack vectors. How to read network packets.
@@ -92,7 +92,7 @@ Certificate block format:
 
 ### Topic 1.3 — Operating Systems: Windows & Linux Security Architecture
 **Type:** Concept + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Windows security model: NTFS permissions, User Account Control (UAC), Windows Registry, Active Directory basics, Windows Event Logs, PowerShell. Linux security model: users/groups, permissions (rwx), sudo, /etc/passwd and /etc/shadow, processes, cron jobs. Why both matter to ethical hackers.
@@ -112,7 +112,7 @@ Certificate block format:
 
 ### Topic 1.4 — Virtualisation & Building Your Home Lab
 **Type:** Setup + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 3 hrs
 **Difficulty:** Beginner
 
 **Description:** Why a home lab? Virtualisation: VirtualBox (free) or VMware. Setting up Kali Linux as an attacker machine. Setting up intentionally vulnerable VMs: Metasploitable2, DVWA (Damn Vulnerable Web Application). Network isolation: internal network vs NAT vs bridged. Snapshots for safe practice.
@@ -132,7 +132,7 @@ Certificate block format:
 
 ### Topic 1.5 — The Ethical Hacking Framework: Methodology & Legal Foundations
 **Type:** Concept
-**Estimated Time:** 1–1.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** The five phases of ethical hacking: Reconnaissance → Scanning → Gaining Access → Maintaining Access → Covering Tracks. Scope and rules of engagement. Types of pentesting: black box, grey box, white box. Legal frameworks: Computer Fraud and Abuse Act (US), Computer Misuse Act (UK), and equivalent. Bug bounty programs: what they are, how they work, what legal protections they provide. CVE, CWE, CVSS scoring.
@@ -152,7 +152,7 @@ Certificate block format:
 
 ### Topic 1.6 — Python & Bash for Security Scripting
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Why scripting matters for security professionals. Bash: for loops, conditionals, variables, reading files, piping, cron. Python: file handling, `socket` module, `requests` library, subprocess, parsing JSON. Automating repetitive security tasks. Writing a simple port scanner in Python.
@@ -176,7 +176,13 @@ Certificate block format:
 **Difficulty:** Beginner
 **Estimated Time:** 4–6 hrs
 
-**Description:** Document and demonstrate your home lab environment — the foundation for every hands-on exercise in this path.
+**Description:** Document and demonstrate your home lab environment — the foundation for every hands-on exercise in this path. Every attack technique, tool, and defensive skill you learn in the next 7 stages will be practiced here first. Getting this environment right isn't just setup — it's your first exercise in operational security: isolated networks, clean snapshots, and a clear written policy for what you will and won't do.
+
+**Learning Objectives:**
+- Configure a legally isolated lab environment where hands-on security practice cannot accidentally affect real systems
+- Create a network topology diagram that documents your lab's structure clearly enough for someone else to reproduce it
+- Verify that the core tools of the path (Nmap, Wireshark, Burp Suite, Metasploit) are functional before you need them
+- Write a personal "Lab Rules" document that demonstrates you understand the legal and ethical boundaries of security research
 
 **Requirements:**
 - VirtualBox with Kali Linux + Metasploitable2 VMs running on an isolated internal network
@@ -187,6 +193,20 @@ Certificate block format:
 - A written "Lab Rules" document: what you will and won't do in this environment, and why
 - All documentation pushed to a **private** GitHub repo (note: security lab docs should not be public)
 - TryHackMe Pre-Security path progress: at least 50% complete
+
+**Evaluation Criteria:**
+- Network diagram shows: VM names, IP addresses, host-only adapter configuration, and explicit annotation that the network is isolated (no internet-facing VMs)
+- All 4 tools (Nmap, Wireshark, Burp Suite, Metasploit) are shown launching successfully (screenshots in the private repo)
+- Snapshots exist on both VMs (Kali and Metasploitable) and are named meaningfully (e.g. "clean-baseline-DATE")
+- "Lab Rules" document addresses: authorized scope (only lab IPs), prohibited actions (no external scanning), and what to do if something goes wrong
+- GitHub repo is private — not public
+
+**Stretch Goals:**
+- Add a third VM: a vulnerable Windows target (e.g. Metasploitable3 Windows) to practice Windows-specific attack techniques
+- Set up a pfSense VM as a firewall between your Kali and target VMs, and document the firewall rules
+- Configure a syslog server and verify that your target VMs send logs to it
+
+**Employer Signal:** A documented, professionally configured home lab with a network diagram and a written rules document tells a security hiring team that you understand the legal and ethical framework of security work — not just that you know how to run tools. This is the first thing a serious cybersecurity employer will want to see.
 
 **Skills Demonstrated:**
 - Virtualisation (`tool`) — `beginner`
@@ -208,7 +228,7 @@ Certificate block format:
 
 ### Topic 2.1 — Linux Command Line Deep Dive
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** File system navigation: `ls`, `cd`, `pwd`, `find`, `locate`. File operations: `cp`, `mv`, `rm`, `mkdir`, `cat`, `less`, `head`, `tail`. Text processing: `grep`, `awk`, `sed`, `cut`, `sort`, `uniq`. Piping and redirection. Process management: `ps`, `top`, `htop`, `kill`. Package management: `apt`. Wildcards and regular expressions.
@@ -228,7 +248,7 @@ Certificate block format:
 
 ### Topic 2.2 — Linux File Permissions, Users & Privilege Escalation Concepts
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** `chmod`, `chown`, `chgrp`. SUID, SGID, sticky bit. `/etc/passwd`, `/etc/shadow` — structure and what hashed passwords look like. `sudo` configuration (`/etc/sudoers`). Weak sudo rules as a privilege escalation vector. `crontab` misuse. World-writable directories.
@@ -248,7 +268,7 @@ Certificate block format:
 
 ### Topic 2.3 — Bash Scripting for Security Automation
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Variables, conditionals, loops, functions, arguments. Reading input. File I/O. Running system commands from scripts. Error handling. Practical security use cases: log parsing, automated scanning, alerting.
@@ -268,7 +288,7 @@ Certificate block format:
 
 ### Topic 2.4 — Networking Tools: Netcat, SSH Tunnelling & Port Forwarding
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Netcat ("the Swiss Army knife"): connecting, listening, file transfer, bind and reverse shells. SSH: key generation, agent forwarding, local port forwarding (`-L`), remote port forwarding (`-R`), dynamic SOCKS proxy (`-D`). Why these matter for penetration testers (pivoting, tunnelling through firewalls).
@@ -288,7 +308,7 @@ Certificate block format:
 
 ### Topic 2.5 — Python for Offensive Security
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** `socket` for raw network connections. `requests` for HTTP interaction and fuzzing. `scapy` for packet crafting. Regular expressions for parsing tool output. Writing a basic vulnerability scanner. Automating Burp Suite via its API.
@@ -311,7 +331,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 6–8 hrs
 
-**Description:** Build a personal security automation toolkit in Bash and Python — tools you'll actually use in the rest of this path.
+**Description:** Build a personal security automation toolkit in Bash and Python — tools you'll actually use in the rest of this path. Building tools yourself isn't just about code — it's about understanding what commercial tools do under the hood. When you've built a directory brute-forcer yourself, you understand exactly what Gobuster is doing. That understanding is what separates tool operators from security professionals.
+
+**Learning Objectives:**
+- Write production-quality Bash scripts with input validation, error handling, and `--help` flags
+- Build a threaded Python network tool that produces structured output (JSON) rather than unformatted text
+- Understand the internals of common recon tools by re-implementing core functionality
+- Establish a personal toolkit repository pattern you'll add to throughout the entire path
 
 **Requirements (all tools tested only in your home lab):**
 - `recon.sh`: takes an IP/hostname, runs Nmap scan, saves report in a dated folder
@@ -321,6 +347,21 @@ Certificate block format:
 - All tools accept `--help` flags and validate inputs
 - A `README.md` documenting each tool, usage examples, and sample output
 - Pushed to a **private** GitHub repo
+
+**Evaluation Criteria:**
+- All tools accept invalid inputs gracefully — no unhandled Python exceptions or Bash errors when given bad arguments
+- `--help` flag prints a clear usage description for all 4 tools
+- `dirscan.py` is threaded (uses `ThreadPoolExecutor` or `threading`) — not a sequential loop
+- `portscan.py` outputs valid JSON (machine-readable, not just printed text)
+- `recon.sh` saves reports to a timestamped folder (e.g. `reports/2026-05-01_10-23-scan/`) — not just to stdout
+- README includes a sample output screenshot or output block for each tool
+
+**Stretch Goals:**
+- Add a `--output` flag to all tools to choose between JSON, CSV, or text output formats
+- Add a `loot.py` script that parses Nmap XML output and extracts: open ports, service versions, and any found CVEs into a structured report
+- Write unit tests for at least 2 of your Python tools using `pytest`
+
+**Employer Signal:** A private GitHub repo with 4 working security automation tools, documented with examples and tested against lab targets, demonstrates that you write real code for real tasks — not just run pre-built tools. Security teams at companies doing internal red team work hire people who can script, not just click.
 
 **Skills Demonstrated:**
 - Bash (`language`) — `intermediate`
@@ -342,7 +383,7 @@ Certificate block format:
 
 ### Topic 3.1 — The CIA Triad & Security Principles
 **Type:** Concept
-**Estimated Time:** 1–1.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Confidentiality, Integrity, Availability — and what attacks on each look like. Authentication vs Authorisation vs Accounting (AAA). Least privilege, defence in depth, separation of duties. Attack types: active vs passive, insider vs outsider. NIST Cybersecurity Framework 2.0: Identify, Protect, Detect, Respond, Recover.
@@ -361,7 +402,7 @@ Certificate block format:
 
 ### Topic 3.2 — Cryptography: Encryption, Hashing & TLS
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Symmetric encryption: AES — how it works, key sizes, modes (CBC, GCM). Asymmetric encryption: RSA, elliptic curve — public/private key pairs, key exchange. Hashing: SHA-256, MD5 (deprecated) — properties, salting, rainbow tables. Digital signatures. TLS handshake step by step. PKI: certificates, CAs, certificate chains.
@@ -381,7 +422,7 @@ Certificate block format:
 
 ### Topic 3.3 — Common Attack Patterns: OWASP Top 10 Overview
 **Type:** Concept + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Overview of OWASP Top 10 2021: Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Authentication Failures, Software Integrity Failures, Logging Failures, SSRF. What each means practically and how each is exploited.
@@ -401,7 +442,7 @@ Certificate block format:
 
 ### Topic 3.4 — Threat Modelling & Vulnerability Management
 **Type:** Concept + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** STRIDE threat model (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege). Vulnerability scanning vs penetration testing. CVE and NVD databases. CVSS scoring: base, temporal, environmental. Reading vulnerability advisories. Responsible disclosure process.
@@ -421,7 +462,7 @@ Certificate block format:
 
 ### Topic 3.5 — Password Security: Hashing, Cracking & Best Practices
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** How password hashes are stored. Hash types: MD5, NTLM, SHA-1, bcrypt, Argon2. Rainbow tables. Dictionary attacks vs brute force vs rule-based attacks. John the Ripper basics. Hashcat basics. `rockyou.txt` wordlist. Password managers and MFA as defences.
@@ -444,7 +485,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 6–8 hrs
 
-**Description:** Conduct a structured security review of your home lab environment and produce a professional-style report.
+**Description:** Conduct a structured security review of your home lab environment and produce a professional-style report. The ability to write a clear, professional security report is what separates a real penetration tester from someone who runs tools. Clients don't read Nmap output — they read executive summaries. This project builds that skill before you need it in the field.
+
+**Learning Objectives:**
+- Apply the STRIDE threat model to a real (lab) environment and produce actionable findings
+- Score vulnerabilities using CVSS and explain the scoring rationale — not just copy a score from NVD
+- Write an Executive Summary that communicates risk to a non-technical reader without technical jargon
+- Structure a professional security report with the sections expected by real clients and certification boards (OSCP, CEH)
 
 **Requirements (home lab systems only):**
 - STRIDE threat model for your lab's three-tier setup (Kali → network → Metasploitable)
@@ -453,6 +500,20 @@ Certificate block format:
 - Cryptography audit: check which services use plaintext protocols (FTP, Telnet), recommend encrypted alternatives
 - Report format: Executive Summary (1 page, non-technical), Findings (technical detail), Risk Rating, Recommendations
 - Saved as PDF, kept in your **private** repo
+
+**Evaluation Criteria:**
+- STRIDE model covers all 6 threat categories with at least 2 findings each — not just the obvious ones
+- Each CVE entry includes: CVE ID, CVSS score with base metric breakdown (AV/AC/PR/UI/S/C/I/A), what an attacker could do, and a specific mitigation
+- Password audit section states: which hashes were cracked, time to crack, tool used, and a minimum 5-point hardened password policy recommendation
+- Executive Summary is written in plain English — no unexplained acronyms, no raw tool output
+- Report is formatted professionally: consistent fonts, section headers, a findings table with risk ratings
+
+**Stretch Goals:**
+- Add a "Remediation Verification" section: describe exactly what a defender would do to verify each fix was applied correctly
+- Score findings using both CVSS and OWASP Risk Rating Methodology and note where they disagree
+- Include a "Lessons Learned" section: what surprised you about the findings, what you'd look for differently next time
+
+**Employer Signal:** A well-structured security audit report — with STRIDE, CVSS scores, and a plain-language Executive Summary — is the exact deliverable security consultants produce for paying clients. Having one in your portfolio demonstrates you can communicate risk, not just find it.
 
 **Skills Demonstrated:**
 - Security Fundamentals (`practice`) — `advanced`
@@ -473,7 +534,7 @@ Certificate block format:
 
 ### Topic 4.1 — Nmap: Network Scanning & Enumeration
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Nmap scan types: TCP SYN (`-sS`), TCP connect (`-sT`), UDP (`-sU`). OS detection (`-O`). Service version detection (`-sV`). Nmap Scripting Engine (NSE): using and writing scripts. Timing and stealth: `-T0` through `-T5`. Output formats: normal, XML, grepable. Scanning from TryHackMe vs home lab.
@@ -493,7 +554,7 @@ Certificate block format:
 
 ### Topic 4.2 — Wireshark: Packet Capture & Traffic Analysis
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Capturing traffic (interface selection, capture filters). Display filters: `ip.addr`, `tcp.port`, `http`, `dns`. Following TCP streams. Protocol dissection: HTTP, DNS, FTP (seeing plaintext credentials). Exporting objects (files from HTTP captures). Identifying suspicious patterns: port scans, brute force, C2 beacons.
@@ -513,7 +574,7 @@ Certificate block format:
 
 ### Topic 4.3 — Enumeration: SMB, FTP, SSH, SMTP & Web Services
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Service enumeration beyond port scanning. SMB: `enum4linux`, `smbclient`, null sessions, share enumeration. FTP: anonymous login, banner grabbing. SSH: version fingerprinting, user enumeration. SMTP: `VRFY` and `EXPN` for user enumeration. Web: HTTP header analysis, directory brute-forcing with Gobuster.
@@ -533,7 +594,7 @@ Certificate block format:
 
 ### Topic 4.4 — Vulnerability Scanning with OpenVAS & Nikto
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Automated vulnerability scanners vs manual penetration testing. OpenVAS/Greenbone: setting up, running a full scan, interpreting results. Nikto for web server scanning. False positives and why scanners aren't enough. Integrating scanner results into a pentest workflow.
@@ -553,7 +614,7 @@ Certificate block format:
 
 ### Topic 4.5 — Wireless Security Fundamentals
 **Type:** Concept + Lab (optional hardware)
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** WiFi security protocols: WEP (broken), WPA2-Personal, WPA2-Enterprise, WPA3. Evil twin attacks. WPA2 handshake capture and offline dictionary attack concept. Aircrack-ng overview. Rogue access points. Protecting wireless networks. **Note:** Practise only on your own wireless network or in a contained lab setup. Never scan or attack networks you don't own.
@@ -575,7 +636,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–10 hrs
 
-**Description:** Perform complete network reconnaissance against your home lab, producing a professional recon report.
+**Description:** Perform complete network reconnaissance against your home lab, producing a professional recon report. Reconnaissance is the most important phase of any penetration test — you can't exploit what you haven't found. This project builds the systematic enumeration habit that separates methodical security professionals from people who just run random exploits.
+
+**Learning Objectives:**
+- Execute a complete, methodical reconnaissance workflow: scan → enumerate → verify → document
+- Use Wireshark to identify plaintext credentials in captured network traffic
+- Triage automated scanner output (OpenVAS + Nikto) into true positives, false positives, and items needing manual verification
+- Produce a professional Reconnaissance Report that a real penetration testing client could receive
 
 **Requirements (home lab only):**
 - Full Nmap scan of your internal lab network: all ports, service versions, OS detection, NSE vuln scripts
@@ -589,6 +656,21 @@ Certificate block format:
   - Attack surface summary (highest-risk findings ranked by CVSS)
   - Recommendations section
 - Saved as PDF in your private repo
+
+**Evaluation Criteria:**
+- Nmap scan covers all 65,535 ports — not just the default top 1,000 (include `-p-` flag evidence in the report)
+- Wireshark credential capture includes: the protocol, the captured credential (redacted in the report body but shown in evidence), and why the protocol is insecure
+- Service enumeration table covers SMB, FTP, SSH, and SMTP with version numbers and associated CVEs
+- OpenVAS/Nikto findings are triaged — each marked as true positive, false positive, or needs manual verification with a one-sentence justification
+- Attack surface summary is ranked by CVSS score, not by tool output order
+- Report is professional: no raw tool output pasted directly — all findings are interpreted and contextualized
+
+**Stretch Goals:**
+- Automate the recon workflow using your Stage 2 `recon.sh` script, extending it to call Gobuster and enum4linux
+- Add a "timeline" section to the report showing the sequence of recon steps and time spent on each
+- Write a "Detection Avoidance" analysis: which of your recon steps would appear in logs, and how could a defender detect them?
+
+**Employer Signal:** A professional network reconnaissance report — with a service inventory table, CVSS-ranked attack surface, and triaged scanner findings — is the exact first deliverable on a real penetration test engagement. Having one in your portfolio is direct proof of real-world readiness.
 
 **Skills Demonstrated:**
 - Nmap (`tool`) — `intermediate`
@@ -612,7 +694,7 @@ Certificate block format:
 
 ### Topic 5.1 — Burp Suite: Web Proxy & Interception
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Burp Suite architecture: Proxy, Scanner, Intruder, Repeater, Decoder, Comparer, Sequencer. Intercepting HTTP/HTTPS traffic. Editing requests. Sending to Repeater for manual testing. Using Intruder for automated fuzzing. Burp's passive scanner in Community Edition. Setting up FoxyProxy.
@@ -632,7 +714,7 @@ Certificate block format:
 
 ### Topic 5.2 — SQL Injection: Detection, Exploitation & Defence
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 3 hrs
 **Difficulty:** Intermediate
 
 **Description:** How SQL injection works: unsanitised input becomes part of a query. Types: classic (error-based), blind (boolean and time-based), union-based, out-of-band. Manual testing with Burp Repeater. SQLMap for automated exploitation. Impact: data theft, authentication bypass, RCE (in some cases). Defence: parameterised queries (prepared statements), ORMs, WAFs.
@@ -653,7 +735,7 @@ Certificate block format:
 
 ### Topic 5.3 — Cross-Site Scripting (XSS): Reflected, Stored & DOM
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** How XSS works: injecting JavaScript into a page that other users see. Types: reflected (requires a link), stored (persists in the database, affects all users), DOM-based (client-side only). Real impact: session cookie theft, keylogging, credential harvesting, malware delivery. BeEF framework overview. Defence: output encoding, Content Security Policy (CSP).
@@ -673,7 +755,7 @@ Certificate block format:
 
 ### Topic 5.4 — Authentication & Session Attacks
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Insecure Direct Object References (IDOR). Session hijacking using stolen cookies. Broken authentication: credential stuffing, weak lockout policies, predictable session tokens. CSRF: forging requests as a logged-in user. Insecure "remember me" implementations. JWT attacks: `none` algorithm, weak secret brute-forcing.
@@ -693,7 +775,7 @@ Certificate block format:
 
 ### Topic 5.5 — File Inclusion, Upload & Command Injection
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Local File Inclusion (LFI): reading arbitrary files. Remote File Inclusion (RFI): executing remote code. Directory traversal (`../../../etc/passwd`). Insecure file upload: bypassing extension checks to upload PHP webshells. Command injection: injecting OS commands via web parameters (`; ls -la`). Server-Side Template Injection (SSTI) overview.
@@ -713,7 +795,7 @@ Certificate block format:
 
 ### Topic 5.6 — API Security Testing
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** REST API security: testing endpoints, authentication bypass, mass assignment, excessive data exposure. GraphQL security: introspection, batching attacks. API documentation as an attack map (Swagger/OpenAPI). Broken Object Level Authorisation (BOLA — API-specific IDOR). Fuzzing API parameters.
@@ -736,7 +818,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 12–15 hrs
 
-**Description:** Perform a complete web application penetration test on OWASP Juice Shop (or a similar intentionally vulnerable application) and produce a professional pentest report.
+**Description:** Perform a complete web application penetration test on OWASP Juice Shop and produce a professional pentest report. A finding described as "SQL injection in login form" is not useful. A finding described as "Unauthenticated SQL Injection in POST /api/login allows extraction of all user credentials (CVSS 9.8)" with reproduction steps, a screenshot, and remediation guidance — that is a finding. This project builds that communication discipline.
+
+**Learning Objectives:**
+- Execute a structured web application penetration test covering the OWASP Top 10 categories systematically
+- Write detailed finding writeups that include: vulnerability type, OWASP category, reproduction steps, CVSS score, business impact, and specific remediation
+- Produce a professional pentest report structure that matches what real security consulting firms deliver
+- Understand the difference between finding a vulnerability and documenting it so a developer can fix it
 
 **Requirements (Juice Shop is a legal, intentionally vulnerable target — run locally):**
 - Complete the following OWASP Juice Shop challenges: at least 15 challenges across different categories
@@ -749,6 +837,20 @@ Certificate block format:
   - Remediation Roadmap
 - Report format: PDF, professional layout
 - Stored in your **private** GitHub repo
+
+**Evaluation Criteria:**
+- At least 15 Juice Shop challenges are solved and documented — not just mentioned (each has a screenshot and CVSS score)
+- Findings cover at least 5 different OWASP Top 10 categories — not 15 variations of the same vulnerability type
+- Every finding includes: a clear title, OWASP category, CVSS score with base metric breakdown, exact reproduction steps (enough for a developer to reproduce), and a specific remediation (not just "sanitize inputs")
+- Executive Summary is written for a non-technical audience — no unexplained technical jargon
+- Remediation Roadmap prioritizes findings by CVSS score and groups related fixes
+
+**Stretch Goals:**
+- Add an API security testing section using Burp Suite's Intruder against Juice Shop's REST API
+- Test the same vulnerabilities against DVWA for comparison — note how different implementations of the same vulnerability class look different in practice
+- Time yourself through the 15 challenges and calculate a hypothetical engagement cost at $200/hr to understand real consulting economics
+
+**Employer Signal:** A professional web pentest report with 15+ documented findings, CVSS scores, and a remediation roadmap is the exact deliverable produced in real security consulting engagements. Having one demonstrates you can do the job — not just pass certifications about it.
 
 **Skills Demonstrated:**
 - Burp Suite (`tool`) — `intermediate`
@@ -774,7 +876,7 @@ Certificate block format:
 
 ### Topic 6.1 — Metasploit Framework
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Advanced
 
 **Description:** Metasploit architecture: modules (exploits, payloads, auxiliaries, post). `msfconsole` workflow. Searching for exploits. `show options`, `set`, `run`. Meterpreter shell. Staged vs stageless payloads. MSFvenom for payload generation. Using Metasploit responsibly.
@@ -794,7 +896,7 @@ Certificate block format:
 
 ### Topic 6.2 — Windows Privilege Escalation
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Windows privesc: unquoted service paths, weak service permissions, always install elevated, token impersonation, pass-the-hash, Mimikatz (theory and lab use). WinPEAS automated enumeration. UAC bypass techniques. Scheduled tasks as privesc vectors.
@@ -814,7 +916,7 @@ Certificate block format:
 
 ### Topic 6.3 — Linux Privilege Escalation
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Linux privesc: SUID binaries, sudo misconfigurations, cron job abuse, writable `/etc/passwd`, PATH hijacking, kernel exploits, Docker breakouts. LinPEAS/Linux Smart Enumeration. Capabilities abuse.
@@ -834,7 +936,7 @@ Certificate block format:
 
 ### Topic 6.4 — Active Directory Attacks (Introduction)
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Advanced
 
 **Description:** What Active Directory is and why it's the crown jewel of corporate networks. Kerberos authentication basics. Attack techniques: Pass-the-Hash, Pass-the-Ticket, Kerberoasting, AS-REP Roasting, LDAP enumeration with BloodHound, DCSync. BloodHound for attack path visualisation.
@@ -854,7 +956,7 @@ Certificate block format:
 
 ### Topic 6.5 — Post-Exploitation: Persistence, Pivoting & Covering Tracks
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Post-exploitation goals: maintain access, move laterally, exfiltrate data. Persistence: adding backdoor users, scheduled tasks, startup scripts, Meterpreter persistence. Pivoting: using a compromised host as a jump point to reach otherwise inaccessible networks. Covering tracks: clearing logs (and why this is usually detected). Data exfiltration techniques.
@@ -877,7 +979,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 12–16 hrs
 
-**Description:** Conduct a full, end-to-end penetration test simulation on a TryHackMe or Hack The Box machine, documented as a professional report.
+**Description:** Conduct a full, end-to-end penetration test simulation on a TryHackMe or Hack The Box machine, documented as a professional report. This is your most significant portfolio piece so far — a documented, full-chain attack on an authorized platform, presented as a professional report, is exactly what employers in penetration testing look for. Every command logged. Every finding documented. Every step explainable.
+
+**Learning Objectives:**
+- Execute the complete penetration test lifecycle in sequence: Reconnaissance → Scanning → Enumeration → Exploitation → Privilege Escalation → Post-Exploitation
+- Document every step with sufficient detail that a client (or employer) could follow the attack chain independently
+- Write a Remediation Verification section that shows you understand both the attack and the defense
+- Apply MITRE ATT&CK framework mapping to your findings — connecting your techniques to the industry-standard taxonomy
 
 **Requirements:**
 - Choose a beginner/intermediate machine on TryHackMe (e.g. Blue, Basic Pentesting, HackPark) or Hack The Box (Starting Point machines)
@@ -887,6 +995,20 @@ Certificate block format:
 - Produce a professional Penetration Test Report (same format as Stage 3 project but now with exploitation findings)
 - Write a "Remediation Verification" section: what a defender would need to do to verify each fix
 - Keep in private repo
+
+**Evaluation Criteria:**
+- All 6 phases of the pentest lifecycle are documented with evidence — no phase skipped or summarized without commands
+- Every command is shown with its actual output (not paraphrased) — the report is a complete audit trail
+- MITRE ATT&CK TTPs are mapped for at least 3 techniques used (e.g. T1046 Network Service Discovery, T1059 Command and Scripting Interpreter)
+- Remediation Verification section describes specific log events, EDR alerts, or configuration checks that would confirm each fix was applied
+- Report follows the same structure as Stage 3: Executive Summary → Scope → Findings Table → Detailed Findings → Remediation Verification
+
+**Stretch Goals:**
+- Complete 2 machines (one Linux, one Windows) and compare the attack chains in the report
+- Add a "Detection Opportunities" section: for each technique used, list the specific Windows Event IDs or Linux log entries that would expose the activity
+- Time-box the engagement (4 hours) to simulate a real time-limited pentest, then debrief on what you found vs what you missed
+
+**Employer Signal:** TryHackMe "Blue" is famous in the security community — it's the MS17-010 (EternalBlue) vulnerability, the same exploit used by WannaCry ransomware. A full report documenting how you exploited it, with MITRE ATT&CK mappings and remediation verification, tells a hiring team you can conduct a real engagement — not just run Metasploit.
 
 **Skills Demonstrated:**
 - Nmap (`tool`) — `intermediate`
@@ -911,7 +1033,7 @@ Certificate block format:
 
 ### Topic 7.1 — Security Operations & SIEM
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Advanced
 
 **Description:** What is a SOC (Security Operations Centre)? Security Information and Event Management (SIEM). Log sources: Windows Event Logs, Linux syslog, network logs, application logs. Log analysis fundamentals. Splunk basics (free tier) or Elastic Stack (ELK). Correlation rules. Writing detection rules for attacks you've already performed (Nmap scans, brute force, exploitation).
@@ -931,7 +1053,7 @@ Certificate block format:
 
 ### Topic 7.2 — Incident Response
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** The incident response lifecycle: Preparation → Identification → Containment → Eradication → Recovery → Lessons Learned. Indicators of Compromise (IoCs). Triage: triaging alert queue, distinguishing true positives from false positives. Memory forensics intro. Disk forensics intro. Writing an incident response plan.
@@ -951,7 +1073,7 @@ Certificate block format:
 
 ### Topic 7.3 — Defensive Hardening: Firewalls, IDS/IPS & Zero Trust
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Firewalls: stateful vs stateless, rule ordering, network segmentation. IDS vs IPS: signature-based vs anomaly-based. Snort/Suricata rule writing. Zero Trust Architecture: "never trust, always verify." Microsegmentation. Secure configuration baselines: CIS Benchmarks. Defence in depth.
@@ -971,7 +1093,7 @@ Certificate block format:
 
 ### Topic 7.4 — Threat Intelligence & the MITRE ATT&CK Framework
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is cyber threat intelligence? Tactical, operational, strategic intelligence. IoC types: hashes, IPs, domains, TTPs. MITRE ATT&CK: tactics, techniques, sub-techniques, groups, software. Using ATT&CK Navigator to map detections. Threat hunting basics. OSINT for threat intelligence.
@@ -994,7 +1116,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 8–12 hrs
 
-**Description:** Simulate the work of a SOC analyst: investigate a set of simulated security events and produce a detection and response report.
+**Description:** Simulate the work of a SOC analyst: investigate a set of simulated security events and produce a detection and response report. This project bridges the two halves of the path — you performed the attack, now you detect it. The most effective security professionals are those who understand both sides. When you write a Splunk query to detect an Nmap scan, you're drawing on first-hand experience of what that traffic looks like. That dual perspective is rare and highly valued.
+
+**Learning Objectives:**
+- Reconstruct the timeline of an attack from raw log data — not from memory of what you did
+- Write working Splunk SPL queries or Snort/Suricata rules that detect specific attacker techniques
+- Map detected activity to MITRE ATT&CK TTPs using ATT&CK Navigator
+- Produce a detection and response report in the format used by real SOC teams
 
 **Requirements:**
 - TryHackMe: complete the "SOC Level 1" learning path (or significant portion)
@@ -1005,6 +1133,20 @@ Certificate block format:
   - ATT&CK TTP mapping for each detected activity
   - Detection rules written (Snort/Suricata or Splunk SPL)
   - Recommendations for hardening to prevent recurrence
+
+**Evaluation Criteria:**
+- Attack timeline is reconstructed from logs only — not from memory. Timestamps must be accurate and sourced from specific log events
+- At least 4 IoCs are identified (minimum: attacker IP, targeted port, exploit name, post-exploitation user/process)
+- ATT&CK TTP mapping covers at least 4 techniques with correct IDs and sub-technique identifiers where applicable
+- At least 2 working detection rules are written (Snort/Suricata syntax or Splunk SPL) and shown to fire against the test traffic
+- Recommendations section is specific and actionable — not generic advice like "patch your systems"
+
+**Stretch Goals:**
+- Build an automated alert in Splunk or ELK that sends an email or Slack notification when the detection rule fires
+- Write detection rules for two additional attacks not performed in Stage 6 (research the traffic signatures)
+- Complete a TryHackMe "Advent of Cyber" or CTF room focused on SOC/DFIR and include the write-up in your private repo
+
+**Employer Signal:** A documented SOC lab exercise with log-based attack timeline reconstruction, ATT&CK TTP mappings, and working detection rules is directly applicable to SOC Analyst, Threat Hunter, and IR Analyst roles — which represent the majority of entry-level cybersecurity hiring. This project demonstrates you can do day-one SOC work.
 
 **Skills Demonstrated:**
 - SIEM (`tool`) — `beginner`
@@ -1046,7 +1188,7 @@ Certificate block format:
 
 ### Topic 8.2 — Bug Bounty Hunting: Getting Started
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** How bug bounty programs work: in-scope vs out-of-scope, responsible disclosure, reward tiers. Top platforms: HackerOne, Bugcrowd, Intigriti. Choosing a program. Recon for bug bounty: subdomain enumeration (Subfinder, Amass), OSINT techniques, identifying attack surface. What gets rewarded vs what gets duplicated or won't-fixed.
@@ -1066,7 +1208,7 @@ Certificate block format:
 
 ### Topic 8.3 — Reverse Engineering & Binary Exploitation Basics
 **Type:** Lesson + Lab
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Introduction to reverse engineering: what it is, when it's needed. Static analysis: strings, file type identification, disassembly with Ghidra (free). Dynamic analysis: running in a sandbox. Basic buffer overflow concept: stack layout, overwriting the return address. picoCTF and PWN challenges for practice.
@@ -1085,7 +1227,7 @@ Certificate block format:
 
 ### Topic 8.4 — Cloud Security Fundamentals
 **Type:** Lesson + Lab
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Cloud security shared responsibility model. AWS security basics: IAM policies, S3 bucket misconfigurations, EC2 security groups, CloudTrail logging. Common cloud misconfigurations: public S3 buckets, overly permissive IAM roles, exposed metadata endpoints. AWS free tier for practice. Cloud pentesting tools: Pacu, Scout Suite.
@@ -1107,7 +1249,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** Ongoing (20–30 hrs over the stage)
 
-**Description:** This is the graduation capstone — two deliverables that serve as your public cybersecurity portfolio.
+**Description:** This is the graduation capstone — two deliverables that together form your public cybersecurity portfolio. In cybersecurity, your public presence matters more than in most tech fields. Employers look at TryHackMe rankings, HackTheBox tiers, and the quality of your write-ups. A blog with 10 detailed, well-written CTF write-ups outweighs a resume that says "I know Burp Suite."
+
+**Learning Objectives:**
+- Write CTF challenge write-ups that explain your methodology clearly enough for another learner to follow and learn from
+- Submit to a real bug bounty program with the scope discipline and report quality expected by professional programs
+- Build a public cybersecurity portfolio page that curates your best work across the entire path
+- Demonstrate range across CTF categories — not just the one type you're most comfortable with
 
 **Deliverable 1: CTF Write-Up Collection (public)**
 - At minimum 5 fully solved CTF challenge write-ups, published publicly on a personal blog (GitHub Pages, Hashnode, or Medium) or in a public GitHub repo
@@ -1123,6 +1271,21 @@ Certificate block format:
 
 **Combined Portfolio:**
 - A personal security portfolio page (GitHub Pages or similar): lists your TryHackMe profile (with badge/room completion stats), Hack The Box profile, CTF write-ups, lab report samples (redacted/sanitised), and any bug bounty hall-of-fame mentions
+
+**Evaluation Criteria:**
+- 5 CTF write-ups are published publicly and cover at least 3 different categories
+- Each write-up explains the thought process — not just the solution. A reader who didn't solve the challenge should understand the methodology after reading
+- Write-ups are published (not just in a private repo) — community visibility is part of the requirement
+- Bug bounty or mock report follows the professional format: title, severity, CVSS, description, reproduction steps, impact, remediation, evidence screenshots
+- Portfolio page links everything together: TryHackMe profile, HackTheBox profile, write-ups, and reports
+- All content respects scope rules — no content referencing unauthorized testing of real systems
+
+**Stretch Goals:**
+- Get a CTF write-up accepted to a community publication (CTFtime, 0xRick's blog network, or similar)
+- Earn a TryHackMe "Top 10%" badge or HackTheBox "Pro Hacker" rank before submission
+- Create a YouTube walkthrough of one of your CTF challenges — video content reaches a different audience than written content
+
+**Employer Signal:** A public portfolio with detailed CTF write-ups across multiple categories, a completed SOC Level 1 TryHackMe path, and a professional bug bounty or lab report demonstrates three things every cybersecurity employer wants to verify: that you can find vulnerabilities, that you can communicate them professionally, and that you operate within legal and ethical boundaries.
 
 **Skills Demonstrated:** All path skills at their maximum level.
 

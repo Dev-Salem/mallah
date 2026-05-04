@@ -163,12 +163,37 @@ The `projects` table holds the admin-defined template for each milestone project
 | `project_id` | UUID (PK) | |
 | `stage_id` | FK → stages | Which stage this project belongs to |
 | `title` | VARCHAR | e.g. "Personal Profile Page" |
-| `description` | TEXT | Admin-written project brief |
+| `description` | TEXT | Admin-written project brief (the "what and why" framing paragraph) |
 | `difficulty_level` | ENUM | `beginner` / `intermediate` / `advanced` |
 | `thumbnail_url` | VARCHAR | Default thumbnail. Learner can override. |
 | `is_public_default` | BOOLEAN | `true` for most paths. `false` for cybersecurity lab projects. |
+| `learning_objectives` | TEXT[] | 3–4 bullet points: "After this project you'll be able to…" — shown before requirements to frame intent |
+| `evaluation_criteria` | TEXT[] | 4–6 checkpoints the AI evaluator uses to grade the project. Also shown to the learner as the quality bar to aim for. |
+| `stretch_goals` | TEXT[] | 2–3 optional extra challenges for learners who finish early. Never gating — purely additive. |
+| `employer_signal` | TEXT | 1–2 sentences: what this project communicates to a hiring manager. Shown in the Project Viewer as a "What this tells employers" callout. |
 
 The `project_skills` table maps projects to the skills they demonstrate (analogous to `topic_skills` for lessons).
+
+**Project AI Evaluation:**
+
+The `project_evaluations` table stores AI evaluation results for submitted projects:
+
+| Field | Type | Notes |
+|---|---|---|
+| `evaluation_id` | UUID (PK) | |
+| `user_id` | FK → users | |
+| `project_id` | FK → projects | |
+| `github_url` | VARCHAR | The URL evaluated (snapshot at evaluation time) |
+| `demo_url` | VARCHAR | Optional live URL evaluated |
+| `status` | ENUM | `pending` / `complete` / `failed` |
+| `overall_score` | SMALLINT | 1–5 score assigned by AI |
+| `criteria_scores` | JSONB | Per-criterion score and comment: `{ criterion: string, passed: boolean, comment: string }[]` |
+| `strengths` | TEXT[] | 2–3 things the AI identified as well-executed |
+| `improvements` | TEXT[] | 2–3 specific, actionable suggestions |
+| `summary` | TEXT | 2–3 sentence overall verdict |
+| `evaluated_at` | TIMESTAMP | |
+
+One learner can have multiple evaluations per project (re-evaluation after improvements is allowed).
 
 The `user_projects` table holds per-learner completion records:
 
@@ -313,30 +338,51 @@ Project topics have a different layout from lesson topics. The AI Tutor panel is
 - "PROJECT" badge to distinguish from lesson topics
 - Breadcrumb + position indicator (same as lessons)
 - "Gates next stage" label — visible until the project is completed
+- Difficulty badge and estimated time
 
 **Main Content Area**
-- Project description (from `projects.description`)
-- Requirements list (rendered from resources of type `INTERNAL_TEXT`)
-- Skills this project demonstrates (from `project_skills` → `skills` — displayed as badges)
-- `VIDEO` and `ARTICLE` resources shown as reference material
-- Estimated time label
+
+Rendered in this exact order:
+
+1. **Project Description** (`projects.description`) — the "what and why" framing paragraph. Sets context before any requirements.
+
+2. **Learning Objectives** (`projects.learning_objectives`) — displayed as a short bulleted list under the heading "What you'll be able to do after this." Shown before requirements so the learner understands intent, not just tasks. 3–4 items.
+
+3. **Requirements** (`projects.requirements` stored as `INTERNAL_TEXT` resources, or as a dedicated field) — numbered checklist. These are the mandatory conditions the project must satisfy to be considered complete. The AI evaluator uses these as the baseline pass/fail criteria.
+
+4. **Evaluation Criteria** (`projects.evaluation_criteria`) — displayed under "How this will be evaluated." 4–6 checkpoints. This is the quality bar shown to the learner upfront so there are no surprises in the AI evaluation report. The same criteria are used by the AI evaluator (Section 7.8).
+
+5. **Skills Demonstrated** (`project_skills` → `skills`) — displayed as skill tags/badges under "Skills you'll unlock." Shows the learner what gets added to their profile upon completion.
+
+6. **What This Tells Employers** (`projects.employer_signal`) — a short callout card (1–2 sentences). Framed as: "Employers see this as proof that you can…" This is the Portfolio Hub / career relevance hook. Makes the project feel purposeful, not academic.
+
+7. **Stretch Goals** (`projects.stretch_goals`) — displayed under "Want to go further?" as an optional section. 2–3 items. Always visually de-emphasized (e.g. muted styling) — never framed as required.
+
+8. **VIDEO and ARTICLE resources** — shown last as reference material under "Helpful References."
+
+9. **Estimated time label** — shown inline near the top of the page alongside difficulty.
 
 **Project Action Panel (right — replaces AI Tutor)**
 - Current status indicator: `Available` / `In Progress` / `Completed`
-- `Mark Project as Complete` button (primary) — opens a modal:
-  - GitHub URL (optional)
-  - Live demo URL (optional)
-  - Personal note (optional, max 300 chars)
-  - Thumbnail upload (optional, overrides admin default)
-  - Tech stack tags (optional)
-- Once completed: shows submitted GitHub link, demo link, and personal note if set. Read-only.
+- `Mark Project as Complete` button (primary) — opens the Submit modal (see below)
+- If the project has been evaluated: shows the latest evaluation summary with a score badge and a "View Full Report" link
+- `Get AI Evaluation` button — available after GitHub URL is submitted. Triggers Section 7.8 flow.
+- Once completed: shows submitted GitHub link, demo link, and personal note. Read-only (learner can update GitHub/demo URLs post-completion).
+
+**Submit Modal (triggered by "Mark Project as Complete")**
+- GitHub URL (optional but strongly encouraged — needed for AI evaluation)
+- Live demo URL (optional)
+- Personal note (optional, max 300 chars)
+- Thumbnail upload (optional, overrides admin default)
+- Tech stack tags (optional)
+- **Skip Project option** — a clearly de-emphasized secondary option at the bottom of the modal: "Skip this project." Tapping it opens a confirmation: "Are you sure? Skipping means this project won't appear in your portfolio and won't be evaluated. You can still unlock the next stage." If confirmed: project status is set to `skipped` (a new valid ENUM value on `user_projects.status`) and the next stage unlocks. The skipped project does not appear in Portfolio Hub. This option exists so learners are never permanently blocked — but it is never presented as the recommended path.
 
 **AI Tutor is not shown on project topics** — learners work independently on projects.
 
 **Bottom Action Bar**
 - `← Back to Roadmap`
 - `Mark Project as Complete` (same as panel button — primary CTA)
-- `Next Stage →` appears only after project is marked complete and next stage unlocks
+- `Next Stage →` appears only after project is marked complete (or skipped) and next stage unlocks
 
 ---
 
@@ -457,12 +503,36 @@ All progress computation is **server-side only**. Do not compute progress on the
 3. For each linked skill: create or upgrade the row in `user_skills` (`source = 'project'`). Same level upgrade logic as lesson topic completion.
 4. **Stage unlock:** check if completing this project satisfies the gate for the next stage. If yes, create `user_projects` rows with `status = 'available'` for all milestone projects in the newly unlocked stage.
 5. **Capstone check:** if `topic_type = 'project_capstone'`, write a graduation badge record for this learner + path combination.
+6. **Auto-trigger AI evaluation:** if `github_url` was provided at submission time, automatically queue an AI evaluation (Section 7.8) in the background. The learner does not need to manually request it.
 
 **Output:**
 - Project status updates to `Completed` in the Topic Viewer panel
 - `Next Stage →` button appears in the bottom action bar
 - Project appears in Portfolio Hub automatically on next load
 - Dashboard `start_available_project` mission type will reflect the new available projects in the next stage
+- If GitHub URL was provided: AI evaluation begins in background; the Project Action Panel shows "Evaluation in progress…" until complete
+
+---
+
+### 7.6b Skip Project
+
+**Input:** Skip confirmation from Submit modal, `user_id`, `project_id`
+
+**Backend process:**
+1. Upsert `user_projects`:
+   - `status = 'skipped'`
+   - `completed_at = NOW()`
+2. **Stage unlock:** same logic as 7.6 step 4 — skipping still unlocks the next stage.
+3. **No skills are written** — skipped projects do not contribute to `user_skills`.
+4. **No portfolio entry** — skipped projects do not appear in Portfolio Hub.
+5. **No badge** — capstone skips do not award the graduation badge.
+
+`user_projects.status` ENUM must include `'skipped'` as a valid value alongside `'available'`, `'in_progress'`, and `'completed'`.
+
+**Output:**
+- `Next Stage →` button appears in the action bar
+- Project card in Portfolio Hub is absent (skipped projects are invisible there)
+- Dashboard reflects the newly unlocked stage
 
 ---
 
@@ -479,6 +549,49 @@ Used by both Dashboard (Mission Card CTA) and Roadmap (highlight current topic).
 4. If all mandatory topics and projects are `completed` → surface "Path Complete" state.
 
 **Returns:** `next_topic_id` + topic/stage/type metadata (used by Dashboard to determine correct mission type and CTA label).
+
+---
+
+### 7.8 AI Project Evaluation
+
+**Trigger:** Either (a) automatically after submission when a GitHub URL is provided, or (b) manually via "Get AI Evaluation" button in the Project Action Panel (available on completed projects with a GitHub URL).
+
+**Input:** `user_id`, `project_id`, `github_url`, optional `demo_url`
+
+**Backend process:**
+1. Create a `project_evaluations` row with `status = 'pending'`.
+2. Fetch the project template: `projects.evaluation_criteria`, `projects.requirements`, `projects.learning_objectives`, `projects.difficulty_level`.
+3. Fetch the learner's submitted `github_url` and `demo_url` from `user_projects`.
+4. Build the AI evaluation prompt with:
+   - Project title, description, and difficulty
+   - Full requirements list
+   - Full evaluation criteria (the per-criterion checkpoints)
+   - GitHub URL and demo URL
+   - Learner's path stage context
+5. Call AI with instructions to:
+   - Score each criterion as `passed: true/false` with a 1–2 sentence comment
+   - Assign an overall score (1–5)
+   - List 2–3 strengths
+   - List 2–3 specific, actionable improvements
+   - Write a 2–3 sentence overall summary
+   - Respond only in JSON matching the `criteria_scores`, `strengths`, `improvements`, `summary`, `overall_score` schema
+6. Parse the response and write all fields to `project_evaluations`.
+7. Update `status = 'complete'` (or `'failed'` if the AI call errors out).
+
+**Output — Evaluation Report shown in Topic Viewer Project Action Panel:**
+- Overall score badge (e.g. "4 / 5")
+- Per-criterion pass/fail chips with expandable comments
+- Strengths section (2–3 bullet points)
+- Improvements section (2–3 actionable bullet points)
+- Summary paragraph
+- "Re-evaluate" button — available after the learner updates their GitHub URL, allowing a fresh evaluation on improved work. No limit on re-evaluations.
+- The evaluation report is also accessible from the Portfolio Hub project card ("View Evaluation")
+
+**Important constraints:**
+- AI evaluation never blocks project completion or stage unlock. The project is already marked complete before evaluation runs.
+- If evaluation fails (`status = 'failed'`), show: "Evaluation couldn't be completed. You can try again once your project is live." No error details exposed to the learner.
+- Evaluation is only available if a `github_url` is present. If the learner submitted without a GitHub URL, the Project Action Panel shows: "Add a GitHub URL to get your project evaluated."
+- For cybersecurity path projects with `is_public_default = false`: evaluation is still available (using the private repo URL), but the evaluation report is also kept private.
 
 ---
 
@@ -502,9 +615,12 @@ Used by both Dashboard (Mission Card CTA) and Roadmap (highlight current topic).
 | Topic is locked | Content is visible (read-only). Actions disabled. Message: "Complete the [Stage N] project to unlock this stage." |
 | Lesson topic already completed | Viewer opens normally. "Mark as Complete" replaced with "Completed ✔". AI Tutor still available. |
 | Project topic already completed | Project panel shows submitted details (read-only). Learner can update GitHub/demo URLs post-completion. |
+| Project topic skipped | Project panel shows "Skipped" status. Learner can still submit the project retroactively — doing so changes status to `completed`, awards skills, and adds it to Portfolio Hub. |
 | No resources attached to topic | Show fallback: topic summary + AI Tutor only. No empty content error. |
 | AI Tutor fails or times out | Show inline error: "Tutor is unavailable right now. Try again in a moment." |
 | AI rate limit hit | Show gentle message: "Take a moment — ask your next question in a few seconds." |
+| AI evaluation pending | Project Action Panel shows "Evaluation in progress…" spinner in place of the evaluation button. |
+| AI evaluation failed | Show: "Evaluation couldn't be completed. You can try again once your project is live." Retry button visible. |
 | Cybersecurity path — any topic | A permanent legal reminder is displayed at the bottom of every topic in the cybersecurity path: "All techniques are practised only in authorised environments. Unauthorised access to computer systems is a criminal offence. Always get written permission before testing any system you don't own." |
 
 ---
@@ -554,9 +670,13 @@ When implementing or extending Mallah:
 
 - The **Roadmap** is the backbone. Everything that measures progress, recommends learning, or analyzes readiness reads from or writes to: `paths`, `stages`, `topics`, `topic_skills`, `user_progress`, `user_skills`, `projects`, `project_skills`, `user_projects`.
 - The **Topic Viewer** is where progress is actually made. It is the only place that writes `'completed'` status to `user_progress` (lesson topics) and `user_projects` (project topics) and triggers skill unlocks.
-- **Two distinct topic types exist at the end of every stage:** `project_milestone` and `project_capstone`. These topics do not use `user_progress` — they use `user_projects`. They do not show the AI Tutor — they show the project action panel. They gate the next stage until marked complete.
+- **Two distinct topic types exist at the end of every stage:** `project_milestone` and `project_capstone`. These topics do not use `user_progress` — they use `user_projects`. They do not show the AI Tutor — they show the project action panel. They gate the next stage until marked complete **or skipped**.
 - **Four resource types exist:** `VIDEO`, `ARTICLE`, `INTERNAL_TEXT`, `CERT`. CERT resources are always rendered last and are optional — they never gate topic completion.
-- **Stage unlock is project-gated:** a stage is `Locked` until the previous stage's milestone project has `user_projects.status = 'completed'`. Three paths (fullstack, datascience, cybersecurity) support a Stage 1 self-assessment skip.
+- **Stage unlock is project-gated:** a stage is `Locked` until the previous stage's milestone project has `user_projects.status = 'completed'` OR `'skipped'`. Three paths (fullstack, datascience, cybersecurity) support a Stage 1 self-assessment skip.
+- **Project data model has four key content fields beyond description:** `learning_objectives` (why this project), `evaluation_criteria` (quality bar, shown to learner AND used by AI evaluator), `stretch_goals` (optional extras, never gating), `employer_signal` (career framing shown as a callout). All four are rendered in the Project Viewer main content area in a defined order — see Section 6.2.
+- **Project Viewer content render order:** Description → Learning Objectives → Requirements → Evaluation Criteria → Skills Demonstrated → What This Tells Employers → Stretch Goals → Video/Article references.
+- **`user_projects.status` has four valid values:** `available`, `in_progress`, `completed`, `skipped`. Skipped projects do not award skills, do not appear in Portfolio Hub, and do not award graduation badges.
+- **AI evaluation** (`project_evaluations` table) is separate from project completion. It runs automatically after submission if a GitHub URL is provided. It never blocks completion or stage unlock. Re-evaluation is allowed after improvements.
 - The **AI Lesson Tutor** lives inside the Topic Viewer for lesson topics only. It is scoped to one topic at a time. Its context is always built fresh from topic metadata + learner profile. Session type stored as `topic_tutor`.
 - The four valid path IDs are: `frontend`, `fullstack`, `cybersecurity`, `datascience`. No other values are valid anywhere in the system.
 - If the Roadmap and Topic Viewer are correct and consistent, the Dashboard, Portfolio Hub, Resume Builder, and Opportunity Analyzer stay coherent by design — they are consumers, not owners, of this data.

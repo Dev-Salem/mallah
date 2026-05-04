@@ -51,7 +51,7 @@ Rules:
 
 ### Topic 1.1 — How the Web Works
 **Type:** Concept
-**Estimated Time:** 1 hr
+**Estimated Time:** 45 min
 **Difficulty:** Beginner
 
 **Description:** Understand what happens when you type a URL. Covers browsers, servers, HTTP requests/responses, and the roles of HTML, CSS, and JavaScript.
@@ -71,7 +71,7 @@ Rules:
 
 ### Topic 1.2 — HTML Structure & Semantics
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Write proper HTML with semantic tags: headings, paragraphs, lists, images, links, nav, section, article, footer. Understand why semantic HTML matters for SEO and accessibility.
@@ -90,7 +90,7 @@ Rules:
 
 ### Topic 1.3 — HTML Forms & Tables
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Build forms with inputs, labels, selects, checkboxes, radios, and buttons. Build a data table. Understand the form submission flow and input types.
@@ -109,7 +109,7 @@ Rules:
 
 ### Topic 1.4 — Intro to CSS: Selectors, Colors & Typography
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Link a stylesheet to HTML. Apply colors, fonts, sizes, weight, spacing. Understand selectors: element, class, ID, pseudo-class (`:hover`, `:focus`). Understand the cascade and specificity.
@@ -128,7 +128,7 @@ Rules:
 
 ### Topic 1.5 — The Box Model
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Deep dive into margin, padding, border, width, height, box-sizing. Use browser DevTools to inspect and debug box model issues live in the browser.
@@ -148,7 +148,7 @@ Rules:
 
 ### Topic 1.6 — CSS Positioning & Display
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Understand static, relative, absolute, fixed, sticky positioning. Understand block vs inline vs inline-block display. Build layered UI elements and a navbar that sticks on scroll.
@@ -170,7 +170,13 @@ Rules:
 **Difficulty:** Beginner
 **Estimated Time:** 4–6 hrs
 
-**Description:** Build a complete, styled personal profile page using pure HTML and CSS — no frameworks.
+**Description:** Build a complete, styled personal profile page using pure HTML and CSS — no frameworks. This is your first real piece of work on the web — something you wrote, something that lives at a real URL. It's small by design, because the goal is to prove to yourself that you can take a blank file and produce something that looks intentional.
+
+**Learning Objectives:**
+- Write valid, semantic HTML without needing a framework to guide your structure
+- Apply the CSS cascade, specificity, and box model deliberately — not by trial and error
+- Host a live project at a real public URL using GitHub Pages
+- Understand how a browser goes from raw files to a rendered page
 
 **Requirements:**
 - All HTML is semantic (no div soup)
@@ -178,6 +184,20 @@ Rules:
 - Proper box model spacing throughout
 - Sticky or fixed navigation with working anchor links
 - Hosted live on GitHub Pages
+
+**Evaluation Criteria:**
+- HTML uses semantic elements correctly (`<nav>`, `<section>`, `<footer>`, etc.) — no `<div>` used where a semantic tag exists
+- CSS is organized and readable: consistent indentation, no redundant rules
+- Box model spacing looks intentional — no elements touching edges accidentally
+- Page renders correctly at 375px (mobile) and 1280px (desktop)
+- Hosted live and accessible via the submitted GitHub Pages URL
+
+**Stretch Goals:**
+- Add a CSS-only dark/light mode toggle using a hidden checkbox hack
+- Add a smooth scroll behavior and active link highlighting via CSS `:target`
+- Add a print stylesheet that hides the nav and looks clean on paper
+
+**Employer Signal:** Shows a recruiter that you can produce structured, clean HTML/CSS without scaffolding — the baseline competency that separates people who've actually built things from those who've only followed tutorials.
 
 **Skills Demonstrated:**
 - HTML (`language`) — `intermediate`
@@ -199,7 +219,7 @@ Rules:
 
 ### Topic 2.1 — Flexbox
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Understand the flex container and flex items model. Learn all key properties: `display: flex`, `flex-direction`, `justify-content`, `align-items`, `flex-wrap`, `gap`. Build common UI patterns with Flexbox.
@@ -219,7 +239,7 @@ Rules:
 
 ### Topic 2.2 — CSS Grid
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Understand grid containers, grid tracks, `grid-template-columns/rows`, `grid-area`, `gap`, and auto-placement. Know when to use Grid vs Flexbox.
@@ -239,7 +259,7 @@ Rules:
 
 ### Topic 2.3 — Responsive Design & Media Queries
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Mobile-first design approach. Write media queries for different breakpoints. Use relative units (%, em, rem, vw, vh). Test layouts on mobile, tablet, and desktop.
@@ -258,7 +278,7 @@ Rules:
 
 ### Topic 2.4 — Tailwind CSS
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Set up Tailwind in a project. Learn utility-first CSS. Build layouts, style typography, add spacing and color using Tailwind classes. Understand why utility-first exists and when it shines.
@@ -277,7 +297,7 @@ Rules:
 
 ### Topic 2.5 — CSS Animations & Transitions
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** CSS transitions for hover states. `@keyframes` animations. Transform (scale, rotate, translate). Timing functions (ease, ease-in-out, cubic-bezier). Micro-interactions: spinners, button presses, fades.
@@ -299,7 +319,13 @@ Rules:
 **Difficulty:** Beginner
 **Estimated Time:** 6–8 hrs
 
-**Description:** Design and build a fully responsive landing page for a fictional product or service using Tailwind CSS.
+**Description:** Design and build a fully responsive landing page for a fictional product or service using Tailwind CSS. Landing pages are the most common frontend deliverable in the real world — every product, startup, and campaign has one. This project is about learning to think in layouts and breakpoints, not just in elements.
+
+**Learning Objectives:**
+- Build complex multi-section layouts using CSS Grid and Flexbox confidently
+- Write fully responsive CSS that works across mobile, tablet, and desktop without hacks
+- Use Tailwind CSS utility classes to style without writing custom CSS for every rule
+- Add CSS animations and transitions that feel polished, not distracting
 
 **Requirements:**
 - Sticky navbar with mobile hamburger menu toggle
@@ -310,6 +336,21 @@ Rules:
 - At least 3 animations/transitions (hover effects, entrance animation)
 - Responsive on mobile (375px), tablet (768px), desktop (1280px)
 - Deployed live on GitHub Pages or Vercel
+
+**Evaluation Criteria:**
+- Layout uses Grid and Flexbox correctly — no layout hacks (negative margins, absolute positioning for flow)
+- All breakpoints tested and functional: mobile stack, tablet adjustment, desktop full layout
+- Tailwind classes are used semantically — not overridden with inline styles
+- Hamburger menu opens and closes correctly on mobile
+- Animations are smooth (no jank) and add value without being distracting
+- Deployed and accessible at submitted URL
+
+**Stretch Goals:**
+- Add a testimonials carousel (CSS-only or minimal JS)
+- Implement a sticky header that changes appearance (shrinks, adds shadow) on scroll
+- Add an FAQ accordion section using only HTML `<details>` and `<summary>`
+
+**Employer Signal:** Proves you can build the most common frontend deliverable in client and agency work — a multi-section, responsive landing page — without scaffolding and without design debt.
 
 **Skills Demonstrated:**
 - CSS (`language`) — `advanced`
@@ -331,7 +372,7 @@ Rules:
 
 ### Topic 3.1 — JavaScript Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Variables (`let`, `const`), data types, operators, conditionals (`if/else`, ternary), loops (`for`, `while`). Write JS in a file linked to HTML — not just the console.
@@ -350,7 +391,7 @@ Rules:
 
 ### Topic 3.2 — Functions & Scope
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Function declarations vs expressions vs arrow functions. Parameters, return values, default values. Call stack, local vs global scope, and closures at a basic level.
@@ -369,7 +410,7 @@ Rules:
 
 ### Topic 3.3 — Arrays & Objects
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Array methods: `map`, `filter`, `reduce`, `find`, `forEach`. Object creation, property access, destructuring, spread/rest operator. Work with arrays of objects — the universal data format of frontend development.
@@ -388,7 +429,7 @@ Rules:
 
 ### Topic 3.4 — The DOM: Selecting & Manipulating Elements
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** `querySelector`, `querySelectorAll`, `getElementById`. Change text content, innerHTML, styles. Create, insert, and remove elements dynamically. Understand the DOM tree structure.
@@ -407,7 +448,7 @@ Rules:
 
 ### Topic 3.5 — Events & User Interaction
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** `addEventListener`, event types (click, input, keydown, submit, mouseover). Event object: `e.target`, `e.preventDefault()`. Event delegation for dynamic lists. Client-side form validation.
@@ -426,7 +467,7 @@ Rules:
 
 ### Topic 3.6 — Async JavaScript: Promises & Fetch
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Synchronous vs asynchronous execution. Callbacks problem. Promises: `.then()`, `.catch()`. `async/await` syntax. Fetch API to call a real REST API and display data on the page.
@@ -446,7 +487,7 @@ Rules:
 
 ### Topic 3.7 — Local Storage & State
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** `localStorage.setItem/getItem/removeItem`. `JSON.stringify/parse` to store objects. Persist UI state across page reloads. Understand what "state" means in a frontend context.
@@ -468,7 +509,13 @@ Rules:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–12 hrs
 
-**Description:** Build a fully functional multi-step quiz app in vanilla JavaScript — no frameworks.
+**Description:** Build a fully functional multi-step quiz app in vanilla JavaScript — no frameworks. The point of this project isn't the quiz — it's that a quiz forces you to manage state: which question are you on, what did the user answer, what's the score, what's the timer showing. This is the first project where you'll feel the difference between JavaScript that reacts to the user and JavaScript that just runs once.
+
+**Learning Objectives:**
+- Manage multi-step UI state in plain JavaScript without a framework
+- Manipulate the DOM dynamically — add, update, and remove elements based on runtime data
+- Work with timers (`setInterval`, `clearInterval`) and asynchronous state changes
+- Persist data across page reloads using `localStorage`
 
 **Requirements:**
 - 10+ questions from a JS array of objects (question, options, answer)
@@ -479,6 +526,21 @@ Rules:
 - Best score stored in localStorage and shown on the start screen
 - Fully responsive
 - Deployed live
+
+**Evaluation Criteria:**
+- State is managed cleanly — no global variable sprawl; state lives in a single object or clear set of variables
+- DOM manipulation is done with `querySelector`/`createElement` — not `innerHTML` string building for dynamic content
+- Timer resets correctly between questions and doesn't cause double-advance bugs
+- localStorage read/write works correctly across page refreshes
+- Results screen shows correct score and allows replay
+- No console errors during a full playthrough
+
+**Stretch Goals:**
+- Add question categories and let the user pick a topic before starting
+- Add a leaderboard stored in localStorage (top 5 scores with initials)
+- Add sound effects on correct/wrong answer (Web Audio API or an audio element)
+
+**Employer Signal:** Demonstrates you can manage UI state, respond to user input, and handle time-based logic in JavaScript — the core skills behind every interactive UI, regardless of the framework you eventually use.
 
 **Skills Demonstrated:**
 - JavaScript (`language`) — `advanced`
@@ -499,7 +561,7 @@ Rules:
 
 ### Topic 4.1 — Git & GitHub Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** `git init`, `add`, `commit`, `status`, `log`. Branching: `git branch`, `git switch`, `git merge`. Understand HEAD, staging area, working directory. Push to GitHub. Write descriptive commit messages.
@@ -519,7 +581,7 @@ Rules:
 
 ### Topic 4.2 — GitHub Workflow: Branches & Pull Requests
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Feature branch workflow. Create branches for each feature. Open a pull request (PR), write a PR description, merge it. Resolve a merge conflict deliberately (create one and fix it).
@@ -539,7 +601,7 @@ Rules:
 
 ### Topic 4.3 — Browser DevTools Deep Dive
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Elements panel: inspect and live-edit HTML/CSS. Console: `console.log/warn/error/table`, reading error messages. Network tab: inspect fetch requests, headers, status codes. Lighthouse: run a performance and accessibility audit.
@@ -558,7 +620,7 @@ Rules:
 
 ### Topic 4.4 — Deployment: Vercel, Netlify & GitHub Pages
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1 hr
 **Difficulty:** Beginner
 
 **Description:** Deploy static sites to GitHub Pages. Deploy to Vercel and Netlify via GitHub repository integration. Understand environment variables, build commands, and custom domains.
@@ -581,7 +643,13 @@ Rules:
 **Difficulty:** Intermediate
 **Estimated Time:** 6–8 hrs
 
-**Description:** Build and deploy a personal developer portfolio website that showcases all projects built so far.
+**Description:** Build and deploy a personal developer portfolio website that showcases all projects built so far. This is the first version of the site you'll eventually send to employers. It doesn't need to be perfect — it needs to be real. A live URL with your actual work is worth more than a polished mockup that doesn't exist.
+
+**Learning Objectives:**
+- Combine HTML, CSS, and JavaScript into a cohesive multi-section website
+- Use Git with a real feature branch workflow — not a single commit dump
+- Deploy a production site on Vercel or Netlify with a proper build process
+- Write a README that communicates what a project is, not just that it exists
 
 **Requirements:**
 - Hero section: name, title, short intro
@@ -592,6 +660,21 @@ Rules:
 - Clean commit history (proper feature commits — not a single initial commit)
 - Deployed live on Vercel or Netlify
 - README with project description and tech stack
+
+**Evaluation Criteria:**
+- All 3 previous stage projects are linked with working demo and GitHub URLs
+- Commit history shows at least 5 meaningful commits (not "initial commit" + one giant dump)
+- Deployed URL is live and loads in under 3 seconds on a standard connection
+- Contact form submits successfully (Formspree confirmation email received)
+- README includes: what the site is, what tech was used, how to run it locally
+- Responsive on mobile — no horizontal scroll, no overlapping elements
+
+**Stretch Goals:**
+- Add a "Currently Learning" or "What's Next" section that updates as you progress
+- Implement a subtle CSS animation on the hero section (typewriter, fade-in, etc.)
+- Add a custom 404 page on Vercel/Netlify
+
+**Employer Signal:** A live portfolio URL is the single most valuable thing a junior developer can have. Recruiters click links — they don't read PDF portfolios. This is the proof that you ship.
 
 **Skills Demonstrated:**
 - Git (`tool`) — `intermediate`
@@ -616,7 +699,7 @@ Rules:
 
 ### Topic 5.1 — Why React? Components & JSX
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** What problems does React solve over vanilla JS? Component-based architecture. JSX syntax. Create your first React app with Vite. Build reusable components. Pass data via props.
@@ -636,7 +719,7 @@ Rules:
 
 ### Topic 5.2 — State & useState Hook
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why does React need its own state system? `useState`: declare, read, update. The re-render cycle. Controlled inputs (input value driven by state). Lifting state up to a parent component.
@@ -655,7 +738,7 @@ Rules:
 
 ### Topic 5.3 — useEffect & Data Fetching
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** `useEffect` for side effects. Dependency array: when effects run. Cleanup functions. Fetch API inside a component. Handle loading state, error state, and empty state.
@@ -675,7 +758,7 @@ Rules:
 
 ### Topic 5.4 — Lists, Keys & Conditional Rendering
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Render arrays with `.map()`. Why keys matter and what makes a good key. Conditional rendering patterns: ternary, `&&` operator, early return. Avoid common rendering mistakes.
@@ -694,7 +777,7 @@ Rules:
 
 ### Topic 5.5 — React Router: Multi-Page Apps
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Install React Router v6. BrowserRouter, Routes, Route, Link, useNavigate, useParams. Build multi-page apps with dynamic routes.
@@ -713,7 +796,7 @@ Rules:
 
 ### Topic 5.6 — Forms & Validation in React
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Controlled form components in React. Multi-field forms with a single state object. Client-side validation with inline error messages. Introduction to React Hook Form for complex forms.
@@ -732,7 +815,7 @@ Rules:
 
 ### Topic 5.7 — Context API & Global State
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Prop drilling problem. `createContext`, `useContext`, Provider pattern. When to use Context vs local state. Build a theme switcher and a global cart state using Context.
@@ -754,7 +837,13 @@ Rules:
 **Difficulty:** Intermediate
 **Estimated Time:** 10–14 hrs
 
-**Description:** Build a fully-featured task management app in React.
+**Description:** Build a fully-featured task management app in React. Task managers are the classic React learning project for a reason — they cover the full surface area of React fundamentals: state, props, context, routing, forms, and persistence. By the time you finish this, you'll have used every core React concept in a real, working product.
+
+**Learning Objectives:**
+- Manage complex, multi-component state with React Context — no prop drilling
+- Build controlled form components with validation and real-time feedback
+- Implement client-side routing with React Router for a multi-page SPA feel
+- Persist application state to localStorage and hydrate it correctly on load
 
 **Requirements:**
 - Add, edit, delete, and complete tasks
@@ -765,6 +854,21 @@ Rules:
 - Dark/light mode toggle using Context, persisted in localStorage
 - All tasks persisted in localStorage
 - React Router: `/` dashboard and `/task/:id` detail view
+
+**Evaluation Criteria:**
+- Context is used correctly — no prop drilling beyond 1 level
+- State updates are immutable (no direct mutation of arrays or objects)
+- Forms are controlled components — input values driven by state
+- `useEffect` dependencies are correct — no infinite loops, no missing dependencies
+- localStorage hydration works on page refresh without flash of empty state
+- Routes work correctly including direct URL navigation (not just link clicks)
+
+**Stretch Goals:**
+- Add drag-and-drop between columns (react-beautiful-dnd or native HTML5 drag)
+- Add task priority levels with color-coded indicators
+- Add a "Focus Mode" route that shows only today's tasks in a distraction-free layout
+
+**Employer Signal:** A working task manager in React demonstrates you understand the React mental model — not just how to use hooks, but when and why. It's the project interviewers mentally compare against their own work when reviewing your code.
 - Fully responsive
 - Deployed on Vercel
 
@@ -788,7 +892,7 @@ Rules:
 
 ### Topic 6.1 — TypeScript for React Developers
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why TypeScript? Types, interfaces, type inference. Typing props, state, API responses, function signatures. Common TS patterns in React. No `any`.
@@ -807,7 +911,7 @@ Rules:
 
 ### Topic 6.2 — Next.js: Routing, SSR & the App Router
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 3 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is Next.js and why use it over bare React? App Router. File-based routing. Server Components vs Client Components. `fetch` with caching in Next.js. Dynamic routes. SEO benefits.
@@ -826,7 +930,7 @@ Rules:
 
 ### Topic 6.3 — API Routes & Server Actions
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Next.js API routes. Build simple server-side endpoints. Server Actions for form submission. Call external APIs from the server to hide API keys from the client.
@@ -846,7 +950,7 @@ Rules:
 
 ### Topic 6.4 — Tailwind CSS at Scale & Component Libraries
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Tailwind in a Next.js project. Build reusable component abstractions with Tailwind. Introduction to shadcn/ui — install and customize components to match your design system.
@@ -865,7 +969,7 @@ Rules:
 
 ### Topic 6.5 — State Management with Zustand
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Problems with Context at scale. Zustand: create a store, define state and actions, use selectors to prevent unnecessary re-renders. When to use Zustand vs Context.
@@ -884,7 +988,7 @@ Rules:
 
 ### Topic 6.6 — React Query: Server State & Caching
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Client state (UI) vs server state (data from APIs). `useQuery` for fetching, `useMutation` for writes. Caching, background refetching, stale time. Why React Query replaces manual `useEffect` + `useState` for data fetching.
@@ -907,13 +1011,19 @@ Rules:
 **Difficulty:** Advanced
 **Estimated Time:** 14–20 hrs
 
-**Description:** Build a complete, real-world Next.js web app. Learner picks one idea (or proposes their own).
+**Description:** Build a complete, real-world Next.js web app of your choosing. This is the project where the training wheels come off — you pick the idea, you make the architectural decisions, you manage the scope. The goal is a finished, deployed app with a real README and a live link you'd actually share on LinkedIn.
 
 **Suggested Ideas:**
 - Recipe finder & saver — Spoonacular API, save favorites
 - Job board aggregator — filter by stack/location/remote
 - Expense tracker with charts — Recharts visualization
 - Real-time weather dashboard — multi-city, 7-day forecast
+
+**Learning Objectives:**
+- Make independent architectural decisions in a Next.js project (when to use Server vs Client components, when to use Zustand vs React Query)
+- Write TypeScript throughout a full project with zero `any` — not just in examples
+- Build and use a Next.js API route to protect an external API key
+- Produce a project README that explains the app clearly to someone who's never seen it
 
 **Requirements:**
 - Next.js with App Router
@@ -924,6 +1034,21 @@ Rules:
 - One API route (hide an external API key)
 - Lighthouse: >80 Performance, >90 Accessibility
 - Deployed on Vercel with clean README and live link
+
+**Evaluation Criteria:**
+- TypeScript is used correctly — no `any`, proper typing of API responses and component props
+- Server and Client components are used appropriately — no unnecessary `'use client'` directives
+- API key is server-side only — not exposed in client-side code or the public GitHub repo
+- Dynamic routes work with direct URL navigation (not just via internal links)
+- Lighthouse Performance score >80, Accessibility score >90 (verified against submitted live URL)
+- README includes: what the app does, why you built it, tech stack, live link, and how to run locally
+
+**Stretch Goals:**
+- Add user-facing error boundaries with a custom fallback UI
+- Implement optimistic updates on mutations (React Query or Zustand)
+- Add end-to-end tests with Playwright for at least 2 critical user flows
+
+**Employer Signal:** A deployed Next.js app with TypeScript, a real API integration, and a Lighthouse score above 80 is the exact benchmark mid-size companies use to filter junior frontend candidates. This is the project that gets callbacks.
 
 **Skills Demonstrated:**
 - Next.js (`framework_library`) — `intermediate`
@@ -947,7 +1072,7 @@ Rules:
 
 ### Topic 7.1 — Web Performance Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Core Web Vitals: LCP, CLS, INP. Lighthouse audits in DevTools. Code splitting, lazy loading with `React.lazy` + `Suspense`, `next/image` for optimized images. Eliminate render-blocking resources.
@@ -966,7 +1091,7 @@ Rules:
 
 ### Topic 7.2 — Web Accessibility (a11y)
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why accessibility matters (legal requirements, business case, ethics). Semantic HTML's role. ARIA labels and roles when semantics aren't enough. Keyboard navigation testing. Color contrast ratios. Test with the axe DevTools browser extension.
@@ -985,7 +1110,7 @@ Rules:
 
 ### Topic 7.3 — SEO for Frontend Developers
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Meta tags (title, description). Open Graph tags for social sharing. Dynamic metadata in Next.js using the `metadata` export and `generateMetadata`. Canonical URLs. Sitemap basics.
@@ -1004,7 +1129,7 @@ Rules:
 
 ### Topic 7.4 — Testing Basics: Vitest & React Testing Library
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why test? Unit tests with Vitest. Component tests with React Testing Library. Query elements the way users would (by role, label, text). Write tests for a component and a utility function.
@@ -1026,7 +1151,13 @@ Rules:
 **Difficulty:** Advanced
 **Estimated Time:** 10–16 hrs
 
-**Description:** Rebuild and polish your portfolio (first built in Stage 4) into a professional, public-ready developer site. This is the portfolio you send to employers.
+**Description:** Rebuild and polish your portfolio (first built in Stage 4) into a professional, public-ready developer site. This is the portfolio you send to employers. Not a refresh — a rebuild. You know Next.js, TypeScript, and performance optimization now. Your Stage 4 portfolio was built with the tools you had then. This one is built with everything you know.
+
+**Learning Objectives:**
+- Build a production-quality Next.js site with TypeScript that scores >90 across all Lighthouse dimensions
+- Implement Open Graph metadata so sharing the site on LinkedIn produces a professional preview card
+- Apply smooth page transitions that enhance, not distract from, the browsing experience
+- Write a "How it was built" README section that demonstrates your technical communication skills
 
 **Requirements:**
 - Rebuilt in Next.js with TypeScript
@@ -1037,6 +1168,21 @@ Rules:
 - Fully responsive — tested on a real mobile device
 - Custom domain (optional but strongly encouraged)
 - README includes a "How it was built" section
+
+**Evaluation Criteria:**
+- All projects from the path are displayed with working live links and GitHub URLs
+- Lighthouse scores verified on deployed URL: Performance >90, Accessibility >90, SEO >90
+- Open Graph preview renders correctly (test with LinkedIn Post Inspector or opengraph.xyz)
+- TypeScript used throughout — no `any`, proper typing on all components
+- Page transitions work without causing layout shift or FOUC
+- README "How it was built" section explains at least 3 technical decisions with rationale
+
+**Stretch Goals:**
+- Add a blog section (MDX-powered) with at least 2 posts about what you learned
+- Add analytics (Vercel Analytics or Plausible) to see who visits
+- Implement a contact form with server-side handling via a Next.js Server Action
+
+**Employer Signal:** A portfolio with Lighthouse 90+ scores, Open Graph previews, and real project case studies communicates senior attention to detail from a junior candidate. This is the most visible thing about you on the internet — treat it accordingly.
 
 **Skills Demonstrated:**
 - Next.js (`framework_library`) — `intermediate`

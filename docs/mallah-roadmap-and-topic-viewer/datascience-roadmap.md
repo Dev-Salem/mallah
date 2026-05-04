@@ -1,7 +1,7 @@
 # Mallah — Data Science & Machine Learning Path
 ## Full Roadmap Specification (with Resources & Certificates)
 
-**Path ID:** `datascience`
+**Path ID:** `data_science`
 **Estimated Duration:** 7–10 months (at 1–2 hrs/day)
 **Difficulty:** Beginner → Advanced
 **Philosophy:** Data science is learned by doing — not by watching lectures. Every topic produces something real: a cleaned dataset, a working model, a chart that answers a question, a deployed prediction tool. By the end, the learner has a portfolio of end-to-end projects and the instincts to attack a new data problem from scratch.
@@ -51,7 +51,7 @@ Certificate block format:
 
 ### Topic 1.1 — Python Basics & the Data Science Environment
 **Type:** Lesson + Setup
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** What data science is and isn't. Set up the data science environment: Anaconda or Python + pip, Jupyter Notebooks (local) and Kaggle Notebooks (cloud, free GPU). Variables, data types, control flow, functions. Python's interactive execution model — why Jupyter is perfect for data work.
@@ -71,7 +71,7 @@ Certificate block format:
 
 ### Topic 1.2 — NumPy: The Foundation of Numerical Python
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** Why NumPy? Arrays vs Python lists (speed, vectorisation). Creating arrays, indexing, slicing, reshaping. Mathematical operations: element-wise, broadcasting. `np.mean`, `np.std`, `np.sum`, `np.where`. Linear algebra basics.
@@ -91,7 +91,7 @@ Certificate block format:
 
 ### Topic 1.3 — Pandas Part 1: Loading, Inspecting & Selecting Data
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Beginner
 
 **Description:** The DataFrame and Series — the core data structures. Loading data: CSV, Excel, JSON, from URLs. Inspecting: `.head()`, `.info()`, `.describe()`, `.shape`, `.dtypes`. Selecting: column selection, `.loc`, `.iloc`, boolean indexing, query strings.
@@ -110,7 +110,7 @@ Certificate block format:
 
 ### Topic 1.4 — Pandas Part 2: Transforming, Grouping & Aggregating
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Adding and modifying columns. Applying functions: `.apply()`, `.map()`, vectorised string operations. Grouping with `.groupby()`. Aggregations: `sum`, `mean`, `count`, `agg`. Sorting. Handling missing values: `.isna()`, `.fillna()`, `.dropna()`.
@@ -129,7 +129,7 @@ Certificate block format:
 
 ### Topic 1.5 — Python for Data Science: Functions, Comprehensions & OOP Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Writing reusable functions. Default arguments, `*args`, `**kwargs`. List comprehensions, dict comprehensions. Lambda functions. Basic OOP: classes and methods (enough to understand Scikit-learn's API pattern). Type hints for data science code.
@@ -148,7 +148,7 @@ Certificate block format:
 
 ### Topic 1.6 — Working with Files, APIs & Data Sources
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Reading from CSV, Excel, JSON, Parquet. Writing cleaned data back out. Fetching data from REST APIs with `requests`. Web scraping basics with `BeautifulSoup` (just enough to get data). Reading from Google Sheets (public). The data science data sourcing toolkit.
@@ -171,7 +171,13 @@ Certificate block format:
 **Difficulty:** Beginner
 **Estimated Time:** 5–7 hrs
 
-**Description:** Build a reusable Python data exploration script that can be pointed at any CSV or URL and automatically generates a summary report.
+**Description:** Build a reusable Python data exploration script that can be pointed at any CSV or URL and automatically generates a summary report. The goal of this project isn't the output — it's the habit. Data scientists who write reproducible, reusable functions from the start build better projects faster. Your exploration script should be something you actually reach for on every future project in this path.
+
+**Learning Objectives:**
+- Write Python code as importable functions, not just notebook cells — the difference between a script and a tool
+- Use Pandas to load and inspect datasets from file paths and URLs programmatically
+- Compute and present a meaningful statistical summary of any tabular dataset
+- Export a human-readable report from a Python script
 
 **Requirements:**
 - Accept a URL or file path as input
@@ -180,6 +186,21 @@ Certificate block format:
 - Export a clean summary to a Markdown or HTML report
 - All logic in importable functions (not just notebook cells)
 - Push to GitHub with a README that includes a sample output
+
+**Evaluation Criteria:**
+- Script runs correctly from the command line: `python explore.py --input data.csv` or similar interface
+- Summary correctly identifies column types (numeric, categorical, datetime)
+- Missing value counts are accurate and clearly presented
+- All functions are importable — no bare top-level code that runs on import
+- README includes a real sample output (screenshot or embedded Markdown table)
+- GitHub repo has a clean commit history and a `requirements.txt`
+
+**Stretch Goals:**
+- Add automatic detection of potential ID columns (high cardinality categorical) and flag them in the report
+- Generate a correlation heatmap PNG and embed it in the HTML report
+- Add a `--compare` flag that accepts two datasets and shows column-by-column differences in distributions
+
+**Employer Signal:** A utility script with a CLI interface, clean imports, and a README that shows real output demonstrates you write code that other people can use — not just code that works once on your machine.
 
 **Skills Demonstrated:**
 - Python (`language`) — `intermediate`
@@ -202,7 +223,7 @@ Certificate block format:
 
 ### Topic 2.1 — Data Cleaning: Missing Values, Duplicates & Outliers
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Types of missing data: MCAR, MAR, MNAR. Strategies: drop, impute (mean/median/mode/forward-fill/KNN). Detecting duplicates and deciding what to drop. Outlier detection: IQR method, Z-score, visualisation. When to remove outliers vs keep them.
@@ -222,7 +243,7 @@ Certificate block format:
 
 ### Topic 2.2 — Data Reshaping & Merging
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Merging DataFrames: `merge`, `join` (inner, left, right, outer). Concatenating. Pivot tables and `pivot_table`. `melt` (wide to long). `stack` and `unstack`. Multi-level indexes. When to use each.
@@ -242,7 +263,7 @@ Certificate block format:
 
 ### Topic 2.3 — Time Series Data with Pandas
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** DateTime index. Parsing dates with `pd.to_datetime`. Resampling: daily to monthly, hourly to weekly. Rolling averages. Shifting and differencing. Time zone handling. Plotting time series.
@@ -262,7 +283,7 @@ Certificate block format:
 
 ### Topic 2.4 — SQL for Data Scientists
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** SQL basics to advanced queries: SELECT, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT. Joins: INNER, LEFT, RIGHT. Subqueries. CTEs (WITH clauses). Window functions: ROW_NUMBER, RANK, LAG, LEAD, SUM OVER PARTITION. NULL handling. SQLite in Python with `sqlite3` and Pandas.
@@ -281,7 +302,7 @@ Certificate block format:
 
 ### Topic 2.5 — Advanced Pandas: Performance & Best Practices
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Pandas performance: vectorised operations vs `.apply()` (and when to use each). `pd.Categorical` for memory savings. Chaining with `.pipe()`. Method chaining for readability. Reading large files in chunks. `dtypes` optimisation to reduce memory.
@@ -304,7 +325,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–10 hrs
 
-**Description:** Take a genuinely messy, real-world dataset through the full wrangling pipeline to a clean, analysis-ready state with documented findings.
+**Description:** Take a genuinely messy, real-world dataset through the full wrangling pipeline to a clean, analysis-ready state with documented findings. You source the data yourself — no pre-cleaned dataset provided. The chaos is the point. Learning to audit, diagnose, and fix data quality issues in an unknown dataset is the most important data science skill that no tutorial ever teaches properly.
+
+**Learning Objectives:**
+- Independently identify and categorize data quality issues in an unfamiliar dataset
+- Make and justify cleaning decisions in writing — not just fix silently
+- Merge two datasets with different schemas into a single analysis-ready table
+- Query cleaned data with SQL to answer real business questions
 
 **Requirements (learner sources their own dataset from Kaggle, data.gov, or open datasets):**
 - Dataset must be messy: missing values, wrong types, duplicates, inconsistent formatting
@@ -316,6 +343,21 @@ Certificate block format:
   - Summary: a written "data quality report" section at the end
 - All code reusable functions (importable, not just notebook cells)
 - Pushed to GitHub with a README explaining the dataset, the problems found, and the decisions made
+
+**Evaluation Criteria:**
+- Dataset is genuinely messy — not a pre-cleaned tutorial dataset (Titanic, Iris, etc.)
+- Every cleaning decision is documented with a written justification — no silent drops or fills
+- Merge uses an appropriate join type with reasoning given for the choice
+- 5 SQL queries are written and answered correctly against a SQLite connection
+- Data quality report section summarizes the key issues found and decisions made in plain language
+- Notebook runs cleanly from top to bottom with no errors on a fresh kernel
+
+**Stretch Goals:**
+- Add a data validation section using `pandera` or `great_expectations` — define schema expectations and show which ones the raw data fails
+- Write a second notebook that re-runs the pipeline on a different messy dataset to prove it's reusable
+- Publish the notebook on Kaggle and share the link in the README
+
+**Employer Signal:** The ability to take a completely unknown, real-world dataset and produce a clean, documented analysis pipeline — with justifications for every decision — is what separates entry-level data analysts from data scientists who can be trusted with production data.
 
 **Skills Demonstrated:**
 - Pandas (`framework_library`) — `advanced`
@@ -337,7 +379,7 @@ Certificate block format:
 
 ### Topic 3.1 — Matplotlib: The Foundation of Python Visualisation
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Beginner
 
 **Description:** The Figure/Axes architecture. Basic charts: line, bar, scatter, histogram, pie. Customisation: titles, labels, legends, colours, grid, fonts. Subplots. Saving figures (PNG, PDF). Object-oriented vs pyplot API.
@@ -356,7 +398,7 @@ Certificate block format:
 
 ### Topic 3.2 — Seaborn: Statistical Visualisation
 **Type:** Lesson + Practice
-**Estimated Time:** 1.5–2.5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Beginner
 
 **Description:** Seaborn's philosophy: statistical graphics with less code. Distribution plots: `histplot`, `kdeplot`, `boxplot`, `violinplot`. Relationship plots: `scatterplot`, `lineplot`, `regplot`. Categorical plots: `barplot`, `countplot`, `stripplot`. Pair plots. Heatmaps. Themes and palettes.
@@ -375,7 +417,7 @@ Certificate block format:
 
 ### Topic 3.3 — Plotly: Interactive Visualisation
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why interactive charts? Plotly Express vs Plotly Graph Objects. Interactive scatter, bar, line, choropleth maps, sunburst charts. Hover tooltips. Exporting to HTML. Basic Plotly Dash intro (or Streamlit + Plotly integration).
@@ -394,7 +436,7 @@ Certificate block format:
 
 ### Topic 3.4 — The EDA Framework: A Structured Approach
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** A systematic EDA process: univariate → bivariate → multivariate analysis. Formulating questions before plotting. Feature relationships and correlation (Pearson, Spearman). Distribution shapes and what they mean. Skewness, kurtosis. Simpson's Paradox — why group-level insights can contradict individual-level data.
@@ -413,7 +455,7 @@ Certificate block format:
 
 ### Topic 3.5 — Feature Engineering Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is feature engineering? Deriving new features from existing ones. Binning continuous variables. Encoding categorical variables: label encoding, one-hot encoding, ordinal encoding, target encoding. Interaction features. Log transformations for skewed distributions.
@@ -436,7 +478,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–12 hrs
 
-**Description:** Perform a complete, publication-quality EDA on a dataset of your choice and write it up as an interactive report.
+**Description:** Perform a complete, publication-quality EDA on a dataset of your choice and write it up as an interactive report. This project is about communication as much as analysis — a chart nobody can interpret isn't insight. The Kaggle publication requirement is intentional: real peer feedback accelerates your growth faster than any internal review.
+
+**Learning Objectives:**
+- Structure an EDA around explicit questions, not just charts for charts' sake
+- Use Matplotlib, Seaborn, and Plotly appropriately for different chart types and levels of interactivity
+- Write a narrative "Story" section that communicates findings to a non-technical reader
+- Earn public validation (Kaggle upvotes) as a signal of analytical and communication quality
 
 **Requirements:**
 - Choose a dataset related to something you're genuinely interested in (sports, finance, health, music, etc.)
@@ -446,6 +494,21 @@ Certificate block format:
 - A written "Story" section: what does this data tell you that you didn't know before?
 - Published as a Kaggle Notebook (makes it public and shareable) with a minimum of 5 upvotes from the community
 - Also pushed to GitHub
+
+**Evaluation Criteria:**
+- Notebook is structured around explicit analytical questions — not a random sequence of charts
+- Each chart has a title, axis labels, and a markdown interpretation below it (1–2 sentences: what does this chart tell us?)
+- At least 3 feature engineering derivations are explained with domain rationale (not just "I made this column")
+- Plotly is used for at least 3 interactive charts (not just static ones)
+- "Story" section is written in plain language a non-data-scientist could read and understand
+- Notebook runs top-to-bottom cleanly with no errors on a fresh kernel
+
+**Stretch Goals:**
+- Add a "What I would investigate next" section with 3 follow-up hypotheses and how you'd test them
+- Collaborate on the dataset with another learner — merge two EDA notebooks with different angles
+- Add a dashboard version using Streamlit (deploy to Streamlit Cloud) that lets anyone explore the data interactively
+
+**Employer Signal:** A public Kaggle notebook with upvotes and a polished narrative is one of the most credible data science portfolio items that doesn't require a business context. It shows you can find, understand, and communicate insights from real data — which is 70% of a data scientist's job.
 
 **Skills Demonstrated:**
 - Matplotlib (`framework_library`) — `beginner`
@@ -468,7 +531,7 @@ Certificate block format:
 
 ### Topic 4.1 — Descriptive Statistics & Distributions
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Measures of central tendency and spread. Probability distributions: normal, binomial, Poisson, uniform. The Central Limit Theorem — why it matters for everything downstream. Sampling: random, stratified, systematic. Confidence intervals intuitively.
@@ -488,7 +551,7 @@ Certificate block format:
 
 ### Topic 4.2 — Hypothesis Testing
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** The logic of hypothesis testing. Null hypothesis, p-value, Type I and II errors, statistical power. Tests: t-test (one sample, two sample, paired), chi-square test of independence, ANOVA. When to use each. Effect size vs statistical significance. The p-value misconception.
@@ -507,7 +570,7 @@ Certificate block format:
 
 ### Topic 4.3 — Correlation, Causation & Regression Basics
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Pearson and Spearman correlation. The correlation ≠ causation principle and examples. Confounders. Simple linear regression: OLS, coefficients interpretation, R², residuals. Multiple linear regression. `statsmodels` for statistical regression (vs Scikit-learn which is ML-first).
@@ -527,7 +590,7 @@ Certificate block format:
 
 ### Topic 4.4 — Probability for Machine Learning
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Bayes' theorem intuitively. Prior, likelihood, posterior. Naive Bayes classifier concept. Information theory: entropy, information gain (used in decision trees). Log-likelihood. Why machine learning loss functions are rooted in probability.
@@ -547,7 +610,7 @@ Certificate block format:
 
 ### Topic 4.5 — A/B Testing & Experimentation
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** What is A/B testing? Experimental design: control/treatment, randomization. Sample size calculation. Running a t-test on A/B results. Multiple testing correction (Bonferroni, FDR). Practical pitfalls: novelty effect, peeking problem, Simpson's Paradox in experiments.
@@ -570,7 +633,13 @@ Certificate block format:
 **Difficulty:** Intermediate
 **Estimated Time:** 8–10 hrs
 
-**Description:** Apply statistical reasoning to answer a real business question from a dataset of your choice.
+**Description:** Apply statistical reasoning to answer a real business question from a dataset of your choice. This project is about the translation layer: taking a messy real-world question, choosing the right statistical test, running it correctly, and then communicating what the result actually means for a decision. The math is the easy part. The communication is what gets you hired.
+
+**Learning Objectives:**
+- Frame business questions as testable statistical hypotheses with explicit null and alternative hypotheses
+- Select and apply the correct test for different data types and question structures
+- Interpret p-values, effect sizes, and confidence intervals in plain language — not just "p < 0.05"
+- Design and analyse a simulated A/B test correctly, accounting for sample size and the peeking problem
 
 **Requirements:**
 - Frame 3–5 business questions that can be answered with statistical tests
@@ -579,6 +648,20 @@ Certificate block format:
 - A simulated A/B test: design an experiment, simulate the data, analyse results
 - All findings written in plain language (no jargon) in a Jupyter Notebook with embedded charts
 - Pushed to GitHub and/or published as a Kaggle Notebook
+
+**Evaluation Criteria:**
+- Each hypothesis test includes: null hypothesis stated, test selected with justification, result computed, interpretation written in plain language
+- Effect sizes are reported alongside p-values — results are not interpreted as significant/not significant based solely on p < 0.05
+- A/B test design specifies sample size calculation before the analysis (not just looking at the data and deciding)
+- All findings are written in language a non-statistician product manager could read and act on
+- Notebook runs cleanly top-to-bottom
+
+**Stretch Goals:**
+- Add a multiple testing correction (Bonferroni or FDR) for the battery of tests and show how conclusions change
+- Rerun the analysis with bootstrap confidence intervals instead of parametric tests and compare results
+- Build a one-page "executive summary" cell at the top of the notebook with the three most important findings
+
+**Employer Signal:** The ability to translate business questions into statistical tests and communicate results without jargon is the most commonly cited skill gap in data science job postings. This project is direct evidence of that competency.
 
 **Skills Demonstrated:**
 - Statistics (`practice`) — `advanced`
@@ -599,7 +682,7 @@ Certificate block format:
 
 ### Topic 5.1 — The Machine Learning Framework
 **Type:** Lesson + Concept
-**Estimated Time:** 1.5–2 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Supervised vs unsupervised vs reinforcement learning. Classification vs regression. The ML workflow: define problem → collect data → explore → engineer features → train model → evaluate → deploy. Train/validation/test split and why it matters. Bias-variance tradeoff intuitively.
@@ -618,7 +701,7 @@ Certificate block format:
 
 ### Topic 5.2 — Scikit-learn API & Preprocessing
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Scikit-learn's consistent API: `fit`, `transform`, `predict`, `fit_transform`. `Pipeline` and `ColumnTransformer`. Preprocessing: `StandardScaler`, `MinMaxScaler`, `LabelEncoder`, `OneHotEncoder`. `SimpleImputer`. Why fit on train only — and never on test.
@@ -638,7 +721,7 @@ Certificate block format:
 
 ### Topic 5.3 — Classification: Logistic Regression, Decision Trees & KNN
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Logistic regression: sigmoid function, decision boundary, probability interpretation. Decision trees: splits, information gain, overfitting. K-Nearest Neighbours: distance metrics, choosing K. Model evaluation for classification: accuracy, precision, recall, F1, AUC-ROC, confusion matrix. Cross-validation.
@@ -658,7 +741,7 @@ Certificate block format:
 
 ### Topic 5.4 — Regression: Linear, Ridge, Lasso & Evaluation
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Linear regression for prediction. Polynomial regression. Regularisation: Ridge (L2) and Lasso (L1) — when and why. Hyperparameter tuning with `GridSearchCV`. Regression evaluation: MAE, MSE, RMSE, R². Residual analysis.
@@ -678,7 +761,7 @@ Certificate block format:
 
 ### Topic 5.5 — Unsupervised Learning: Clustering & Dimensionality Reduction
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** K-Means clustering: algorithm, choosing K (elbow method, silhouette score). DBSCAN: density-based clustering for non-spherical shapes. PCA: principal components, variance explained, 2D visualisation of high-dimensional data. t-SNE for visualisation.
@@ -698,7 +781,7 @@ Certificate block format:
 
 ### Topic 5.6 — Model Selection, Evaluation & Avoiding Overfitting
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Cross-validation variants: K-fold, stratified K-fold, time-series split. Learning curves: diagnosing overfitting vs underfitting. Hyperparameter tuning: `GridSearchCV`, `RandomizedSearchCV`. Model selection: when complexity helps vs hurts. Baseline models and why you need them.
@@ -721,7 +804,13 @@ Certificate block format:
 **Difficulty:** Intermediate → Advanced
 **Estimated Time:** 12–16 hrs
 
-**Description:** Build a complete, end-to-end machine learning pipeline for a real prediction problem.
+**Description:** Build a complete, end-to-end machine learning pipeline for a real prediction problem. The code is the deliverable, but the thinking is what matters. A notebook that only shows the winning model is unimpressive. A notebook that shows what you tried, why you made each decision, what surprised you, and where the model still fails — that is the work of a thoughtful data scientist.
+
+**Learning Objectives:**
+- Build a reproducible scikit-learn pipeline with `Pipeline` + `ColumnTransformer` that handles preprocessing and modeling in one object
+- Compare multiple algorithms fairly using cross-validation — not just a single train/test split
+- Run and interpret an error analysis to understand where the model is still wrong and why
+- Write a plain-English findings summary that a business stakeholder could act on
 
 **Requirements:**
 - Choose a classification or regression problem with a real-world dataset (Kaggle or open data)
@@ -735,6 +824,21 @@ Certificate block format:
   - Error analysis: which predictions were most wrong, and why?
   - A plain-English "findings" summary: what factors matter most for prediction?
 - Pushed to GitHub with a polished README documenting the problem, approach, and results
+
+**Evaluation Criteria:**
+- `Pipeline` + `ColumnTransformer` used correctly — no data leakage (fit only on training data, transform both)
+- Baseline established (most-frequent class for classification, mean for regression) and the model beats it
+- At least 3 algorithms compared with cross-validated metrics — not a single train/test split
+- Error analysis section identifies at least 3 patterns in misclassified examples with hypotheses about why
+- Plain-English summary is written for a non-technical reader — no unexplained jargon
+- Notebook runs top-to-bottom cleanly from a fresh kernel
+
+**Stretch Goals:**
+- Add SHAP values to explain feature importance and plot a beeswarm chart
+- Export the trained pipeline to a `.pkl` file and write a simple `predict.py` script that loads it and runs inference
+- Deploy the model as a Streamlit app where users can input features and get a prediction
+
+**Employer Signal:** A well-structured ML pipeline notebook with cross-validated evaluation, error analysis, and a plain-language summary is the single most common portfolio item requested in data science take-home assessments. This project is essentially a pre-built answer to that ask.
 
 **Skills Demonstrated:**
 - Scikit-learn (`framework_library`) — `advanced`
@@ -757,7 +861,7 @@ Certificate block format:
 
 ### Topic 6.1 — Ensemble Methods: Random Forest & Gradient Boosting
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Advanced
 
 **Description:** Bagging vs boosting. Random Forests: how they work, feature importance, out-of-bag error. Gradient Boosting: the algorithm intuition. XGBoost, LightGBM, CatBoost: differences, when to use each. Hyperparameter tuning for boosting algorithms.
@@ -777,7 +881,7 @@ Certificate block format:
 
 ### Topic 6.2 — Model Interpretability & Fairness
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Why interpretability matters (regulation, trust, debugging). SHAP values: global and local explanations. LIME for any black-box model. Partial Dependence Plots. Model fairness: detecting bias across demographic groups. Equal opportunity vs equalised odds.
@@ -796,7 +900,7 @@ Certificate block format:
 
 ### Topic 6.3 — Handling Imbalanced Datasets
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Why accuracy fails on imbalanced data. Oversampling: SMOTE. Undersampling: RandomUnderSampler. Class weights. Threshold tuning. Evaluation metrics for imbalanced problems: Precision-Recall curve, Average Precision, Matthews Correlation Coefficient.
@@ -816,7 +920,7 @@ Certificate block format:
 
 ### Topic 6.4 — Feature Selection & Dimensionality Reduction
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Filter methods: correlation-based selection, chi-square test. Wrapper methods: recursive feature elimination (RFE). Embedded methods: Lasso regularisation, tree-based importance. PCA for dimensionality reduction before modelling. Feature selection pipeline in Scikit-learn.
@@ -836,7 +940,7 @@ Certificate block format:
 
 ### Topic 6.5 — Time Series Forecasting
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** Time series ML: lag features, rolling features, seasonality encoding. Prophet for trend/seasonality modelling (Meta's library, simple and powerful). ARIMA basics. Proper time series cross-validation (no future leakage). Evaluation: MAE, RMSE, MAPE.
@@ -859,7 +963,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 15–20 hrs
 
-**Description:** Enter a live or practice Kaggle competition and submit a real entry.
+**Description:** Enter a live or practice Kaggle competition and submit a real entry. Kaggle competitions are the closest thing to a job interview simulation in data science — tight feedback loop, objective scoring, and thousands of participants whose approaches you can learn from. The leaderboard position matters less than the debrief.
+
+**Learning Objectives:**
+- Build and iterate a complete ML pipeline under competitive evaluation — not just once, but across 5+ experimental variations
+- Apply SHAP for feature importance analysis and use the results to guide the next iteration
+- Use stacking or blending to combine multiple model predictions into a stronger ensemble
+- Write a competition debrief that demonstrates metacognitive understanding — not just "what score did I get"
 
 **Requirements:**
 - Enter an active or practice competition on Kaggle (e.g. Titanic, House Prices, or a current active competition)
@@ -869,6 +979,20 @@ Certificate block format:
 - Submit at least 5 versions with different approaches — document in a notebook what changed and the leaderboard impact
 - Final score: aim to beat at least 75% of the competition's public leaderboard
 - Write a "competition debrief" notebook: what worked, what didn't, what would you try next
+
+**Evaluation Criteria:**
+- At least 5 submissions are documented in the debrief with: what changed, expected impact, actual impact, and interpretation
+- SHAP analysis is used to inform at least one experimental change (not just displayed as a chart)
+- Ensemble uses at least 2 model types and beats the best single model on cross-validation
+- Final score beats at least 50% of the public leaderboard (75% is the stretch target)
+- Competition debrief is written with honest analysis — including failures and dead ends
+
+**Stretch Goals:**
+- Write a public Kaggle notebook documenting your approach — and earn at least 10 upvotes
+- Perform a post-competition analysis of top solutions and write a "what I would have done differently" section
+- Try a neural network approach (TabNet or a simple MLP) and document how it compares to gradient boosting
+
+**Employer Signal:** A Kaggle competition submission, especially with a public debrief notebook, is direct evidence of competitive ML skills. Top companies including Airbnb, Spotify, and many quantitative finance firms specifically look for Kaggle history when hiring data scientists.
 
 **Skills Demonstrated:**
 - XGBoost (`framework_library`) — `intermediate`
@@ -891,7 +1015,7 @@ Certificate block format:
 
 ### Topic 7.1 — Neural Networks from Scratch
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Advanced
 
 **Description:** The perceptron. Multilayer networks. Forward pass: weighted sum + activation functions (ReLU, sigmoid, softmax). Backpropagation intuition (no full calculus required). Loss functions: cross-entropy, MSE. Gradient descent: batch, mini-batch, stochastic. Implement a 2-layer network in pure NumPy.
@@ -911,7 +1035,7 @@ Certificate block format:
 
 ### Topic 7.2 — PyTorch Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2.5 hrs
 **Difficulty:** Advanced
 
 **Description:** Tensors: creation, operations, GPU vs CPU. Autograd: automatic differentiation. Building models with `nn.Module`. Custom datasets and `DataLoader`. Training loop: forward pass → loss → backward → update. Model saving and loading.
@@ -931,7 +1055,7 @@ Certificate block format:
 
 ### Topic 7.3 — Text Processing & NLP Fundamentals
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Intermediate
 
 **Description:** Text preprocessing: tokenization, lowercasing, stopword removal, stemming/lemmatization. Bag of Words, TF-IDF. Word embeddings: Word2Vec intuition, pre-trained embeddings. `spaCy` for NLP tasks. Named Entity Recognition. Sentiment analysis as a classification problem.
@@ -951,7 +1075,7 @@ Certificate block format:
 
 ### Topic 7.4 — Transfer Learning & Transformers (Practical)
 **Type:** Lesson + Practice
-**Estimated Time:** 5–6 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** What is transfer learning? Using pre-trained models from HuggingFace. `transformers` library: tokenizers, pre-trained models, fine-tuning for text classification. BERT for sentiment analysis. When to fine-tune vs when to use embeddings as features.
@@ -972,7 +1096,7 @@ Certificate block format:
 
 ### Topic 7.5 — Convolutional Neural Networks (Image Classification)
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** How CNNs work: convolutions, filters, pooling, feature maps. Architecture overview: LeNet, VGG, ResNet. Transfer learning for images: using pre-trained ResNet from `torchvision.models`. Data augmentation. Training a classifier on custom images.
@@ -995,7 +1119,13 @@ Certificate block format:
 **Difficulty:** Advanced
 **Estimated Time:** 12–16 hrs
 
-**Description:** Build a complete NLP classification system from raw text to a deployed prediction API.
+**Description:** Build a complete NLP classification system from raw text to a deployed prediction API. A model that lives only in a notebook is invisible. A model with a live URL that anyone can demo in 30 seconds is a portfolio piece. This project ends with a deployed Streamlit app — something you can open on a phone during a job interview and show working in real time.
+
+**Learning Objectives:**
+- Compare a classical NLP baseline (TF-IDF + Logistic Regression) against a fine-tuned transformer model and interpret why the gap exists
+- Perform a thorough error analysis that identifies specific patterns in the model's failures
+- Save a complete ML pipeline (preprocessing + model) to disk in a way that can be loaded and run without re-training
+- Deploy a data science project as a live interactive app accessible to anyone with a browser
 
 **Requirements:**
 - Choose a text classification task: sentiment, topic, spam, intent, or toxicity detection
@@ -1005,6 +1135,21 @@ Certificate block format:
 - Model saved to disk with all preprocessing steps
 - A Streamlit app that lets anyone enter a text and get a prediction + confidence score (deployed to Streamlit Cloud — free)
 - GitHub repo with README, requirements.txt, and live Streamlit URL
+
+**Evaluation Criteria:**
+- Baseline (TF-IDF + LR) is properly cross-validated — not just a single train/test split
+- DistilBERT fine-tuning uses a HuggingFace `Trainer` or equivalent — not just the pretrained model weights
+- Error analysis identifies at least 3 categories of text the model consistently misclassifies, with hypotheses
+- Model and preprocessing pipeline are saved correctly — the Streamlit app loads from saved artifacts, not by re-training on startup
+- Streamlit app is live at the submitted URL and returns a prediction + confidence score within 5 seconds
+- README includes: what the task is, dataset source, baseline vs advanced model performance comparison, and the live app URL
+
+**Stretch Goals:**
+- Add a "why did the model predict this?" section in the Streamlit app using LIME or a simple attention visualization
+- Add batch prediction mode: let users upload a CSV and download predictions for all rows
+- Log model experiments with MLflow (preview of Stage 8) and document what you found in the README
+
+**Employer Signal:** A live, deployed NLP app with a public URL demonstrates three skills simultaneously: ML modeling, software engineering (packaging a model), and product thinking (making it usable). NLP roles at companies like Yelp, Twitter, and any firm doing document processing look for exactly this combination.
 
 **Skills Demonstrated:**
 - NLP (`practice`) — `intermediate`
@@ -1027,7 +1172,7 @@ Certificate block format:
 
 ### Topic 8.1 — MLflow: Experiment Tracking & Model Registry
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** What is MLOps? The reproducibility problem in ML. MLflow: tracking experiments (params, metrics, artifacts). Model registry: versioning, staging, production. Comparing runs. Logging Scikit-learn and XGBoost models.
@@ -1047,7 +1192,7 @@ Certificate block format:
 
 ### Topic 8.2 — Deploying ML Models as APIs
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 2 hrs
 **Difficulty:** Advanced
 
 **Description:** FastAPI for serving ML models. Request/response schema with Pydantic. Loading saved models at startup. Prediction endpoint. Input validation. Containerising with Docker. Deploying to a cloud service (Render free tier or Railway).
@@ -1067,7 +1212,7 @@ Certificate block format:
 
 ### Topic 8.3 — Building Interactive Data Apps with Streamlit
 **Type:** Lesson + Practice
-**Estimated Time:** 3–4 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Intermediate
 
 **Description:** Advanced Streamlit: multi-page apps, session state, caching (`@st.cache_data`), forms, file uploaders, charting with Plotly + Streamlit. Deploying to Streamlit Cloud. Building dashboards for non-technical stakeholders.
@@ -1087,7 +1232,7 @@ Certificate block format:
 
 ### Topic 8.4 — Data Pipelines & Automation
 **Type:** Lesson + Practice
-**Estimated Time:** 4–5 hrs
+**Estimated Time:** 1.5 hrs
 **Difficulty:** Advanced
 
 **Description:** What is a data pipeline? ETL vs ELT. Scheduling Python scripts. `schedule` library for simple cron-like jobs. Introduction to Apache Airflow (concepts only — DAGs, tasks, scheduling). Data validation in pipelines with Great Expectations or Pydantic.
@@ -1111,7 +1256,13 @@ Certificate block format:
 **Estimated Time:** 30–50 hrs
 **Note:** This is the graduation project. It represents the full capability of a junior data scientist.
 
-**Description:** Build a complete, original, end-to-end data science product. The domain should be something you genuinely care about.
+**Description:** Build a complete, original, end-to-end data science product. The domain should be something you genuinely care about — it will show. This is the project interviewers ask you to walk through. The written report matters as much as the code. The live Streamlit demo matters as much as the model accuracy. Make it something you'd be excited to talk about for 45 minutes.
+
+**Learning Objectives:**
+- Scope, plan, and execute a complete data science project from problem definition to production deployment
+- Apply every MLOps practice from the path — experiment tracking, model registry, API deployment — in a single coherent system
+- Write a project report that communicates your approach, findings, and limitations to a non-technical audience
+- Structure a GitHub repo using professional project conventions (not a flat folder of notebooks)
 
 **Requirements:**
 - An original problem — not a tutorial clone
@@ -1125,6 +1276,21 @@ Certificate block format:
 - Streamlit dashboard: EDA visualisations + prediction interface (deployed to Streamlit Cloud)
 - Written report: problem statement, data sources, approach, results, limitations, and what you'd do next
 - GitHub repo: clean notebooks, src/ folder with reusable modules, requirements.txt, README with live URLs and screenshots
+
+**Evaluation Criteria:**
+- FastAPI endpoint is live and returns predictions — test with a curl command documented in the README
+- Streamlit app is live and includes both EDA visualisations and a prediction interface
+- MLflow tracking is included in the repo (or a screenshot of the MLflow UI showing all experiments)
+- Written report addresses: what problem you solved, why the data is appropriate, what the model does well and poorly, and what you'd improve with more time
+- GitHub repo structure follows the `src/` + `notebooks/` pattern — not a flat pile of `.ipynb` files
+- README includes: problem statement, architecture diagram or flow description, live URLs, and setup instructions
+
+**Stretch Goals:**
+- Add a data drift monitor that flags when incoming prediction requests look statistically different from training data
+- Containerize the FastAPI service with Docker and write a `docker-compose.yml` to run it locally
+- Write a "post-mortem" blog post about the project (what broke, what surprised you, what you'd do differently) and publish it
+
+**Employer Signal:** A capstone with a live FastAPI endpoint, a deployed Streamlit dashboard, MLflow tracking, and a written report is the complete signal a data science hiring committee looks for. It demonstrates modeling, engineering, communication, and product thinking in one project — the full stack of what a working data scientist does.
 
 **Skills Demonstrated:** All path skills at their maximum level.
 
