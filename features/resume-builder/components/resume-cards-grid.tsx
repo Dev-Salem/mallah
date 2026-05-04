@@ -24,6 +24,14 @@ import {
   deleteResumeAction,
   cloneResumeAction,
 } from "@/features/resume-builder/actions/resume-actions";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription, 
+  DialogFooter 
+} from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -51,6 +59,8 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   const t = useTranslations("ResumeBuilder");
   const router = useRouter();
   const [isCreatingGeneral, setIsCreatingGeneral] = useState(false);
+  const [isNamingGeneral, setIsNamingGeneral] = useState(false);
+  const [generalResumeTitle, setGeneralResumeTitle] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -89,14 +99,20 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   };
 
   const handleCreateGeneral = async () => {
+    if (!generalResumeTitle.trim()) {
+      setIsNamingGeneral(true);
+      return;
+    }
     setIsCreatingGeneral(true);
     try {
-      const resume = await createGeneralResumeAction("General Resume");
+      const resume = await createGeneralResumeAction(generalResumeTitle);
       router.push(`/dashboard/resume-builder/${resume.resume_id}`);
     } catch (err: any) {
       toast.error(err.message || "Failed to create resume");
     } finally {
       setIsCreatingGeneral(false);
+      setIsNamingGeneral(false);
+      setGeneralResumeTitle("");
     }
   };
 
@@ -115,40 +131,90 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
 
   const resumes = initialData;
   const isAtLimit = resumes.length >= 3;
+  const bestAts = resumes.length > 0 ? Math.max(...resumes.map(r => r.ats_score || 0)) : 0;
 
   return (
     <TooltipProvider>
       <div className="space-y-8 max-w-7xl mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6 mb-2">
-          <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">{t("MyResumes")}</h1>
-            <p className="text-muted-foreground text-sm font-medium">{t("ManageResumesDesc")}</p>
-          </div>
+        {/* Enhanced Glassmorphism Header */}
+        <div className="relative group">
+          {/* Background Glow */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
           
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span>
-                <Button
-                  disabled={isAtLimit || isCreatingGeneral}
-                  onClick={isAtLimit ? undefined : handleCreateGeneral}
-                  className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 h-11 px-6 rounded-xl transition-all active:scale-95"
-                >
-                  {isCreatingGeneral ? (
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <Plus className="w-5 h-5 mr-2" />
+          <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 p-8 rounded-3xl bg-card/30 backdrop-blur-xl border border-primary/10 shadow-2xl overflow-hidden">
+            {/* Inner HUD Grid Decoration */}
+            <div className="absolute inset-0 hud-grid opacity-[0.02] pointer-events-none" />
+            
+            {/* Soft Glow */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] pointer-events-none" />
+            
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6 relative z-10">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground uppercase italic">
+                    {t("MyResumes")}
+                  </h1>
+                  <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/5 text-primary font-bold px-3 py-0.5 text-[10px] uppercase tracking-widest animate-pulse">
+                    {t("SystemActive")}
+                  </Badge>
+                </div>
+                <p className="text-muted-foreground text-xs font-bold uppercase tracking-[0.2em] opacity-70 max-w-md leading-relaxed">
+                  {t("ManageResumesDesc")}
+                </p>
+                
+                {/* Stats Hub */}
+                <div className="flex items-center gap-4 pt-2">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-background/40 border border-primary/5 relative overflow-hidden group/stat">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
+                    <FileText className="w-3.5 h-3.5 text-primary/60" />
+                    <span className="text-[10px] font-black text-foreground uppercase tracking-tight relative z-10">
+                      {resumes.length} <span className="text-muted-foreground ml-1">Documents</span>
+                    </span>
+                  </div>
+                  {bestAts > 0 && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-background/40 border border-primary/5 relative overflow-hidden group/stat">
+                      <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
+                      <Sparkles className="w-3.5 h-3.5 text-yellow-500/60" />
+                      <span className="text-[10px] font-black text-foreground uppercase tracking-tight relative z-10">
+                        {bestAts}% <span className="text-muted-foreground ml-1">Best Score</span>
+                      </span>
+                    </div>
                   )}
-                  <span className="font-semibold">{t("NewResume")}</span>
-                </Button>
-              </span>
-            </TooltipTrigger>
-            {isAtLimit && (
-              <TooltipContent className="bg-slate-900 text-white border-none rounded-lg p-3 shadow-xl">
-                <p className="text-xs font-semibold">{t("LimitReachedTooltip")}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4 relative z-10">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="w-full sm:w-auto">
+                    <Button
+                      disabled={isAtLimit || isCreatingGeneral}
+                      onClick={isAtLimit ? undefined : handleCreateGeneral}
+                      className={cn(
+                        "w-full sm:w-auto h-14 px-8 rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 group/btn overflow-hidden relative",
+                        isAtLimit ? "bg-muted text-muted-foreground grayscale" : "bg-primary hover:bg-primary/90 text-white shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)]"
+                      )}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+                      
+                      {isCreatingGeneral ? (
+                        <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                      ) : (
+                        <Plus className="w-5 h-5 mr-3 group-hover/btn:rotate-90 transition-transform duration-300" />
+                      )}
+                      <span>{t("NewResume")}</span>
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                {isAtLimit && (
+                  <TooltipContent className="bg-slate-900 text-white border-none rounded-xl p-4 shadow-2xl max-w-[200px]">
+                    <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed text-center">{t("LimitReachedTooltip")}</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </div>
+          </div>
         </div>
 
         {/* Resumes Grid */}
@@ -201,6 +267,58 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
             ))}
           </div>
         )}
+
+        {/* Create General Resume Dialog */}
+        <Dialog open={isNamingGeneral} onOpenChange={(open) => {
+          if (!open) {
+            setIsNamingGeneral(false);
+            setGeneralResumeTitle("");
+          }
+        }}>
+          <DialogContent className="rounded-3xl border border-primary/20 bg-background shadow-2xl p-8 max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                  <Plus className="w-5 h-5 text-primary" />
+                </div>
+                {t("NewResume")}
+              </DialogTitle>
+              <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest pt-2">
+                {t("ResumeTitle")}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <Input
+                value={generalResumeTitle}
+                onChange={(e) => setGeneralResumeTitle(e.target.value)}
+                placeholder={t("ResumeTitlePlaceholder")}
+                className="h-12 rounded-xl border-primary/20 focus:border-primary/50 focus:ring-primary/10 bg-muted/20 font-bold"
+                onKeyDown={(e) => e.key === "Enter" && handleCreateGeneral()}
+                autoFocus
+              />
+            </div>
+            <DialogFooter className="gap-2 pt-2">
+              <Button
+                variant="ghost"
+                onClick={() => setIsNamingGeneral(false)}
+                className="rounded-xl h-12 px-6 text-muted-foreground font-bold uppercase tracking-widest text-[10px]"
+              >
+                {t("Cancel")}
+              </Button>
+              <Button
+                onClick={handleCreateGeneral}
+                disabled={!generalResumeTitle.trim() || isCreatingGeneral}
+                className="rounded-xl h-12 px-8 font-black uppercase tracking-widest text-[10px] bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 min-w-[120px]"
+              >
+                {isCreatingGeneral ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  t("CreateGeneral")
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && closeDeleteDialog()}>
@@ -286,7 +404,6 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
 
   return (
     <motion.div
-      layout
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       className="relative"
@@ -331,9 +448,22 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
           )}
 
           <div className="absolute top-4 end-4 z-10">
-             <div className="bg-dashboard-card-bg/90 backdrop-blur px-2 py-1 border border-primary/10 rounded-full shadow-sm text-[9px] font-bold text-muted-foreground uppercase">
-                ATS: {resume.ats_score || "—"}
-             </div>
+             {(() => {
+                const score = resume.ats_score || 0;
+                const scoreColor = score >= 80 ? "text-green-400 bg-green-500/5 border-green-500/10 shadow-green-500/5" :
+                                 score >= 60 ? "text-yellow-400 bg-yellow-500/5 border-yellow-500/10 shadow-yellow-500/5" :
+                                 score > 0 ? "text-red-400 bg-red-500/5 border-red-500/10 shadow-red-500/5" :
+                                 "text-muted-foreground bg-dashboard-card-bg/50 border-primary/5";
+                
+                return (
+                  <div className={cn(
+                    "backdrop-blur-md px-3 py-1 border rounded-full shadow-sm text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                    scoreColor
+                  )}>
+                    <span className="opacity-50 mr-1">ATS</span> {resume.ats_score || "—"}
+                  </div>
+                );
+             })()}
           </div>
 
           {/* Header HUD Overlay */}

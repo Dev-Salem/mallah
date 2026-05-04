@@ -662,6 +662,7 @@
   },
   "ResumeBuilder": {
     "MyResumes": "My Resumes",
+    "SystemActive": "Active",
     "GeneralResume": "Navigator Profile",
     "JobBasedResume": "Job-Based Resume",
     "LimitReachedTooltip": "Delete a resume to create a new one.",

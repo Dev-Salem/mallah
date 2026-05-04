@@ -662,6 +662,7 @@
   },
   "ResumeBuilder": {
     "MyResumes": "سيرتي الذاتية",
+    "SystemActive": "نشط",
     "GeneralResume": "ملف الملاح",
     "JobBasedResume": "سيرة مخصصة لوظيفة",
     "LimitReachedTooltip": "احذف سيرة واحدة لإنشاء أخرى جديدة.",
