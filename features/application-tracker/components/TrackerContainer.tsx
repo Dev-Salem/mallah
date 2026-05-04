@@ -51,13 +51,6 @@ export function TrackerContainer({ initialApplications }: TrackerContainerProps)
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">{t("title")}</h1>
-        <p className="text-muted-foreground">
-          Manage your job applications and track your progress in the professional market.
-        </p>
-      </div>
-
       <ApplicationList
         initialApplications={initialApplications}
         onEdit={handleEdit}

@@ -127,8 +127,8 @@ export function ApplicationDrawer({ isOpen, onClose, application, onSuccess }: A
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="sm:max-w-lg overflow-y-auto">
-        <SheetHeader className="pb-6">
+      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto p-6">
+        <SheetHeader className="pb-6 p-0">
           <SheetTitle>{application ? t("editApplication") : t("addApplication")}</SheetTitle>
           <SheetDescription>
             {application ? "Modify application details and update progress." : "Track a new job opportunity in your pipeline."}
@@ -239,7 +239,7 @@ export function ApplicationDrawer({ isOpen, onClose, application, onSuccess }: A
               </div>
             </div>
 
-            <SheetFooter className="mt-8">
+            <SheetFooter className="mt-8 p-0">
               <div className="flex w-full gap-3">
                 <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
                   {t("actions.cancel")}
