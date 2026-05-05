@@ -33,32 +33,68 @@ export interface Topic {
     skills?: Skill[];
 }
 
+export interface ProjectReview {
+    id: string;
+    user_project_id: string;
+    overall_verdict: 'strong' | 'solid' | 'needs_work';
+    score: number | null;
+    score_total: number | null;
+    strengths: string | null;
+    improvements: string | null;
+    requirements_results: any;
+    recommended_topics: string[] | null;
+    stretch_score: number | null;
+    submission_number: number | null;
+    created_at: string | null;
+}
+
 export interface Project {
     project_id: string;
     stage_id: string;
     title: string;
     description?: string | null;
+    overview?: string | null;
+    core_requirements?: string[] | null;
+    stretch_goals?: string[] | null;
+    evaluation_criteria?: string[] | null;
+    quality_signals?: string[] | null; // Keep for backward compatibility if needed, but we'll use evaluation_criteria
+    recommended_tech?: string[] | null;
     difficulty_level: 'beginner' | 'intermediate' | 'advanced';
     thumbnail_url?: string | null;
     is_public_default: boolean;
-    user_status?: 'available' | 'in_progress' | 'completed' | 'waiting'; // Joined from user_projects
+    user_status?: 'available' | 'in_progress' | 'completed' | 'waiting';
+    effort_planning?: string | null;
+    effort_building?: string | null;
+    effort_polish?: string | null;
+    effort_planning_pct?: number | null;
+    effort_building_pct?: number | null;
+    effort_polish_pct?: number | null;
+    employer_signal?: string | null;
+    learning_objectives?: string[] | null;
+    skills?: Skill[];
 }
 
 export interface UserProjectSubmission {
-    user_project_id?: string;
+    id?: string;
     user_id?: string;
     project_id?: string;
     github_url?: string | null;
     demo_url?: string | null;
     personal_note?: string | null;
-    public_portfolio?: boolean;
+    is_public?: boolean;
     thumbnail_url?: string | null;
-    tech_stack_tags?: string[] | null;
-    status: 'in_progress' | 'completed' | 'waiting';
+    tech_tags?: string[] | null;
+    status: 'available' | 'in_progress' | 'completed' | 'waiting';
+    review_status?: 'none' | 'pending' | 'complete' | 'failed' | null;
     feedback?: string | null;
     grade?: number | null;
-    updated_at?: string;
+    completed_at?: string | null;
+    skipped?: boolean | null;
+    skipped_at?: string | null;
+    updated_at?: string | null;
+    latest_review?: ProjectReview | null;
 }
+
 
 export interface Stage {
     stage_id: string;

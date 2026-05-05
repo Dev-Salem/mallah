@@ -17,6 +17,14 @@ export interface ParsedTopic {
     difficulty: string;
     description: string;
     practicalOutput: string;
+    learningObjectives: string[];
+    coreRequirements: string[];
+    evaluationCriteria: string[];
+    stretchGoals: string[];
+    employerSignal: string;
+    effortPlanning: number;
+    effortBuilding: number;
+    effortPolish: number;
     skills: Array<{ id: string; name: string; category: string; level: string }>;
     resources: ParsedResource[];
 }
@@ -101,11 +109,44 @@ export class RoadmapParser {
 
                 const difficulty = body.match(/\*\*Difficulty:\*\* (.+)/)?.[1]?.trim().toLowerCase() || "beginner";
 
-                const descMatch = body.match(/\*\*Description:\*\* ([\s\S]+?)\n\n/);
+                const descMatch = body.match(/\*\*Description:\*\* ([\s\S]+?)(?=\n\n|\n\*\*)/);
                 const description = descMatch ? descMatch[1].trim() : "";
 
-                const outputMatch = body.match(/\*\*(Practical Output|Requirements):\*\* ([\s\S]+?)(?=\n\n|\n---|\n###)/i);
+                const outputMatch = body.match(/\*\*(Practical Output|Requirements):\*\* ([\s\S]+?)(?=\n\n|\n---|\n###|\n\*\*)/i);
                 const practicalOutput = outputMatch ? outputMatch[2].trim() : "";
+
+                // New metadata fields
+                const objectivesMatch = body.match(/\*\*Learning Objectives:\*\*([\s\S]+?)(?=\n\n|\n\*\*)/i);
+                const learningObjectives = objectivesMatch 
+                    ? objectivesMatch[1].trim().split("\n").map(l => l.replace(/^- /, "").trim()).filter(Boolean) 
+                    : [];
+
+                const reqsMatch = body.match(/\*\*Core Requirements:\*\*([\s\S]+?)(?=\n\n|\n\*\*)/i);
+                const coreRequirements = reqsMatch 
+                    ? reqsMatch[1].trim().split("\n").map(l => l.replace(/^- /, "").trim()).filter(Boolean) 
+                    : [];
+
+                const evalMatch = body.match(/\*\*Evaluation Criteria:\*\*([\s\S]+?)(?=\n\n|\n\*\*)/i);
+                const evaluationCriteria = evalMatch 
+                    ? evalMatch[1].trim().split("\n").map(l => l.replace(/^- /, "").trim()).filter(Boolean) 
+                    : [];
+
+                const stretchMatch = body.match(/\*\*Stretch Goals:\*\*([\s\S]+?)(?=\n\n|\n\*\*)/i);
+                const stretchGoals = stretchMatch 
+                    ? stretchMatch[1].trim().split("\n").map(l => l.replace(/^- /, "").trim()).filter(Boolean) 
+                    : [];
+
+                const signalMatch = body.match(/\*\*Employer Signal:\*\*([\s\S]+?)(?=\n\n|\n\*\*)/i);
+                const employerSignal = signalMatch ? signalMatch[1].replace(/^"|"$/g, "").trim() : "";
+
+                // Effort breakdown
+                const planningMatch = body.match(/\*\*Planning:\*\* (\d+)%/i);
+                const buildingMatch = body.match(/\*\*Building:\*\* (\d+)%/i);
+                const polishMatch = body.match(/\*\*Polish:\*\* (\d+)%/i);
+
+                const effortPlanning = planningMatch ? parseInt(planningMatch[1]) : 0;
+                const effortBuilding = buildingMatch ? parseInt(buildingMatch[1]) : 0;
+                const effortPolish = polishMatch ? parseInt(polishMatch[1]) : 0;
 
                 // Parse Skills
                 const skills: ParsedTopic["skills"] = [];
@@ -176,6 +217,14 @@ export class RoadmapParser {
                     difficulty,
                     description,
                     practicalOutput,
+                    learningObjectives,
+                    coreRequirements,
+                    evaluationCriteria,
+                    stretchGoals,
+                    employerSignal,
+                    effortPlanning,
+                    effortBuilding,
+                    effortPolish,
                     skills,
                     resources
                 });
@@ -272,7 +321,15 @@ export class RoadmapParser {
                         stage_id: stageRow.stage_id,
                         title: topic.title,
                         description: topic.practicalOutput || topic.description,
-                        difficulty_level: topic.difficulty as 'beginner' | 'intermediate' | 'advanced'
+                        difficulty_level: topic.difficulty as 'beginner' | 'intermediate' | 'advanced',
+                        learning_objectives: topic.learningObjectives,
+                        core_requirements: topic.coreRequirements,
+                        evaluation_criteria: topic.evaluationCriteria,
+                        stretch_goals: topic.stretchGoals,
+                        employer_signal: topic.employerSignal,
+                        effort_planning: topic.effortPlanning,
+                        effort_building: topic.effortBuilding,
+                        effort_polish: topic.effortPolish
                     }, { onConflict: "stage_id, title" });
 
                     if (pErr && pErr.code !== "23505") {

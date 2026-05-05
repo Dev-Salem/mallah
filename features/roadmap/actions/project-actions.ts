@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { Project, UserProjectSubmission } from '../types';
+import { EvaluationService } from '../services/evaluation-service';
 
 export async function getProjectAction(projectId: string): Promise<(Project & { submission?: UserProjectSubmission }) | null> {
     const supabase = await createClient();
@@ -28,10 +29,15 @@ export async function getProjectAction(projectId: string): Promise<(Project & { 
         return null;
     }
 
-    // Get user submission progress
+    // Get user submission progress with latest review
     const { data: progressData } = await supabase
         .from('user_projects')
-        .select('*')
+        .select(`
+            *,
+            project_reviews (
+                *
+            )
+        `)
         .eq('user_id', user.id)
         .eq('project_id', projectId)
         .maybeSingle();
@@ -43,12 +49,76 @@ export async function getProjectAction(projectId: string): Promise<(Project & { 
     // Remove the original relation to avoid leaking structure
     delete projectData.project_skills;
 
+    // Get the latest review if it exists
+    const reviews = (progressData as any)?.project_reviews || [];
+    const latestReview = reviews.length > 0 
+        ? reviews.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0] 
+        : null;
+
     return {
         ...projectData,
         skills: mappedSkills,
         user_status: progressData?.status || 'available',
-        submission: progressData || undefined
+        submission: progressData ? {
+            ...progressData,
+            latest_review: latestReview
+        } : undefined
     } as (Project & { submission?: UserProjectSubmission, skills?: unknown[] });
+}
+
+
+export async function evaluateProjectAction(projectId: string): Promise<{ success: boolean; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: 'Unauthorized' };
+
+    // 1. Get project and submission data
+    const { data: project } = await supabase.from('projects').select('*').eq('project_id', projectId).single();
+    const { data: submission } = await supabase.from('user_projects').select('*').eq('user_id', user.id).eq('project_id', projectId).single();
+
+    if (!project || !submission || !submission.github_url) {
+        return { success: false, error: 'Incomplete project or submission data' };
+    }
+
+    try {
+        // 2. Set status to pending
+        await supabase.from('user_projects').update({ review_status: 'pending' }).eq('id', submission.id);
+
+        // 3. Call AI Service
+        const evaluation = await EvaluationService.evaluateProject(project as Project, submission);
+
+        // 4. Save review
+        const { error: reviewError } = await supabase.from('project_reviews').insert({
+            user_project_id: submission.id,
+            overall_verdict: evaluation.overall_verdict,
+            score: evaluation.score,
+            score_total: 100,
+            strengths: evaluation.strengths,
+            improvements: evaluation.improvements,
+            requirements_results: evaluation.requirements_results,
+            recommended_topics: evaluation.recommended_topics,
+            stretch_score: evaluation.stretch_score,
+            submission_number: 1 // TODO: Increment if multiple submissions
+        });
+
+        if (reviewError) throw reviewError;
+
+        // 5. Update user project status
+        await supabase.from('user_projects').update({ 
+            review_status: 'complete',
+            grade: evaluation.score,
+            status: 'completed'
+        }).eq('id', submission.id);
+
+        revalidatePath('/dashboard/roadmap');
+        revalidatePath(`/dashboard/project/${projectId}`);
+        return { success: true };
+    } catch (error: any) {
+        console.error('Evaluation Action Error:', error);
+        await supabase.from('user_projects').update({ review_status: 'failed' }).eq('id', submission.id);
+        return { success: false, error: error.message };
+    }
 }
 
 export async function submitProjectAction(
@@ -59,7 +129,7 @@ export async function submitProjectAction(
         personal_note?: string;
         public_portfolio?: boolean;
         thumbnail_url?: string;
-        tech_stack_tags?: string[];
+        tech_tags?: string[];
     }
 ): Promise<{ success: boolean; error?: string }> {
     const supabase = await createClient();
@@ -69,7 +139,7 @@ export async function submitProjectAction(
         return { success: false, error: 'Unauthorized' };
     }
 
-    const { error } = await supabase
+    const { data: submission, error } = await supabase
         .from('user_projects')
         .upsert({
             user_id: user.id,
@@ -79,14 +149,23 @@ export async function submitProjectAction(
             personal_note: data.personal_note || null,
             is_public: data.public_portfolio || false,
             thumbnail_url: data.thumbnail_url || null,
-            tech_tags: data.tech_stack_tags || null,
+            tech_tags: data.tech_tags || null,
             status: 'completed',
-            completed_at: new Date().toISOString()
-        }, { onConflict: 'user_id, project_id' });
+            completed_at: new Date().toISOString(),
+            review_status: data.github_url ? 'pending' : 'none'
+        }, { onConflict: 'user_id, project_id' })
+        .select()
+        .single();
 
     if (error) {
         console.error('Error submitting project:', error);
         return { success: false, error: error.message };
+    }
+
+    // Trigger AI evaluation if GitHub URL is provided
+    if (data.github_url) {
+        // We trigger it asynchronously to not block the submission response
+        evaluateProjectAction(projectId).catch(err => console.error('Delayed evaluation failed:', err));
     }
 
     // 2. Skill acquisition
