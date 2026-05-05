@@ -674,7 +674,7 @@
     },
     "projects": {
       "addExternal": "إضافة مشروع خارجي",
-      "noProjectsMessage": "لم تقم بإنجاز أي مشاريع بعد.",
+      "noProjectsMessage": "أكمل مشروعاً من خارطة طريقك لإضافته هنا.",
       "visibilityToggle": "إظهار للعامة",
       "sourceBadge": {
         "roadmap": "مسار ملاح",
@@ -705,10 +705,26 @@
         "successMessage": "تمت إضافة المشروع الخارجي بنجاح."
       },
       "statusInProgress": "قيد التنفيذ",
+      "statusCompleted": "مكتمل",
       "noDescription": "لا يوجد وصف متوفر.",
       "privateBadge": "خاص",
       "visibilityPublic": "تم تفعيل الظهور للعامة",
-      "visibilityPrivate": "تم إخفاء المشروع من العامة"
+      "visibilityPrivate": "تم إخفاء المشروع من العامة",
+      "personalNoteLabel": "ملاحظة الملاح",
+      "technicalOverview": "نظرة تقنية",
+      "formalSkills": "المهارات المكتسبة",
+      "techStack": "التقنيات المستخدمة",
+      "markAsComplete": "تحديد كمكتمل",
+      "deleteProject": "حذف المشروع",
+      "setPublic": "جعله عاماً",
+      "setPrivate": "جعله خاصاً",
+      "accessRestricted": "الدخول محدود",
+      "systemReady": "النظام جاهز",
+      "publicEmptyState": "لم يقم هذا الملاح بمشاركة أعماله مع العامة بعد.",
+      "privateEmptyState": "أكمل مشروعاً من خارطة طريقك لإضافته هنا",
+      "noStack": "لم يتم تحديد تقنيات",
+      "noSkills": "لا توجد مهارات موثقة مرتبطة",
+      "completedDateLabel": "تاريخ الإنجاز"
     }
   },
   "Common": {

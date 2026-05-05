@@ -1,0 +1,52 @@
+/* Tactical HUD Design Tokens & Utilities for Project Cards */
+
+.hud-grid-projects {
+  background-size: 30px 30px;
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--primary), transparent 95%) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--primary), transparent 95%) 1px, transparent 1px);
+}
+
+.glass-projects {
+  background: color-mix(in oklch, var(--background), transparent 25%);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 82%);
+}
+
+.glow-border-projects {
+  transition: all 0.3s ease;
+}
+
+.glow-border-projects:hover {
+  box-shadow: 0 0 15px color-mix(in oklch, var(--primary), transparent 85%);
+  border-color: color-mix(in oklch, var(--primary), transparent 60%);
+}
+
+/* Status Dot Glows */
+.dot-glow-success { box-shadow: 0 0 8px var(--success); }
+.dot-glow-warning { box-shadow: 0 0 8px var(--warning); }
+.dot-glow-destructive { box-shadow: 0 0 8px var(--destructive); }
+.dot-glow-info { box-shadow: 0 0 8px var(--info); }
+
+/* Animations */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
+
+.animate-status-pulse {
+  animation: statusPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Corner Brackets for HUD feel */
+.hud-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--primary-border);
+  pointer-events: none;
+}
+.hud-corner-tl { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+.hud-corner-tr { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.hud-corner-bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.hud-corner-br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }

@@ -675,7 +675,7 @@
     },
     "projects": {
       "addExternal": "Add External Project",
-      "noProjectsMessage": "You haven't completed any projects yet.",
+      "noProjectsMessage": "Finish a project from your roadmap to add it here.",
       "visibilityToggle": "Public Visibility",
       "sourceBadge": {
         "roadmap": "Mallah Roadmap",
@@ -706,10 +706,26 @@
         "successMessage": "External project added successfully."
       },
       "statusInProgress": "In Progress",
+      "statusCompleted": "Completed",
       "noDescription": "No description provided.",
       "privateBadge": "Private",
       "visibilityPublic": "Project is now public",
-      "visibilityPrivate": "Project is now private"
+      "visibilityPrivate": "Project is now private",
+      "personalNoteLabel": "Learner Note",
+      "technicalOverview": "Technical Overview",
+      "formalSkills": "Formal Skills",
+      "techStack": "Tech Stack",
+      "markAsComplete": "Mark as Complete",
+      "deleteProject": "Delete Project",
+      "setPublic": "Set Public",
+      "setPrivate": "Set Private",
+      "accessRestricted": "Access Restricted",
+      "systemReady": "System Ready",
+      "publicEmptyState": "This learner hasn't made their portfolio public yet.",
+      "privateEmptyState": "Finish a project from your roadmap to add it here",
+      "noStack": "No stack specified",
+      "noSkills": "No formal skills linked",
+      "completedDateLabel": "Completed"
     }
   },
   "Common": {

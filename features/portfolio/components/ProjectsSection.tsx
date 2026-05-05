@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProjectCard } from './ProjectCard';
+import { ProjectCardGrid } from './ProjectCardGrid';
 import { AddExternalProjectDrawer } from './AddExternalProjectDrawer';
-import type { PortfolioProject } from '../types';
+import { PortfolioProject, mapPortfolioProjectToProject } from '../types';
 
 interface ProjectsSectionProps {
     projects: PortfolioProject[];
@@ -19,9 +19,9 @@ export function ProjectsSection({ projects, catalog, isPublicView = false }: Pro
     const tTabs = useTranslations('PortfolioHub.tabs');
     const [isAddOpen, setIsAddOpen] = useState(false);
 
-    // On private dashboard, show all projects (completed, in_progress)
-    // For public profile, the service already filters to 'completed' & 'is_public'
-    const filterProjects = isPublicView ? projects : projects;
+    // Map the internal projects to the UI Project types
+    const mappedProjects = projects.map(mapPortfolioProjectToProject);
+    const viewMode = isPublicView ? "public" : "private";
 
     return (
         <div className="space-y-6">
@@ -31,24 +31,17 @@ export function ProjectsSection({ projects, catalog, isPublicView = false }: Pro
                 </h2>
 
                 {!isPublicView && (
-                    <Button onClick={() => setIsAddOpen(true)} size="sm" className="gap-2">
+                    <Button onClick={() => setIsAddOpen(true)} size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-white font-mono text-xs tracking-tighter">
                         <Plus className="w-4 h-4" />
-                        {t('addExternal')}
+                        ADD EXTERNAL
                     </Button>
                 )}
             </div>
 
-            {filterProjects.length === 0 ? (
-                <div className="text-center py-16 px-4 border border-dashed rounded-xl border-primary/20 bg-primary/5">
-                    <p className="text-muted-foreground">{t('noProjectsMessage')}</p>
-                </div>
-            ) : (
-                <div className="space-y-4">
-                    {filterProjects.map(project => (
-                        <ProjectCard key={project.project_id} project={project} isPublicView={isPublicView} />
-                    ))}
-                </div>
-            )}
+            <ProjectCardGrid 
+                projects={mappedProjects} 
+                viewMode={viewMode} 
+            />
 
             {!isPublicView && (
                 <AddExternalProjectDrawer

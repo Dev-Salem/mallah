@@ -33,6 +33,80 @@ export interface PortfolioProject {
     skills: { skill_id: string; name: string; category: string }[];
 }
 
+// ─── Tactical HUD Project Types ───
+
+export interface BaseProject {
+    id: string;
+    title: string;
+    description: string;
+    difficulty: "beginner" | "intermediate" | "advanced";
+    status: "available" | "in_progress" | "completed";
+    isPublic: boolean;
+    techStack: string[];
+    skills: {
+        name: string;
+        category:
+            | "fundamentals"
+            | "language"
+            | "framework_library"
+            | "tool"
+            | "platform_service"
+            | "practice"
+            | "other";
+    }[];
+    githubUrl: string | null;
+    demoUrl: string | null;
+    completedAt: string | null;
+    thumbnailUrl: string | null;
+}
+
+export interface RoadmapProject extends BaseProject {
+    sourceType: "roadmap";
+    personalNote: string | null;
+}
+
+export interface ExternalProject extends BaseProject {
+    sourceType: "user_custom";
+}
+
+export type Project = RoadmapProject | ExternalProject;
+
+/**
+ * Maps the flat PortfolioProject from the service to the specialized Project types
+ */
+export function mapPortfolioProjectToProject(up: PortfolioProject): Project {
+    const base: BaseProject = {
+        id: up.project_id,
+        title: up.custom_name || up.title,
+        description: (up.custom_description || up.description) ?? "",
+        difficulty: (up.difficulty_level as BaseProject["difficulty"]) || "beginner",
+        status: up.status,
+        isPublic: up.is_public,
+        techStack: up.tech_stack || [],
+        skills: up.skills.map((s) => ({
+            name: s.name,
+            category: s.category as any,
+        })),
+        githubUrl: up.github_url,
+        demoUrl: up.demo_url,
+        completedAt: up.completed_at,
+        thumbnailUrl: up.thumbnail_url,
+    };
+
+    if (up.source_type === "roadmap") {
+        return {
+            ...base,
+            sourceType: "roadmap",
+            personalNote: up.personal_note,
+        } as RoadmapProject;
+    }
+
+    return {
+        ...base,
+        sourceType: "user_custom",
+    } as ExternalProject;
+}
+
 // ─── Header profile ───
 export interface PortfolioProfile {
     user_id: string;
