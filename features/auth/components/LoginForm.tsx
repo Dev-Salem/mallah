@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/lib/i18n/routing'
 import { loginSchema, type LoginFormData } from '../types'
 import { loginAction } from '../actions/auth-actions'
 import { Link } from '@/lib/i18n/routing'
@@ -28,10 +28,12 @@ export default function LoginForm() {
         setServerError(null)
         startTransition(async () => {
             const result = await loginAction(data)
-            if (!result.success && result.error) {
-                setServerError(t(result.error))
-            } else if (result.redirectTo) {
-                router.push(result.redirectTo)
+            
+            // Note: If loginAction succeeds, it will redirect and this code won't execute.
+            if (result && !result.success) {
+                if (result.error) {
+                    setServerError(t(result.error))
+                }
             }
         })
     }

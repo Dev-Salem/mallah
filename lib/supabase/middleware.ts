@@ -25,16 +25,14 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
+          
+          // We don't overwrite supabaseResponse with NextResponse.next() here
+          // because it would lose any existing redirect/rewrite headers from next-intl.
+          // Instead, we just set the cookies on the existing response object.
+          
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
-          // Preserve existing headers (like next-intl rewrites)
-          existingResponse?.headers.forEach((value, key) => {
-            supabaseResponse.headers.set(key, value);
-          });
         },
       },
     }
@@ -42,7 +40,19 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
 
   // IMPORTANT: Avoid writing any logic between createServerClient and getUser(). A simple
   // mistake can make it very hard to debug issues with emails being sent multiple times.
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+
+  const cookieNames = request.cookies.getAll().map(c => c.name);
+  console.log(`[updateSession] Cookies present: ${cookieNames.join(', ')}`);
+
+  if (error) {
+    console.warn(`[updateSession] Error getting user:`, error.message);
+  } else {
+    console.log(`[updateSession] User found: ${user?.id || 'none'}`);
+  }
 
   return { response: supabaseResponse, user }
 }

@@ -50,56 +50,41 @@ export async function middleware(request: NextRequest) {
     }
 
     // ─── STANDARD LEARNER ROUTING ───
-    // Bypass intl for specific system paths
     if (pathname.startsWith('/auth/') || pathname === '/auth' || pathname.startsWith('/api/') || pathname === '/api') {
       const { response } = await updateSession(request);
       return response;
     }
 
-    // Run intl middleware first to handle routing/locales
     const intlResponse = intlMiddleware(request);
-
-    // If intlMiddleware issued a redirect (e.g. locale prefix normalization),
-    // update session cookies and return
     const isRedirect = intlResponse.headers.get('location');
     if (isRedirect) {
-      const { response } = await updateSession(request, intlResponse);
+      const { response, user } = await updateSession(request, intlResponse);
+      console.log(`[Middleware] Redirecting to ${isRedirect}. User: ${user?.id || 'none'}`);
       return response;
     }
 
-    // For normal responses, apply route protection
     const { response: supabaseResponse, user } = await updateSession(request, intlResponse);
-
     const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
     const isPublic = isPublicRoute(pathname);
     const withoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
     const isAdminPath = ADMIN_PANEL_PATH && (withoutLocale === `/${ADMIN_PANEL_PATH}` || withoutLocale.startsWith(`/${ADMIN_PANEL_PATH}/`));
 
-    // Authentication Guard
     if (!user) {
       if (!isPublic) {
-        if (isAdminPath) {
-          const adminLoginUrl = new URL(`/${locale}/${ADMIN_PANEL_PATH}/login`, request.url);
-          return NextResponse.redirect(adminLoginUrl);
-        }
+        console.log(`[Middleware] No user for protected route ${pathname}. Redirecting to login.`);
         const loginUrl = new URL(`/${locale}/login`, request.url);
         return NextResponse.redirect(loginUrl);
       }
-    }
-
-    // Role & Status Guards
-    if (user) {
-      if (!user.email_confirmed_at && !isPublic && !pathname.includes('/verify-success')) {
-        const loginUrl = new URL(`/${locale}/login`, request.url);
-        return NextResponse.redirect(loginUrl);
-      }
-
-      if (pathname.match(/^\/(en|ar)\/(login|register)$/)) {
+    } else {
+      console.log(`[Middleware] User ${user.id} authenticated. Path: ${pathname}`);
+      
+      // Fixed regex to include non-prefixed paths
+      if (pathname.match(/^\/((en|ar)\/)?(login|register)$/) || pathname === '/login' || pathname === '/register') {
+        console.log(`[Middleware] User already logged in, redirecting from ${pathname} to dashboard.`);
         const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
         return NextResponse.redirect(dashboardUrl);
       }
 
-      // Profile-based onboarding checks
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -115,29 +100,25 @@ export async function middleware(request: NextRequest) {
 
       const { data: learner } = await supabase
         .from('learners')
-        .select('role, onboarding_completed, status')
+        .select('*')
         .eq('user_id', user.id)
         .single();
 
-      if (learner?.status === 'blocked' && !isPublic) {
-        const loginUrl = new URL(`/${locale}/login`, request.url);
-        return NextResponse.redirect(loginUrl);
-      }
-
-      const isLearnerDashboard = /^\/(en|ar)\/dashboard/.test(pathname);
-      const isLearnerSettings = /^\/(en|ar)\/settings/.test(pathname);
-      const isOnboarding = /^\/(en|ar)\/onboarding/.test(pathname);
+      const isLearnerDashboard = pathname.match(/^\/(en|ar)\/dashboard/) || pathname === '/dashboard';
+      const isLearnerSettings = pathname.match(/^\/(en|ar)\/settings/) || pathname === '/settings';
+      const isOnboarding = pathname.match(/^\/(en|ar)\/onboarding/) || pathname === '/onboarding';
 
       if (!isAdminPath && learner && !learner.onboarding_completed && (isLearnerDashboard || isLearnerSettings) && !isOnboarding) {
+        console.log(`[Middleware] Incomplete onboarding, redirecting to onboarding.`);
         const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
         return NextResponse.redirect(onboardingUrl);
       }
     }
 
     return supabaseResponse;
-  } catch (error) {
-    console.error('Middleware execution error:', error);
-    return NextResponse.next({ request });
+  } catch (e) {
+    console.error(`[Middleware FATAL ERROR]`, e);
+    return NextResponse.next();
   }
 }
 

@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+import { redirect } from '@/lib/i18n/routing'
 import {
     loginSchema,
     registerSchema,
@@ -79,6 +79,7 @@ export async function loginAction(
     }
 
     const { user } = data
+    console.log(`[LoginAction] Success for user: ${user.id}`);
 
     // Check email verification status
     if (!user?.email_confirmed_at) {
@@ -88,11 +89,17 @@ export async function loginAction(
     // Determine redirect based on role and onboarding status
     const userId = user.id
 
-    const { data: learner } = await supabase
+    const { data: learner, error: learnerError } = await supabase
         .from('learners')
         .select('role, onboarding_completed, status')
         .eq('user_id', userId)
         .single()
+
+    if (learnerError) {
+        console.warn(`[LoginAction] Learner record not found or error: ${learnerError.message}`);
+    } else {
+        console.log(`[LoginAction] Learner state: role=${learner.role}, onboarding=${learner.onboarding_completed}, status=${learner.status}`);
+    }
 
     // Check account status
     if (learner?.status === 'blocked') {
@@ -103,15 +110,12 @@ export async function loginAction(
         return { success: false, error: 'errors.accountNotFound' }
     }
 
-    if (learner?.role === 'admin') {
-        return { success: true, redirectTo: '/admin' }
-    }
+    const redirectTo = learner?.role === 'admin' 
+        ? '/admin' 
+        : (learner && !learner.onboarding_completed ? '/onboarding' : '/dashboard');
 
-    if (learner && !learner.onboarding_completed) {
-        return { success: true, redirectTo: '/onboarding' }
-    }
-
-    return { success: true, redirectTo: '/dashboard' }
+    console.log(`[LoginAction] Success. Server-side redirecting to: ${redirectTo}`);
+    redirect({ href: redirectTo, locale: 'en' }); // Explicitly passing locale for now or relying on current
 }
 
 export async function forgotPasswordAction(

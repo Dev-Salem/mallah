@@ -22,7 +22,8 @@ export default async function DashboardPage() {
     .single();
 
   if (!learner) {
-    redirect(`/${locale}/login`);
+    console.warn(`[Dashboard] Learner record missing for user ${user.id}. Redirecting to onboarding.`);
+    redirect(`/${locale}/onboarding`);
   }
 
   // Edge case: Onboarding not completed → redirect
