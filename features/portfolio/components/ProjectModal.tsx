@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Globe, Calendar, Trash2, CheckCircle2, Lock, Unlock } from "lucide-react";
 import { Project, RoadmapProject, ExternalProject } from "../types";
 import { useTranslations } from "next-intl";
-import { toggleProjectVisibilityAction } from "../actions/portfolio-actions";
+import { toggleProjectVisibilityAction, deleteProjectAction } from "../actions/portfolio-actions";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -36,6 +36,22 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
             const result = await toggleProjectVisibilityAction(project.id, !project.isPublic);
             if (result.success) {
                 toast.success(!project.isPublic ? t('visibilityPublic') : t('visibilityPrivate'));
+            } else {
+                toast.error(result.error);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!confirm(t('confirmDelete' as any || 'Are you sure you want to delete this project?'))) return;
+        setIsUpdating(true);
+        try {
+            const result = await deleteProjectAction(project.id);
+            if (result.success) {
+                toast.success(t('projectDeleted' as any || 'Project deleted successfully.'));
+                onOpenChange(false);
             } else {
                 toast.error(result.error);
             }
@@ -200,7 +216,13 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                                 </Button>
                                 
                                 {!isRoadmap && (
-                                    <Button variant="ghost" size="sm" className="gap-2 font-mono text-[10px] tracking-wider uppercase text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+                                    <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        className="gap-2 font-mono text-[10px] tracking-wider uppercase text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                        onClick={handleDelete}
+                                        disabled={isUpdating}
+                                    >
                                         <Trash2 className="w-3.5 h-3.5" /> {t('deleteProject')}
                                     </Button>
                                 )}

@@ -1,11 +1,13 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import type { PortfolioData, PortfolioProject, PortfolioSkill, PortfolioProfile } from '../types';
 
 // ─── Private Portfolio (authenticated user) ───
 export async function getPrivatePortfolio(): Promise<PortfolioData> {
     const supabase = await createClient();
+    const admin = getSupabaseAdmin();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Unauthorized');
 
@@ -38,7 +40,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
     const skillIds = (userSkillsRaw ?? []).map(s => s.skill_id);
     let skillsMap: Record<string, { name: string; category: string }> = {};
     if (skillIds.length > 0) {
-        const { data: skillsData } = await supabase
+        const { data: skillsData } = await admin
             .from('skills')
             .select('skill_id, name, category')
             .in('skill_id', skillIds);
@@ -48,7 +50,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
     }
 
     // Get project_skills to link skills -> projects
-    const { data: allProjectSkills } = await supabase
+    const { data: allProjectSkills } = await admin
         .from('project_skills')
         .select('project_id, skill_id');
 
@@ -71,7 +73,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
     const projectIds = (userProjectsRaw ?? []).map(p => p.project_id);
     let projectsMap: Record<string, { title: string; description: string | null; difficulty_level: string | null; thumbnail_url: string | null; source_type: string | null }> = {};
     if (projectIds.length > 0) {
-        const { data: projectsData } = await supabase
+        const { data: projectsData } = await admin
             .from('projects')
             .select('project_id, title, description, difficulty_level, thumbnail_url, source_type')
             .in('project_id', projectIds);
@@ -150,6 +152,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
 // ─── Public Portfolio (by slug) ───
 export async function getPublicPortfolio(slug: string): Promise<PortfolioData | null> {
     const supabase = await createClient();
+    const admin = getSupabaseAdmin();
 
     // 1. Find learner by slug
     const { data: learner } = await supabase
@@ -181,7 +184,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     const skillIds = (userSkillsRaw ?? []).map(s => s.skill_id);
     let skillsMap: Record<string, { name: string; category: string }> = {};
     if (skillIds.length > 0) {
-        const { data: skillsData } = await supabase
+        const { data: skillsData } = await admin
             .from('skills')
             .select('skill_id, name, category')
             .in('skill_id', skillIds);
@@ -211,7 +214,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     const projectIds = (userProjectsRaw ?? []).map(p => p.project_id);
     let projectsMap: Record<string, { title: string; description: string | null; difficulty_level: string | null; thumbnail_url: string | null; source_type: string | null }> = {};
     if (projectIds.length > 0) {
-        const { data: projectsData } = await supabase
+        const { data: projectsData } = await admin
             .from('projects')
             .select('project_id, title, description, difficulty_level, thumbnail_url, source_type')
             .in('project_id', projectIds);
@@ -227,7 +230,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     }
 
     // project skills
-    const { data: allProjectSkills } = await supabase
+    const { data: allProjectSkills } = await admin
         .from('project_skills')
         .select('project_id, skill_id');
 
@@ -284,6 +287,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
 // ─── Catalog skills for the "Add Project" picker ───
 export async function getSkillsCatalog(): Promise<{ skill_id: string; name: string; category: string }[]> {
     const supabase = await createClient();
+    const admin = getSupabaseAdmin();
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) return [];
@@ -298,13 +302,13 @@ export async function getSkillsCatalog(): Promise<{ skill_id: string; name: stri
     if (learner?.current_path_id) {
         // Fetch skills linked to topics/projects in this path
         // 1. Get topics in this path
-        const { data: topicSkills } = await supabase
+        const { data: topicSkills } = await admin
             .from('topic_skills')
             .select('skill_id, topics!inner(stage_id, stages!inner(path_id))')
             .eq('topics.stages.path_id', learner.current_path_id);
 
         // 2. Get projects in this path
-        const { data: projectSkills } = await supabase
+        const { data: projectSkills } = await admin
             .from('project_skills')
             .select('skill_id, projects!inner(stage_id, stages!inner(path_id))')
             .eq('projects.stages.path_id', learner.current_path_id);
@@ -315,7 +319,7 @@ export async function getSkillsCatalog(): Promise<{ skill_id: string; name: stri
         ]);
 
         if (relevantSkillIds.size > 0) {
-            const { data } = await supabase
+            const { data } = await admin
                 .from('skills')
                 .select('skill_id, name, category')
                 .eq('is_verified', true)
@@ -326,7 +330,7 @@ export async function getSkillsCatalog(): Promise<{ skill_id: string; name: stri
     }
 
     // Fallback: all verified skills
-    const { data } = await supabase
+    const { data } = await admin
         .from('skills')
         .select('skill_id, name, category')
         .eq('is_verified', true)

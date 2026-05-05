@@ -107,89 +107,93 @@ export async function deleteManualSkillAction(skillId: string): Promise<ActionRe
 
 // ─── Add external project ───
 export async function addExternalProjectAction(input: AddExternalProjectInput): Promise<ActionResult> {
-    const parsed = addExternalProjectSchema.safeParse(input);
-    if (!parsed.success) return { success: false, error: 'Invalid input' };
-
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return { success: false, error: 'Unauthorized' };
-
-    console.log(`[addExternalProjectAction] Starting for user: ${user.id}`);
-    const admin = getSupabaseAdmin();
-    const data = parsed.data;
-
-    // 1. Create project template
-    console.log(`[addExternalProjectAction] Step 1: Creating project template`);
-    const { data: project, error: projErr } = await admin
-        .from('projects')
-        .insert({
-            title: data.title,
-            description: data.description,
-            difficulty_level: data.difficulty_level,
-            source_type: 'user_custom',
-            is_public_default: true,
-            is_active: true,
-        })
-        .select()
-        .single();
-
-    if (projErr || !project) {
-        console.error(`[addExternalProjectAction] Step 1 Failed:`, JSON.stringify(projErr, null, 2));
-        return { success: false, error: projErr?.message ?? 'Failed to create project template' };
-    }
-
-    console.log(`[addExternalProjectAction] Step 1 Success: project_id=${project.project_id}`);
-
-    // 2. Link skills if any
-    if (data.skill_ids && data.skill_ids.length > 0) {
-        console.log(`[addExternalProjectAction] Step 2: Linking ${data.skill_ids.length} skills`);
-        const { error: skillErr } = await admin
-            .from('project_skills')
-            .insert(data.skill_ids.map(sid => ({ project_id: project.project_id, skill_id: sid })));
-        if (skillErr) console.warn(`[addExternalProjectAction] Step 2 Warning:`, JSON.stringify(skillErr, null, 2));
-    }
-
-    // 3. Create user_projects row
-    console.log(`[addExternalProjectAction] Step 3: Creating user_projects row`);
-    const { error: upErr } = await admin
-        .from('user_projects')
-        .insert({
-            user_id: user.id,
-            project_id: project.project_id,
-            status: data.status,
-            is_public: true,
-            github_url: data.github_url || null,
-            demo_url: data.demo_url || null,
-            tech_stack: data.tech_stack ?? [],
-            completed_at: data.status === 'completed' ? new Date().toISOString() : null,
-            started_at: data.started_at || null,
-            bullets: data.bullets ?? [],
-        });
-
-    if (upErr) {
-        console.error(`[addExternalProjectAction] Step 3 Failed:`, JSON.stringify(upErr, null, 2));
-        return { success: false, error: upErr.message };
-    }
-
-    console.log(`[addExternalProjectAction] Step 3 Success`);
-
-    // 4. If completed, unlock skills
-    if (data.status === 'completed' && data.skill_ids && data.skill_ids.length > 0) {
-        for (const skillId of data.skill_ids) {
-            await admin
-                .from('user_skills')
-                .upsert({
-                    user_id: user.id,
-                    skill_id: skillId,
-                    level: 'beginner',
-                    source: 'project',
-                    is_public: true,
-                }, { onConflict: 'user_id,skill_id' });
+    try {
+        const parsed = addExternalProjectSchema.safeParse(input);
+        if (!parsed.success) {
+            const errorMsg = parsed.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+            return { success: false, error: `Invalid input: ${errorMsg}` };
         }
-    }
 
-    revalidatePath('/dashboard/portfolio');
-    return { success: true };
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { success: false, error: 'Unauthorized' };
+
+        console.log(`[addExternalProjectAction] START for user: ${user.id}`);
+        const admin = getSupabaseAdmin();
+        const data = parsed.data;
+
+        // 1. Create project template
+        const { data: project, error: projErr } = await admin
+            .from('projects')
+            .insert({
+                project_id: crypto.randomUUID(),
+                title: data.title,
+                description: data.description,
+                difficulty_level: data.difficulty_level,
+                source_type: 'user_custom',
+                is_public_default: true,
+                is_active: true,
+            })
+            .select()
+            .single();
+
+        if (projErr || !project) {
+            console.error(`[addExternalProjectAction] Project Template Error:`, projErr);
+            return { success: false, error: projErr?.message ?? 'Failed to create project template' };
+        }
+
+        // 2. Link skills if any
+        if (data.skill_ids && data.skill_ids.length > 0) {
+            const { error: skillErr } = await admin
+                .from('project_skills')
+                .insert(data.skill_ids.map(sid => ({ project_id: project.project_id, skill_id: sid })));
+            if (skillErr) console.warn(`[addExternalProjectAction] Skill Link Warning:`, skillErr);
+        }
+
+        // 3. Create user_projects row
+        const { error: upErr } = await admin
+            .from('user_projects')
+            .insert({
+                user_id: user.id,
+                project_id: project.project_id,
+                status: data.status,
+                is_public: true,
+                github_url: data.github_url || null,
+                demo_url: data.demo_url || null,
+                tech_stack: data.tech_stack ?? [],
+                completed_at: data.status === 'completed' ? new Date().toISOString() : null,
+                started_at: (data.started_at && data.started_at.trim() !== '') ? data.started_at : null,
+                bullets: data.bullets ?? [],
+            });
+
+        if (upErr) {
+            console.error(`[addExternalProjectAction] User Project Error:`, upErr);
+            return { success: false, error: upErr.message };
+        }
+
+        // 4. If completed, unlock skills
+        if (data.status === 'completed' && data.skill_ids && data.skill_ids.length > 0) {
+            for (const skillId of data.skill_ids) {
+                await admin
+                    .from('user_skills')
+                    .upsert({
+                        user_id: user.id,
+                        skill_id: skillId,
+                        level: 'beginner',
+                        source: 'project',
+                        is_public: true,
+                    }, { onConflict: 'user_id,skill_id' });
+            }
+        }
+
+        revalidatePath('/dashboard/portfolio');
+        revalidatePath('/portfolio', 'layout');
+        console.log(`[addExternalProjectAction] SUCCESS`);
+        return { success: true };
+    } catch (e: any) {
+        console.error(`[addExternalProjectAction] CRITICAL ERROR:`, e);
+        return { success: false, error: e.message ?? 'An unexpected error occurred' };
+    }
 }
 
 // ─── Update bio ───
@@ -208,5 +212,53 @@ export async function updateBioAction(input: UpdateBioInput): Promise<ActionResu
 
     if (error) return { success: false, error: error.message };
     revalidatePath('/dashboard/portfolio');
+    revalidatePath('/portfolio', 'layout');
+    return { success: true };
+}
+
+// ─── Delete project ───
+export async function deleteProjectAction(projectId: string): Promise<ActionResult> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: 'Unauthorized' };
+
+    const admin = getSupabaseAdmin();
+
+    // 1. Verify ownership and that it's NOT a roadmap project
+    const { data: project } = await admin
+        .from('projects')
+        .select('source_type')
+        .eq('project_id', projectId)
+        .single();
+
+    if (!project || project.source_type === 'roadmap') {
+        return { success: false, error: 'Cannot delete roadmap projects.' };
+    }
+
+    // 2. Delete user_projects link first
+    const { error: upErr } = await admin
+        .from('user_projects')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('project_id', projectId);
+
+    if (upErr) return { success: false, error: upErr.message };
+
+    // 3. Delete project_skills associations
+    await admin
+        .from('project_skills')
+        .delete()
+        .eq('project_id', projectId);
+
+    // 4. Delete the project template itself
+    const { error: pErr } = await admin
+        .from('projects')
+        .delete()
+        .eq('project_id', projectId);
+
+    if (pErr) return { success: false, error: pErr.message };
+
+    revalidatePath('/dashboard/portfolio');
+    revalidatePath('/portfolio', 'layout');
     return { success: true };
 }

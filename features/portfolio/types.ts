@@ -138,7 +138,7 @@ export type AddManualSkillInput = z.infer<typeof addManualSkillSchema>;
 
 export const addExternalProjectSchema = z.object({
     title: z.string().min(1).max(200),
-    description: z.string().min(1).max(300),
+    description: z.string().min(1).max(2000),
     difficulty_level: z.enum(['beginner', 'intermediate', 'advanced']),
     github_url: z.string().optional().or(z.literal('')),
     demo_url: z.string().optional().or(z.literal('')),

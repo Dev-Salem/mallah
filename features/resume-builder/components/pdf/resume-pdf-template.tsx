@@ -1,24 +1,27 @@
 import { Document, Page, Text, View, StyleSheet, Link, Font } from "@react-pdf/renderer";
+import path from 'path';
 
 // Register Fonts
-Font.register({
-  family: 'Inter',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.ttf', fontWeight: 400 },
-    { src: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fMZhrib2Bg-4.ttf', fontWeight: 600 },
-    { src: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYMZhrib2Bg-4.ttf', fontWeight: 700 },
-  ]
-});
+// const fontDir = path.join(process.cwd(), 'public', 'fonts');
 
-Font.register({
-  family: 'JetBrains Mono',
-  src: 'https://fonts.gstatic.com/s/jetbrainsmono/v18/t64v85u_7LIsfshR2k42VfB3_X6t.ttf'
-});
+// Font.register({
+//   family: 'Inter',
+//   fonts: [
+//     { src: path.join(fontDir, 'Inter-Regular.ttf'), fontWeight: 400 },
+//     { src: path.join(fontDir, 'Inter-SemiBold.ttf'), fontWeight: 600 },
+//     { src: path.join(fontDir, 'Inter-Bold.ttf'), fontWeight: 700 },
+//   ]
+// });
+
+// Font.register({
+//   family: 'JetBrains Mono',
+//   src: path.join(fontDir, 'JetBrainsMono-Regular.ttf')
+// });
 
 const styles = StyleSheet.create({
   page: {
     padding: 36, // 0.5in
-    fontFamily: "Inter",
+    fontFamily: "Helvetica",
     fontSize: 9.5,
     color: "#000",
     lineHeight: 1.3,
@@ -30,7 +33,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: 600,
-    fontFamily: "Inter",
+    fontFamily: "Helvetica",
     marginBottom: 4,
   },
   contact: {
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#cbd5e1", // Slate-300
     paddingBottom: 2,
     marginBottom: 8,
-    fontFamily: "Inter",
+    fontFamily: "Helvetica",
     letterSpacing: 0.1,
   },
   text: {
@@ -66,14 +69,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 10.5,
     fontWeight: 600,
-    fontFamily: "Inter",
+    fontFamily: "Helvetica",
   },
   companyLine: {
     fontSize: 9.5,
     color: "#64748b", // Slate-500
   },
   dates: {
-    fontFamily: "JetBrains Mono",
+    fontFamily: "Courier",
     fontSize: 9,
     color: "#64748b", // Slate-500
   },
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
   skillLabel: {
     fontSize: 9.5,
     fontWeight: 600,
-    fontFamily: "Inter",
+    fontFamily: "Helvetica",
   },
 });
 
@@ -101,6 +104,16 @@ export const ResumePDFTemplate = ({
   sections: any[];
   resumeInfo: any;
 }) => {
+  const ensureValidUrl = (url: string | undefined | null) => {
+    if (!url) return undefined;
+    const trimmed = url.trim();
+    if (!trimmed) return undefined;
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('mailto:')) {
+      return trimmed;
+    }
+    return `https://${trimmed}`;
+  };
+
   const personalInfo =
     sections.find((s) => s.section_type === "PERSONAL_INFO")?.content || {};
   const displayName =
@@ -153,17 +166,17 @@ export const ResumePDFTemplate = ({
             {personalInfo.location && (personalInfo.linkedin || personalInfo.github || personalInfo.portfolio) && <Text>•</Text>}
 
             {personalInfo.linkedin && (
-              <Link src={personalInfo.linkedin} style={styles.link}>LinkedIn</Link>
+              <Link src={ensureValidUrl(personalInfo.linkedin)} style={styles.link}>LinkedIn</Link>
             )}
             {personalInfo.linkedin && (personalInfo.github || personalInfo.portfolio) && <Text>•</Text>}
 
             {personalInfo.github && (
-              <Link src={personalInfo.github} style={styles.link}>GitHub</Link>
+              <Link src={ensureValidUrl(personalInfo.github)} style={styles.link}>GitHub</Link>
             )}
             {personalInfo.github && personalInfo.portfolio && <Text>•</Text>}
 
             {personalInfo.portfolio && (
-              <Link src={personalInfo.portfolio} style={styles.link}>Portfolio</Link>
+              <Link src={ensureValidUrl(personalInfo.portfolio)} style={styles.link}>Portfolio</Link>
             )}
           </View>
         </View>
@@ -237,7 +250,7 @@ export const ResumePDFTemplate = ({
                   <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, flexWrap: 'wrap' }}>
                     {proj.demo || proj.demo_override ? (
                       <Link
-                        src={proj.demo || proj.demo_override}
+                        src={ensureValidUrl(proj.demo || proj.demo_override)}
                         style={{ ...styles.title, ...styles.link }}
                       >
                         {proj.title || "Untitled Project"}
@@ -258,7 +271,7 @@ export const ResumePDFTemplate = ({
 
                 {(proj.github || proj.github_override) && (
                   <Link
-                    src={proj.github || proj.github_override}
+                    src={ensureValidUrl(proj.github || proj.github_override)}
                     style={{ ...styles.companyLine, ...styles.link, marginTop: 1, fontSize: 9 }}
                   >
                     GitHub Codebase

@@ -119,6 +119,7 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
                             placeholder={t('titlePlaceholder')}
                             value={title}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                            maxLength={200}
                         />
                     </div>
 
@@ -130,6 +131,7 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
                             className="resize-none h-24"
                             value={description}
                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                            maxLength={2000}
                         />
                     </div>
 
@@ -176,7 +178,7 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
                         <Label htmlFor="startedAt">{t('startLabel')}</Label>
                         <Input
                             id="startedAt"
-                            placeholder={t('startPlaceholder')}
+                            type="date"
                             value={startedAt}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStartedAt(e.target.value)}
                         />
@@ -337,7 +339,7 @@ export function AddExternalProjectDrawer({ open, onOpenChange, catalog }: AddExt
                     <Button
                         className="w-full"
                         onClick={handleSubmit}
-                        disabled={isSubmitting || !title || !description}
+                        disabled={isSubmitting || !title.trim() || !description.trim()}
                     >
                         {isSubmitting ? t('submitting') : t('submit')}
                     </Button>
