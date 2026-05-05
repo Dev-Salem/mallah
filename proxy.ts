@@ -23,7 +23,8 @@ function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTES.some(route => withoutLocale === route || withoutLocale.startsWith(route + '/'));
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  console.log(`[Proxy] Hitting: ${request.nextUrl.pathname}`);
   try {
     const pathname = request.nextUrl.pathname;
     
@@ -39,6 +40,7 @@ export async function middleware(request: NextRequest) {
     // 3. Update Supabase session (refreshes if needed)
     // We pass intlResponse to ensure cookies are set on the routing response
     const { response: finalResponse, user } = await updateSession(request, intlResponse);
+    console.log(`[Middleware] Request: ${pathname}, User: ${user?.id || 'none'}, UA: ${request.headers.get('user-agent')?.slice(0, 50)}...`);
 
     // 4. Extract locale and routing info
     const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';

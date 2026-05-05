@@ -123,8 +123,8 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
                     )}
                 </div>
 
-                {/* Tech Chips */}
-                <div className="flex flex-wrap gap-2 mt-auto">
+                {/* Tech Chips & Skills */}
+                <div className="flex flex-wrap gap-2 mt-auto pt-2 items-center">
                     {project.tech_stack.map((tech: string, i: number) => (
                         <Badge 
                             key={i} 
@@ -134,6 +134,21 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
                             {tech}
                         </Badge>
                     ))}
+                    
+                    {project.skills && project.skills.length > 0 && (
+                        <div className="flex flex-wrap gap-2 items-center">
+                            {project.tech_stack.length > 0 && <span className="text-[10px] text-muted-foreground/30 font-black px-1 uppercase tracking-tighter">Demonstrated:</span>}
+                            {project.skills.map((skill) => (
+                                <Badge 
+                                    key={skill.skill_id} 
+                                    variant="outline" 
+                                    className="border-primary/20 bg-background text-primary text-[10px] font-bold py-0.5 px-2 rounded-md shadow-sm"
+                                >
+                                    {skill.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

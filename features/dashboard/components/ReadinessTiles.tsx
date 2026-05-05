@@ -46,7 +46,7 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
                 ? `${readiness.roadmap_skills_count} from roadmap · ${readiness.manual_skills_count} added manually`
                 : 'Complete topics to unlock skills',
             icon: Cpu,
-            href: '/dashboard/skills',
+            href: '/dashboard/portfolio',
             warning: false,
         },
         {
@@ -54,7 +54,7 @@ export function ReadinessTiles({ readiness }: ReadinessTilesProps) {
             value: String(readiness.completed_projects_count),
             subLabel: `${readiness.available_projects_count} available to start`,
             icon: FolderKanban,
-            href: '/dashboard/skills',
+            href: '/dashboard/portfolio',
             warning: readiness.completed_projects_count === 0,
         },
         {

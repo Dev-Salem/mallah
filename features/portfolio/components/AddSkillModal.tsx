@@ -8,6 +8,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { addManualSkillAction } from '../actions/portfolio-actions';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Search, X } from 'lucide-react';
 
 interface AddSkillModalProps {
     open: boolean;
@@ -20,6 +23,8 @@ export function AddSkillModal({ open, onOpenChange, catalog, existingIds }: AddS
     const t = useTranslations('PortfolioHub.skills.addModal');
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [level, setLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const availableSkills = catalog.filter(c => !existingIds.includes(c.skill_id));
@@ -34,6 +39,8 @@ export function AddSkillModal({ open, onOpenChange, catalog, existingIds }: AddS
             toast.success(t('successMessage'));
             setSelectedId(null);
             setLevel('beginner');
+            setSearchQuery('');
+            setSelectedCategory(null);
             onOpenChange(false);
         } else {
             toast.error(result.error);
@@ -50,20 +57,94 @@ export function AddSkillModal({ open, onOpenChange, catalog, existingIds }: AddS
 
                 <div className="grid gap-6 py-4">
                     <div className="space-y-4">
-                        <Label>{t('skillLabel')}</Label>
-                        {/* Native select as a simple placeholder until we have a searchable select component */}
-                        <select
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
-                            value={selectedId || ''}
-                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedId(e.target.value)}
-                        >
-                            <option value="" disabled>{t('placeholder')}</option>
-                            {availableSkills.map(s => (
-                                <option key={s.skill_id} value={s.skill_id}>
-                                    {s.name} ({s.category})
-                                </option>
-                            ))}
-                        </select>
+                        <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('skillLabel')}</Label>
+                        
+                        {/* Search & Filter */}
+                        <div className="space-y-3">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search catalog..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-9 bg-muted/20 border-primary/10 h-9"
+                                />
+                            </div>
+
+                            {/* Category Filter Pills */}
+                            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                                <button
+                                    type="button"
+                                    onClick={() => setSelectedCategory(null)}
+                                    className={cn(
+                                        "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border",
+                                        selectedCategory === null
+                                            ? "bg-primary border-primary text-primary-foreground"
+                                            : "bg-muted/50 text-muted-foreground border-transparent"
+                                    )}
+                                >
+                                    All
+                                </button>
+                                {Array.from(new Set(availableSkills.map(s => s.category))).sort().map(category => (
+                                    <button
+                                        key={category}
+                                        type="button"
+                                        onClick={() => setSelectedCategory(category === selectedCategory ? null : category)}
+                                        className={cn(
+                                            "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border",
+                                            selectedCategory === category
+                                                ? "bg-primary border-primary text-primary-foreground"
+                                                : "bg-muted/50 text-muted-foreground border-transparent"
+                                        )}
+                                    >
+                                        {category}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Skill Picker List */}
+                        <div className="border border-primary/10 rounded-xl bg-muted/10 overflow-hidden">
+                            <div className="max-h-[250px] overflow-y-auto p-3 space-y-4 custom-scrollbar">
+                                {Object.entries(
+                                    availableSkills
+                                        .filter(s => {
+                                            const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase());
+                                            const matchesCategory = !selectedCategory || s.category === selectedCategory;
+                                            return matchesSearch && matchesCategory;
+                                        })
+                                        .reduce((acc, skill) => {
+                                            if (!acc[skill.category]) acc[skill.category] = [];
+                                            acc[skill.category].push(skill);
+                                            return acc;
+                                        }, {} as Record<string, typeof availableSkills>)
+                                ).map(([category, categorySkills]) => (
+                                    <div key={category} className="space-y-2">
+                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/50 flex items-center gap-2">
+                                            {category}
+                                            <div className="flex-1 h-[1px] bg-primary/5" />
+                                        </h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {categorySkills.map((skill) => (
+                                                <button
+                                                    key={skill.skill_id}
+                                                    type="button"
+                                                    onClick={() => setSelectedId(skill.skill_id === selectedId ? null : skill.skill_id)}
+                                                    className={cn(
+                                                        "px-3 py-1.5 rounded-lg text-xs font-bold transition-all border",
+                                                        selectedId === skill.skill_id
+                                                            ? "bg-primary/10 border-primary text-primary shadow-sm shadow-primary/10"
+                                                            : "bg-background border-border/50 text-muted-foreground hover:border-primary/30"
+                                                    )}
+                                                >
+                                                    {skill.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="space-y-4">

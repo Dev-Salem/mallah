@@ -402,7 +402,7 @@ function computeMission(
             title: "Time to Build Something Real",
             description: "You've learned the theory. Projects are what make your skills visible to employers and clients.",
             cta_label: "Start Your First Project",
-            cta_target: "/dashboard/skills",
+            cta_target: "/dashboard/portfolio",
             context_line: null,
         };
     }

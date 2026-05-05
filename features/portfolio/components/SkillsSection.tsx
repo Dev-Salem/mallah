@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { SkillCard } from './SkillCard';
 import type { PortfolioSkill } from '../types';
 import { AddSkillModal } from './AddSkillModal';
+import { cn } from '@/lib/utils';
 
 interface SkillsSectionProps {
     skills: PortfolioSkill[];
@@ -18,12 +19,15 @@ interface SkillsSectionProps {
 export function SkillsSection({ skills, catalog, isPublicView = false }: SkillsSectionProps) {
     const t = useTranslations('PortfolioHub.skills');
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [isAddOpen, setIsAddOpen] = useState(false);
 
-    const filteredSkills = skills.filter(s =>
-        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredSkills = skills.filter(s => {
+        const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                             s.category.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = !selectedCategory || s.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     return (
         <div className="space-y-6">
@@ -44,6 +48,37 @@ export function SkillsSection({ skills, catalog, isPublicView = false }: SkillsS
                         {t('addSkill')}
                     </Button>
                 )}
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide no-scrollbar">
+                <button
+                    type="button"
+                    onClick={() => setSelectedCategory(null)}
+                    className={cn(
+                        "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border",
+                        selectedCategory === null
+                            ? "bg-primary border-primary text-primary-foreground shadow-sm shadow-primary/20"
+                            : "bg-muted/30 border-border/50 text-muted-foreground hover:border-primary/30"
+                    )}
+                >
+                    All
+                </button>
+                {Array.from(new Set(skills.map(s => s.category))).sort().map(category => (
+                    <button
+                        key={category}
+                        type="button"
+                        onClick={() => setSelectedCategory(category === selectedCategory ? null : category)}
+                        className={cn(
+                            "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap border",
+                            selectedCategory === category
+                                ? "bg-primary border-primary text-primary-foreground shadow-sm shadow-primary/20"
+                                : "bg-muted/30 border-border/50 text-muted-foreground hover:border-primary/30"
+                        )}
+                    >
+                        {category}
+                    </button>
+                ))}
             </div>
 
             {skills.length === 0 ? (

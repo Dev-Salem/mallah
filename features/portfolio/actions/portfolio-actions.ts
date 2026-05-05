@@ -114,10 +114,12 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: 'Unauthorized' };
 
+    console.log(`[addExternalProjectAction] Starting for user: ${user.id}`);
     const admin = getSupabaseAdmin();
     const data = parsed.data;
 
     // 1. Create project template
+    console.log(`[addExternalProjectAction] Step 1: Creating project template`);
     const { data: project, error: projErr } = await admin
         .from('projects')
         .insert({
@@ -126,20 +128,29 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
             difficulty_level: data.difficulty_level,
             source_type: 'user_custom',
             is_public_default: true,
+            is_active: true,
         })
-        .select('project_id')
+        .select()
         .single();
 
-    if (projErr || !project) return { success: false, error: projErr?.message ?? 'Failed to create project' };
+    if (projErr || !project) {
+        console.error(`[addExternalProjectAction] Step 1 Failed:`, JSON.stringify(projErr, null, 2));
+        return { success: false, error: projErr?.message ?? 'Failed to create project template' };
+    }
+
+    console.log(`[addExternalProjectAction] Step 1 Success: project_id=${project.project_id}`);
 
     // 2. Link skills if any
     if (data.skill_ids && data.skill_ids.length > 0) {
-        await admin
+        console.log(`[addExternalProjectAction] Step 2: Linking ${data.skill_ids.length} skills`);
+        const { error: skillErr } = await admin
             .from('project_skills')
             .insert(data.skill_ids.map(sid => ({ project_id: project.project_id, skill_id: sid })));
+        if (skillErr) console.warn(`[addExternalProjectAction] Step 2 Warning:`, JSON.stringify(skillErr, null, 2));
     }
 
     // 3. Create user_projects row
+    console.log(`[addExternalProjectAction] Step 3: Creating user_projects row`);
     const { error: upErr } = await admin
         .from('user_projects')
         .insert({
@@ -155,7 +166,12 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
             bullets: data.bullets ?? [],
         });
 
-    if (upErr) return { success: false, error: upErr.message };
+    if (upErr) {
+        console.error(`[addExternalProjectAction] Step 3 Failed:`, JSON.stringify(upErr, null, 2));
+        return { success: false, error: upErr.message };
+    }
+
+    console.log(`[addExternalProjectAction] Step 3 Success`);
 
     // 4. If completed, unlock skills
     if (data.status === 'completed' && data.skill_ids && data.skill_ids.length > 0) {

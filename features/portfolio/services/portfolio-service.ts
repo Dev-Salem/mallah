@@ -281,9 +281,51 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     return { profile, skills, projects };
 }
 
-// ─── Catalog skills for the "Add Skill" picker ───
+// ─── Catalog skills for the "Add Project" picker ───
 export async function getSkillsCatalog(): Promise<{ skill_id: string; name: string; category: string }[]> {
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return [];
+
+    // Get learner's path
+    const { data: learner } = await supabase
+        .from('learners')
+        .select('current_path_id')
+        .eq('user_id', user.id)
+        .single();
+
+    if (learner?.current_path_id) {
+        // Fetch skills linked to topics/projects in this path
+        // 1. Get topics in this path
+        const { data: topicSkills } = await supabase
+            .from('topic_skills')
+            .select('skill_id, topics!inner(stage_id, stages!inner(path_id))')
+            .eq('topics.stages.path_id', learner.current_path_id);
+
+        // 2. Get projects in this path
+        const { data: projectSkills } = await supabase
+            .from('project_skills')
+            .select('skill_id, projects!inner(stage_id, stages!inner(path_id))')
+            .eq('projects.stages.path_id', learner.current_path_id);
+
+        const relevantSkillIds = new Set([
+            ...(topicSkills ?? []).map(ts => ts.skill_id),
+            ...(projectSkills ?? []).map(ps => ps.skill_id)
+        ]);
+
+        if (relevantSkillIds.size > 0) {
+            const { data } = await supabase
+                .from('skills')
+                .select('skill_id, name, category')
+                .eq('is_verified', true)
+                .in('skill_id', Array.from(relevantSkillIds))
+                .order('name');
+            if (data && data.length > 0) return data;
+        }
+    }
+
+    // Fallback: all verified skills
     const { data } = await supabase
         .from('skills')
         .select('skill_id, name, category')

@@ -19,11 +19,9 @@ export function ProjectsSection({ projects, catalog, isPublicView = false }: Pro
     const tTabs = useTranslations('PortfolioHub.tabs');
     const [isAddOpen, setIsAddOpen] = useState(false);
 
-    // We only show available/in_progress on the private dashboard
+    // On private dashboard, show all projects (completed, in_progress)
     // For public profile, the service already filters to 'completed' & 'is_public'
-    const filterProjects = isPublicView
-        ? projects
-        : projects.filter(p => p.status === 'completed');
+    const filterProjects = isPublicView ? projects : projects;
 
     return (
         <div className="space-y-6">
