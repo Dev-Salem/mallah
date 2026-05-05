@@ -1,27 +1,11 @@
 import { Document, Page, Text, View, StyleSheet, Link, Font } from "@react-pdf/renderer";
-import path from 'path';
 
-// Register Fonts
-// const fontDir = path.join(process.cwd(), 'public', 'fonts');
-
-// Font.register({
-//   family: 'Inter',
-//   fonts: [
-//     { src: path.join(fontDir, 'Inter-Regular.ttf'), fontWeight: 400 },
-//     { src: path.join(fontDir, 'Inter-SemiBold.ttf'), fontWeight: 600 },
-//     { src: path.join(fontDir, 'Inter-Bold.ttf'), fontWeight: 700 },
-//   ]
-// });
-
-// Font.register({
-//   family: 'JetBrains Mono',
-//   src: path.join(fontDir, 'JetBrainsMono-Regular.ttf')
-// });
+// Register Fonts is now handled in pdf-service.tsx to avoid bundling issues
 
 const styles = StyleSheet.create({
   page: {
     padding: 36, // 0.5in
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     fontSize: 9.5,
     color: "#000",
     lineHeight: 1.3,
@@ -33,7 +17,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: 600,
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     marginBottom: 4,
   },
   contact: {
@@ -54,7 +38,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#cbd5e1", // Slate-300
     paddingBottom: 2,
     marginBottom: 8,
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
     letterSpacing: 0.1,
   },
   text: {
@@ -69,14 +53,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 10.5,
     fontWeight: 600,
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
   },
   companyLine: {
     fontSize: 9.5,
     color: "#64748b", // Slate-500
   },
   dates: {
-    fontFamily: "Courier",
+    fontFamily: "JetBrains Mono",
     fontSize: 9,
     color: "#64748b", // Slate-500
   },
@@ -93,7 +77,7 @@ const styles = StyleSheet.create({
   skillLabel: {
     fontSize: 9.5,
     fontWeight: 600,
-    fontFamily: "Helvetica",
+    fontFamily: "Inter",
   },
 });
 
