@@ -24,15 +24,21 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
+          console.log(`[updateSession] Setting cookies: ${cookiesToSet.map(c => c.name).join(', ')}`);
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           
           // We don't overwrite supabaseResponse with NextResponse.next() here
           // because it would lose any existing redirect/rewrite headers from next-intl.
           // Instead, we just set the cookies on the existing response object.
           
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+          cookiesToSet.forEach(({ name, value, options }) => {
+            const cookieOptions = {
+              ...options,
+              secure: process.env.NODE_ENV === 'production',
+            };
+            console.log(`[updateSession] Setting cookie: ${name}, Options:`, JSON.stringify(cookieOptions));
+            supabaseResponse.cookies.set(name, value, cookieOptions)
+          })
         },
       },
     }

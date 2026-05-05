@@ -1,90 +1,77 @@
-import createMiddleware from 'next-intl/middleware';
-import { routing } from './lib/i18n/routing';
-import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from './lib/supabase/middleware'
-import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server';
+import createIntlMiddleware from 'next-intl/middleware';
+import { routing } from '@/lib/i18n/routing';
+import { updateSession } from '@/lib/supabase/middleware';
+import { createServerClient } from '@supabase/ssr';
 
-const intlMiddleware = createMiddleware(routing);
+const intlMiddleware = createIntlMiddleware(routing);
 
-const ADMIN_PANEL_PATH = process.env.ADMIN_PANEL_PATH || '';
+const PUBLIC_ROUTES = [
+  '/',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
+  '/verify-success'
+];
 
-// Routes that don't require authentication (without locale prefix)
-const publicRoutes = ['/', '/login', '/register', '/register/check-email', '/forgot-password', '/reset-password', '/auth-error'];
+const ADMIN_PANEL_PATH = process.env.ADMIN_PANEL_PATH || 'admin';
 
-function isPublicRoute(pathname: string): boolean {
-  // Strip locale prefix (e.g. /en/login → /login, /login → /login)
+function isPublicRoute(pathname: string) {
   const withoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
-
-  // Standard learner public routes
-  if (publicRoutes.includes(withoutLocale)) return true;
-
-  // Admin obfuscated login
-  if (ADMIN_PANEL_PATH && withoutLocale === `/${ADMIN_PANEL_PATH}/login`) return true;
-
-  return false;
+  return PUBLIC_ROUTES.some(route => withoutLocale === route || withoutLocale.startsWith(route + '/'));
 }
 
 export async function middleware(request: NextRequest) {
   try {
-    // ─── BYPASS: Server Action requests must not be intercepted ───
-    // Next.js Server Actions use internal POST requests with a 'next-action' header.
-    // If the middleware applies intl rewrites or auth redirects to these requests,
-    // the RSC payload is corrupted, causing "An unexpected response was received from the server".
-    if (request.headers.has('next-action')) {
-      const { response } = await updateSession(request);
-      return response;
-    }
-
     const pathname = request.nextUrl.pathname;
-
-    // ─── SECURITY: Block common admin path scanners ───
-    const withoutLocaleCheck = pathname.replace(/^\/(en|ar)/, '') || '/';
-    if (withoutLocaleCheck === '/admin' || withoutLocaleCheck.startsWith('/admin/') ||
-      withoutLocaleCheck === '/administrator' || withoutLocaleCheck.startsWith('/administrator/')) {
-      if (process.env.NODE_ENV === 'development') {
-        const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
-        const adminLoginUrl = new URL(`/${locale}/${ADMIN_PANEL_PATH}/login`, request.url);
-        return NextResponse.redirect(adminLoginUrl);
-      }
-      return new NextResponse('Not Found', { status: 404 });
-    }
-
-    // ─── STANDARD LEARNER ROUTING ───
-    if (pathname.startsWith('/auth/') || pathname === '/auth' || pathname.startsWith('/api/') || pathname === '/api') {
+    
+    // 1. Handle system paths (bypass intl)
+    if (pathname.startsWith('/auth/') || pathname.startsWith('/api/') || pathname.startsWith('/_next')) {
       const { response } = await updateSession(request);
       return response;
     }
 
+    // 2. Initialize intl middleware
     const intlResponse = intlMiddleware(request);
-    const isRedirect = intlResponse.headers.get('location');
-    if (isRedirect) {
-      const { response, user } = await updateSession(request, intlResponse);
-      console.log(`[Middleware] Redirecting to ${isRedirect}. User: ${user?.id || 'none'}`);
-      return response;
-    }
+    
+    // 3. Update Supabase session (refreshes if needed)
+    // We pass intlResponse to ensure cookies are set on the routing response
+    const { response: finalResponse, user } = await updateSession(request, intlResponse);
 
-    const { response: supabaseResponse, user } = await updateSession(request, intlResponse);
+    // 4. Extract locale and routing info
     const locale = pathname.match(/^\/(en|ar)/)?.[1] || 'en';
     const isPublic = isPublicRoute(pathname);
     const withoutLocale = pathname.replace(/^\/(en|ar)/, '') || '/';
-    const isAdminPath = ADMIN_PANEL_PATH && (withoutLocale === `/${ADMIN_PANEL_PATH}` || withoutLocale.startsWith(`/${ADMIN_PANEL_PATH}/`));
+    const isAdminPath = withoutLocale === `/${ADMIN_PANEL_PATH}` || withoutLocale.startsWith(`/${ADMIN_PANEL_PATH}/`);
 
-    if (!user) {
-      if (!isPublic) {
-        console.log(`[Middleware] No user for protected route ${pathname}. Redirecting to login.`);
-        const loginUrl = new URL(`/${locale}/login`, request.url);
-        return NextResponse.redirect(loginUrl);
-      }
-    } else {
-      console.log(`[Middleware] User ${user.id} authenticated. Path: ${pathname}`);
+    // 5. Auth Guards
+    if (!user && !isPublic) {
+      const cookieNames = request.cookies.getAll().map(c => c.name);
+      console.warn(`[Middleware] AUTH DENIED: Path=${pathname}, Cookies=${cookieNames.join(', ')}`);
       
-      // Fixed regex to include non-prefixed paths
-      if (pathname.match(/^\/((en|ar)\/)?(login|register)$/) || pathname === '/login' || pathname === '/register') {
-        console.log(`[Middleware] User already logged in, redirecting from ${pathname} to dashboard.`);
+      const loginUrl = new URL(`/${locale}/login`, request.url);
+      // IMPORTANT: We must propagate cookies from finalResponse even on redirect
+      const redirectResponse = NextResponse.redirect(loginUrl);
+      finalResponse.cookies.getAll().forEach(cookie => {
+        redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+      });
+      return redirectResponse;
+    }
+
+    if (user) {
+      // Redirect logged in users away from auth pages
+      if (withoutLocale === '/login' || withoutLocale === '/register') {
         const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
-        return NextResponse.redirect(dashboardUrl);
+        const redirectResponse = NextResponse.redirect(dashboardUrl);
+        finalResponse.cookies.getAll().forEach(cookie => {
+          redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+        });
+        return redirectResponse;
       }
 
+      // Feature-specific guards (Learner vs Admin)
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -93,6 +80,9 @@ export async function middleware(request: NextRequest) {
             getAll() { return request.cookies.getAll() },
             setAll(cookiesToSet) {
               cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+              cookiesToSet.forEach(({ name, value, options }) =>
+                finalResponse.cookies.set(name, value, options)
+              )
             },
           },
         }
@@ -100,24 +90,28 @@ export async function middleware(request: NextRequest) {
 
       const { data: learner } = await supabase
         .from('learners')
-        .select('*')
+        .select('onboarding_completed')
         .eq('user_id', user.id)
         .single();
 
-      const isLearnerDashboard = pathname.match(/^\/(en|ar)\/dashboard/) || pathname === '/dashboard';
-      const isLearnerSettings = pathname.match(/^\/(en|ar)\/settings/) || pathname === '/settings';
-      const isOnboarding = pathname.match(/^\/(en|ar)\/onboarding/) || pathname === '/onboarding';
+      const isDashboardRequest = withoutLocale === '/dashboard' || withoutLocale.startsWith('/dashboard/');
+      const isSettingsRequest = withoutLocale === '/settings' || withoutLocale.startsWith('/settings/');
+      const isOnboardingRequest = withoutLocale === '/onboarding' || withoutLocale.startsWith('/onboarding/');
 
-      if (!isAdminPath && learner && !learner.onboarding_completed && (isLearnerDashboard || isLearnerSettings) && !isOnboarding) {
-        console.log(`[Middleware] Incomplete onboarding, redirecting to onboarding.`);
+      if (!isAdminPath && learner && !learner.onboarding_completed && (isDashboardRequest || isSettingsRequest) && !isOnboardingRequest) {
+        console.log(`[Middleware] Onboarding incomplete for ${user.id}. Redirecting.`);
         const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
-        return NextResponse.redirect(onboardingUrl);
+        const redirectResponse = NextResponse.redirect(onboardingUrl);
+        finalResponse.cookies.getAll().forEach(cookie => {
+          redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+        });
+        return redirectResponse;
       }
     }
 
-    return supabaseResponse;
+    return finalResponse;
   } catch (e) {
-    console.error(`[Middleware FATAL ERROR]`, e);
+    console.error(`[Middleware FATAL]`, e);
     return NextResponse.next();
   }
 }
@@ -126,4 +120,4 @@ export const config = {
   matcher: [
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-}
+};

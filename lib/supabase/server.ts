@@ -14,13 +14,16 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+            cookiesToSet.forEach(({ name, value, options }) => {
+              const cookieOptions = {
+                ...options,
+                secure: process.env.NODE_ENV === 'production',
+              };
+              console.log(`[ServerClient] Setting cookie: ${name}, Options:`, JSON.stringify(cookieOptions));
+              cookieStore.set(name, value, cookieOptions)
+            })
+          } catch (error) {
+            console.error(`[ServerClient] Failed to set cookies:`, error);
           }
         },
       },
