@@ -8,7 +8,7 @@ import {
     ArrowLeft, Trophy, ExternalLink, Link as LinkIcon, Edit2, CheckCircle2, 
     Github, BookOpen, AlertCircle, ChevronRight, X, Target, Lightbulb, 
     ListChecks, Star, Timer, Hammer, Sparkles, Briefcase, FileText,
-    Percent, Award, Clock
+    Percent, Award, Clock, Code2
 } from 'lucide-react';
 import { Project, Skill, UserProjectSubmission, ProjectReview } from '../types';
 import { submitProjectAction, skipProjectAction } from '../actions/project-actions';
@@ -47,6 +47,17 @@ function EffortBadge({ label, icon: Icon, value, colorClass }: { label: string, 
             </div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
             <span className="text-sm font-black">{value}</span>
+        </div>
+    );
+}
+
+function TechStackBadge({ tech }: { tech: string }) {
+    return (
+        <div className="flex items-center gap-2.5 px-4 py-2.5 bg-card/50 backdrop-blur-sm border rounded-xl shadow-sm transition-all hover:border-primary/50 group">
+            <div className="p-1.5 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                <Code2 className="w-3.5 h-3.5 text-primary" />
+            </div>
+            <span className="text-sm font-black tracking-tight">{tech}</span>
         </div>
     );
 }
@@ -176,26 +187,13 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                 )}
                             </div>
 
-                            <div className="flex flex-wrap gap-4 mb-8">
-                                <EffortBadge 
-                                    label={t('planning')} 
-                                    icon={Target} 
-                                    value={project.effort_planning || ''} 
-                                    colorClass="bg-blue-500/10 text-blue-500" 
-                                />
-                                <EffortBadge 
-                                    label={t('building')} 
-                                    icon={Hammer} 
-                                    value={project.effort_building || ''} 
-                                    colorClass="bg-orange-500/10 text-orange-500" 
-                                />
-                                <EffortBadge 
-                                    label={t('polish')} 
-                                    icon={Sparkles} 
-                                    value={project.effort_polish || ''} 
-                                    colorClass="bg-purple-500/10 text-purple-500" 
-                                />
-                            </div>
+                            {project.recommended_tech && project.recommended_tech.length > 0 && (
+                                <div className="flex flex-wrap gap-3 mb-8">
+                                    {project.recommended_tech.map((tech, i) => (
+                                        <TechStackBadge key={i} tech={tech} />
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
