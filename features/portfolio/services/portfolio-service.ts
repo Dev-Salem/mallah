@@ -65,7 +65,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
     // 3. Projects
     const { data: userProjectsRaw } = await supabase
         .from('user_projects')
-        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at, started_at, bullets')
+        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at, started_at, bullets, custom_name, custom_description')
         .eq('user_id', user.id);
 
     const projectIds = (userProjectsRaw ?? []).map(p => p.project_id);
@@ -103,6 +103,8 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
             project_id: up.project_id,
             title: template?.title ?? 'Unknown Project',
             description: template?.description ?? null,
+            custom_name: up.custom_name,
+            custom_description: up.custom_description,
             difficulty_level: (template?.difficulty_level as PortfolioProject['difficulty_level']) ?? null,
             source_type: (template?.source_type as 'roadmap' | 'user_custom') ?? 'roadmap',
             status: up.status as PortfolioProject['status'],
@@ -201,7 +203,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     // 3. Projects (only public + completed)
     const { data: userProjectsRaw } = await supabase
         .from('user_projects')
-        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at, started_at, bullets')
+        .select('id, project_id, status, is_public, github_url, demo_url, personal_note, thumbnail_url, tech_stack, completed_at, started_at, bullets, custom_name, custom_description')
         .eq('user_id', learner.user_id)
         .eq('is_public', true)
         .eq('status', 'completed');
@@ -245,6 +247,8 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
             project_id: up.project_id,
             title: template?.title ?? 'Unknown Project',
             description: template?.description ?? null,
+            custom_name: up.custom_name,
+            custom_description: up.custom_description,
             difficulty_level: (template?.difficulty_level as PortfolioProject['difficulty_level']) ?? null,
             source_type: (template?.source_type as 'roadmap' | 'user_custom') ?? 'roadmap',
             status: 'completed' as const,

@@ -61,7 +61,9 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-bold text-xl text-foreground leading-tight">{project.title}</h3>
+                            <h3 className="font-bold text-xl text-foreground leading-tight">
+                                {project.custom_name || project.title}
+                            </h3>
                             {!isPublicView && !project.is_public && (
                                 <Badge variant="secondary" className="bg-muted text-[10px] uppercase font-mono h-5">
                                     {t('privateBadge')}
@@ -116,7 +118,7 @@ export function ProjectCard({ project, isPublicView = false }: ProjectCardProps)
                         </ul>
                     ) : (
                         <p className="text-sm text-muted-foreground/80 leading-relaxed">
-                            {project.description || project.personal_note || t('noDescription')}
+                            {project.custom_description || project.description || project.personal_note || t('noDescription')}
                         </p>
                     )}
                 </div>

@@ -130,6 +130,8 @@ export async function submitProjectAction(
         public_portfolio?: boolean;
         thumbnail_url?: string;
         tech_tags?: string[];
+        custom_name?: string;
+        custom_description?: string;
     }
 ): Promise<{ success: boolean; error?: string }> {
     const supabase = await createClient();
@@ -147,6 +149,8 @@ export async function submitProjectAction(
             github_url: data.github_url || null,
             demo_url: data.demo_url || null,
             personal_note: data.personal_note || null,
+            custom_name: data.custom_name || null,
+            custom_description: data.custom_description || null,
             is_public: data.public_portfolio || false,
             thumbnail_url: data.thumbnail_url || null,
             tech_tags: data.tech_tags || null,

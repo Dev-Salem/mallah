@@ -16,6 +16,8 @@ export interface PortfolioProject {
     project_id: string;
     title: string;
     description: string | null;
+    custom_name: string | null;
+    custom_description: string | null;
     difficulty_level: 'beginner' | 'intermediate' | 'advanced' | null;
     source_type: 'roadmap' | 'user_custom';
     status: 'available' | 'in_progress' | 'completed';

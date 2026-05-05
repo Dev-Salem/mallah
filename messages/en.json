@@ -346,6 +346,7 @@
     "modules": "Modules",
     "minutes": "min",
     "current_stage": "Current Stage",
+    "completed_stage": "Completed Stage",
     "completed": "Completed",
     "locked": "Locked",
     "difficulty_label": "Difficulty",
@@ -412,6 +413,8 @@
   },
   "ProjectViewer": {
     "actionPanel": "Action Panel",
+    "readyToStart": "Ready to Start",
+    "startProjectDesc": "Ready to put your skills to the test? Submit your project to get AI feedback and unlock the next stage.",
     "backToRoadmap": "Back to Roadmap",
     "projectMilestone": "Project Milestone",
     "gatesNextStage": "Gates Next Stage",
@@ -439,6 +442,8 @@
     "cancel": "Cancel",
     "saving": "Saving...",
     "submit": "Submit Project",
+    "submittedAt": "Submitted at",
+    "skippedAt": "Skipped at",
     "submittedOn": "Submitted on {date}",
     "skippedOn": "Skipped on {date}",
     "editSubmission": "Edit Submission",
@@ -486,7 +491,24 @@
     "strengths": "Strengths",
     "improvements": "Areas for Improvement",
     "close": "Close",
-    "submitInstructions": "We are currently reviewing your project. This usually takes less than a minute."
+    "submitInstructions": "We are currently reviewing your project. This usually takes less than a minute.",
+    "fastTracked": "Fast-Tracked Milestone",
+    "skippedNotice": "You've skipped this project to focus on later stages. You can return any time to submit it and validate these skills on your profile.",
+    "resumeAndValidate": "Resume & Validate",
+    "submissionForm": {
+      "header": "Submit Your Project",
+      "githubLabel": "Github Repository URL",
+      "demoLabel": "Live Demo URL (Optional)",
+      "techStackLabel": "Which technologies did you use?",
+      "customizationHeader": "Portfolio Customization (Optional)",
+      "customNameLabel": "Display Name",
+      "customDescriptionLabel": "Display Description",
+      "skipButton": "Skip & Move On",
+      "skipConfirmTitle": "Skip this project?",
+      "skipConfirmDesc": "You can still validate it later to earn the reward.",
+      "goBackButton": "Go back",
+      "confirmSkipButton": "Yes, skip it"
+    }
   },
 
   "Onboarding": {

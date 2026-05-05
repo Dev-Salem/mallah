@@ -93,7 +93,9 @@ export async function getDashboardSummary(
             if (!stg.is_unlocked) continue;
 
             const tComp = stg.topics.filter(t => t.user_status === 'completed').length;
-            const pComp = stg.project?.user_status === 'completed' ? 1 : 0;
+            const pComp = (stg.project?.user_status === 'completed' || 
+                           stg.project?.user_status === 'waiting' || 
+                           stg.project?.user_status === 'skipped') ? 1 : 0;
             const totalStageItems = stg.topics.length + (stg.project ? 1 : 0);
 
             topicsData.completed_topics += tComp;
@@ -101,17 +103,18 @@ export async function getDashboardSummary(
 
             if (stg.project) {
                 projectsCount++;
-                if (pComp) completedProjects++;
+                if (stg.project.user_status === 'completed') completedProjects++;
                 if (stg.project.user_status === 'available') availableProjects++;
             }
 
             // Track if stage 1 is completed (for StartFirstProject mission)
-            if (i === 0 && (tComp + pComp) >= totalStageItems) {
+            const isStageDone = (tComp + pComp) >= totalStageItems;
+            if (i === 0 && isStageDone) {
                 hasPassedStage1 = true;
             }
 
             // First incomplete stage = current stage
-            if ((tComp + pComp) < totalStageItems && !currentStage) {
+            if (!isStageDone && !currentStage) {
                 currentStage = stg;
                 currentStageIndex = i;
                 stageData.current_stage_id = stg.stage_id;
@@ -128,7 +131,7 @@ export async function getDashboardSummary(
                 const uncompletedTopic = stg.topics.find(t => t.user_status !== 'completed');
                 if (uncompletedTopic) {
                     nextTopic = uncompletedTopic;
-                } else if (stg.project && stg.project.user_status !== 'completed') {
+                } else if (stg.project && !pComp) {
                     nextProject = stg.project;
                 }
             }

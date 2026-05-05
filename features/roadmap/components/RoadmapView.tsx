@@ -167,10 +167,26 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                 {/* Vertical Spine Line */}
                 <div className="absolute left-[19px] md:left-[24px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-primary/30 to-transparent opacity-20 dark:opacity-40" />
 
-                <Accordion type="multiple" defaultValue={roadmap.stages.filter(s => s.is_unlocked && !s.topics.every(t => t.user_status === 'completed')).map(s => s.stage_id)} className="contents">
+                <Accordion 
+                    type="multiple" 
+                    defaultValue={roadmap.stages
+                        .filter(s => {
+                            const stageTopicsCompleted = s.topics.filter(t => t.user_status === 'completed').length;
+                            const projectCompleted = (s.project?.user_status === 'completed' || s.project?.user_status === 'waiting') ? 1 : 0;
+                            const totalStageItems = s.topics.length + (s.project ? 1 : 0);
+                            const isStageDone = (stageTopicsCompleted + projectCompleted) >= totalStageItems;
+                            return s.is_unlocked && !isStageDone;
+                        })
+                        .slice(0, 1) // Only open the first incomplete stage
+                        .map(s => s.stage_id)} 
+                    className="contents"
+                >
                     {roadmap.stages.map((stage, index) => {
-                        const isCompleted = !stage.topics.some(t => t.user_status !== 'completed') &&
-                            (!stage.project || stage.project.user_status === 'completed' || stage.project.user_status === 'waiting');
+                        const stageTopicsCompleted = stage.topics.filter(t => t.user_status === 'completed').length;
+                        const projectCompleted = (stage.project?.user_status === 'completed' || stage.project?.user_status === 'waiting') ? 1 : 0;
+                        const totalStageItems = stage.topics.length + (stage.project ? 1 : 0);
+                        const isCompleted = (stageTopicsCompleted + projectCompleted) >= totalStageItems;
+                        
                         const state = !stage.is_unlocked ? 'locked' : isCompleted ? 'completed' : 'current';
 
                         return (
@@ -214,9 +230,10 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
 }
 
 function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: ReturnType<typeof useTranslations>; locale: string; state: 'locked' | 'current' | 'completed', isFirst?: boolean }) {
-    const totalTopics = stage.topics.filter(t => !t.topic_type.startsWith('project_')).length;
-    const completedTopics = stage.topics.filter(t => !t.topic_type.startsWith('project_') && t.user_status === 'completed').length;
-    const progressPercent = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+    const stageTopicsCompleted = stage.topics.filter(t => t.user_status === 'completed').length;
+    const projectCompleted = (stage.project?.user_status === 'completed' || stage.project?.user_status === 'waiting') ? 1 : 0;
+    const totalStageItems = stage.topics.length + (stage.project ? 1 : 0);
+    const progressPercent = totalStageItems > 0 ? ((stageTopicsCompleted + projectCompleted) / totalStageItems) * 100 : 0;
 
     return (
         <div
@@ -239,9 +256,12 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                         <div className="flex items-center gap-3">
                             <span className={cn(
                                 "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
-                                state === 'locked' ? "text-muted-foreground/60" : "text-primary/80"
+                                state === 'locked' ? "text-muted-foreground/60" : 
+                                state === 'completed' ? "text-success/80" : "text-primary/80"
                             )}>
-                                {state === 'locked' ? 'ENCRYPTED' : 'CURRENT STAGE'} // {String(stage.order_index).padStart(2, '0')}
+                                {state === 'locked' ? 'ENCRYPTED' : 
+                                 state === 'completed' ? t('completed_stage').toUpperCase() : 
+                                 t('current_stage').toUpperCase()} // {String(stage.order_index).padStart(2, '0')}
                             </span>
                             <div className={cn(
                                 "text-[9px] px-2 py-0.5 rounded-md border uppercase font-mono font-bold tracking-widest",
@@ -298,7 +318,7 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
             {state !== 'locked' ? (
                 <AccordionContent className="relative z-10 flex flex-col gap-6 pt-6">
                     <div className="flex flex-col gap-3">
-                        {stage.topics.filter(t => !t.topic_type.startsWith('project_')).map(topic => (
+                        {stage.topics.map(topic => (
                             <TopicItem key={topic.topic_id} topic={topic} t={t} locale={locale} />
                         ))}
                     </div>
@@ -341,6 +361,7 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                     {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : 
                      topic.topic_type === 'lesson' ? <PlayCircle className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
                      topic.topic_type === 'lesson_lab' ? <FlaskConical className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
+                     topic.topic_type.startsWith('project_') ? <LayoutTemplate className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
                      <FileText className={cn("w-5 h-5", isInProgress && "animate-pulse")} />}
                     
                     {isInProgress && (

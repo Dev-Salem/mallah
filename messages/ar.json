@@ -346,6 +346,7 @@
     "modules": "وحدات",
     "minutes": "دقيقة",
     "current_stage": "المرحلة الحالية",
+    "completed_stage": "المرحلة المكتملة",
     "completed": "مكتمل",
     "locked": "مغلق",
     "difficulty_label": "المستوى",
@@ -412,6 +413,8 @@
   },
   "ProjectViewer": {
     "actionPanel": "لوحة التحكم",
+    "readyToStart": "جاهز للبدء",
+    "startProjectDesc": "جاهز لاختبار مهاراتك؟ سلم مشروعك للحصول على تقييم الذكاء الاصطناعي وفتح المرحلة التالية.",
     "backToRoadmap": "العودة للخارطة",
     "projectMilestone": "مشروع مرحلي",
     "gatesNextStage": "يفتح المرحلة التالية",
@@ -439,6 +442,8 @@
     "cancel": "إلغاء",
     "saving": "جاري الحفظ...",
     "submit": "تسليم المشروع",
+    "submittedAt": "تم التسليم في",
+    "skippedAt": "تم التخطي في",
     "submittedOn": "تم التسليم في {date}",
     "skippedOn": "تم التخطي في {date}",
     "editSubmission": "تعديل التسليم",
@@ -486,7 +491,24 @@
     "strengths": "نقاط القوة",
     "improvements": "مجالات التحسين",
     "close": "إغلاق",
-    "submitInstructions": "نحن نقوم حالياً بمراجعة مشروعك. يستغرق هذا عادةً أقل من دقيقة."
+    "submitInstructions": "نحن نقوم حالياً بمراجعة مشروعك. يستغرق هذا عادةً أقل من دقيقة.",
+    "fastTracked": "مشروع تم تخطيه",
+    "skippedNotice": "لقد قمت بتخطي هذا المشروع للتركيز على مراحل متقدمة. يمكنك العودة في أي وقت لتسليمه وتوثيق مهاراتك في ملفك الشخصي.",
+    "resumeAndValidate": "استئناف والتحقق",
+    "submissionForm": {
+      "header": "تقديم مشروعك",
+      "githubLabel": "رابط مستودع جيثب",
+      "demoLabel": "رابط العرض المباشر (اختياري)",
+      "techStackLabel": "ما هي التقنيات التي استخدمتها؟",
+      "customizationHeader": "تخصيص معرض الأعمال (اختياري)",
+      "customNameLabel": "اسم العرض",
+      "customDescriptionLabel": "وصف العرض",
+      "skipButton": "تخطي والمتابعة",
+      "skipConfirmTitle": "تخطي هذا المشروع؟",
+      "skipConfirmDesc": "لا يزال بإمكانك التحقق منه لاحقاً للحصول على المكافأة.",
+      "goBackButton": "رجوع",
+      "confirmSkipButton": "نعم، تخطي"
+    }
   },
   "Onboarding": {
     "stepLabel": "الخطوة {step} من {total}",
