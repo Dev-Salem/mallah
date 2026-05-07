@@ -24,12 +24,17 @@ function isPublicRoute(pathname: string) {
 }
 
 export async function proxy(request: NextRequest) {
-  console.log(`[Proxy] Hitting: ${request.nextUrl.pathname}`);
+  const pathname = request.nextUrl.pathname;
+  const method = request.method;
+  const isAction = request.headers.has('next-action');
+  
+  console.log(`[Proxy] ${method} ${pathname} | Action: ${isAction}`);
+  
   try {
-    const pathname = request.nextUrl.pathname;
-    
-    // 1. Handle system paths (bypass intl)
-    if (pathname.startsWith('/auth/') || pathname.startsWith('/api/') || pathname.startsWith('/_next')) {
+    // 1. Handle system paths (bypass intl & guards)
+    // CRITICAL: We also bypass for Server Actions to prevent redirects/rewrites from breaking the action response.
+    if (isAction || pathname.startsWith('/auth/') || pathname.startsWith('/api/') || pathname.startsWith('/_next')) {
+      console.log(`[Middleware] System/Action path detected. Bypassing complex logic.`);
       const { response } = await updateSession(request);
       return response;
     }
@@ -38,7 +43,6 @@ export async function proxy(request: NextRequest) {
     const intlResponse = intlMiddleware(request);
     
     // 3. Update Supabase session (refreshes if needed)
-    // We pass intlResponse to ensure cookies are set on the routing response
     const { response: finalResponse, user } = await updateSession(request, intlResponse);
     console.log(`[Middleware] Request: ${pathname}, User: ${user?.id || 'none'}, UA: ${request.headers.get('user-agent')?.slice(0, 50)}...`);
 
@@ -50,11 +54,8 @@ export async function proxy(request: NextRequest) {
 
     // 5. Auth Guards
     if (!user && !isPublic) {
-      const cookieNames = request.cookies.getAll().map(c => c.name);
-      console.warn(`[Middleware] AUTH DENIED: Path=${pathname}, Cookies=${cookieNames.join(', ')}`);
-      
+      console.warn(`[Middleware] AUTH DENIED: Path=${pathname}`);
       const loginUrl = new URL(`/${locale}/login`, request.url);
-      // IMPORTANT: We must propagate cookies from finalResponse even on redirect
       const redirectResponse = NextResponse.redirect(loginUrl);
       finalResponse.cookies.getAll().forEach(cookie => {
         redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
@@ -101,7 +102,7 @@ export async function proxy(request: NextRequest) {
       const isOnboardingRequest = withoutLocale === '/onboarding' || withoutLocale.startsWith('/onboarding/');
 
       if (!isAdminPath && learner && !learner.onboarding_completed && (isDashboardRequest || isSettingsRequest) && !isOnboardingRequest) {
-        console.log(`[Middleware] Onboarding incomplete for ${user.id}. Redirecting.`);
+        console.log(`[Middleware] Onboarding incomplete. Redirecting.`);
         const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
         const redirectResponse = NextResponse.redirect(onboardingUrl);
         finalResponse.cookies.getAll().forEach(cookie => {

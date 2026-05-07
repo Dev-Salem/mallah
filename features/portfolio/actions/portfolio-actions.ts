@@ -119,10 +119,11 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
         if (!user) return { success: false, error: 'Unauthorized' };
 
         console.log(`[addExternalProjectAction] START for user: ${user.id}`);
+        
         const admin = getSupabaseAdmin();
-        const data = parsed.data;
 
         // 1. Create project template
+        console.log(`[addExternalProjectAction] Step 1: Creating project template...`);
         const { data: project, error: projErr } = await admin
             .from('projects')
             .insert({
@@ -141,9 +142,11 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
             console.error(`[addExternalProjectAction] Project Template Error:`, projErr);
             return { success: false, error: projErr?.message ?? 'Failed to create project template' };
         }
+        console.log(`[addExternalProjectAction] Project created: ${project.project_id}`);
 
         // 2. Link skills if any
         if (data.skill_ids && data.skill_ids.length > 0) {
+            console.log(`[addExternalProjectAction] Step 2: Linking ${data.skill_ids.length} skills...`);
             const { error: skillErr } = await admin
                 .from('project_skills')
                 .insert(data.skill_ids.map(sid => ({ project_id: project.project_id, skill_id: sid })));
@@ -151,6 +154,7 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
         }
 
         // 3. Create user_projects row
+        console.log(`[addExternalProjectAction] Step 3: Inserting user_projects row...`);
         const { error: upErr } = await admin
             .from('user_projects')
             .insert({
@@ -170,6 +174,7 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
             console.error(`[addExternalProjectAction] User Project Error:`, upErr);
             return { success: false, error: upErr.message };
         }
+        console.log(`[addExternalProjectAction] User Project inserted successfully`);
 
         // 4. If completed, unlock skills
         if (data.status === 'completed' && data.skill_ids && data.skill_ids.length > 0) {
