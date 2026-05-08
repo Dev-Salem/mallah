@@ -22,13 +22,15 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
       cookies: {
         getAll() {
           const allCookies = request.cookies.getAll();
-          console.log(`[updateSession] getAll: Found ${allCookies.length} cookies`);
+          const cookieNames = allCookies.map(c => c.name).join(', ');
+          console.log(`[updateSession] getAll: Found ${allCookies.length} cookies (${cookieNames})`);
           return allCookies;
         },
         setAll(cookiesToSet) {
           console.log(`[updateSession] setAll: Setting ${cookiesToSet.length} cookies`);
           
           cookiesToSet.forEach(({ name, value }) => {
+            // Update request cookies for downstream logic
             request.cookies.set(name, value);
           });
 

@@ -57,15 +57,14 @@ export async function proxy(request: NextRequest) {
       console.warn(`[Middleware] AUTH DENIED: Path=${pathname}`);
       const loginUrl = new URL(`/${locale}/login`, request.url);
       const redirectResponse = NextResponse.redirect(loginUrl);
-      finalResponse.cookies.getAll().forEach(cookie => {
-        console.log(`[Middleware] Copying cookie to redirect: ${cookie.name}`);
-        redirectResponse.cookies.set(cookie.name, cookie.value, {
-          ...cookie,
-          path: '/',
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-        });
+      
+      // Copy all headers (especially Set-Cookie) from finalResponse to preserve session
+      finalResponse.headers.forEach((value, key) => {
+        if (key.toLowerCase() === 'set-cookie') {
+          redirectResponse.headers.append(key, value);
+        }
       });
+      
       return redirectResponse;
     }
 
@@ -74,9 +73,14 @@ export async function proxy(request: NextRequest) {
       if (withoutLocale === '/login' || withoutLocale === '/register') {
         const dashboardUrl = new URL(`/${locale}/dashboard`, request.url);
         const redirectResponse = NextResponse.redirect(dashboardUrl);
-        finalResponse.cookies.getAll().forEach(cookie => {
-          redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+        
+        // Copy all headers (especially Set-Cookie) from finalResponse to preserve session
+        finalResponse.headers.forEach((value, key) => {
+          if (key.toLowerCase() === 'set-cookie') {
+            redirectResponse.headers.append(key, value);
+          }
         });
+        
         return redirectResponse;
       }
 
@@ -100,9 +104,14 @@ export async function proxy(request: NextRequest) {
         console.log(`[Middleware] Onboarding incomplete. Redirecting.`);
         const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
         const redirectResponse = NextResponse.redirect(onboardingUrl);
-        finalResponse.cookies.getAll().forEach(cookie => {
-          redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+        
+        // Copy all headers (especially Set-Cookie) from finalResponse to preserve session
+        finalResponse.headers.forEach((value, key) => {
+          if (key.toLowerCase() === 'set-cookie') {
+            redirectResponse.headers.append(key, value);
+          }
         });
+        
         return redirectResponse;
       }
     }

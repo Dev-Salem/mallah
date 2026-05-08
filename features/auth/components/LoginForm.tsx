@@ -34,9 +34,9 @@ export default function LoginForm() {
                     setServerError(t(result.error))
                 }
             } else if (result && result.success && result.redirectTo) {
-                // IMPORTANT: Client-side redirect ensures cookies are saved by the browser
-                // before the next page load.
-                router.push(result.redirectTo);
+                // IMPORTANT: Use window.location.href for login success to ensure
+                // that the browser fully persists cookies before the next page load.
+                window.location.href = result.redirectTo;
             }
         })
     }
