@@ -2,22 +2,23 @@
 
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, UploadCloud, FileText } from 'lucide-react';
+import { Loader2, UploadCloud, FileText, CheckCircle2, X } from 'lucide-react';
 import { uploadCVAction } from '../actions/analyzer.action';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { ExtractedCV } from '../types';
 
 interface CVUploadZoneProps {
     onUploadComplete?: (cvData: ExtractedCV) => void;
+    onRemove?: () => void;
 }
 
 import { useTranslations } from 'next-intl';
 
-export function CVUploadZone({ onUploadComplete }: CVUploadZoneProps) {
+export function CVUploadZone({ onUploadComplete, onRemove }: CVUploadZoneProps) {
     const t = useTranslations('Dashboard.Opportunities.customAnalysis.fileUpload');
     const [isUploading, setIsUploading] = useState(false);
     const [fileName, setFileName] = useState<string | null>(null);
@@ -55,13 +56,20 @@ export function CVUploadZone({ onUploadComplete }: CVUploadZoneProps) {
         }
     }, [onUploadComplete]);
 
+    const handleRemove = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setFileName(null);
+        if (onRemove) onRemove();
+    };
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
             'application/pdf': ['.pdf'],
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
         },
-        maxFiles: 1
+        maxFiles: 1,
+        disabled: !!fileName || isUploading
     });
 
     return (
@@ -69,23 +77,66 @@ export function CVUploadZone({ onUploadComplete }: CVUploadZoneProps) {
             <div 
                 {...getRootProps()} 
                 className={cn(
-                    "relative border-2 border-dashed rounded-xl p-8 transition-all duration-300 cursor-pointer group",
+                    "relative border-2 border-dashed rounded-xl p-8 transition-all duration-500 cursor-pointer group min-h-[160px] flex flex-col items-center justify-center overflow-hidden",
                     isDragActive ? "border-primary bg-primary/5 scale-[0.99]" : "border-primary/10 bg-muted/10 hover:border-primary/30 hover:bg-primary/5",
-                    isUploading && "pointer-events-none opacity-50"
+                    isUploading && "pointer-events-none opacity-50",
+                    fileName && !isUploading && "border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50"
                 )}
             >
                 <input {...getInputProps()} />
                 
-                <div className="flex flex-col items-center justify-center text-center space-y-3">
+                <AnimatePresence mode="wait">
                     {isUploading ? (
-                        <>
-                            <Loader2 className="h-10 w-10 animate-spin text-primary/70" />
+                        <motion.div 
+                            key="uploading"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1.1 }}
+                            className="flex flex-col items-center justify-center text-center space-y-3"
+                        >
+                            <Loader2 className="h-10 w-10 animate-spin text-primary" />
                             <p className="text-[10px] font-mono tracking-widest text-primary uppercase animate-pulse">
                                 {t('dragActive')}
                             </p>
-                        </>
+                        </motion.div>
+                    ) : fileName ? (
+                        <motion.div 
+                            key="success"
+                            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            className="flex flex-col items-center justify-center text-center space-y-4"
+                        >
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full animate-pulse" />
+                                <div className="h-14 w-14 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 relative z-10">
+                                    <CheckCircle2 className="h-7 w-7 text-emerald-500" />
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2 z-10">
+                                <p className="text-xs font-mono tracking-widest text-emerald-500 uppercase font-bold">
+                                    {t('ready')}
+                                </p>
+                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono max-w-[240px] truncate">
+                                    <FileText className="h-3.5 w-3.5 shrink-0" />
+                                    <span className="truncate">{fileName}</span>
+                                    <button 
+                                        type="button"
+                                        onClick={handleRemove}
+                                        className="ml-1 p-1 hover:bg-emerald-500/20 rounded-md transition-colors text-emerald-400/70 hover:text-emerald-400"
+                                    >
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
                     ) : (
-                        <>
+                        <motion.div 
+                            key="empty"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="flex flex-col items-center justify-center text-center space-y-3"
+                        >
                             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                 <UploadCloud className="h-6 w-6 text-primary/70 group-hover:text-primary transition-colors" />
                             </div>
@@ -97,27 +148,20 @@ export function CVUploadZone({ onUploadComplete }: CVUploadZoneProps) {
                                     {t('formats')}
                                 </p>
                             </div>
-                        </>
+                        </motion.div>
                     )}
-                </div>
+                </AnimatePresence>
             </div>
 
-            {fileName && !isUploading && (
-                <div className="flex items-center justify-center animate-in fade-in slide-in-from-top-2">
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-emerald-400 text-[10px] font-mono uppercase tracking-tight">
-                        <FileText className="h-3 w-3" />
-                        <span>{t('ready')}: {fileName}</span>
-                    </div>
+            <div className="flex items-center justify-center">
+                <div className={cn(
+                    "text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded transition-colors duration-500",
+                    fileName ? "text-emerald-500 bg-emerald-500/10" : "text-foreground/60 bg-white/10"
+                )}>
+                    {fileName ? "Transmission Verified" : t('status')}
                 </div>
-            )}
-            
-            {!fileName && !isUploading && (
-                <div className="flex items-center justify-center">
-                    <div className="text-[9px] font-mono uppercase tracking-widest text-foreground/60 bg-white/10 px-2 py-0.5 rounded">
-                        {t('status')}
-                    </div>
-                </div>
-            )}
+            </div>
         </div>
     );
 }
+

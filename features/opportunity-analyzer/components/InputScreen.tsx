@@ -78,6 +78,7 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
                             onUploadComplete={(data) => {
                                 setCvData(data);
                             }} 
+                            onRemove={() => setCvData(null)}
                         />
                     </div>
 
