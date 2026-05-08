@@ -55,6 +55,7 @@ export const analyzeJobAction = async (jobDescription: string, cvData: Extracted
                 company_name: z.string().nullable(),
                 seniority: z.enum(['Intern', 'Junior', 'Mid', 'Senior']).nullable(),
                 employment_type: z.enum(['Full-time', 'Part-time', 'Contract', 'Remote']).nullable(),
+                location: z.string().nullable(),
                 required_skills: z.array(z.string()),
                 preferred_skills: z.array(z.string()),
                 responsibilities: z.array(z.string())
@@ -144,6 +145,7 @@ export const analyzeJobAction = async (jobDescription: string, cvData: Extracted
             match_score: score,
             job_title: jdData.job_title || null,
             company_name: jdData.company_name || null,
+            location: jdData.location || null,
             seniority_level: jdData.seniority || null,
             raw_jd_text: jobDescription,
             extracted_skills: {

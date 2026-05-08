@@ -12,7 +12,7 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
 
         const buffer = await generateResumePdfBuffer(resume);
 
-        return new NextResponse(buffer, {
+        return new NextResponse(new Uint8Array(buffer), {
             headers: {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': `attachment; filename="${(resume.title || 'resume').replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf"`,

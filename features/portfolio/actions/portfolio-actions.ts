@@ -110,9 +110,11 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
     try {
         const parsed = addExternalProjectSchema.safeParse(input);
         if (!parsed.success) {
-            const errorMsg = parsed.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+            const errorMsg = parsed.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
             return { success: false, error: `Invalid input: ${errorMsg}` };
         }
+
+        const { data } = parsed;
 
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();

@@ -94,8 +94,7 @@ export async function getDashboardSummary(
 
             const tComp = stg.topics.filter(t => t.user_status === 'completed').length;
             const pComp = (stg.project?.user_status === 'completed' || 
-                           stg.project?.user_status === 'waiting' || 
-                           stg.project?.user_status === 'skipped') ? 1 : 0;
+                           stg.project?.user_status === 'waiting') ? 1 : 0;
             const totalStageItems = stg.topics.length + (stg.project ? 1 : 0);
 
             topicsData.completed_topics += tComp;

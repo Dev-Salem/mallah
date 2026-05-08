@@ -14,15 +14,15 @@ function registerResumeFonts() {
         Font.register({
             family: 'Inter',
             fonts: [
-                { src: fs.readFileSync(path.join(fontDir, 'Inter-Regular.ttf')), fontWeight: 400 },
-                { src: fs.readFileSync(path.join(fontDir, 'Inter-SemiBold.ttf')), fontWeight: 600 },
-                { src: fs.readFileSync(path.join(fontDir, 'Inter-Bold.ttf')), fontWeight: 700 },
+                { src: fs.readFileSync(path.join(fontDir, 'Inter-Regular.ttf')) as any, fontWeight: 400 },
+                { src: fs.readFileSync(path.join(fontDir, 'Inter-SemiBold.ttf')) as any, fontWeight: 600 },
+                { src: fs.readFileSync(path.join(fontDir, 'Inter-Bold.ttf')) as any, fontWeight: 700 },
             ]
         });
 
         Font.register({
             family: 'JetBrains Mono',
-            src: fs.readFileSync(path.join(fontDir, 'JetBrainsMono-Regular.ttf'))
+            src: fs.readFileSync(path.join(fontDir, 'JetBrainsMono-Regular.ttf')) as any
         });
 
         fontsRegistered = true;

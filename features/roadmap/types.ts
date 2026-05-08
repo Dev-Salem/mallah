@@ -81,6 +81,8 @@ export interface UserProjectSubmission {
     github_url?: string | null;
     demo_url?: string | null;
     personal_note?: string | null;
+    custom_name?: string | null;
+    custom_description?: string | null;
     is_public?: boolean;
     thumbnail_url?: string | null;
     tech_tags?: string[] | null;
@@ -92,6 +94,7 @@ export interface UserProjectSubmission {
     skipped?: boolean | null;
     skipped_at?: string | null;
     updated_at?: string | null;
+    created_at?: string | null;
     latest_review?: ProjectReview | null;
 }
 

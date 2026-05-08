@@ -45,12 +45,12 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
     };
 
     const handleDelete = async () => {
-        if (!confirm(t('confirmDelete' as any || 'Are you sure you want to delete this project?'))) return;
+        if (!confirm(t('confirmDelete' as any) || 'Are you sure you want to delete this project?')) return;
         setIsUpdating(true);
         try {
             const result = await deleteProjectAction(project.id);
             if (result.success) {
-                toast.success(t('projectDeleted' as any || 'Project deleted successfully.'));
+                toast.success(t('projectDeleted' as any) || 'Project deleted successfully.');
                 onOpenChange(false);
             } else {
                 toast.error(result.error);
@@ -129,7 +129,7 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                             {project.completedAt && (
                                 <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase">
                                     <Calendar className="w-3.5 h-3.5" />
-                                    {t('completedDateLabel' as any || 'Completed')}: {new Date(project.completedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                                    {t('completedDateLabel' as any) || 'Completed'}: {new Date(project.completedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                 </div>
                             )}
                         </div>
@@ -181,7 +181,7 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                                         {tech}
                                     </Badge>
                                 )) : (
-                                    <span className="text-xs text-muted-foreground italic font-mono">{t('noStack' as any || 'No stack specified')}</span>
+                                    <span className="text-xs text-muted-foreground italic font-mono">{t('noStack' as any) || 'No stack specified'}</span>
                                 )}
                             </div>
                         </div>
@@ -194,7 +194,7 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                                         {skill.name}
                                     </Badge>
                                 )) : (
-                                    <span className="text-xs text-muted-foreground italic font-mono">{t('noSkills' as any || 'No skills linked')}</span>
+                                    <span className="text-xs text-muted-foreground italic font-mono">{t('noSkills' as any) || 'No skills linked'}</span>
                                 )}
                             </div>
                         </div>

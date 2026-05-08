@@ -1,14 +1,14 @@
 import { createServerClient } from '@supabase/ssr'
-import { type User } from '@supabase/supabase-js'
+import { type User, type SupabaseClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function updateSession(request: NextRequest, existingResponse?: NextResponse): Promise<{ response: NextResponse; user: User | null }> {
+export async function updateSession(request: NextRequest, existingResponse?: NextResponse): Promise<{ response: NextResponse; user: User | null; supabase: SupabaseClient | null }> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error('CRITICAL: Supabase environment variables are missing in middleware.');
-    return { response: existingResponse || NextResponse.next({ request }), user: null };
+    return { response: existingResponse || NextResponse.next({ request }), user: null, supabase: null };
   }
 
   let supabaseResponse = existingResponse || NextResponse.next({
@@ -60,5 +60,5 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
     console.log(`[updateSession] User found: ${user?.id || 'none'}`);
   }
 
-  return { response: supabaseResponse, user }
+  return { response: supabaseResponse, user, supabase }
 }

@@ -43,7 +43,7 @@ export async function proxy(request: NextRequest) {
     const intlResponse = intlMiddleware(request);
     
     // 3. Update Supabase session (refreshes if needed)
-    const { response: finalResponse, user } = await updateSession(request, intlResponse);
+    const { response: finalResponse, user, supabase } = await updateSession(request, intlResponse);
     console.log(`[Middleware] Request: ${pathname}, User: ${user?.id || 'none'}, UA: ${request.headers.get('user-agent')?.slice(0, 50)}...`);
 
     // 4. Extract locale and routing info
@@ -75,27 +75,16 @@ export async function proxy(request: NextRequest) {
       }
 
       // Feature-specific guards (Learner vs Admin)
-      const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          cookies: {
-            getAll() { return request.cookies.getAll() },
-            setAll(cookiesToSet) {
-              cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-              cookiesToSet.forEach(({ name, value, options }) =>
-                finalResponse.cookies.set(name, value, options)
-              )
-            },
-          },
-        }
-      )
 
-      const { data: learner } = await supabase
-        .from('learners')
-        .select('onboarding_completed')
-        .eq('user_id', user.id)
-        .single();
+      let learner = null;
+      if (supabase) {
+        const { data } = await supabase
+          .from('learners')
+          .select('onboarding_completed')
+          .eq('user_id', user.id)
+          .single();
+        learner = data;
+      }
 
       const isDashboardRequest = withoutLocale === '/dashboard' || withoutLocale.startsWith('/dashboard/');
       const isSettingsRequest = withoutLocale === '/settings' || withoutLocale.startsWith('/settings/');

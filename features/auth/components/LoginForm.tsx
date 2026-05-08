@@ -29,11 +29,15 @@ export default function LoginForm() {
         startTransition(async () => {
             const result = await loginAction(data)
             
-            // Note: If loginAction succeeds, it will redirect and this code won't execute.
             if (result && !result.success) {
                 if (result.error) {
                     setServerError(t(result.error))
                 }
+            } else if (result && result.success && result.redirectTo) {
+                // IMPORTANT: Client-side redirect ensures cookies are saved by the browser
+                // before the next page load.
+                router.push(result.redirectTo);
+                router.refresh(); // Force refresh to ensure layout fetches new session
             }
         })
     }

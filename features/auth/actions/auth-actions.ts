@@ -114,8 +114,8 @@ export async function loginAction(
         ? '/admin' 
         : (learner && !learner.onboarding_completed ? '/onboarding' : '/dashboard');
 
-    console.log(`[LoginAction] Success. Server-side redirecting to: ${redirectTo}`);
-    redirect({ href: redirectTo, locale: 'en' }); // Explicitly passing locale for now or relying on current
+    console.log(`[LoginAction] Success. Returning redirectTo: ${redirectTo}`);
+    return { success: true, redirectTo };
 }
 
 export async function forgotPasswordAction(
@@ -163,7 +163,7 @@ export async function signOutAction() {
     const supabase = await createClient()
     await supabase.auth.signOut()
     revalidatePath('/', 'layout')
-    redirect('/')
+    redirect({ href: '/', locale: 'en' })
 }
 
 export async function resendVerificationEmailAction(
