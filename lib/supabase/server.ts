@@ -14,12 +14,15 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
+            console.log(`[ServerClient] setAll called with ${cookiesToSet.length} cookies`);
             cookiesToSet.forEach(({ name, value, options }) => {
               const cookieOptions = {
                 ...options,
+                path: '/', // Ensure path is always root
                 secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax' as const, // explicitly set for dev compatibility
               };
-              console.log(`[ServerClient] Setting cookie: ${name}, Options:`, JSON.stringify(cookieOptions));
+              console.log(`[ServerClient] Setting cookie: ${name}, Value prefix: ${value.slice(0, 10)}... Options:`, JSON.stringify(cookieOptions));
               cookieStore.set(name, value, cookieOptions)
             })
           } catch (error) {

@@ -58,7 +58,13 @@ export async function proxy(request: NextRequest) {
       const loginUrl = new URL(`/${locale}/login`, request.url);
       const redirectResponse = NextResponse.redirect(loginUrl);
       finalResponse.cookies.getAll().forEach(cookie => {
-        redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+        console.log(`[Middleware] Copying cookie to redirect: ${cookie.name}`);
+        redirectResponse.cookies.set(cookie.name, cookie.value, {
+          ...cookie,
+          path: '/',
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+        });
       });
       return redirectResponse;
     }

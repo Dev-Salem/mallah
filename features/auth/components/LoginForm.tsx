@@ -37,7 +37,6 @@ export default function LoginForm() {
                 // IMPORTANT: Client-side redirect ensures cookies are saved by the browser
                 // before the next page load.
                 router.push(result.redirectTo);
-                router.refresh(); // Force refresh to ensure layout fetches new session
             }
         })
     }

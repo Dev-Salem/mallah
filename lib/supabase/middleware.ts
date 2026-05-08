@@ -21,43 +21,44 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll()
+          const allCookies = request.cookies.getAll();
+          console.log(`[updateSession] getAll: Found ${allCookies.length} cookies`);
+          return allCookies;
         },
         setAll(cookiesToSet) {
-          console.log(`[updateSession] Setting cookies: ${cookiesToSet.map(c => c.name).join(', ')}`);
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          console.log(`[updateSession] setAll: Setting ${cookiesToSet.length} cookies`);
           
-          // We don't overwrite supabaseResponse with NextResponse.next() here
-          // because it would lose any existing redirect/rewrite headers from next-intl.
-          // Instead, we just set the cookies on the existing response object.
-          
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
+
           cookiesToSet.forEach(({ name, value, options }) => {
             const cookieOptions = {
               ...options,
+              path: '/', // Always root
               secure: process.env.NODE_ENV === 'production',
+              sameSite: 'lax' as const,
             };
-            console.log(`[updateSession] Setting cookie: ${name}, Options:`, JSON.stringify(cookieOptions));
-            supabaseResponse.cookies.set(name, value, cookieOptions)
-          })
+            console.log(`[updateSession] Response set: ${name}, Options:`, JSON.stringify(cookieOptions));
+            supabaseResponse.cookies.set(name, value, cookieOptions);
+          });
         },
       },
     }
   )
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and getUser(). A simple
-  // mistake can make it very hard to debug issues with emails being sent multiple times.
+  // This will trigger setAll if the session needs refreshing
   const {
     data: { user },
     error,
   } = await supabase.auth.getUser()
 
-  const cookieNames = request.cookies.getAll().map(c => c.name);
-  console.log(`[updateSession] Cookies present: ${cookieNames.join(', ')}`);
-
   if (error) {
-    console.warn(`[updateSession] Error getting user:`, error.message);
+    console.warn(`[updateSession] getUser failed:`, error.message);
+  } else if (user) {
+    console.log(`[updateSession] getUser success: ${user.id}`);
   } else {
-    console.log(`[updateSession] User found: ${user?.id || 'none'}`);
+    console.log(`[updateSession] getUser: No session found`);
   }
 
   return { response: supabaseResponse, user, supabase }
