@@ -67,7 +67,7 @@ export function SkillsTab({ result }: { result: OpportunityAnalysisResult }) {
                             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Required</p>
                             <div className="flex flex-wrap gap-2">
                                 {missing.required.map((s, i) => (
-                                    <Badge key={i} variant="destructive">{s}</Badge>
+                                    <Badge key={i} variant="destructive" className="whitespace-normal h-auto py-1 text-left">{s}</Badge>
                                 ))}
                             </div>
                         </div>
@@ -78,7 +78,7 @@ export function SkillsTab({ result }: { result: OpportunityAnalysisResult }) {
                             <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Preferred</p>
                             <div className="flex flex-wrap gap-2">
                                 {missing.preferred.map((s, i) => (
-                                    <Badge key={i} variant="outline" className="text-muted-foreground">{s}</Badge>
+                                    <Badge key={i} variant="outline" className="text-muted-foreground whitespace-normal h-auto py-1 text-left">{s}</Badge>
                                 ))}
                             </div>
                         </div>
