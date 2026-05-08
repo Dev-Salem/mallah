@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { Loader2, Zap } from 'lucide-react';
+import { Loader2, Zap, CheckCircle2, Check, ShieldCheck } from 'lucide-react';
 import { CVUploadZone } from './CVUploadZone';
 import { ExtractedCV } from '../types';
 import { cn } from '@/lib/utils';
+import { getSavedCVAction } from '../actions/analyzer.action';
 
 interface InputScreenProps {
     onAnalyze: (jdText: string, cvData: ExtractedCV | null) => void;
@@ -21,6 +22,25 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
     const t = useTranslations('Dashboard.Opportunities.customAnalysis');
     const [jdText, setJdText] = useState(initialJD || '');
     const [cvData, setCvData] = useState<ExtractedCV | null>(null);
+    const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCV = async () => {
+            try {
+                const res = await getSavedCVAction();
+                if (res.success && res.data) {
+                    setCvData(res.data);
+                    setUploadedFileName(res.fileName || 'Verified_Resume.pdf');
+                }
+            } catch (err) {
+                console.error("Failed to load existing CV", err);
+            } finally {
+                setIsInitialLoading(false);
+            }
+        };
+        fetchCV();
+    }, []);
 
     useEffect(() => {
         if (initialJD) {
@@ -71,15 +91,34 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-[10px] font-mono tracking-widest text-foreground/70 uppercase px-1">
-                            {t('resumeLabel')}
-                        </label>
+                        <div className="flex items-center gap-2 px-1">
+                            <label className="text-[10px] font-mono tracking-widest text-foreground/70 uppercase">
+                                {t('resumeLabel')}
+                            </label>
+                            {cvData && (
+                                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] animate-in fade-in zoom-in duration-500 group">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 group-hover:scale-110 transition-transform" /> 
+                                    <span className="font-bold tracking-tighter">DATA LINK ACTIVE</span>
+                                </div>
+                            )}
+                        </div>
                         <CVUploadZone 
+                            fileName={uploadedFileName}
+                            onUploadStarted={(name) => setUploadedFileName(name)}
                             onUploadComplete={(data) => {
                                 setCvData(data);
                             }} 
-                            onRemove={() => setCvData(null)}
+                            onRemove={() => {
+                                setCvData(null);
+                                setUploadedFileName(null);
+                            }}
                         />
+                        {cvData && (
+                             <div className="flex items-center gap-2 px-2 py-1 mt-2 text-[9px] font-mono text-emerald-500/60 uppercase tracking-[0.2em] animate-pulse">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,1)]" />
+                                Persistent Analysis Profile Loaded
+                             </div>
+                        )}
                     </div>
 
                     {error && (
@@ -93,7 +132,7 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
                             type="submit" 
                             disabled={isAnalyzing || !isReady} 
                             className={cn(
-                                "w-full py-7 text-sm font-mono tracking-[0.2em] uppercase transition-all duration-500",
+                                "w-full py-7 text-sm font-mono tracking-[0.2em] uppercase transition-all duration-500 relative overflow-hidden",
                                 isReady && !isAnalyzing ? "bg-primary text-white hover:shadow-[0_0_30px_rgba(255,100,0,0.3)] shadow-lg" : "bg-primary/10 text-primary/40 border border-primary/10"
                             )}
                         >
@@ -105,6 +144,12 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
                                 <><Zap className="w-4 h-4 mr-3" /> {t('button.ready')}</>
                             )}
                         </Button>
+                        
+                        {cvData && isReady && !isAnalyzing && (
+                            <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest animate-in slide-in-from-top-2 duration-500">
+                                <CheckCircle2 className="w-3 h-3" /> Full Analysis Mode: CV Included
+                            </div>
+                        )}
                     </div>
                 </form>
             </CardContent>

@@ -7,7 +7,9 @@ const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
 serve(async (req) => {
   try {
-    const { userId, fileName, fileUrl, textContent } = await req.json();
+    const payload = await req.json();
+    console.log('Received payload:', payload);
+    const { userId, fileName, fileUrl, textContent } = payload;
 
     if (!userId || (!fileUrl && !textContent)) {
       return new Response(

@@ -179,6 +179,28 @@ export const deleteAnalysisAction = async (id: string) => {
 };
 
 
+export const getSavedCVAction = async (): Promise<{ success: boolean; data?: ExtractedCV; fileName?: string; error?: string }> => {
+    try {
+        const data = await analyzerService.getCvUpload();
+        if (data) {
+            return { 
+                success: true, 
+                data: {
+                    extracted_skills: data.extracted_skills as any,
+                    experience_years: data.experience_years,
+                    previous_roles: data.previous_roles
+                },
+                fileName: data.file_name
+            };
+        }
+        return { success: true };
+    } catch (e: unknown) {
+        const err = e as Error;
+        console.error("Get Saved CV Error:", err);
+        return { success: false, error: err.message || "Failed to fetch CV" };
+    }
+};
+
 export const uploadCVAction = async (formData: FormData): Promise<{ success: boolean; data?: ExtractedCV; error?: string }> => {
     try {
         const file = formData.get('file') as File;
@@ -203,34 +225,48 @@ export const uploadCVAction = async (formData: FormData): Promise<{ success: boo
             throw new Error(`Upload failed: ${uploadError.message}`);
         }
 
-        // 2. Invoke Edge Function for Parsing
-        // We get the public URL for the function to access
-        const { data: { publicUrl } } = supabase.storage
-            .from('cv-uploads')
-            .getPublicUrl(filePath);
-
-        const { data: functionData, error: functionError } = await supabase.functions.invoke('parse-cv', {
-            body: { 
-                userId: user.id,
-                fileName: file.name,
-                fileUrl: publicUrl
-            }
-        });
-
-        if (functionError) {
-            throw new Error(`Parsing failed: ${functionError.message}`);
+        // 2. Extract Text from PDF locally using pdf-parse
+        let textContent = "";
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const { extractText } = await import('unpdf');
+            const { text } = await extractText(new Uint8Array(arrayBuffer), { mergePages: true });
+            textContent = text;
+        } catch (parseError) {
+            console.error("PDF Parsing failed:", parseError);
+            throw new Error("Failed to extract text from PDF. Ensure the file is a valid PDF.");
         }
 
-        // The edge function returns the CV data under { cv: { ... } }
-        const cvData = functionData.cv;
+        // 3. Parse with OpenAI using our existing Server Action
+        const parseResult = await parseCvAction(textContent);
         
+        if (!parseResult.success || !parseResult.data) {
+            throw new Error(`AI Parsing failed: ${parseResult.error}`);
+        }
+
+        // 4. Save to Database
+        const { error: dbError } = await supabase
+            .from('cv_uploads')
+            .upsert(
+                {
+                    user_id: user.id,
+                    file_name: file.name,
+                    extracted_skills: parseResult.data.extracted_skills,
+                    experience_years: parseResult.data.experience_years,
+                    previous_roles: parseResult.data.previous_roles,
+                    uploaded_at: new Date().toISOString(),
+                },
+                { onConflict: 'user_id' }
+            );
+
+        if (dbError) {
+            console.error("Failed to save CV to database:", dbError);
+            // Non-fatal, we can still return the parsed data
+        }
+
         return { 
             success: true, 
-            data: {
-                extracted_skills: cvData.extracted_skills,
-                experience_years: cvData.experience_years,
-                previous_roles: cvData.previous_roles
-            } 
+            data: parseResult.data 
         };
 
     } catch (e: unknown) {

@@ -12,16 +12,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExtractedCV } from '../types';
 
 interface CVUploadZoneProps {
+    fileName?: string | null;
+    onUploadStarted?: (name: string) => void;
     onUploadComplete?: (cvData: ExtractedCV) => void;
     onRemove?: () => void;
 }
 
 import { useTranslations } from 'next-intl';
 
-export function CVUploadZone({ onUploadComplete, onRemove }: CVUploadZoneProps) {
+export function CVUploadZone({ fileName, onUploadStarted, onUploadComplete, onRemove }: CVUploadZoneProps) {
     const t = useTranslations('Dashboard.Opportunities.customAnalysis.fileUpload');
     const [isUploading, setIsUploading] = useState(false);
-    const [fileName, setFileName] = useState<string | null>(null);
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -32,7 +33,7 @@ export function CVUploadZone({ onUploadComplete, onRemove }: CVUploadZoneProps) 
             return;
         }
 
-        setFileName(file.name);
+        if (onUploadStarted) onUploadStarted(file.name);
         setIsUploading(true);
 
         const formData = new FormData();
@@ -46,19 +47,18 @@ export function CVUploadZone({ onUploadComplete, onRemove }: CVUploadZoneProps) 
                 if (onUploadComplete) onUploadComplete(result.data);
             } else {
                 toast.error(result.error || "Failed to process CV");
-                setFileName(null);
+                if (onRemove) onRemove(); // Reset in parent if failed
             }
         } catch {
             toast.error("Upload failed");
-            setFileName(null);
+            if (onRemove) onRemove(); // Reset in parent if failed
         } finally {
             setIsUploading(false);
         }
-    }, [onUploadComplete]);
+    }, [onUploadStarted, onUploadComplete, onRemove]);
 
     const handleRemove = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setFileName(null);
         if (onRemove) onRemove();
     };
 
