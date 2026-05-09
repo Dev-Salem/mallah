@@ -48,7 +48,7 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
 
   const handleStageUpdate = async (newStage: ApplicationStage) => {
     if (newStage === application.stage) return;
-    
+
     try {
       const res = await updateApplicationAction(application.application_id, { stage: newStage });
       if (res.success) {
@@ -69,12 +69,12 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
       "hover:shadow-2xl hover:shadow-primary/15 hover:border-primary/50",
       isTerminal && "opacity-75 hover:opacity-100"
     )}>
-      <CardContent className="p-5">
+      <CardContent className="px-5 pb-5 pt-3.5">
         <div className="flex items-center justify-between mb-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Badge 
-                variant="outline" 
+              <Badge
+                variant="outline"
                 className={cn(
                   "text-[10px] uppercase tracking-wider font-bold cursor-pointer transition-all",
                   "active:scale-95 hover:opacity-80 focus:ring-2 focus:ring-primary/20",
@@ -86,8 +86,8 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-40">
               {ALL_STAGES.map((s) => (
-                <DropdownMenuItem 
-                  key={s} 
+                <DropdownMenuItem
+                  key={s}
                   onClick={() => handleStageUpdate(s)}
                   className={cn(
                     "text-xs capitalize",
@@ -108,7 +108,7 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
                 </a>
               </Button>
             )}
-            
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -126,7 +126,7 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
                     {t("actions.viewAnalysis")}
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={() => onDelete(application.application_id)}
                   className="text-destructive focus:text-destructive"
                 >
@@ -142,7 +142,7 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
           <h3 className="text-lg font-semibold tracking-tight text-foreground line-clamp-2">
             {application.role_title}
           </h3>
-          
+
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Building2 className="h-3.5 w-3.5" />
@@ -169,7 +169,7 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
           </div>
         )}
       </CardContent>
-      
+
       {/* Visual Accent */}
       <div className={cn(
         "absolute inset-y-0 left-0 w-1",
