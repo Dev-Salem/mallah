@@ -8,7 +8,6 @@ import { PATH_IDS } from "../types";
 import { PATH_CONTENT, getMatchLabel } from "../constants";
 import { CheckCircle2, ArrowRight, Sparkles, Briefcase, Code2, Layers, Cpu, Info } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface StepRecommendationProps {
@@ -35,25 +34,17 @@ export default function StepRecommendation({
         await onAccept(pathId);
     };
 
-    // SVG Ring constants
     const radius = 60;
     const circumference = 2 * Math.PI * radius;
 
-    // AI recommendation view
     if (recommendation && !showAllPaths) {
         const path = PATH_CONTENT[recommendation.recommended_path_id];
         const matchLabel = getMatchLabel(recommendation.match_score);
         const offset = circumference - (recommendation.match_score / 100) * circumference;
 
         return (
-            <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-6xl mx-auto space-y-8"
-            >
-                {/* Header Section */}
+            <div className="w-full max-w-6xl mx-auto space-y-8">
                 <div className="flex flex-col md:flex-row items-center gap-8 md:items-start text-center md:text-left">
-                    {/* SVG Score Ring */}
                     <div className="relative shrink-0 w-40 h-40 flex items-center justify-center">
                         <svg className="w-full h-full -rotate-90">
                             <circle
@@ -63,16 +54,14 @@ export default function StepRecommendation({
                                 className="stroke-muted fill-none"
                                 strokeWidth="8"
                             />
-                            <motion.circle
+                            <circle
                                 cx="80"
                                 cy="80"
                                 r={radius}
                                 className="stroke-primary fill-none"
                                 strokeWidth="8"
                                 strokeDasharray={circumference}
-                                initial={{ strokeDashoffset: circumference }}
-                                animate={{ strokeDashoffset: offset }}
-                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                strokeDashoffset={offset}
                                 strokeLinecap="round"
                             />
                         </svg>
@@ -97,7 +86,6 @@ export default function StepRecommendation({
                             </p>
                         </div>
 
-                        {/* Hybrid Breakdown (Base vs AI) */}
                         <div className="flex flex-wrap gap-4 items-center justify-center md:justify-start">
                             <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground glass px-3 py-1.5 rounded-full border border-white/5">
                                 <Cpu className="w-3.5 h-3.5" />
@@ -117,7 +105,6 @@ export default function StepRecommendation({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Left Column: Why This Path */}
                     <div className="space-y-6">
                         <section className="glass p-6 rounded-2xl border border-white/5 space-y-4 relative overflow-hidden group">
                            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
@@ -135,18 +122,12 @@ export default function StepRecommendation({
                                 )}
                                 <ul className="space-y-3">
                                     {recommendation.reasons.map((reason, i) => (
-                                        <motion.li 
-                                            key={i} 
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: i * 0.1 }}
-                                            className="flex items-start gap-3 text-sm"
-                                        >
+                                        <li key={i} className="flex items-start gap-3 text-sm">
                                             <div className="mt-1 p-0.5 rounded-full bg-primary/20">
                                                 <CheckCircle2 className="w-3 h-3 text-primary shrink-0" />
                                             </div>
                                             <span className="text-foreground/90">{reason}</span>
-                                        </motion.li>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -170,7 +151,6 @@ export default function StepRecommendation({
                         </section>
                     </div>
 
-                    {/* Right Column: Outcomes & Skills */}
                     <div className="space-y-6">
                         <section className="glass p-6 rounded-2xl border border-white/5 space-y-4">
                             <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
@@ -200,14 +180,8 @@ export default function StepRecommendation({
                             </div>
                         </section>
 
-                        {/* Alternatives Section */}
-                        <AnimatePresence>
                         {recommendation.alternatives.length > 0 && (
-                            <motion.section 
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="glass p-6 rounded-2xl border border-white/5 space-y-4"
-                            >
+                            <section className="glass p-6 rounded-2xl border border-white/5 space-y-4">
                                 <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                                     {t("recommendation.alternatives")}
                                 </div>
@@ -224,13 +198,11 @@ export default function StepRecommendation({
                                         </div>
                                     ))}
                                 </div>
-                            </motion.section>
+                            </section>
                         )}
-                        </AnimatePresence>
                     </div>
                 </div>
 
-                {/* Bottom Actions */}
                 <div className="flex flex-col md:flex-row gap-4 pt-6">
                     <Button
                         size="lg"
@@ -260,17 +232,12 @@ export default function StepRecommendation({
                         {t("recommendation.chooseDifferent")}
                     </Button>
                 </div>
-            </motion.div>
+            </div>
         );
     }
 
-    // Manual path selection
     return (
-        <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-4xl mx-auto space-y-8"
-        >
+        <div className="w-full max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
                 <h2 className="text-3xl font-extrabold tracking-tight">{t("manual.title")}</h2>
                 <p className="text-muted-foreground text-lg">{t("manual.subtitle")}</p>
@@ -282,14 +249,11 @@ export default function StepRecommendation({
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-                {PATH_IDS.map((pathId, idx) => {
+                {PATH_IDS.map((pathId) => {
                     const path = PATH_CONTENT[pathId];
                     return (
-                        <motion.button
+                        <button
                             key={pathId}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.1 }}
                             onClick={() => handleAccept(pathId)}
                             disabled={accepting}
                             className={cn(
@@ -320,7 +284,7 @@ export default function StepRecommendation({
                                     <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                                 </div>
                             </div>
-                        </motion.button>
+                        </button>
                     );
                 })}
             </div>
@@ -333,6 +297,6 @@ export default function StepRecommendation({
                     </Button>
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 }

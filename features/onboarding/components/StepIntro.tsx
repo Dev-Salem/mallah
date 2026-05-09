@@ -12,7 +12,7 @@ export default function StepIntro({ onStart }: StepIntroProps) {
     const t = useTranslations("Onboarding");
 
     return (
-        <div className="flex flex-col items-center text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="flex flex-col items-center text-center space-y-8">
             <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center glow-border">
                 <Compass className="w-10 h-10 text-primary" />
             </div>

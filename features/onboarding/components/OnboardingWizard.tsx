@@ -3,10 +3,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import type { OnboardingFormData, OnboardingDraft, WizardStep, BackgroundType, PrimaryGoal, WeeklyHours, AILanguage, AIDetailLevel, ConfidenceItem, AIRecommendationResponse, PathId } from "../types";
 import { WIZARD_STEPS } from "../types";
-import { submitOnboardingAction, acceptPathAction, saveOnboardingDraftAction } from "../actions/onboarding-actions";
+import { submitOnboardingAction, acceptPathAction } from "../actions/onboarding-actions";
 import StepIntro from "./StepIntro";
 import StepIdentity from "./StepIdentity";
 import StepGoal from "./StepGoal";
@@ -26,7 +25,7 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
     const router = useRouter();
 
     const [currentStep, setCurrentStep] = useState<WizardStep>((initialDraft?.currentStep as WizardStep) || "intro");
-    const [formData, setFormData] = useState<Partial<OnboardingFormData>>({
+    const [formData, setFormData] = useState<Partial<OnboardingFormData> >({
         backgroundType: initialDraft?.backgroundType,
         primaryGoal: initialDraft?.primaryGoal,
         weeklyHoursCategory: initialDraft?.weeklyHoursCategory,
@@ -45,13 +44,16 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
     const [error, setError] = useState<string | null>(null);
 
     // Save draft after each step change (except intro, loading, and result steps)
+    // Using fetch instead of a Server Action to avoid the implicit router refresh
+    // that Server Actions trigger, which causes the page to flicker.
     useEffect(() => {
         const skipSteps: WizardStep[] = ["intro", "loading", "recommendation", "manual-selection"];
         if (!skipSteps.includes(currentStep)) {
-            saveOnboardingDraftAction({
-                ...formData,
-                currentStep,
-            });
+            fetch("/api/onboarding/draft", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...formData, currentStep }),
+            }).catch(() => {/* fire-and-forget, ignore errors */});
         }
     }, [currentStep, formData]);
 
@@ -136,11 +138,9 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
             {/* Progress bar */}
             {!isResultStep && currentStep !== "intro" && currentStep !== "loading" && (
                 <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted">
-                    <motion.div
+                    <div
                         className="h-full bg-primary"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progressPercent}%` }}
-                        transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                        style={{ width: progressPercent + "%" }}
                     />
                 </div>
             )}
@@ -150,15 +150,10 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
                 "relative z-10 w-full mx-auto px-4 py-12 transition-all duration-700 ease-in-out",
                 isResultStep ? "max-w-6xl" : "max-w-2xl"
             )}>
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentStep}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                    >
-                        {currentStep === "intro" && (
+                <div
+                    key={currentStep}
+                >
+                    {currentStep === "intro" && (
                             <StepIntro onStart={() => setCurrentStep("identity")} />
                         )}
 
@@ -242,9 +237,8 @@ export default function OnboardingWizard({ initialDraft }: OnboardingWizardProps
                                 onAccept={handleAcceptPath}
                             />
                         )}
-                    </motion.div>
-                </AnimatePresence>
+                    </div>
+                </div>
             </div>
-        </div>
     );
 }

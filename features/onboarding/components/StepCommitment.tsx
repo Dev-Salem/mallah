@@ -22,7 +22,7 @@ export default function StepCommitment({ value, onSelect, onBack }: StepCommitme
     const velocity = preview ? VELOCITY_MAP[preview] : null;
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-400">
+        <div className="space-y-8">
             <div className="space-y-2">
                 <p className="text-sm text-primary font-medium tracking-wide uppercase">
                     {t("stepLabel", { step: 3, total: 6 })}
@@ -53,7 +53,7 @@ export default function StepCommitment({ value, onSelect, onBack }: StepCommitme
 
             {/* Live milestone preview */}
             {milestoneWeeks && velocity && (
-                <div className="glass rounded-xl p-4 flex items-start gap-3 animate-in fade-in duration-300">
+                <div className="glass rounded-xl p-4 flex items-start gap-3">
                     <Zap className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                     <p className="text-sm text-muted-foreground">
                         {t("commitment.preview", { weeks: milestoneWeeks })}
