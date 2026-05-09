@@ -1,10 +1,10 @@
 import { getTranslations } from 'next-intl/server'
-import { getAdminPaths } from '../../../../../../../features/admin/actions/admin-content-actions'
+import { getAdminPathsWithFullContent } from '../../../../../../../features/admin/actions/admin-content-actions'
 import { TopicsBrowser } from '../../../../../../../features/admin/components/content/topics-browser'
 
 export default async function AdminTopicsPage() {
   const t = await getTranslations('Admin.Content.Topics')
-  const paths = await getAdminPaths()
+  const paths = await getAdminPathsWithFullContent()
 
   return (
     <div className="space-y-6">

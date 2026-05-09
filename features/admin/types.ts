@@ -126,6 +126,18 @@ export interface AdminResource {
   order_index: number;
 }
 
+export interface AdminTopicWithResources extends AdminTopic {
+  resources: AdminResource[];
+}
+
+export interface AdminStageWithTopics extends Omit<AdminStage, 'topic_count'> {
+  topics: AdminTopicWithResources[];
+}
+
+export interface AdminPathWithFullContent extends Omit<AdminPath, 'stage_count'> {
+  stages: AdminStageWithTopics[];
+}
+
 export interface AdminSkill {
   skill_id: string;
   name: string;

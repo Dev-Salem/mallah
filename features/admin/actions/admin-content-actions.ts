@@ -18,6 +18,9 @@ import type {
   PathOverview,
   ContentWarning,
   AdminUser,
+  AdminPathWithFullContent,
+  AdminStageWithTopics,
+  AdminTopicWithResources,
 } from '../types'
 
 const ADMIN_BASE = 'admin'
@@ -428,7 +431,121 @@ export async function deleteTopic(topicId: string): Promise<AdminActionResult> {
   return { success: true }
 }
 
-// ─── Resources CRUD ───
+// ─── Full Content Fetch (for hierarchical view) ───
+export async function getAdminPathsWithFullContent(): Promise<AdminPathWithFullContent[]> {
+  const admin = await requireAdmin()
+  const db = getSupabaseAdmin()
+
+  // 1. Fetch all paths
+  const { data: paths } = await db
+    .from('paths')
+    .select('path_id, name, short_description, is_active')
+    .order('name')
+
+  if (!paths) return []
+
+  // 2. Fetch all stages, topics, and resources in parallel
+  const [stagesRes, topicsRes, resourcesRes, learnerCountsData] = await Promise.all([
+    db.from('stages').select('*').order('order_index'),
+    db.from('topics').select('*').order('order_index'),
+    db.from('topic_resources').select('*').order('order_index'),
+    Promise.all(paths.map(async (p) => {
+      const { count } = await db
+        .from('learners')
+        .select('*', { count: 'exact', head: true })
+        .eq('current_path_id', p.path_id)
+      return { path_id: p.path_id, learner_count: count || 0 }
+    }))
+  ])
+
+  const stagesData = stagesRes.data || []
+  const topicsData = topicsRes.data || []
+  const resourcesData = resourcesRes.data || []
+
+  const learnerCountMap = new Map(learnerCountsData.map(d => [d.path_id, d.learner_count]))
+
+  // Build nested structure
+  const stagesMap = new Map<string, AdminStageWithTopics>()
+  const topicsMap = new Map<string, AdminTopicWithResources>()
+
+  // Initialize topics with empty resources
+  for (const topic of topicsData) {
+    topicsMap.set(topic.topic_id, { ...topic, resources: [] })
+  }
+
+  // Add resources to topics
+  for (const resource of resourcesData) {
+    const topic = topicsMap.get(resource.topic_id)
+    if (topic) {
+      topic.resources.push(resource)
+    }
+  }
+
+  // Initialize stages with topics
+  for (const stage of stagesData) {
+    stagesMap.set(stage.stage_id, {
+      stage_id: stage.stage_id,
+      path_id: stage.path_id,
+      title: stage.title,
+      description: stage.description,
+      difficulty_level: stage.difficulty_level,
+      order_index: stage.order_index,
+      learner_count: 0,
+      topics: [],
+    })
+  }
+
+  // Group topics into stages
+  for (const topic of topicsMap.values()) {
+    const stage = stagesMap.get(topic.stage_id)
+    if (stage) {
+      stage.topics.push(topic)
+    }
+  }
+
+  // Build final paths with nested stages
+  return paths.map(p => {
+    const pathStages = Array.from(stagesMap.values())
+      .filter(s => s.path_id === p.path_id)
+      .sort((a, b) => a.order_index - b.order_index)
+    return {
+      path_id: p.path_id,
+      name: p.name,
+      short_description: p.short_description || '',
+      is_active: p.is_active,
+      learner_count: learnerCountMap.get(p.path_id) || 0,
+      stages: pathStages,
+    }
+  })
+}
+
+// ─── Stage Reordering ───
+export async function reorderStage(stageId: string, newOrderIndex: number): Promise<AdminActionResult> {
+  const admin = await requireAdmin()
+  const db = getSupabaseAdmin()
+
+  const { error } = await db.from('stages').update({ order_index: newOrderIndex }).eq('stage_id', stageId)
+  if (error) return { success: false, error: error.message }
+
+  await logAdminEvent(admin.userId, 'stage_reordered', `Admin ${admin.email} reordered Stage ${stageId} to index ${newOrderIndex}`, 'stage')
+
+  revalidatePath(`/${ADMIN_BASE}`)
+  return { success: true }
+}
+
+// ─── Topic Reordering ───
+export async function reorderTopic(topicId: string, newOrderIndex: number): Promise<AdminActionResult> {
+  const admin = await requireAdmin()
+  const db = getSupabaseAdmin()
+
+  const { error } = await db.from('topics').update({ order_index: newOrderIndex }).eq('topic_id', topicId)
+  if (error) return { success: false, error: error.message }
+
+  await logAdminEvent(admin.userId, 'topic_reordered', `Admin ${admin.email} reordered Topic ${topicId} to index ${newOrderIndex}`, 'topic')
+
+  revalidatePath(`/${ADMIN_BASE}`)
+  return { success: true }
+}
 export async function getResourcesForTopic(topicId: string) {
   const admin = await requireAdmin()
   const db = getSupabaseAdmin()
@@ -481,6 +598,36 @@ export async function deleteResource(resourceId: string): Promise<AdminActionRes
     admin.userId,
     'resource_deleted',
     `Admin ${admin.email} deleted resource ${resourceId}`,
+    'resource'
+  )
+
+  revalidatePath(`/${ADMIN_BASE}`)
+  return { success: true }
+}
+
+export async function updateResource(
+  resourceId: string,
+  data: {
+    resource_type?: string
+    title?: string
+    url?: string
+    content?: string
+    provider?: string
+    cost_type?: string
+    cost_note?: string
+    order_index?: number
+  }
+): Promise<AdminActionResult> {
+  const admin = await requireAdmin()
+  const db = getSupabaseAdmin()
+
+  const { error } = await db.from('topic_resources').update(data).eq('resource_id', resourceId)
+  if (error) return { success: false, error: error.message }
+
+  await logAdminEvent(
+    admin.userId,
+    'resource_edited',
+    `Admin ${admin.email} edited resource ${resourceId}`,
     'resource'
   )
 
