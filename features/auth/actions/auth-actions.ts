@@ -111,7 +111,7 @@ export async function loginAction(
     }
 
     const redirectTo = learner?.role === 'admin' 
-        ? '/admin' 
+        ? '/admin/dashboard' 
         : (learner && !learner.onboarding_completed ? '/onboarding' : '/dashboard');
 
     console.log(`[LoginAction] Success. Returning redirectTo: ${redirectTo}`);

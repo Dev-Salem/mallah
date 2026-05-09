@@ -11,9 +11,10 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   
   // Convenience redirect for /admin
-  if (pathname === '/admin') {
-    const locale = request.cookies.get('NEXT_LOCALE')?.value || 'en'
-    return NextResponse.redirect(new URL(`/${locale}/admin`, request.url))
+  const isLocalizedAdmin = pathname === '/en/admin' || pathname === '/ar/admin'
+  if (pathname === '/admin' || isLocalizedAdmin) {
+    const locale = isLocalizedAdmin ? pathname.split('/')[1] : (request.cookies.get('NEXT_LOCALE')?.value || 'en')
+    return NextResponse.redirect(new URL(`/${locale}/admin/dashboard`, request.url))
   }
 
   // 1. Update session (Supabase)

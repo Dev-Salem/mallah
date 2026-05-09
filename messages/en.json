@@ -971,7 +971,9 @@
         "stages": "Stages",
         "deactivateConfirm": "{count} navigators are currently enrolled in this path. Deactivating prevents new enrollments but does not remove existing progress. Continue?",
         "slugPlaceholder": "auto-generated-slug",
-        "visibleToAll": "Visible to all navigators"
+        "visibleToAll": "Visible to all navigators",
+        "addDescription": "Create a new professional roadmap for navigators.",
+        "editDescription": "Modify the current path structure and properties."
       },
       "Stages": {
         "title": "Stages",
