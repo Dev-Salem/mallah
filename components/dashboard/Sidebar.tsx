@@ -83,8 +83,6 @@ export function Sidebar() {
       href: '/dashboard/tracker', 
       icon: ClipboardList, 
       label: t('Tracker.title'),
-      showDot: sidebarData?.hasActiveApplications ?? false,
-      dotColor: 'bg-amber-500'
     },
   ];
 
@@ -144,10 +142,7 @@ export function Sidebar() {
                   {item.label}
                 </span>
 
-                {/* Amber dot indicator */}
-                {'showDot' in item && item.showDot && (
-                  <div className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                )}
+
 
                 {isActive && (
                   <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
