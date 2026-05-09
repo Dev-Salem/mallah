@@ -309,7 +309,8 @@
         "delete": "Delete",
         "confirmDelete": "Confirm Delete",
         "viewAnalysis": "View Analysis"
-      }
+      },
+      "statusUpdated": "Status updated successfully"
     }
   },
   "Roadmap": {

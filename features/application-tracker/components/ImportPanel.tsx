@@ -83,7 +83,7 @@ export function ImportPanel({ onSelect, selectedId }: ImportPanelProps) {
                 "group w-full flex items-center justify-between p-3 rounded-lg border text-left transition-all duration-200",
                 selectedId === analysis.analysis_id
                   ? "bg-primary/5 border-primary ring-1 ring-primary"
-                  : "bg-background hover:bg-muted/50 border-muted"
+                  : "bg-card/60 backdrop-blur-md hover:bg-muted/50 border-border dark:border-white/20"
               )}
             >
               <div className="flex-1 min-w-0">

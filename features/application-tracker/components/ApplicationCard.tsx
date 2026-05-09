@@ -14,6 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { updateApplicationAction } from "../actions/tracker.actions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { ApplicationStage } from "../types";
+
+const ALL_STAGES: ApplicationStage[] = [
+  "saved", "applied", "in_review", "interviewing", "offer", "accepted", "rejected", "withdrawn"
+];
 
 interface ApplicationCardProps {
   application: JobApplication;
@@ -35,42 +43,62 @@ const STAGE_COLORS: Record<string, string> = {
 
 export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis }: ApplicationCardProps) {
   const t = useTranslations("Dashboard.Tracker");
+  const router = useRouter();
   const isTerminal = ["rejected", "withdrawn", "accepted"].includes(application.stage);
+
+  const handleStageUpdate = async (newStage: ApplicationStage) => {
+    if (newStage === application.stage) return;
+    
+    try {
+      const res = await updateApplicationAction(application.application_id, { stage: newStage });
+      if (res.success) {
+        toast.success(t("statusUpdated") || "Status updated");
+        router.refresh();
+      } else {
+        toast.error(res.error || "Failed to update status");
+      }
+    } catch (error) {
+      toast.error("An error occurred");
+    }
+  };
 
   return (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/5",
+      "group relative overflow-hidden transition-all duration-300",
+      "border-border dark:border-white/20 bg-card/60 backdrop-blur-md",
+      "hover:shadow-2xl hover:shadow-primary/15 hover:border-primary/50",
       isTerminal && "opacity-75 hover:opacity-100"
     )}>
       <CardContent className="p-5">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 space-y-1">
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold tracking-tight text-foreground line-clamp-1">
-                {application.role_title}
-              </h3>
-              <Badge variant="outline" className={cn("text-[10px] uppercase tracking-wider font-bold", STAGE_COLORS[application.stage])}>
+        <div className="flex items-center justify-between mb-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Badge 
+                variant="outline" 
+                className={cn(
+                  "text-[10px] uppercase tracking-wider font-bold cursor-pointer transition-all",
+                  "active:scale-95 hover:opacity-80 focus:ring-2 focus:ring-primary/20",
+                  STAGE_COLORS[application.stage]
+                )}
+              >
                 {t(`stages.${application.stage}`)}
               </Badge>
-            </div>
-            
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Building2 className="h-3.5 w-3.5" />
-                <span>{application.company_name}</span>
-              </div>
-              {application.location && (
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span>{application.location}</span>
-                </div>
-              )}
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5" />
-                <span>{format(new Date(application.date), "MMM d, yyyy")}</span>
-              </div>
-            </div>
-          </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-40">
+              {ALL_STAGES.map((s) => (
+                <DropdownMenuItem 
+                  key={s} 
+                  onClick={() => handleStageUpdate(s)}
+                  className={cn(
+                    "text-xs capitalize",
+                    application.stage === s && "bg-primary/10 font-medium text-primary"
+                  )}
+                >
+                  {t(`stages.${s}`)}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <div className="flex items-center gap-1">
             {application.posting_url && (
@@ -107,6 +135,29 @@ export function ApplicationCard({ application, onEdit, onDelete, onViewAnalysis 
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <h3 className="text-lg font-semibold tracking-tight text-foreground line-clamp-2">
+            {application.role_title}
+          </h3>
+          
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <Building2 className="h-3.5 w-3.5" />
+              <span>{application.company_name}</span>
+            </div>
+            {application.location && (
+              <div className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5" />
+                <span>{application.location}</span>
+              </div>
+            )}
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" />
+              <span>{format(new Date(application.date), "MMM d, yyyy")}</span>
+            </div>
           </div>
         </div>
 

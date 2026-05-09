@@ -309,7 +309,8 @@
         "delete": "حذف",
         "confirmDelete": "تأكيد الحذف",
         "viewAnalysis": "عرض التحليل"
-      }
+      },
+      "statusUpdated": "تم تحديث الحالة بنجاح"
     }
   },
   "Roadmap": {
