@@ -11,7 +11,7 @@ import {
   cloneResume,
   updateResumeTypeAndJD,
 } from "../services/resume-service";
-import { parseJobDescription, improveResumeText } from "../services/ai-service";
+import { parseJobDescription, improveResumeText, improveResumeBullets } from "../services/ai-service";
 import { calculateATSScore, PATH_BASELINES } from "../services/ats-service";
 import { createClient } from "@/lib/supabase/server";
 import { SourceJDShape, WhatChangedSummary } from "../types";
@@ -144,6 +144,19 @@ export async function aiImproveAction(
   return await improveResumeText({
     text,
     sectionType,
+    pathId,
+    primaryGoal,
+    languagePref: "en",
+  });
+}
+
+export async function aiImproveBulletsAction(
+  bullets: string[],
+  pathId: string,
+  primaryGoal: string
+) {
+  return await improveResumeBullets({
+    bullets,
     pathId,
     primaryGoal,
     languagePref: "en",

@@ -23,7 +23,6 @@ export default async function AdminDashboardPage() {
     getCurrentAdmin(),
   ])
 
-  const adminBasePath = process.env.ADMIN_PANEL_PATH || ''
 
   return (
     <div className="space-y-8">
@@ -38,11 +37,10 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <DashboardStatsCards stats={stats} adminBasePath={adminBasePath} />
+      <DashboardStatsCards stats={stats} />
 
       {/* Quick Actions */}
       <QuickActions
-        adminBasePath={adminBasePath}
         isSuperAdmin={admin?.adminLevel === 'super'}
       />
 

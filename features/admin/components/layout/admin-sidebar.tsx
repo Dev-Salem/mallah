@@ -29,7 +29,6 @@ import type { AdminLevel } from '../../types'
 interface AdminSidebarProps {
   displayName: string
   adminLevel: AdminLevel
-  adminBasePath: string
 }
 
 interface NavItem {
@@ -41,7 +40,7 @@ interface NavItem {
   children?: { id: string; labelKey: string; href: string; icon: React.ElementType }[]
 }
 
-export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSidebarProps) {
+export function AdminSidebar({ displayName, adminLevel }: AdminSidebarProps) {
   const t = useTranslations('Admin.Sidebar')
   const locale = useLocale()
   const pathname = usePathname()
@@ -53,7 +52,7 @@ export function AdminSidebar({ displayName, adminLevel, adminBasePath }: AdminSi
     setMounted(true)
   }, [])
 
-  const base = `/${locale}/${adminBasePath}`
+  const base = `/${locale}/admin`
 
   const navItems: NavItem[] = [
     {

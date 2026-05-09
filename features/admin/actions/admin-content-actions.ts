@@ -20,7 +20,7 @@ import type {
   AdminUser,
 } from '../types'
 
-const ADMIN_BASE = process.env.ADMIN_PANEL_PATH || ''
+const ADMIN_BASE = 'admin'
 
 // ─── Authorization Helper ───
 async function requireAdmin(level: 'normal' | 'super' = 'normal') {

@@ -66,3 +66,48 @@ Rules:
         throw new Error("AI features are currently unavailable.");
     }
 }
+
+export async function improveResumeBullets({
+    bullets,
+    pathId,
+    primaryGoal,
+    languagePref
+}: {
+    bullets: string[];
+    pathId?: string | null;
+    primaryGoal?: string | null;
+    languagePref?: string | null;
+}) {
+    try {
+        const promptContext = `
+Learner Path: ${pathId || 'General'}
+Primary Goal: ${primaryGoal || 'Getting a job'}
+Language Preference: ${languagePref || 'en'}
+
+Original bullets:
+${bullets.map((b, i) => `${i + 1}. ${b}`).join("\n")}`;
+
+        const { text: improvedBullets } = await generateText({
+            model: MODEL,
+            maxRetries: 2,
+            system: `You are an expert resume writer. Rewrite the provided resume bullet points to be more impactful using the XYZ method (Accomplished [X] as measured by [Y], by doing [Z]) or the STAR method (Situation, Task, Action, Result). 
+Rules:
+1. Use strong action verbs.
+2. Be concise and impactful.
+3. Quantify results where possible. If metrics are missing, use placeholders like "[X%]" or "[amount]" to indicate where the user should add data.
+4. ONLY return the rewritten bullets, one per line, numbered.
+5. Write in the requested language preference (en = English, ar = Arabic, mix = Mix of both).
+6. Do NOT invent new facts, but restructure existing ones.`,
+            prompt: `Improve these bullets: \n${promptContext}`
+        });
+
+        return improvedBullets
+            .trim()
+            .split("\n")
+            .map((l) => l.replace(/^\d+\.\s*/, "").trim())
+            .filter((l) => l.length > 0);
+    } catch (e) {
+        console.error("AI Bullet Improve Error:", e);
+        throw new Error("AI features are currently unavailable.");
+    }
+}

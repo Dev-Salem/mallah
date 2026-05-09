@@ -20,9 +20,7 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const adminBasePath = typeof window !== 'undefined'
-    ? window.location.pathname.replace(/^\/(en|ar)\//, '/').split('/')[1]
-    : ''
+  const adminBasePath = 'admin'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

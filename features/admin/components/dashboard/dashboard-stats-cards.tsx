@@ -1,17 +1,16 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import Link from 'next/link'
+import { Link } from '@/lib/i18n/routing'
 import { Users, CheckCircle2, AlertTriangle, Lightbulb } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import type { DashboardStats } from '../../types'
 
 interface DashboardStatsCardsProps {
   stats: DashboardStats
-  adminBasePath: string
 }
 
-export function DashboardStatsCards({ stats, adminBasePath }: DashboardStatsCardsProps) {
+export function DashboardStatsCards({ stats }: DashboardStatsCardsProps) {
   const t = useTranslations('Admin.Dashboard.Stats')
 
   const cards = [
@@ -21,7 +20,7 @@ export function DashboardStatsCards({ stats, adminBasePath }: DashboardStatsCard
       icon: Users,
       color: 'text-primary',
       bgColor: 'bg-primary/10',
-      href: `/${adminBasePath}/learners`,
+      href: `/admin/learners`,
     },
     {
       label: t('activeThisWeek'),
@@ -43,7 +42,7 @@ export function DashboardStatsCards({ stats, adminBasePath }: DashboardStatsCard
       icon: AlertTriangle,
       color: 'text-info',
       bgColor: 'bg-info/10',
-      href: `/${adminBasePath}/skills?filter=pending`,
+      href: `/admin/skills?filter=pending`,
     },
   ]
 

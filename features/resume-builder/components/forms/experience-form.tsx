@@ -13,9 +13,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Trash2, X, Edit2 } from "lucide-react";
+import { Plus, Trash2, Edit2, Sparkles, Loader2 } from "lucide-react";
+import { aiImproveBulletsAction } from "../../actions/resume-actions";
+import { InlineDiffPanel } from "../editor/inline-diff-panel";
 interface Props {
   initialData: any;
   onChange: (data: any) => void;
@@ -179,6 +182,11 @@ function ExperienceSubForm({
     },
   });
 
+  const [isImproving, setIsImproving] = useState(false);
+  const [improvingIndex, setImprovingIndex] = useState<number | null>(null);
+  const [originalText, setOriginalText] = useState("");
+  const [suggestedText, setSuggestedText] = useState("");
+
   const isCurrent = form.watch("current");
   const bullets = form.watch("bullets") || [""];
 
@@ -196,6 +204,39 @@ function ExperienceSubForm({
     const next = [...bullets];
     next.splice(idx, 1);
     form.setValue("bullets", next, { shouldValidate: true });
+  };
+
+  const handleAIImprove = async (idx: number) => {
+    const bulletText = bullets[idx];
+    if (!bulletText?.trim()) return;
+
+    setIsImproving(true);
+    setImprovingIndex(idx);
+    setOriginalText(bulletText);
+
+    try {
+      const improved = await aiImproveBulletsAction(
+        [bulletText],
+        "frontend",
+        "Getting a job"
+      );
+      setSuggestedText(improved[0]);
+    } catch {
+      // Errors handled by server action
+    } finally {
+      setIsImproving(false);
+    }
+  };
+
+  const handleAcceptSuggestion = (idx: number, text: string) => {
+    const nextBullets = [...bullets];
+    nextBullets[idx] = text;
+    form.setValue("bullets", nextBullets, { shouldValidate: true, shouldDirty: true });
+    setImprovingIndex(null);
+  };
+
+  const handleRejectSuggestion = () => {
+    setImprovingIndex(null);
   };
 
   const onSubmit = (values: ExperienceEntryFormType) => {
@@ -310,28 +351,60 @@ function ExperienceSubForm({
 
         <div className="space-y-2 pt-4">
           <FormLabel>{t("KeyAchievements")}</FormLabel>
-          {bullets.map((bullet, idx) => (
-            <div key={idx} className="flex gap-2 items-center">
-              <span className="text-muted-foreground text-xs w-4 shrink-0">•</span>
-              <Input
-                placeholder={t("BulletPlaceholder")}
-                value={bullet}
-                onChange={(e) => updateBullet(idx, e.target.value)}
-                className="flex-1"
-              />
-              {bullets.length > 1 && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 px-2 text-muted-foreground hover:text-destructive"
-                  onClick={() => removeBullet(idx)}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          ))}
+
+
+          <div className="space-y-3">
+            {bullets.map((bullet, idx) => (
+              <div key={idx} className="space-y-2">
+                <div className="flex gap-2">
+                  <span className="text-muted-foreground text-xs w-4 shrink-0 mt-2.5">•</span>
+                  <Textarea
+                    placeholder={t("BulletPlaceholder")}
+                    value={bullet}
+                    onChange={(e) => updateBullet(idx, e.target.value)}
+                    className="flex-1 min-h-[60px] resize-none"
+                  />
+                  
+                  <div className="flex flex-col gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
+                      onClick={() => handleAIImprove(idx)}
+                      disabled={isImproving || !bullet.trim() || (improvingIndex !== null && improvingIndex !== idx)}
+                    >
+                      {isImproving && improvingIndex === idx ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-3.5 h-3.5" />
+                      )}
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => removeBullet(idx)}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+
+                {improvingIndex === idx && (
+                  <InlineDiffPanel
+                    originalText={originalText}
+                    suggestedText={suggestedText}
+                    onAccept={() => handleAcceptSuggestion(idx, suggestedText)}
+                    onReject={handleRejectSuggestion}
+                    isLoading={isImproving}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           <Button
             type="button"
             variant="ghost"

@@ -1,4 +1,4 @@
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 import { updateSession } from '@/lib/supabase/middleware'
 
@@ -7,7 +7,15 @@ import { routing } from './lib/i18n/routing'
 
 const intlMiddleware = createIntlMiddleware(routing)
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+  
+  // Convenience redirect for /admin
+  if (pathname === '/admin') {
+    const locale = request.cookies.get('NEXT_LOCALE')?.value || 'en'
+    return NextResponse.redirect(new URL(`/${locale}/admin`, request.url))
+  }
+
   // 1. Update session (Supabase)
   let response = await updateSession(request)
   
@@ -17,7 +25,6 @@ export async function proxy(request: NextRequest) {
   }
 
   // Skip intl for auth and api routes
-  const pathname = request.nextUrl.pathname
   if (pathname.startsWith('/auth') || pathname.startsWith('/api')) {
     return response
   }
