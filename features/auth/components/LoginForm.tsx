@@ -9,12 +9,15 @@ import { loginSchema, type LoginFormData } from '../types'
 import { loginAction } from '../actions/auth-actions'
 import { Link } from '@/lib/i18n/routing'
 import { Button } from '@/components/ui/button'
+import { Eye, EyeOff } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function LoginForm() {
     const t = useTranslations('Auth')
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const [serverError, setServerError] = useState<string | null>(null)
+    const [showPassword, setShowPassword] = useState(false)
 
     const {
         register,
@@ -31,7 +34,9 @@ export default function LoginForm() {
             
             if (result && !result.success) {
                 if (result.error) {
-                    setServerError(t(result.error))
+                    const message = t(result.error)
+                    setServerError(message)
+                    toast.error(message)
                 }
             } else if (result && result.success && result.redirectTo) {
                 // IMPORTANT: Use window.location.href for login success to ensure
@@ -66,14 +71,28 @@ export default function LoginForm() {
                 <label htmlFor="password" className="text-sm font-medium text-muted-foreground">
                     {t('login.passwordLabel')}
                 </label>
-                <input
-                    id="password"
-                    type="password"
-                    autoComplete="current-password"
-                    {...register('password')}
-                    className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm"
-                    placeholder="••••••••"
-                />
+                <div className="relative">
+                    <input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        autoComplete="current-password"
+                        {...register('password')}
+                        className="w-full px-4 py-3 glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all font-mono text-sm pr-12"
+                        placeholder="••••••••"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-primary transition-colors p-1"
+                        tabIndex={-1}
+                    >
+                        {showPassword ? (
+                            <EyeOff className="w-4 h-4" />
+                        ) : (
+                            <Eye className="w-4 h-4" />
+                        )}
+                    </button>
+                </div>
                 {errors.password && (
                     <span className="text-xs text-red-400">{t(errors.password.message!)}</span>
                 )}

@@ -11,9 +11,8 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
     return { response: existingResponse || NextResponse.next({ request }), user: null, supabase: null };
   }
 
-  let supabaseResponse = existingResponse || NextResponse.next({
-    request,
-  })
+  // Use the existing response or create a new one
+  let supabaseResponse = existingResponse || NextResponse.next({ request })
 
   const supabase = createServerClient(
     supabaseUrl,
@@ -21,35 +20,27 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
     {
       cookies: {
         getAll() {
-          const allCookies = request.cookies.getAll();
-          const cookieNames = allCookies.map(c => c.name).join(', ');
-          console.log(`[updateSession] getAll: Found ${allCookies.length} cookies (${cookieNames})`);
-          return allCookies;
+          return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          console.log(`[updateSession] setAll: Setting ${cookiesToSet.length} cookies`);
-          
-          cookiesToSet.forEach(({ name, value }) => {
-            // Update request cookies for downstream logic
-            request.cookies.set(name, value);
-          });
+          // Update request cookies for downstream reads
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
 
-          cookiesToSet.forEach(({ name, value, options }) => {
-            const cookieOptions = {
-              ...options,
-              path: '/', // Always root
-              secure: process.env.NODE_ENV === 'production',
-              sameSite: 'lax' as const,
-            };
-            console.log(`[updateSession] Response set: ${name}, Options:`, JSON.stringify(cookieOptions));
-            supabaseResponse.cookies.set(name, value, cookieOptions);
-          });
+          // If no existing response was passed, recreate it per the canonical pattern
+          // so the new request cookies are carried forward
+          if (!existingResponse) {
+            supabaseResponse = NextResponse.next({ request })
+          }
+
+          // Set cookies on the response so the browser stores them
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
         },
       },
     }
   )
 
-  // This will trigger setAll if the session needs refreshing
   const {
     data: { user },
     error,
@@ -57,10 +48,6 @@ export async function updateSession(request: NextRequest, existingResponse?: Nex
 
   if (error) {
     console.warn(`[updateSession] getUser failed:`, error.message);
-  } else if (user) {
-    console.log(`[updateSession] getUser success: ${user.id}`);
-  } else {
-    console.log(`[updateSession] getUser: No session found`);
   }
 
   return { response: supabaseResponse, user, supabase }

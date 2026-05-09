@@ -13,16 +13,16 @@ export default async function CheckEmailPage() {
     return (
         <div className="relative min-h-screen bg-background flex items-center justify-center p-6 overflow-hidden">
             {/* Visual Infrastructure */}
-            <div className="fixed inset-0 noise z-[100] mix-blend-overlay pointer-events-none" />
-            <div className="fixed inset-0 hud-grid opacity-[0.4] pointer-events-none" />
-            <div className="fixed inset-0 scanline z-[101] pointer-events-none" />
+            <div className="fixed inset-0 noise z-[100] mix-blend-overlay opacity-50 dark:opacity-100 pointer-events-none" />
+            <div className="fixed inset-0 hud-grid opacity-[0.05] dark:opacity-[0.4] pointer-events-none" />
+            <div className="fixed inset-0 scanline z-[101] pointer-events-none opacity-20 dark:opacity-100" />
 
             <div className="relative z-10 w-full max-w-md">
                 <div className="text-center mb-12">
                     <div className="inline-block transform mb-8 p-1 border border-primary/20 glass">
                         <Mail size={48} className="text-primary m-4" />
                     </div>
-                    <h1 className={`text-3xl font-black text-white mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
+                    <h1 className={`text-3xl font-black text-foreground mb-2 uppercase ${locale !== 'ar' ? 'tracking-tighter' : ''}`}>
                         {t('checkEmail.title')}
                     </h1>
                 </div>
@@ -31,7 +31,7 @@ export default async function CheckEmailPage() {
                     <div className="absolute top-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
 
                     <div className="flex flex-col gap-6 text-center py-4">
-                        <p className="text-sm text-white/70 leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
                             {t('checkEmail.message')}
                         </p>
 
@@ -40,7 +40,7 @@ export default async function CheckEmailPage() {
                         </div>
                     </div>
 
-                    <div className={`mt-8 pt-8 border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-white/20 uppercase ${locale !== 'ar' ? 'tracking-widest' : ''}`}>
+                    <div className={`mt-8 pt-8 border-t border-border flex justify-between items-center text-[8px] font-mono text-muted-foreground/30 uppercase ${locale !== 'ar' ? 'tracking-widest' : ''}`}>
                         <span>ENC: AES-256</span>
                         <span>MALLAH_CORE_v4.0.2</span>
                     </div>

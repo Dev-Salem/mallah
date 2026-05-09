@@ -27,6 +27,7 @@ export const metadata = {
 
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function RootLayout({
   children,
@@ -51,6 +52,7 @@ export default async function RootLayout({
             <TooltipProvider>
               {children}
             </TooltipProvider>
+            <Toaster position="top-center" />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

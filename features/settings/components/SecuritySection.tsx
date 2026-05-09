@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Shield, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Shield, CheckCircle, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { changePasswordAction } from '../actions/settings-actions';
@@ -21,6 +21,8 @@ export function SecuritySection() {
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleSave = async () => {
         setSaving(true);
@@ -63,19 +65,37 @@ export function SecuritySection() {
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
                         {tl('newPassword')}
                     </label>
-                    <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)}
-                        placeholder={tp('passwordMin')}
-                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors placeholder:text-muted-foreground/30"
-                    />
+                    <div className="relative">
+                        <input type={showPassword ? "text" : "password"} value={newPassword} onChange={e => setNewPassword(e.target.value)}
+                            placeholder={tp('passwordMin')}
+                            className="w-full h-10 px-3 pr-10 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors placeholder:text-muted-foreground/30"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-primary transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                    </div>
                 </div>
 
                 <div>
                     <label className={cn("text-[10px] font-mono text-muted-foreground uppercase block mb-2", !isArabic && "tracking-widest")}>
                         {tl('confirmPassword')}
                     </label>
-                    <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
-                        className="w-full h-10 px-3 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
-                    />
+                    <div className="relative">
+                        <input type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+                            className="w-full h-10 px-3 pr-10 bg-background border border-input text-foreground text-sm font-mono focus:border-primary/50 focus:outline-none transition-colors"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-primary transition-colors"
+                        >
+                            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                    </div>
                 </div>
             </div>
 

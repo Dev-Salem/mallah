@@ -58,7 +58,7 @@ export default function CheckEmailClient() {
         <div className="flex flex-col gap-4 max-w-sm mx-auto w-full">
             {!email && (
                 <div className="flex flex-col gap-1.5 text-left mb-2">
-                    <label htmlFor="resend-email" className="text-xs font-medium text-white/70">
+                    <label htmlFor="resend-email" className="text-xs font-medium text-muted-foreground">
                         {t('checkEmail.enterEmailResend')}
                     </label>
                     <input
@@ -66,7 +66,7 @@ export default function CheckEmailClient() {
                         type="email"
                         value={inputEmail}
                         onChange={(e) => setInputEmail(e.target.value)}
-                        className="w-full px-4 py-2 text-sm glass border-white/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-white placeholder:text-white/30 transition-all"
+                        className="w-full px-4 py-2 text-sm glass border-primary/10 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground/40 transition-all"
                         placeholder="you@example.com"
                     />
                 </div>
@@ -87,8 +87,8 @@ export default function CheckEmailClient() {
 
             {feedback && (
                 <div className={`flex items-center gap-2 p-3 rounded-lg text-sm border ${feedback.type === 'success'
-                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-                        : 'border-red-500/30 bg-red-500/10 text-red-400'
+                        ? 'border-success/30 bg-success/5 text-success'
+                        : 'border-destructive/30 bg-destructive/5 text-destructive'
                     }`}>
                     {feedback.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
                     <span>{feedback.message}</span>
