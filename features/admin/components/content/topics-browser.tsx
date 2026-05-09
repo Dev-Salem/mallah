@@ -5,10 +5,11 @@ import { useTranslations } from 'next-intl'
 import type { AdminPathWithFullContent, AdminStageWithTopics, AdminTopicWithResources, AdminResource } from '../../types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ChevronDown, ChevronRight, Plus, Pencil, BookOpen, FileText, Video, Award, Beaker } from 'lucide-react'
+import { ChevronDown, ChevronRight, Plus, Pencil, BookOpen, FileText, Video, Award, Beaker, Eye } from 'lucide-react'
 import { StageForm } from './forms/stage-form'
 import { TopicForm } from './forms/topic-form'
 import { ResourceForm } from './forms/resource-form'
+import { ContentViewDialog } from './content-view-dialog'
 
 interface TopicsBrowserProps {
   paths: AdminPathWithFullContent[]
@@ -26,9 +27,11 @@ const RESOURCE_ICONS: Record<string, React.ElementType> = {
 function ResourceRow({
   resource,
   onEdit,
+  onView,
 }: {
   resource: AdminResource
   onEdit: (r: AdminResource) => void
+  onView: (r: AdminResource) => void
 }) {
   const Icon = RESOURCE_ICONS[resource.resource_type] ?? FileText
   return (
@@ -52,7 +55,15 @@ function ResourceRow({
         variant="ghost"
         size="xs"
         className="opacity-0 group-hover:opacity-100 shrink-0"
-        onClick={() => onEdit(resource)}
+        onClick={(e) => { e.stopPropagation(); onView(resource); }}
+      >
+        <Eye className="h-3 w-3" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="xs"
+        className="opacity-0 group-hover:opacity-100 shrink-0"
+        onClick={(e) => { e.stopPropagation(); onEdit(resource); }}
       >
         <Pencil className="h-3 w-3" />
       </Button>
@@ -66,11 +77,15 @@ function TopicRow({
   onEditTopic,
   onAddResource,
   onEditResource,
+  onViewTopic,
+  onViewResource,
 }: {
   topic: AdminTopicWithResources
   onEditTopic: (t: AdminTopicWithResources) => void
   onAddResource: (topicId: string) => void
   onEditResource: (r: AdminResource) => void
+  onViewTopic: (t: AdminTopicWithResources) => void
+  onViewResource: (r: AdminResource) => void
 }) {
   const t = useTranslations('Admin.Content.Paths')
   const [open, setOpen] = useState(false)
@@ -102,11 +117,14 @@ function TopicRow({
           className="flex items-center gap-1 opacity-0 group-hover:opacity-100"
           onClick={(e) => e.stopPropagation()}
         >
-          <Button variant="ghost" size="xs" onClick={() => onAddResource(topic.topic_id)}>
+          <Button variant="ghost" size="xs" onClick={(e) => { e.stopPropagation(); onAddResource(topic.topic_id); }}>
             <Plus className="h-3 w-3" />
             {t('addResource')}
           </Button>
-          <Button variant="ghost" size="xs" onClick={() => onEditTopic(topic)}>
+          <Button variant="ghost" size="xs" onClick={(e) => { e.stopPropagation(); onViewTopic(topic); }}>
+            <Eye className="h-3 w-3" />
+          </Button>
+          <Button variant="ghost" size="xs" onClick={(e) => { e.stopPropagation(); onEditTopic(topic); }}>
             <Pencil className="h-3 w-3" />
           </Button>
         </div>
@@ -118,7 +136,7 @@ function TopicRow({
             <p className="text-xs text-muted-foreground px-4 py-2 italic">{t('noResources')}</p>
           ) : (
             topic.resources.map((res) => (
-              <ResourceRow key={res.resource_id} resource={res} onEdit={onEditResource} />
+              <ResourceRow key={res.resource_id} resource={res} onEdit={onEditResource} onView={onViewResource} />
             ))
           )}
         </div>
@@ -136,6 +154,9 @@ function StageRow({
   onEditTopic,
   onAddResource,
   onEditResource,
+  onViewStage,
+  onViewTopic,
+  onViewResource,
 }: {
   stage: AdminStageWithTopics
   pathId: string
@@ -144,6 +165,9 @@ function StageRow({
   onEditTopic: (t: AdminTopicWithResources) => void
   onAddResource: (topicId: string) => void
   onEditResource: (r: AdminResource) => void
+  onViewStage: (s: AdminStageWithTopics) => void
+  onViewTopic: (t: AdminTopicWithResources) => void
+  onViewResource: (r: AdminResource) => void
 }) {
   const t = useTranslations('Admin.Content.Paths')
   const [open, setOpen] = useState(false)
@@ -185,11 +209,14 @@ function StageRow({
           className="flex items-center gap-1 opacity-0 group-hover:opacity-100"
           onClick={(e) => e.stopPropagation()}
         >
-          <Button variant="ghost" size="xs" onClick={() => onAddTopic(stage.stage_id)}>
+          <Button variant="ghost" size="xs" onClick={(e) => { e.stopPropagation(); onAddTopic(stage.stage_id); }}>
             <Plus className="h-3 w-3" />
             {t('addTopic')}
           </Button>
-          <Button variant="ghost" size="xs" onClick={() => onEditStage(stage)}>
+          <Button variant="ghost" size="xs" onClick={(e) => { e.stopPropagation(); onViewStage(stage); }}>
+            <Eye className="h-3 w-3" />
+          </Button>
+          <Button variant="ghost" size="xs" onClick={(e) => { e.stopPropagation(); onEditStage(stage); }}>
             <Pencil className="h-3 w-3" />
           </Button>
         </div>
@@ -219,6 +246,8 @@ function StageRow({
                 onEditTopic={onEditTopic}
                 onAddResource={onAddResource}
                 onEditResource={onEditResource}
+                onViewTopic={onViewTopic}
+                onViewResource={onViewResource}
               />
             ))
           )}
@@ -246,6 +275,12 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
   const [resourceFormOpen, setResourceFormOpen] = useState(false)
   const [editingResource, setEditingResource] = useState<AdminResource | null>(null)
   const [resourceFormTopicId, setResourceFormTopicId] = useState('')
+
+  const [viewEntity, setViewEntity] = useState<{
+    type: 'stage' | 'topic' | 'resource'
+    data: AdminStageWithTopics | AdminTopicWithResources | AdminResource
+  } | null>(null)
+  const [viewDialogOpen, setViewDialogOpen] = useState(false)
 
   const selectedPath = paths.find((p) => p.path_id === selectedPathId)
 
@@ -283,6 +318,21 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
     setEditingResource(resource)
     setResourceFormTopicId(resource.topic_id)
     setResourceFormOpen(true)
+  }
+
+  const openViewStage = (stage: AdminStageWithTopics) => {
+    setViewEntity({ type: 'stage', data: stage })
+    setViewDialogOpen(true)
+  }
+
+  const openViewTopic = (topic: AdminTopicWithResources) => {
+    setViewEntity({ type: 'topic', data: topic })
+    setViewDialogOpen(true)
+  }
+
+  const openViewResource = (resource: AdminResource) => {
+    setViewEntity({ type: 'resource', data: resource })
+    setViewDialogOpen(true)
   }
 
   return (
@@ -340,6 +390,9 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
                 onEditTopic={openEditTopic}
                 onAddResource={openAddResource}
                 onEditResource={openEditResource}
+                onViewStage={openViewStage}
+                onViewTopic={openViewTopic}
+                onViewResource={openViewResource}
               />
             ))}
           </div>
@@ -395,6 +448,13 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
         nextOrderIndex={0}
         open={resourceFormOpen}
         onOpenChange={setResourceFormOpen}
+      />
+
+      {/* Content View Dialog */}
+      <ContentViewDialog
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+        entity={viewEntity}
       />
     </div>
   )

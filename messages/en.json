@@ -1109,7 +1109,16 @@
       "block": "Block Access",
       "unblock": "Restore Access",
       "confirmBlock": "Are you sure you want to block this user? They will lose all access to their dashboard.",
-      "noLearners": "No learners found matching criteria."
+      "noLearners": "No learners found matching criteria.",
+      "detailTitle": "Navigator Details",
+      "onboarding": "Onboarding",
+      "completed": "Completed",
+      "notCompleted": "Not Completed",
+      "progress": "Progress",
+      "lastActive": "Last Active",
+      "never": "Never",
+      "noPath": "No path assigned",
+      "userId": "User ID"
     },
     "Audit": {
       "title": "Administrative Ledger",

@@ -44,8 +44,6 @@ export async function getDashboardStats() {
   const { count: totalLearners } = await db
     .from('learners')
     .select('*', { count: 'exact', head: true })
-    .eq('role', 'learner')
-    .eq('status', 'active')
 
   // Active this week (distinct users with activity in last 7 days)
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
@@ -786,27 +784,33 @@ export async function updateProject(
 }
 
 // ─── Learners (read-only + block/unblock) ───
-export async function getAdminLearners() {
+export async function getAdminLearners(): Promise<AdminLearner[]> {
   const admin = await requireAdmin()
   const db = getSupabaseAdmin()
 
-  const { data } = await db
+  const { data, error } = await db
     .from('learners')
     .select(`
       user_id,
       first_name,
       last_name,
-      email,
       current_path_id,
       onboarding_completed,
       status,
       created_at,
       paths ( name )
     `)
-    .eq('role', 'learner')
     .order('created_at', { ascending: false })
 
+  if (error) {
+    console.error('[getAdminLearners] Error:', error)
+    return []
+  }
+
   if (!data) return []
+
+  console.log(`[getAdminLearners] Found ${data.length} users in learners table`)
+
 
   return data.map((d: any) => ({
     user_id: d.user_id,
