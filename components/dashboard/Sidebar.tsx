@@ -142,8 +142,6 @@ export function Sidebar() {
                   {item.label}
                 </span>
 
-
-
                 {isActive && (
                   <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--primary)]" />
                 )}

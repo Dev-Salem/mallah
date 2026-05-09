@@ -80,7 +80,6 @@ export function JobFeed({ pathId, pathName, learnerSkills, onAnalyzeJob }: JobFe
                                 <JobCard
                                     job={job}
                                     onAnalyze={onAnalyzeJob}
-                                    onSave={() => { /* Handled saving later */ }}
                                 />
                             </div>
                         ))}
