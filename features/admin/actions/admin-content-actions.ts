@@ -15,6 +15,7 @@ import type {
   AdminResource,
   AdminLearner,
   AdminLearnerDetail,
+  AdminUserProject,
   AdminAuditLogEntry,
   PathOverview,
   ContentWarning,
@@ -732,8 +733,16 @@ export async function getAdminProjects(): Promise<AdminProject[]> {
 
   if (!projects) return []
 
+  const seen = new Set<string>()
+  const unique = projects.filter(p => {
+    const key = p.title
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+
   return Promise.all(
-    projects.map(async (p) => {
+    unique.map(async (p) => {
       const { count: skillCount } = await db
         .from('project_skills')
         .select('*', { count: 'exact', head: true })
@@ -782,6 +791,51 @@ export async function updateProject(
 
   revalidatePath(`/${ADMIN_BASE}`)
   return { success: true }
+}
+
+export async function getAdminUserProjects(): Promise<AdminUserProject[]> {
+  await requireAdmin()
+  const db = getSupabaseAdmin()
+
+  const { data, error } = await db
+    .from('user_projects')
+    .select(`
+      id,
+      user_id,
+      project_id,
+      status,
+      started_at,
+      completed_at,
+      github_url,
+      demo_url,
+      project_name,
+      tech_stack,
+      review_status,
+      learners ( first_name, last_name, email ),
+      projects ( title, stages ( title ) )
+    `)
+    .in('status', ['completed', 'waiting', 'in_progress'])
+    .order('completed_at', { ascending: false, nullsFirst: false })
+
+  if (error || !data) return []
+
+  return data.map((d: any) => ({
+    id: d.id,
+    user_id: d.user_id,
+    project_id: d.project_id,
+    status: d.status,
+    started_at: d.started_at,
+    completed_at: d.completed_at,
+    github_url: d.github_url,
+    demo_url: d.demo_url,
+    project_name: d.project_name,
+    tech_stack: d.tech_stack,
+    review_status: d.review_status,
+    learner_name: `${d.learners?.first_name || ''} ${d.learners?.last_name || ''}`.trim(),
+    learner_email: d.learners?.email || '',
+    project_title: d.projects?.title || '',
+    stage_title: d.projects?.stages?.title || null,
+  })) as AdminUserProject[]
 }
 
 // ─── Learners (read-only + block/unblock) ───

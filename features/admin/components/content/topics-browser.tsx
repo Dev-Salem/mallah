@@ -405,6 +405,7 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
 
       {/* Stage form */}
       <StageForm
+        key={editingStage?.stage_id ?? 'new-stage'}
         pathId={stageFormPathId}
         stage={editingStage
           ? {
@@ -421,6 +422,7 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
 
       {/* Topic form */}
       <TopicForm
+        key={editingTopic?.topic_id ?? 'new-topic'}
         stageId={topicFormStageId}
         topic={editingTopic
           ? {
@@ -443,6 +445,7 @@ export function TopicsBrowser({ paths }: TopicsBrowserProps) {
 
       {/* Resource form */}
       <ResourceForm
+        key={editingResource?.resource_id ?? 'new-resource'}
         topicId={resourceFormTopicId}
         resource={editingResource ?? undefined}
         nextOrderIndex={0}

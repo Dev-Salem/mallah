@@ -213,3 +213,22 @@ export interface AdminLearnerDetail extends AdminLearner {
   topic_progress: LearnerTopicProgress[];
   project_progress: LearnerProjectProgress[];
 }
+
+// User submitted project types
+export interface AdminUserProject {
+  id: string;
+  user_id: string;
+  project_id: string;
+  status: string;
+  started_at: string | null;
+  completed_at: string | null;
+  github_url: string | null;
+  demo_url: string | null;
+  project_name: string | null;
+  tech_stack: string[] | null;
+  review_status: string | null;
+  learner_name: string;
+  learner_email: string;
+  project_title: string;
+  stage_title: string | null;
+}

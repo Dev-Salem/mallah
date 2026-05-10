@@ -148,7 +148,7 @@ export function AdminSidebar({ displayName, adminLevel }: AdminSidebarProps) {
                         href={child.href}
                         className={`flex items-center gap-3 px-3 py-1.5 text-sm rounded-md transition-colors ${
                           isActive(child.href)
-                            ? 'bg-sidebar-accent text-sidebar-primary font-medium'
+                            ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
                             : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                         }`}
                       >
@@ -168,11 +168,11 @@ export function AdminSidebar({ displayName, adminLevel }: AdminSidebarProps) {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 isActive(item.href)
-                  ? 'bg-sidebar-accent text-sidebar-primary'
+                  ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
                   : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
               }`}
             >
-              <item.icon className={`h-4 w-4 shrink-0 ${isActive(item.href) ? 'text-sidebar-primary' : ''}`} />
+              <item.icon className="h-4 w-4 shrink-0" />
               <span>{t(item.labelKey)}</span>
             </Link>
           )

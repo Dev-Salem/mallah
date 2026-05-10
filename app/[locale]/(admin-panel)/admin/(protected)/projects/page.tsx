@@ -1,10 +1,15 @@
 import { getTranslations } from 'next-intl/server'
-import { getAdminProjects } from '../../../../../../features/admin/actions/admin-content-actions'
+import { getAdminProjects, getAdminUserProjects } from '../../../../../../features/admin/actions/admin-content-actions'
 import { ProjectsTable } from '../../../../../../features/admin/components/projects/projects-table'
+import { UserProjectsTable } from '../../../../../../features/admin/components/projects/user-projects-table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default async function AdminProjectsPage() {
   const t = await getTranslations('Admin.Projects')
-  const projects = await getAdminProjects()
+  const [projects, userProjects] = await Promise.all([
+    getAdminProjects(),
+    getAdminUserProjects(),
+  ])
 
   return (
     <div className="space-y-6">
@@ -17,7 +22,18 @@ export default async function AdminProjectsPage() {
         </p>
       </div>
 
-      <ProjectsTable initialProjects={projects} />
+      <Tabs defaultValue="catalog">
+        <TabsList>
+          <TabsTrigger value="catalog">{t('tabCatalog')}</TabsTrigger>
+          <TabsTrigger value="submissions">{t('tabSubmissions')} ({userProjects.length})</TabsTrigger>
+        </TabsList>
+        <TabsContent value="catalog" className="mt-4">
+          <ProjectsTable initialProjects={projects} />
+        </TabsContent>
+        <TabsContent value="submissions" className="mt-4">
+          <UserProjectsTable submissions={userProjects} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

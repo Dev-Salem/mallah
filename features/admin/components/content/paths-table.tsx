@@ -108,6 +108,7 @@ export function PathsTable({ initialPaths }: PathsTableProps) {
       </div>
 
       <PathForm
+        key={editingPath?.path_id ?? 'new-path'}
         path={editingPath ?? undefined}
         open={formOpen}
         onOpenChange={setFormOpen}
