@@ -1,7 +1,7 @@
 # Mallah — Data Science & Machine Learning Path
 ## Full Roadmap Specification (with Resources & Certificates)
 
-**Path ID:** `data_science`
+**Path ID:** `datascience`
 **Estimated Duration:** 7–10 months (at 1–2 hrs/day)
 **Difficulty:** Beginner → Advanced
 **Philosophy:** Data science is learned by doing — not by watching lectures. Every topic produces something real: a cleaned dataset, a working model, a chart that answers a question, a deployed prediction tool. By the end, the learner has a portfolio of end-to-end projects and the instincts to attack a new data problem from scratch.
