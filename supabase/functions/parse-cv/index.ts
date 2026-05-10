@@ -36,7 +36,7 @@ serve(async (req) => {
 
     if (!OPENAI_API_KEY) throw new Error("Missing OPENAI_API_KEY");
 
-    // Call OpenAI to extract skills and experience
+    // Call OpenAI to extract skills, projects, and experience
     const aiRes = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -46,7 +46,7 @@ serve(async (req) => {
         body: JSON.stringify({
             model: 'gpt-4o',
             messages: [
-                { role: 'system', content: 'Extract skills and experience from the following CV text. Return JSON with extracted_skills (array of {skill_name, inferred_level}), experience_years (number), and previous_roles (array of strings).' },
+                { role: 'system', content: 'Extract skills, CV projects, and experience from the following CV text. Return JSON with extracted_skills (array of {skill_name, inferred_level}), extracted_projects (array of {project_name, skills, summary}), experience_years (number), and previous_roles (array of strings).' },
                 { role: 'user', content: textToParse }
             ],
             response_format: { type: 'json_object' }
@@ -63,6 +63,7 @@ serve(async (req) => {
           user_id: userId,
           file_name: fileName,
           extracted_skills: extractedData.extracted_skills,
+          cv_projects: extractedData.extracted_projects ?? [],
           experience_years: extractedData.experience_years,
           previous_roles: extractedData.previous_roles,
           uploaded_at: new Date().toISOString(),

@@ -237,6 +237,7 @@ export type Database = {
       }
       cv_uploads: {
         Row: {
+          cv_projects: Json | null
           cv_id: string
           experience_years: number | null
           extracted_skills: Json
@@ -246,6 +247,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          cv_projects?: Json | null
           cv_id?: string
           experience_years?: number | null
           extracted_skills?: Json
@@ -255,6 +257,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          cv_projects?: Json | null
           cv_id?: string
           experience_years?: number | null
           extracted_skills?: Json

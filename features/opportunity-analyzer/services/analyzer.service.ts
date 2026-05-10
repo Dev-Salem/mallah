@@ -14,6 +14,8 @@ export const analyzerService = {
                 file_name: fileName,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 extracted_skills: extractedData.extracted_skills as any,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                cv_projects: extractedData.extracted_projects as any,
                 experience_years: extractedData.experience_years,
                 previous_roles: extractedData.previous_roles,
                 uploaded_at: new Date().toISOString()
@@ -164,9 +166,21 @@ export const analyzerService = {
         // Use Promise.all to fetch skills, projects, and progress concurrently
         const [skillsRes, projectsRes, progressRes, profileRes] = await Promise.all([
             supabase.from('user_skills').select('*, skills(name, category)').eq('user_id', user.id),
-            supabase.from('user_projects').select('*, projects(title, stage_id)').eq('user_id', user.id).eq('status', 'completed'),
-            supabase.from('user_progress').select('*').eq('user_id', user.id),
-            supabase.from('learners').select('current_path_id, readiness_level').eq('user_id', user.id).single()
+            supabase
+                .from('user_projects')
+                .select('project_id, tech_stack, projects(title, description, source_type, project_skills(skills(name, category)))')
+                .eq('user_id', user.id)
+                .eq('status', 'completed'),
+            supabase
+                .from('user_progress')
+                .select('status, topics(title, topic_skills(skills(name, category)))')
+                .eq('user_id', user.id)
+                .eq('status', 'in_progress'),
+            supabase
+                .from('learners')
+                .select('current_path_id, readiness_level')
+                .eq('user_id', user.id)
+                .single()
         ]);
 
         if (skillsRes.error) throw skillsRes.error;

@@ -1,11 +1,23 @@
 export type OpportunityScoreTier = 'NOT_READY' | 'EARLY_STAGE' | 'GETTING_CLOSE' | 'STRONG_CANDIDATE' | 'EXCELLENT_MATCH';
 
 export const SCORE_WEIGHT_MALLAH = 1.0;
-export const SCORE_WEIGHT_CV = 0.7;
+export const SCORE_WEIGHT_CV = 1.0;
+export const REQUIRED_SKILL_WEIGHT = 0.55;
+export const PREFERRED_SKILL_WEIGHT = 0.2;
+export const PROJECT_WEIGHT = 0.25;
+export const MAX_MATCH_SCORE = 95;
+export const APPLY_READY_SCORE = 75;
+
 export interface ExtractedSkill {
     name: string;
     level?: 'beginner' | 'intermediate' | 'advanced';
     category?: string;
+}
+
+export interface ExtractedCVProject {
+    project_name: string;
+    skills: string[];
+    summary?: string;
 }
 
 export interface ExtractedJD {
@@ -19,18 +31,22 @@ export interface ExtractedJD {
 
 export interface ExtractedCV {
     extracted_skills: Array<{ skill_name: string; inferred_level: string }>;
+    extracted_projects: ExtractedCVProject[];
     experience_years: number;
     previous_roles: string[];
 }
 
 export interface SkillMatchInfo {
     skill_name: string;
+    matched_requirement: string;
     source: 'roadmap' | 'project' | 'manual' | 'cv';
+    requirement_type?: 'required' | 'preferred';
     is_verified: boolean;
     current_level?: string;
     required_level?: string;
     weight: number;
     project_title?: string; // If source == project
+    match_reason?: string;
 }
 
 export interface MatchScoreBreakdown {

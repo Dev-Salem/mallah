@@ -48,6 +48,7 @@ export function SkillsTab({ result }: { result: OpportunityAnalysisResult }) {
                         <div key={i} className="flex flex-col gap-1 p-3 bg-muted/30 rounded-lg">
                             <span className="font-semibold">{s.skill_name}</span>
                             <Badge variant="secondary" className="w-fit text-amber-500 bg-amber-500/10">Needs Improvement</Badge>
+                            {s.match_reason && <span className="text-xs text-muted-foreground">{s.match_reason}</span>}
                         </div>
                     ))}
                     {partial.length === 0 && <p className="text-sm text-muted-foreground italic">No partial matches.</p>}

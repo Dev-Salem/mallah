@@ -2,25 +2,10 @@
 import { OpportunityAnalysisResult } from '../../types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
+import { getScoreLabel, getScoreTextColor, isApplyReady } from '../../services/scoring';
 
 export function OverviewTab({ result }: { result: OpportunityAnalysisResult }) {
-    const isApplyReady = result.match_score >= 80;
-    
-    const getScoreColor = (s: number) => {
-        if (s < 35) return 'text-red-500';
-        if (s < 55) return 'text-amber-500';
-        if (s < 75) return 'text-yellow-500';
-        if (s < 90) return 'text-green-500';
-        return 'text-emerald-500';
-    };
-
-    const getScoreLabel = (s: number) => {
-        if (s < 35) return 'Not Ready Yet';
-        if (s < 55) return 'Early Stage';
-        if (s < 75) return 'Getting Close';
-        if (s < 90) return 'Strong Candidate';
-        return 'Excellent Match';
-    };
+    const applyReady = isApplyReady(result.match_score);
 
     return (
         <div className="grid md:grid-cols-2 gap-6">
@@ -56,13 +41,13 @@ export function OverviewTab({ result }: { result: OpportunityAnalysisResult }) {
                             <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="10" className="text-muted/20" />
                             <circle 
                                 cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="10" 
-                                className={getScoreColor(result.match_score)}
+                                className={getScoreTextColor(result.match_score)}
                                 strokeDasharray={`${result.match_score * 2.827} 282.7`} 
                                 strokeLinecap="round"
                             />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <span className={getScoreColor(result.match_score) + " text-4xl font-black"}>{result.match_score}%</span>
+                            <span className={getScoreTextColor(result.match_score) + " text-4xl font-black"}>{result.match_score}%</span>
                         </div>
                     </div>
                     
@@ -73,10 +58,10 @@ export function OverviewTab({ result }: { result: OpportunityAnalysisResult }) {
                     {result.cv_skills_contributed > 0 && (
                         <div className="flex items-start gap-2 bg-blue-500/10 text-blue-600 p-3 rounded-lg text-sm w-full dark:text-blue-400">
                             <AlertCircle className="w-5 h-5 shrink-0" />
-                            <p>{result.cv_skills_contributed} skills from your CV contributed to this score. Complete roadmap topics to verify them.</p>
+                            <p>{result.cv_skills_contributed} skills from your CV contributed at full weight in this score.</p>
                         </div>
                     )}
-                    {isApplyReady && (
+                    {applyReady && (
                         <div className="flex items-start gap-2 bg-emerald-500/10 text-emerald-600 p-3 rounded-lg text-sm w-full font-bold dark:text-emerald-400">
                             <AlertCircle className="w-5 h-5 shrink-0" />
                             <p>You are Apply Ready! You meet the core requirements for this role. Check the Action Plan to prepare your application.</p>

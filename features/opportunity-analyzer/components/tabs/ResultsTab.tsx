@@ -4,19 +4,17 @@ import { OpportunityAnalysisResult } from '../../types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, AlertTriangle, XCircle, ArrowRight, Zap } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, ArrowRight, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { getScoreTextColor, isApplyReady } from '../../services/scoring';
 
 export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
     const t = useTranslations('Dashboard.Opportunities');
-    const isApplyReady = result.match_score >= 80;
-
-    const getScoreColor = (s: number) => {
-        if (s < 35) return 'bg-red-500';
-        if (s < 60) return 'bg-amber-500';
-        if (s < 80) return 'bg-blue-500';
-        return 'bg-emerald-500';
-    };
+    const applyReady = isApplyReady(result.match_score);
+    const requiredFullMatches = result.skills_breakdown.matched.filter((skill) => skill.requirement_type === 'required').length;
+    const requiredPartialMatches = result.skills_breakdown.partial.filter((skill) => skill.requirement_type === 'required').length;
+    const requiredTotal = Math.max(result.extracted_skills.required.length, 1);
+    const requiredCoverage = ((requiredFullMatches + (requiredPartialMatches * 0.5)) / requiredTotal) * 100;
 
     return (
         <div className="space-y-6">
@@ -30,7 +28,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted/20" />
                                     <circle 
                                         cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" 
-                                        className={result.match_score >= 80 ? "text-emerald-500" : "text-blue-500"}
+                                        className={getScoreTextColor(result.match_score)}
                                         strokeDasharray={`${result.match_score * 2.827} 282.7`} 
                                         strokeLinecap="round"
                                         style={{ transition: 'stroke-dasharray 1s ease-in-out' }}
@@ -40,8 +38,8 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                                     {result.match_score}%
                                 </div>
                             </div>
-                            <Badge variant={isApplyReady ? "default" : "secondary"} className={isApplyReady ? "bg-emerald-500" : ""}>
-                                {isApplyReady ? "Apply Ready" : "Building Skills"}
+                            <Badge variant={applyReady ? "default" : "secondary"} className={applyReady ? "bg-emerald-500" : ""}>
+                                {applyReady ? "Apply Ready" : "Building Skills"}
                             </Badge>
                         </div>
                         
@@ -49,7 +47,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                             <div>
                                 <h3 className="text-xl font-bold mb-1">Match Potential Analysis</h3>
                                 <p className="text-foreground/70 text-sm">
-                                    Based on your Mallah profile and uploaded CV, you are a <strong>{result.match_score >= 80 ? "strong" : "developing"}</strong> candidate for this role.
+                                    Based on your Mallah profile and uploaded CV, you are a <strong>{applyReady ? "strong" : "developing"}</strong> candidate for this role.
                                 </p>
                             </div>
 
@@ -57,13 +55,13 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-xs font-medium">
                                         <span>Required Skills</span>
-                                        <span>{result.skills_breakdown.matched.length} / {result.skills_breakdown.matched.length + result.skills_breakdown.missing.required.length}</span>
+                                        <span>{requiredFullMatches + (requiredPartialMatches * 0.5)} / {result.extracted_skills.required.length}</span>
                                     </div>
-                                    <Progress value={(result.skills_breakdown.matched.length / Math.max(result.skills_breakdown.matched.length + result.skills_breakdown.missing.required.length, 1)) * 100} className="h-2" />
+                                    <Progress value={requiredCoverage} className="h-2" />
                                 </div>
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-xs font-medium">
-                                        <span>CV Boost</span>
+                                        <span>CV Coverage</span>
                                         <span className="text-blue-500">+{result.cv_skills_contributed} Skills</span>
                                     </div>
                                     <div className="h-2 bg-blue-500/10 rounded-full overflow-hidden">
@@ -95,7 +93,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                                 <span className="text-xs text-muted-foreground self-center">+{result.skills_breakdown.missing.required.length - 5} more</span>
                             )}
                         </div>
-                        <p className="text-xs text-foreground/60">Focus on these to increase your match score above 80%.</p>
+                        <p className="text-xs text-foreground/60">Focus on these to increase your match score above 75%.</p>
                     </CardContent>
                 </Card>
 
