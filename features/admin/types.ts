@@ -180,3 +180,36 @@ export interface AdminActionResult {
   error?: string;
   data?: unknown;
 }
+
+// Learner detail types
+export interface LearnerTopicProgress {
+  topic_id: string;
+  title: string;
+  topic_type: string;
+  status: string;
+  completed_at: string | null;
+  stage_title: string;
+  stage_order: number;
+}
+
+export interface LearnerProjectProgress {
+  project_id: string;
+  title: string;
+  difficulty_level: string | null;
+  status: string;
+  completed_at: string | null;
+  stage_title: string;
+}
+
+export interface AdminLearnerDetail extends AdminLearner {
+  bio: string | null;
+  primary_goal: string | null;
+  weekly_hours_category: string | null;
+  topics_completed: number;
+  topics_total: number;
+  projects_completed: number;
+  projects_total: number;
+  last_active: string | null;
+  topic_progress: LearnerTopicProgress[];
+  project_progress: LearnerProjectProgress[];
+}

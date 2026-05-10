@@ -1113,7 +1113,13 @@
       "lastActive": "آخر نشاط",
       "never": "أبداً",
       "noPath": "لا يوجد مسار مخصص",
-      "userId": "معرّف المستخدم"
+      "userId": "معرّف المستخدم",
+      "topicsCompleted": "المواضيع المكتملة",
+      "projectsCompleted": "المشاريع المكتملة",
+      "topicProgress": "تقدم المواضيع",
+      "projectProgress": "تقدم المشاريع",
+      "noProgress": "لا يوجد نشاط تعليمي بعد.",
+      "primaryGoal": "الهدف الرئيسي"
     },
     "Audit": {
       "title": "سجل العمليات الإداري",

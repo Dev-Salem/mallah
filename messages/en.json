@@ -1118,7 +1118,13 @@
       "lastActive": "Last Active",
       "never": "Never",
       "noPath": "No path assigned",
-      "userId": "User ID"
+      "userId": "User ID",
+      "topicsCompleted": "Topics Done",
+      "projectsCompleted": "Projects Done",
+      "topicProgress": "Topic Progress",
+      "projectProgress": "Project Progress",
+      "noProgress": "No learning activity yet.",
+      "primaryGoal": "Primary Goal"
     },
     "Audit": {
       "title": "Administrative Ledger",

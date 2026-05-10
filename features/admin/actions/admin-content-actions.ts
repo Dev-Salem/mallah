@@ -14,6 +14,7 @@ import type {
   AdminTopic,
   AdminResource,
   AdminLearner,
+  AdminLearnerDetail,
   AdminAuditLogEntry,
   PathOverview,
   ContentWarning,
@@ -851,6 +852,99 @@ export async function unblockLearner(userId: string): Promise<AdminActionResult>
 
   revalidatePath(`/${ADMIN_BASE}`)
   return { success: true }
+}
+
+export async function getAdminLearnerDetail(userId: string): Promise<AdminLearnerDetail | null> {
+  await requireAdmin()
+  const db = getSupabaseAdmin()
+
+  const { data: learner } = await db
+    .from('learners')
+    .select('*, paths ( name )')
+    .eq('user_id', userId)
+    .single()
+
+  if (!learner) return null
+
+  const pathId = learner.current_path_id
+
+  let topicProgress: any[] = []
+  let projectProgress: any[] = []
+  let topicsCompleted = 0
+  let topicsTotal = 0
+  let projectsCompleted = 0
+  let projectsTotal = 0
+
+  if (pathId) {
+    const [{ data: stages }, { data: userTopics }, { data: userProjects }] = await Promise.all([
+      db.from('stages').select('stage_id, title, order_index, topics ( topic_id, title, topic_type, order_index ), projects ( project_id, title, difficulty_level )').eq('path_id', pathId).order('order_index'),
+      db.from('user_progress').select('topic_id, status, completed_at, last_accessed_at').eq('user_id', userId),
+      db.from('user_projects').select('project_id, status, completed_at').eq('user_id', userId),
+    ])
+
+    const topicMap = new Map((userTopics || []).map(t => [t.topic_id, t]))
+    const projectMap = new Map((userProjects || []).map(p => [p.project_id, p]))
+
+    for (const stage of (stages || [])) {
+      for (const topic of (stage.topics || [])) {
+        topicsTotal++
+        const ut = topicMap.get(topic.topic_id)
+        const status = ut?.status || 'not_started'
+        if (status === 'completed') topicsCompleted++
+        topicProgress.push({
+          topic_id: topic.topic_id,
+          title: topic.title,
+          topic_type: topic.topic_type,
+          status,
+          completed_at: ut?.completed_at || null,
+          stage_title: stage.title,
+          stage_order: stage.order_index,
+        })
+      }
+
+      for (const proj of (stage.projects || [])) {
+        projectsTotal++
+        const up = projectMap.get(proj.project_id)
+        const status = up?.status || 'available'
+        if (status === 'completed' || status === 'waiting') projectsCompleted++
+        projectProgress.push({
+          project_id: proj.project_id,
+          title: proj.title,
+          difficulty_level: proj.difficulty_level,
+          status,
+          completed_at: up?.completed_at || null,
+          stage_title: stage.title,
+        })
+      }
+    }
+
+    topicProgress.sort((a, b) => a.stage_order - b.stage_order)
+  }
+
+  const lastAccessed = (await db.from('user_progress').select('last_accessed_at').eq('user_id', userId).order('last_accessed_at', { ascending: false }).limit(1)).data?.[0]?.last_accessed_at || null
+
+  return {
+    user_id: learner.user_id,
+    first_name: learner.first_name || '',
+    last_name: learner.last_name || '',
+    email: learner.email || '',
+    current_path_id: learner.current_path_id || null,
+    path_name: learner.paths?.name || null,
+    onboarding_completed: !!learner.onboarding_completed,
+    status: learner.status || 'unknown',
+    created_at: learner.created_at,
+    progress_percent: topicsTotal + projectsTotal > 0 ? Math.round(((topicsCompleted + projectsCompleted) / (topicsTotal + projectsTotal)) * 100) : 0,
+    last_active: lastAccessed,
+    bio: learner.bio || null,
+    primary_goal: learner.primary_goal || null,
+    weekly_hours_category: learner.weekly_hours_category || null,
+    topics_completed: topicsCompleted,
+    topics_total: topicsTotal,
+    projects_completed: projectsCompleted,
+    projects_total: projectsTotal,
+    topic_progress: topicProgress,
+    project_progress: projectProgress,
+  }
 }
 
 // ─── Audit Log (super admin only) ───
