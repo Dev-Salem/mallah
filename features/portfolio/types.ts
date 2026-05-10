@@ -13,6 +13,7 @@ export interface PortfolioSkill {
 
 // ─── Project types ───
 export interface PortfolioProject {
+    id: string;
     project_id: string;
     title: string;
     description: string | null;
@@ -44,6 +45,7 @@ export interface BaseProject {
     isPublic: boolean;
     techStack: string[];
     skills: {
+        id: string;
         name: string;
         category:
             | "fundamentals"
@@ -57,6 +59,8 @@ export interface BaseProject {
     githubUrl: string | null;
     demoUrl: string | null;
     completedAt: string | null;
+    startedAt: string | null;
+    bullets: string[];
     thumbnailUrl: string | null;
 }
 
@@ -76,7 +80,7 @@ export type Project = RoadmapProject | ExternalProject;
  */
 export function mapPortfolioProjectToProject(up: PortfolioProject): Project {
     const base: BaseProject = {
-        id: up.project_id,
+        id: up.id,
         title: up.custom_name || up.title,
         description: (up.custom_description || up.description) ?? "",
         difficulty: (up.difficulty_level as BaseProject["difficulty"]) || "beginner",
@@ -84,12 +88,15 @@ export function mapPortfolioProjectToProject(up: PortfolioProject): Project {
         isPublic: up.is_public,
         techStack: up.tech_stack || [],
         skills: up.skills.map((s) => ({
+            id: s.skill_id,
             name: s.name,
             category: s.category as any,
         })),
         githubUrl: up.github_url,
         demoUrl: up.demo_url,
         completedAt: up.completed_at,
+        startedAt: up.started_at,
+        bullets: up.bullets || [],
         thumbnailUrl: up.thumbnail_url,
     };
 
@@ -156,3 +163,20 @@ export const updateBioSchema = z.object({
 });
 
 export type UpdateBioInput = z.infer<typeof updateBioSchema>;
+
+export const updateExternalProjectSchema = z.object({
+    projectId: z.string(), // Record ID
+    title: z.string().min(1, 'Title is required').max(200),
+    description: z.string().min(1, 'Description is required').max(2000),
+    difficulty_level: z.enum(['beginner', 'intermediate', 'advanced']),
+    github_url: z.string().url('Invalid GitHub URL').optional().or(z.literal('')),
+    demo_url: z.string().url('Invalid Demo URL').optional().or(z.literal('')),
+    tech_stack: z.array(z.string()),
+    thumbnail_url: z.string().url('Invalid Thumbnail URL').optional().or(z.literal('')),
+    status: z.enum(['available', 'in_progress', 'completed']),
+    started_at: z.string().optional().or(z.literal('')),
+    bullets: z.array(z.string()).optional(),
+    skill_ids: z.array(z.string()).optional(),
+});
+
+export type UpdateExternalProjectInput = z.infer<typeof updateExternalProjectSchema>;
