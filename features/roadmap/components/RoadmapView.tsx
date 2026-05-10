@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { RoadmapData, Stage, Topic } from '../types';
-import { CheckCircle2, Circle, Lock, PlayCircle, FileText, FlaskConical, LayoutTemplate, Trophy, Video, BookOpen, Clock, Zap } from 'lucide-react';
+import { CertificateSuggestion, RoadmapData, Stage, Topic } from '../types';
+import { Award, CheckCircle2, Circle, ExternalLink, Lock, PlayCircle, FileText, FlaskConical, LayoutTemplate, Trophy, Video, BookOpen, Clock, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocale } from 'next-intl';
 
@@ -28,6 +28,7 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
 
     const pathId = roadmap.path_id as keyof typeof PATH_HEADER_STATS;
     const stats = PATH_HEADER_STATS[pathId] || PATH_HEADER_STATS.frontend;
+    const certificateSuggestions = roadmap.certificateStage?.suggestions ?? [];
 
     // Calculate dynamic stats
     let completedTopics = 0;
@@ -224,6 +225,23 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                         );
                     })}
                 </Accordion>
+
+                {certificateSuggestions.length > 0 && (
+                    <>
+                        <div className="relative flex flex-col items-center pt-8">
+                            <div className="z-20 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 border-primary/40 bg-primary/10 text-primary shadow-[0_0_18px_rgba(249,115,22,0.2)]">
+                                <Award className="h-4 w-4 md:h-5 md:w-5" />
+                            </div>
+                            <div className="absolute -bottom-7 text-[9px] font-mono text-primary/60 uppercase tracking-widest text-center">
+                                NEXT
+                            </div>
+                        </div>
+
+                        <div className="pb-16">
+                            <CertificateStageCard suggestions={certificateSuggestions} t={t} />
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
@@ -336,6 +354,91 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                     {t('unlock_notice', { stage: stage.order_index - 1 })}
                 </div>
             )}
+        </div>
+    );
+}
+
+function CertificateStageCard({ suggestions, t }: { suggestions: CertificateSuggestion[]; t: ReturnType<typeof useTranslations> }) {
+    return (
+        <div className="relative flex flex-col gap-6 rounded-3xl border border-primary/20 bg-card/70 p-6 md:p-10 shadow-[0_0_30px_rgba(249,115,22,0.06)]">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.04] via-transparent to-primary/[0.02] pointer-events-none rounded-3xl" />
+
+            <div className="relative z-10 flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                    <span className="rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-primary/80">
+                        {t('certificate_stage_label')}
+                    </span>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                        {t('certificate_stage_title')}
+                    </h3>
+                    <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                        {t('certificate_stage_description')}
+                    </p>
+                </div>
+            </div>
+
+            <div className="relative z-10 grid gap-4">
+                {suggestions.map((suggestion) => (
+                    <div
+                        key={suggestion.id}
+                        className="rounded-2xl border border-border/60 bg-background/80 p-5 transition-colors hover:border-primary/30"
+                    >
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            <div className="min-w-0 flex-1">
+                                <div className="mb-3 flex flex-wrap items-center gap-2">
+                                    <span className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-primary/80">
+                                        {suggestion.stageLabel}
+                                    </span>
+                                    {suggestion.afterText && (
+                                        <span className="text-[11px] font-mono uppercase tracking-[0.08em] text-muted-foreground/70">
+                                            {t('certificate_after', { after: suggestion.afterText })}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <h4 className="text-lg font-bold tracking-tight text-foreground">
+                                    {suggestion.title}
+                                </h4>
+
+                                <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                    <span>{t('certificate_provider', { provider: suggestion.provider })}</span>
+                                    {suggestion.costLabel && (
+                                        <span>{t('certificate_cost', { cost: suggestion.costLabel })}</span>
+                                    )}
+                                </div>
+
+                                {suggestion.costNote && (
+                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                        {suggestion.costNote}
+                                    </p>
+                                )}
+
+                                {suggestion.whyNow && (
+                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                        <span className="font-semibold text-foreground">{t('certificate_why_now_label')} </span>
+                                        {suggestion.whyNow}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="md:pl-6">
+                                <Link
+                                    href={suggestion.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary px-4 py-2 text-xs font-mono font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_18px_rgba(249,115,22,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_22px_rgba(249,115,22,0.3)]"
+                                >
+                                    {t('certificate_cta')}
+                                    <ExternalLink className="h-3.5 w-3.5" />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

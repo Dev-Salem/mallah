@@ -370,6 +370,14 @@
       "resume_project": "استئناف المشروع",
       "view_submission": "عرض التسليم"
     },
+    "certificate_stage_label": "مسار الشهادات",
+    "certificate_stage_title": "اقتراحات الشهادات الخارجية",
+    "certificate_stage_description": "اعتمادات اختيارية مناسبة لمستواك الحالي وتزيد من قوة ملفك المهني بعد إنهاء المرحلة المرتبطة بها.",
+    "certificate_after": "بعد: {after}",
+    "certificate_provider": "الجهة: {provider}",
+    "certificate_cost": "التكلفة: {cost}",
+    "certificate_why_now_label": "ليش الآن:",
+    "certificate_cta": "فتح الشهادة",
     "milestone_project": "مشروع رئيسي",
     "types": {
       "lesson": "درس",

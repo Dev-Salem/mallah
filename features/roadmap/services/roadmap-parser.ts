@@ -37,6 +37,18 @@ export interface ParsedStage {
     topics: ParsedTopic[];
 }
 
+export interface ParsedCertificateSuggestion {
+    id: string;
+    stageLabel: string;
+    afterText?: string;
+    title: string;
+    provider: string;
+    url: string;
+    costLabel?: string;
+    costNote?: string;
+    whyNow?: string;
+}
+
 const DASH_PATTERN = /(?:—|–|â€”|â€“)/;
 
 function parseHeadingParts(value: string): { orderLabel: string; title: string } | null {
@@ -88,6 +100,35 @@ function normalizeDifficulty(value: string): 'beginner' | 'intermediate' | 'adva
     if (normalized.includes("advanced")) return "advanced";
     if (normalized.includes("intermediate")) return "intermediate";
     return "beginner";
+}
+
+function slugify(value: string): string {
+    return value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+}
+
+function extractInlineValue(block: string, labelPattern: string): string | undefined {
+    const escaped = labelPattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = block.match(new RegExp(`\\*\\*${escaped}:\\*\\*\\s*([^\\n]+)`, "i"));
+    return match?.[1]?.trim();
+}
+
+function normalizeCostData(costLine?: string, explicitCostNote?: string): Pick<ParsedCertificateSuggestion, "costLabel" | "costNote"> {
+    if (!costLine && !explicitCostNote) {
+        return {};
+    }
+
+    const normalizedCostLine = costLine?.replace(/`/g, "").trim();
+    const parts = normalizedCostLine ? splitDashSegments(normalizedCostLine) : [];
+    const rawCostLabel = parts[0] || normalizedCostLine || undefined;
+    const inlineCostNote = parts.slice(1).join(" - ").trim() || undefined;
+
+    return {
+        costLabel: rawCostLabel?.replace(/_/g, " "),
+        costNote: explicitCostNote?.replace(/`/g, "").trim() || inlineCostNote,
+    };
 }
 
 export class RoadmapParser {
@@ -276,6 +317,63 @@ export class RoadmapParser {
         });
 
         return { pathId, stages };
+    }
+
+    static parseCertificateSuggestions(content: string): ParsedCertificateSuggestion[] {
+        const normalizedContent = content.replace(/\r\n/g, "\n");
+        const certificateSectionMatch = normalizedContent.match(/\n## Certificate Suggestions\s*([\s\S]+)/i);
+        if (!certificateSectionMatch) {
+            return [];
+        }
+
+        const certificateSection = certificateSectionMatch[1];
+        const rawBlocks = `\n${certificateSection}`.split(/\n### /m).slice(1);
+        const suggestions: ParsedCertificateSuggestion[] = [];
+
+        rawBlocks.forEach(rawBlock => {
+            const firstLineBreak = rawBlock.indexOf("\n");
+            if (firstLineBreak === -1) return;
+
+            const heading = rawBlock.substring(0, firstLineBreak).trim();
+            if (!heading.toLowerCase().includes("certificate suggestion")) return;
+
+            const body = rawBlock.substring(firstLineBreak);
+            const afterText = body.match(/\*\(After:\s*([^)]+)\)\*/i)?.[1]?.trim();
+            const certificatePattern = /\*\*Certificate(?:\s+\d+)?:\*\*\s*([^\n]+)\n([\s\S]*?)(?=\n\*\*Certificate(?:\s+\d+)?:\*\*|\n---|\n### |\n## |\s*$)/gi;
+            let certificateMatch: RegExpExecArray | null;
+            let certificateIndex = 0;
+
+            while ((certificateMatch = certificatePattern.exec(body)) !== null) {
+                certificateIndex += 1;
+
+                const detailsBlock = certificateMatch[2];
+                const provider = extractInlineValue(detailsBlock, "Provider");
+                const url = extractInlineValue(detailsBlock, "URL");
+                const costLine = extractInlineValue(detailsBlock, "Cost");
+                const explicitCostNote = extractInlineValue(detailsBlock, "cost_note");
+                const whyNow = detailsBlock.match(/\*\*Why now:\*\*\s*([\s\S]*?)(?=\n\*\*[A-Za-z]|\n---|\n### |\n## |\s*$)/i)?.[1]?.trim();
+                const { costLabel, costNote } = normalizeCostData(costLine, explicitCostNote);
+
+                if (!provider || !url) {
+                    continue;
+                }
+
+                const title = certificateMatch[1].trim();
+                suggestions.push({
+                    id: `${slugify(heading)}_${certificateIndex}_${slugify(title)}`,
+                    stageLabel: heading.replace(/\s*Certificate Suggestion\s*$/i, "").trim(),
+                    afterText,
+                    title,
+                    provider,
+                    url,
+                    costLabel,
+                    costNote,
+                    whyNow,
+                });
+            }
+        });
+
+        return suggestions;
     }
 
     static async syncToDatabase(pathId: string, stages: ParsedStage[], supabase: SupabaseClient) {

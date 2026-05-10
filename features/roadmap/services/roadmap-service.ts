@@ -1,5 +1,35 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { createClient } from '@/lib/supabase/server';
-import { RoadmapData, Stage, Topic, Project } from '../types';
+import { RoadmapData, Stage, Topic, Project, RoadmapCertificateStage } from '../types';
+import { RoadmapParser } from './roadmap-parser';
+import { ROADMAP_FILE_BY_PATH_ID } from './roadmap-seed-service';
+
+const ROADMAPS_DIR = path.join(process.cwd(), 'docs', 'mallah-roadmap-and-topic-viewer');
+
+async function loadCertificateStage(pathId: string): Promise<RoadmapCertificateStage | null> {
+    const roadmapFile = ROADMAP_FILE_BY_PATH_ID[pathId as keyof typeof ROADMAP_FILE_BY_PATH_ID];
+    if (!roadmapFile) {
+        return null;
+    }
+
+    try {
+        const content = await fs.readFile(path.join(ROADMAPS_DIR, roadmapFile), 'utf-8');
+        const suggestions = RoadmapParser.parseCertificateSuggestions(content);
+
+        if (suggestions.length === 0) {
+            return null;
+        }
+
+        return {
+            title: 'Certificate Suggestions',
+            suggestions,
+        };
+    } catch (error) {
+        console.error(`Failed to load certificate suggestions for ${pathId}:`, error);
+        return null;
+    }
+}
 
 export class RoadmapService {
     static async getUserRoadmap(userId: string): Promise<RoadmapData | null> {
@@ -107,9 +137,12 @@ export class RoadmapService {
             } as Stage;
         });
 
+        const certificateStage = await loadCertificateStage(pathId);
+
         return {
             path_id: pathId,
-            stages
+            stages,
+            certificateStage,
         };
     }
 

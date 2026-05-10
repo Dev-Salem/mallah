@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { RoadmapParser } from "./roadmap-parser.ts";
+import { RoadmapParser } from "./roadmap-parser";
 
 export const ROADMAP_FILE_BY_PATH_ID = {
     frontend: "frontend-roadmap.md",

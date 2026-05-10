@@ -370,6 +370,14 @@
       "resume_project": "Resume Project",
       "view_submission": "View Submission"
     },
+    "certificate_stage_label": "Certificate Track",
+    "certificate_stage_title": "External Certificate Suggestions",
+    "certificate_stage_description": "Optional credentials that fit your current level and strengthen your public signal once you finish the matching stage.",
+    "certificate_after": "After: {after}",
+    "certificate_provider": "Provider: {provider}",
+    "certificate_cost": "Cost: {cost}",
+    "certificate_why_now_label": "Why now:",
+    "certificate_cta": "Open Certificate",
     "milestone_project": "Milestone Project",
     "types": {
       "lesson": "Lesson",
