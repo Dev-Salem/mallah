@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,16 +13,24 @@ interface ProjectsSectionProps {
     projects: PortfolioProject[];
     catalog: { skill_id: string; name: string; category: string }[];
     isPublicView?: boolean;
+    initialOpenProjectId?: string | null;
 }
 
-export function ProjectsSection({ projects, catalog, isPublicView = false }: ProjectsSectionProps) {
+export function ProjectsSection({ projects, catalog, isPublicView = false, initialOpenProjectId = null }: ProjectsSectionProps) {
     const t = useTranslations('PortfolioHub.projects');
     const tTabs = useTranslations('PortfolioHub.tabs');
     const [isAddOpen, setIsAddOpen] = useState(false);
+    const router = useRouter();
+    const pathname = usePathname();
 
     // Map the internal projects to the UI Project types
     const mappedProjects = projects.map(mapPortfolioProjectToProject);
     const viewMode = isPublicView ? "public" : "private";
+
+    useEffect(() => {
+        if (!initialOpenProjectId || isPublicView) return;
+        router.replace(pathname, { scroll: false });
+    }, [initialOpenProjectId, isPublicView, pathname, router]);
 
     return (
         <div className="space-y-6">
@@ -41,6 +50,7 @@ export function ProjectsSection({ projects, catalog, isPublicView = false }: Pro
             <ProjectCardGrid 
                 projects={mappedProjects} 
                 viewMode={viewMode} 
+                initialOpenProjectId={initialOpenProjectId}
             />
 
             {!isPublicView && (

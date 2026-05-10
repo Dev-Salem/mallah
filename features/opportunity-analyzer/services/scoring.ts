@@ -3,6 +3,8 @@ import {
     ExtractedCV,
     MAX_MATCH_SCORE,
     MatchScoreBreakdown,
+    MissingSkillItem,
+    MissingSkillRoadmapTopic,
     PREFERRED_SKILL_WEIGHT,
     PROJECT_WEIGHT,
     REQUIRED_SKILL_WEIGHT,
@@ -69,6 +71,14 @@ type InProgressTopic = {
 
 type RolePath = 'frontend' | 'fullstack' | 'cybersecurity' | 'datascience' | 'unknown';
 
+type RoadmapTopicCandidate = {
+    topic_id: string;
+    topic_title: string;
+    stage_title: string;
+    stage_order_index: number;
+    linked_skills: string[];
+};
+
 type SkillMatchOutcome = {
     score: 0 | 0.5 | 1;
     info?: SkillMatchInfo;
@@ -132,8 +142,20 @@ const ROLE_KEYWORDS: Record<RolePath, string[]> = {
     unknown: [],
 };
 
-function normalizeText(value: string): string {
-    let normalized = value.toLowerCase().trim();
+const CREDENTIAL_PATTERNS = [
+    /\bbachelor'?s?\b/,
+    /\bmaster'?s?\b/,
+    /\bphd\b/,
+    /\bdegree\b/,
+    /\bcertification\b/,
+    /\bcertificate\b/,
+    /\bdiploma\b/,
+    /\blicen[cs]e\b/,
+    /\bbootcamp\b/,
+] as const;
+
+function normalizeText(value: string | null | undefined): string {
+    let normalized = (value ?? '').toLowerCase().trim();
 
     for (const [alias, canonical] of Object.entries(SKILL_ALIASES)) {
         normalized = normalized.replaceAll(alias, canonical);
@@ -145,6 +167,24 @@ function normalizeText(value: string): string {
         .replace(/[^\w\s+/.&]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
+}
+
+export function isCredentialRequirement(value: string): boolean {
+    const normalized = normalizeText(value);
+    return CREDENTIAL_PATTERNS.some((pattern) => pattern.test(normalized));
+}
+
+export function sanitizeExtractedSkills(skills: string[]): string[] {
+    const deduped = new Map<string, string>();
+
+    for (const skill of skills) {
+        if (isCredentialRequirement(skill)) continue;
+        const normalized = normalizeText(skill);
+        if (!normalized) continue;
+        if (!deduped.has(normalized)) deduped.set(normalized, skill.trim());
+    }
+
+    return Array.from(deduped.values());
 }
 
 function getLevelRank(level?: string | null): number {
@@ -182,6 +222,13 @@ function isRelatedSkill(requiredSkill: string, candidateSkill: string): boolean 
 
     const related = RELATED_SKILLS[normalizedRequired] ?? [];
     return related.includes(normalizedCandidate);
+}
+
+function isSubsetSkill(requiredSkill: string, candidateSkill: string): boolean {
+    const requiredParts = splitRequirementParts(requiredSkill);
+    const normalizedCandidate = normalizeText(candidateSkill);
+
+    return requiredParts.length > 1 && requiredParts.some((part) => stringsOverlap(part, normalizedCandidate));
 }
 
 function partialCompositeCoverage(parts: string[], candidates: string[]): number {
@@ -247,9 +294,9 @@ function buildProjectSkillList(project: LearnerProject): string[] {
     ];
 }
 
-function countProjectCoverage(requiredSkills: string[], projectSkills: string[]): number {
+export function getCoveredSkillsForProject(requiredSkills: string[], projectSkills: string[]): string[] {
     const normalizedProjectSkills = projectSkills.map((skill) => normalizeText(skill));
-    let matched = 0;
+    const coveredSkills: string[] = [];
 
     for (const requiredSkill of requiredSkills) {
         const parts = splitRequirementParts(requiredSkill);
@@ -258,17 +305,21 @@ function countProjectCoverage(requiredSkills: string[], projectSkills: string[])
         );
 
         if (hasFullMatch) {
-            matched += 1;
+            coveredSkills.push(requiredSkill);
             continue;
         }
 
         const partialScore = partialCompositeCoverage(parts, normalizedProjectSkills);
         if (partialScore > 0 || normalizedProjectSkills.some((projectSkill) => isRelatedSkill(requiredSkill, projectSkill))) {
-            matched += 1;
+            coveredSkills.push(requiredSkill);
         }
     }
 
-    return matched;
+    return coveredSkills;
+}
+
+function countProjectCoverage(requiredSkills: string[], projectSkills: string[]): number {
+    return getCoveredSkillsForProject(requiredSkills, projectSkills).length;
 }
 
 function evaluateRequirementMatch(
@@ -330,7 +381,7 @@ function evaluateRequirementMatch(
                     current_level: exactMatch.level,
                     required_level: requiredLevel,
                     weight: 0.5,
-                    match_reason: 'Lower level than the job asks for.',
+                    match_reason: `You have ${exactMatch.name} (${exactMatch.level}) - this role needs ${requiredLevel}.`,
                 },
             };
         }
@@ -363,7 +414,7 @@ function evaluateRequirementMatch(
                 current_level: compositePartial.level,
                 required_level: requiredLevel,
                 weight: 0.5,
-                match_reason: 'Partial coverage of a multi-part requirement.',
+                match_reason: `You have ${compositePartial.name} - this role also needs the rest of ${skill}.`,
             },
         };
     }
@@ -381,7 +432,7 @@ function evaluateRequirementMatch(
                 current_level: relatedMallah.level,
                 required_level: requiredLevel,
                 weight: 0.5,
-                match_reason: 'Close variant in the same stack.',
+                match_reason: `You have ${relatedMallah.name} - this role requires ${skill}.`,
             },
         };
     }
@@ -399,7 +450,7 @@ function evaluateRequirementMatch(
                 required_level: requiredLevel,
                 current_level: 'in progress',
                 weight: 0.5,
-                match_reason: 'You are actively learning this through an in-progress roadmap topic.',
+                match_reason: `${inProgressMatch.name} topic in progress - finish it to fully match.`,
             },
         };
     }
@@ -439,7 +490,11 @@ export function calculateOpportunityScore(params: {
         const outcome = evaluateRequirementMatch(skill, 'required', mallahSkills, cvData, progress);
         if (outcome.score === 1 && outcome.info) breakdown.matched.push(outcome.info);
         else if (outcome.score === 0.5 && outcome.info) breakdown.partial.push(outcome.info);
-        else breakdown.missing.required.push(skill);
+        else breakdown.missing.required.push({
+            skill_name: skill,
+            roadmap_topic: null,
+            outside_current_path: false,
+        });
         requiredCoveragePoints += outcome.score;
     }
 
@@ -447,7 +502,11 @@ export function calculateOpportunityScore(params: {
         const outcome = evaluateRequirementMatch(skill, 'preferred', mallahSkills, cvData, progress);
         if (outcome.score === 1 && outcome.info) breakdown.matched.push(outcome.info);
         else if (outcome.score === 0.5 && outcome.info) breakdown.partial.push(outcome.info);
-        else breakdown.missing.preferred.push(skill);
+        else breakdown.missing.preferred.push({
+            skill_name: skill,
+            roadmap_topic: null,
+            outside_current_path: false,
+        });
         preferredCoveragePoints += outcome.score;
     }
 
@@ -522,4 +581,51 @@ export function getScoreBarColor(score: number): string {
 
 export function isApplyReady(score: number): boolean {
     return score >= APPLY_READY_SCORE;
+}
+
+export function findRoadmapTopicForSkill(
+    skill: string,
+    roadmapTopics: RoadmapTopicCandidate[]
+): MissingSkillRoadmapTopic | null {
+    const exactMatch = roadmapTopics.find((topic) =>
+        topic.linked_skills.some((linkedSkill) => stringsOverlap(normalizeText(skill), normalizeText(linkedSkill)))
+    );
+
+    if (exactMatch) {
+        return {
+            topic_id: exactMatch.topic_id,
+            topic_title: exactMatch.topic_title,
+            stage_title: exactMatch.stage_title,
+            stage_order_index: exactMatch.stage_order_index,
+        };
+    }
+
+    const relatedMatch = roadmapTopics.find((topic) =>
+        topic.linked_skills.some((linkedSkill) =>
+            isRelatedSkill(skill, linkedSkill) || isSubsetSkill(skill, linkedSkill)
+        )
+    );
+
+    if (!relatedMatch) return null;
+
+    return {
+        topic_id: relatedMatch.topic_id,
+        topic_title: relatedMatch.topic_title,
+        stage_title: relatedMatch.stage_title,
+        stage_order_index: relatedMatch.stage_order_index,
+    };
+}
+
+export function enrichMissingSkillsWithRoadmap(
+    items: MissingSkillItem[],
+    roadmapTopics: RoadmapTopicCandidate[]
+): MissingSkillItem[] {
+    return items.map((item) => {
+        const topic = findRoadmapTopicForSkill(item.skill_name, roadmapTopics);
+        return {
+            ...item,
+            roadmap_topic: topic,
+            outside_current_path: !topic,
+        };
+    });
 }

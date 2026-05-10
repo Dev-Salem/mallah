@@ -8,6 +8,14 @@ import { CheckCircle2, AlertTriangle, ArrowRight, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { getScoreTextColor, isApplyReady } from '../../services/scoring';
 
+function getMissingSkillName(skill: unknown): string {
+    if (typeof skill === 'string') return skill;
+    if (skill && typeof skill === 'object' && typeof (skill as { skill_name?: unknown }).skill_name === 'string') {
+        return (skill as { skill_name: string }).skill_name;
+    }
+    return '';
+}
+
 export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
     const t = useTranslations('Dashboard.Opportunities');
     const applyReady = isApplyReady(result.match_score);
@@ -86,7 +94,7 @@ export function ResultsTab({ result }: { result: OpportunityAnalysisResult }) {
                         <div className="flex flex-wrap gap-2 text-sm">
                             {result.skills_breakdown.missing.required.slice(0, 5).map((skill, i) => (
                                 <Badge key={i} variant="outline" className="border-red-200 bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400">
-                                    {skill}
+                                    {getMissingSkillName(skill)}
                                 </Badge>
                             ))}
                             {result.skills_breakdown.missing.required.length > 5 && (

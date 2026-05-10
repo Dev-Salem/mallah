@@ -49,13 +49,52 @@ export interface SkillMatchInfo {
     match_reason?: string;
 }
 
+export interface MissingSkillRoadmapTopic {
+    topic_id: string;
+    topic_title: string;
+    stage_title: string;
+    stage_order_index: number;
+}
+
+export interface MissingSkillItem {
+    skill_name: string;
+    roadmap_topic: MissingSkillRoadmapTopic | null;
+    outside_current_path: boolean;
+}
+
 export interface MatchScoreBreakdown {
     matched: SkillMatchInfo[];
     partial: SkillMatchInfo[];
     missing: {
-        required: string[];
-        preferred: string[];
+        required: MissingSkillItem[];
+        preferred: MissingSkillItem[];
     };
+}
+
+export interface PortfolioSyncRelevantProject {
+    id: string;
+    title: string;
+    covered_skills: string[];
+    source_label: 'Mallah Roadmap' | 'Portfolio Hub' | 'From CV';
+    source_type: 'roadmap' | 'portfolio' | 'cv';
+    project_url: string | null;
+}
+
+export interface PortfolioSyncSuggestion {
+    suggestion_id: string;
+    suggestion_type: 'catalog' | 'generated';
+    project_id: string | null;
+    title: string;
+    covered_skills: string[];
+    effort_level: 'Beginner' | 'Intermediate';
+    reason: string;
+    description: string;
+}
+
+export interface PortfolioSyncData {
+    existing_total_count: number;
+    existing_relevant_projects: PortfolioSyncRelevantProject[];
+    build_suggestions: PortfolioSyncSuggestion[];
 }
 
 export type ActionStepType = 'learn_topic' | 'build_project' | 'update_resume' | 'apply_now';

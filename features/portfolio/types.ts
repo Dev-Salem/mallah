@@ -144,7 +144,7 @@ export const addExternalProjectSchema = z.object({
     demo_url: z.string().optional().or(z.literal('')),
     tech_stack: z.array(z.string()).optional(),
     skill_ids: z.array(z.string()).optional(),
-    status: z.enum(['in_progress', 'completed']),
+    status: z.enum(['available', 'in_progress', 'completed']),
     started_at: z.string().optional(),
     bullets: z.array(z.string()).optional(),
 });

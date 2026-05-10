@@ -231,7 +231,7 @@
           "dragActive": "Processing resume...",
           "ready": "Resume processed",
           "empty": "Upload Resume (Optional)",
-          "formats": "Accepts PDF or DOCX up to 5MB",
+          "formats": "Accepts PDF up to 5MB",
           "status": "System Status: Ready"
         }
       },

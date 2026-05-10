@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Lock, Code2, User } from 'lucide-react';
 import { Project } from '../types';
@@ -10,10 +10,17 @@ import './projectCards.css';
 interface ProjectCardProps {
     project: Project;
     viewMode: "private" | "public";
+    initiallyOpen?: boolean;
 }
 
-export function ProjectCard({ project, viewMode }: ProjectCardProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export function ProjectCard({ project, viewMode, initiallyOpen = false }: ProjectCardProps) {
+    const [isModalOpen, setIsModalOpen] = useState(initiallyOpen);
+
+    useEffect(() => {
+        if (initiallyOpen) {
+            setIsModalOpen(true);
+        }
+    }, [initiallyOpen]);
 
     const isRoadmap = project.sourceType === "roadmap";
     const isPrivate = !project.isPublic;

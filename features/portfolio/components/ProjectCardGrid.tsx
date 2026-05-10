@@ -8,9 +8,10 @@ import { useTranslations } from "next-intl";
 interface ProjectCardGridProps {
     projects: Project[];
     viewMode: "private" | "public";
+    initialOpenProjectId?: string | null;
 }
 
-export function ProjectCardGrid({ projects, viewMode }: ProjectCardGridProps) {
+export function ProjectCardGrid({ projects, viewMode, initialOpenProjectId = null }: ProjectCardGridProps) {
     const t = useTranslations('PortfolioHub.projects');
 
     if (projects.length === 0) {
@@ -41,6 +42,7 @@ export function ProjectCardGrid({ projects, viewMode }: ProjectCardGridProps) {
                     key={project.id} 
                     project={project} 
                     viewMode={viewMode} 
+                    initiallyOpen={project.id === initialOpenProjectId}
                 />
             ))}
         </div>

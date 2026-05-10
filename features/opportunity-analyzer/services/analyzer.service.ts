@@ -163,8 +163,25 @@ export const analyzerService = {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error("Not authenticated");
 
-        // Use Promise.all to fetch skills, projects, and progress concurrently
-        const [skillsRes, projectsRes, progressRes, profileRes] = await Promise.all([
+        const profileRes = await supabase
+            .from('learners')
+            .select('current_path_id, readiness_level')
+            .eq('user_id', user.id)
+            .single();
+
+        if (profileRes.error) throw profileRes.error;
+
+        const currentPathId = profileRes.data?.current_path_id;
+
+        const roadmapTopicsPromise = currentPathId
+            ? supabase
+                .from('topics')
+                .select('topic_id, title, topic_skills(skills(name)), stages!inner(title, order_index, path_id)')
+                .eq('stages.path_id', currentPathId)
+            : Promise.resolve({ data: [], error: null });
+
+        // Use Promise.all to fetch skills, projects, progress, and current-path topics concurrently
+        const [skillsRes, projectsRes, progressRes, roadmapTopicsRes] = await Promise.all([
             supabase.from('user_skills').select('*, skills(name, category)').eq('user_id', user.id),
             supabase
                 .from('user_projects')
@@ -176,23 +193,68 @@ export const analyzerService = {
                 .select('status, topics(title, topic_skills(skills(name, category)))')
                 .eq('user_id', user.id)
                 .eq('status', 'in_progress'),
-            supabase
-                .from('learners')
-                .select('current_path_id, readiness_level')
-                .eq('user_id', user.id)
-                .single()
+            roadmapTopicsPromise
         ]);
 
         if (skillsRes.error) throw skillsRes.error;
         if (projectsRes.error) throw projectsRes.error;
         if (progressRes.error) throw progressRes.error;
-        if (profileRes.error) throw profileRes.error;
+        if (roadmapTopicsRes.error) throw roadmapTopicsRes.error;
 
         return {
             skills: skillsRes.data,
             completedProjects: projectsRes.data,
             progress: progressRes.data,
-            learnerProfile: profileRes.data
+            learnerProfile: profileRes.data,
+            roadmapTopics: roadmapTopicsRes.data ?? []
+        };
+    },
+
+    getPortfolioSyncSourceData: async () => {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Not authenticated");
+
+        const cvUploadPromise = supabase
+            .from('cv_uploads')
+            .select('cv_projects')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+        const [completedProjectsRes, userProjectsRes, catalogProjectsRes, cvUploadRes, skillsCatalogRes] = await Promise.all([
+            supabase
+                .from('user_projects')
+                .select('project_id, github_url, demo_url, tech_stack, projects(title, description, source_type, difficulty_level, recommended_tech, project_skills(skills(skill_id, name, category)))')
+                .eq('user_id', user.id)
+                .eq('status', 'completed'),
+            supabase
+                .from('user_projects')
+                .select('project_id')
+                .eq('user_id', user.id),
+            supabase
+                .from('projects')
+                .select('project_id, title, description, difficulty_level, recommended_tech, source_type, project_skills(skills(skill_id, name, category))')
+                .eq('is_active', true)
+                .eq('source_type', 'roadmap'),
+            cvUploadPromise,
+            supabase
+                .from('skills')
+                .select('skill_id, name')
+                .eq('is_verified', true)
+        ]);
+
+        if (completedProjectsRes.error) throw completedProjectsRes.error;
+        if (userProjectsRes.error) throw userProjectsRes.error;
+        if (catalogProjectsRes.error) throw catalogProjectsRes.error;
+        if (cvUploadRes.error && cvUploadRes.error.code !== 'PGRST116') throw cvUploadRes.error;
+        if (skillsCatalogRes.error) throw skillsCatalogRes.error;
+
+        return {
+            completedProjects: completedProjectsRes.data ?? [],
+            existingUserProjectIds: (userProjectsRes.data ?? []).map((project) => project.project_id),
+            catalogProjects: catalogProjectsRes.data ?? [],
+            cvProjects: (cvUploadRes.data?.cv_projects as ExtractedCV['extracted_projects'] | null) ?? [],
+            skillsCatalog: skillsCatalogRes.data ?? [],
         };
     }
 };

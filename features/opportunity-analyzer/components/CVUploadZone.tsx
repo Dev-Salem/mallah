@@ -65,8 +65,7 @@ export function CVUploadZone({ fileName, onUploadStarted, onUploadComplete, onRe
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
-            'application/pdf': ['.pdf'],
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+            'application/pdf': ['.pdf']
         },
         maxFiles: 1,
         disabled: !!fileName || isUploading
