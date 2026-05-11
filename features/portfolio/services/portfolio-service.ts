@@ -470,7 +470,7 @@ export async function updateExternalProject(
             description: data.description,
             difficulty_level: data.difficulty_level,
             thumbnail_url: data.thumbnail_url,
-            is_public: true // Custom projects are usually public templates
+            is_public_default: true // Custom projects are usually public templates
         })
         .eq('project_id', templateId);
 
@@ -483,6 +483,7 @@ export async function updateExternalProject(
             status: data.status,
             github_url: data.github_url,
             demo_url: data.demo_url,
+            thumbnail_url: data.thumbnail_url,
             tech_stack: data.tech_stack,
             started_at: data.started_at,
             bullets: data.bullets,

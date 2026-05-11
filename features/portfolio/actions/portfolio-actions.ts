@@ -135,6 +135,7 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
                 description: data.description,
                 difficulty_level: data.difficulty_level,
                 source_type: 'user_custom',
+                thumbnail_url: data.thumbnail_url,
                 is_public_default: true,
                 is_active: true,
             })
@@ -167,6 +168,7 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
                 is_public: true,
                 github_url: data.github_url || null,
                 demo_url: data.demo_url || null,
+                thumbnail_url: data.thumbnail_url || null,
                 tech_stack: data.tech_stack ?? [],
                 completed_at: data.status === 'completed' ? new Date().toISOString() : null,
                 started_at: (data.started_at && data.started_at.trim() !== '') ? data.started_at : null,

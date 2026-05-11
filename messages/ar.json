@@ -722,7 +722,12 @@
         "removeImage": "إزالة الصورة",
         "submit": "إضافة المشروع",
         "submitting": "جاري الإضافة...",
-        "successMessage": "تمت إضافة المشروع الخارجي بنجاح."
+        "successMessage": "تمت إضافة المشروع الخارجي بنجاح.",
+        "searchSkillsPlaceholder": "ابحث عن المهارات...",
+        "noSkillsFound": "لم يتم العثور على مهارات تطابق بحثك.",
+        "selectedSkillsCount": "تم اختيار {count}",
+        "updateSubmit": "حفظ التغييرات",
+        "updateSuccessMessage": "تم تحديث المشروع بنجاح!"
       },
       "statusInProgress": "قيد التنفيذ",
       "statusCompleted": "مكتمل",

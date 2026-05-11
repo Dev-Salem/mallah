@@ -792,7 +792,12 @@
         "removeImage": "Remove Image",
         "submit": "Add Project",
         "submitting": "Adding Project.",
-        "successMessage": "External project added successfully."
+        "successMessage": "External project added successfully.",
+        "searchSkillsPlaceholder": "Search skills...",
+        "noSkillsFound": "No skills matching your search.",
+        "selectedSkillsCount": "{count} Selected",
+        "updateSubmit": "Save Changes",
+        "updateSuccessMessage": "Project updated successfully!"
       },
       "privateBadge": "Private",
       "visibilityPublic": "Project is now public",
