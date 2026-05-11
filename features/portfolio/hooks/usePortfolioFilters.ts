@@ -1,7 +1,6 @@
 'use client';
 
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { PortfolioProject } from '../types';
 
 export type PortfolioTab = 'all' | 'available' | 'in_progress' | 'completed';
@@ -9,32 +8,32 @@ export type ProjectTypeFilter = 'all' | 'roadmap' | 'external';
 export type VisibilityFilter = 'all' | 'public' | 'private';
 
 export function usePortfolioFilters(projects: PortfolioProject[], isOwner: boolean) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  // 1. Local State for instant, non-navigational filtering
+  const [activeTab, setActiveTab] = useState<PortfolioTab>('all');
+  const [typeFilter, setTypeFilter] = useState<ProjectTypeFilter>('all');
+  const [visibilityFilter, setVisibilityFilter] = useState<VisibilityFilter>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // 1. Read state from URL
-  const activeTab = (searchParams.get('tab') as PortfolioTab) || 'all';
-  const typeFilter = (searchParams.get('type') as ProjectTypeFilter) || 'all';
-  const visibilityFilter = (searchParams.get('visibility') as VisibilityFilter) || 'all';
-
-  // 2. Sync state to URL
-  const setFilter = useCallback((key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === 'all' || !value) {
-      params.delete(key);
-    } else {
-      params.set(key, value);
+  // 2. Local setter function
+  const setFilter = useCallback((key: string, value: any) => {
+    switch (key) {
+      case 'tab':
+        setActiveTab(value || 'all');
+        break;
+      case 'type':
+        setTypeFilter(value || 'all');
+        break;
+      case 'visibility':
+        setVisibilityFilter(value || 'all');
+        break;
+      case 'q':
+        setSearchQuery(value || '');
+        break;
     }
-    // Using router.replace to avoid clogging history with filter changes
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [searchParams, router, pathname]);
+  }, []);
 
   // 3. Derived State: Counts
-  // We compute counts based on the current TYPE and VISIBILITY filters, but showing counts across ALL TABS
-  // However, spec says "live badge count", usually meaning the count of items that WOULD show up in that tab.
   const counts = useMemo(() => {
-    // We only filter by type and visibility to get the counts for each tab
     const baseList = projects.filter(project => {
         // Type Filter
         if (typeFilter !== 'all') {
@@ -58,7 +57,7 @@ export function usePortfolioFilters(projects: PortfolioProject[], isOwner: boole
     };
   }, [projects, typeFilter, visibilityFilter, isOwner]);
 
-  // 4. Derived State: Filtered Projects (The actual list to render)
+  // 4. Derived State: Filtered Projects
   const filteredProjects = useMemo(() => {
     return projects.filter(project => {
       // Tab Filter
@@ -77,15 +76,25 @@ export function usePortfolioFilters(projects: PortfolioProject[], isOwner: boole
         if (visibilityFilter === 'private' && project.is_public) return false;
       }
 
+      // Search Query Filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = project.title.toLowerCase().includes(query);
+        const matchesDesc = project.description?.toLowerCase().includes(query);
+        if (!matchesName && !matchesDesc) return false;
+      }
+
       return true;
     });
-  }, [projects, activeTab, typeFilter, visibilityFilter, isOwner]);
+  }, [projects, activeTab, typeFilter, visibilityFilter, isOwner, searchQuery]);
 
   return {
     activeTab,
     typeFilter,
     visibilityFilter,
+    searchQuery,
     setFilter,
+    setSearchQuery,
     filteredProjects,
     counts
   };

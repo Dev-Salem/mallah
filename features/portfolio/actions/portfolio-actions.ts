@@ -52,28 +52,67 @@ export async function addManualSkillAction(input: AddManualSkillInput): Promise<
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: 'Unauthorized' };
 
-    // Check for duplicates
+    const admin = getSupabaseAdmin();
+    let finalSkillId = parsed.data.skill_id;
+
+    // 1. Handle Custom Skill Creation
+    if (!finalSkillId && parsed.data.custom_name) {
+        // Check if a skill with this name already exists (to avoid duplicate skills in catalog)
+        const { data: existingSkill } = await admin
+            .from('skills')
+            .select('skill_id')
+            .ilike('name', parsed.data.custom_name)
+            .maybeSingle();
+
+        if (existingSkill) {
+            finalSkillId = existingSkill.skill_id;
+        } else {
+            // Create new unverified skill
+            const { data: newSkill, error: skillErr } = await admin
+                .from('skills')
+                .insert({
+                    skill_id: crypto.randomUUID(),
+                    name: parsed.data.custom_name,
+                    category: parsed.data.custom_category || 'Other',
+                    is_verified: false
+                })
+                .select()
+                .single();
+
+            if (skillErr || !newSkill) {
+                return { success: false, error: skillErr?.message || 'Failed to create custom skill' };
+            }
+            finalSkillId = newSkill.skill_id;
+        }
+    }
+
+    if (!finalSkillId) return { success: false, error: 'No skill selected or defined' };
+
+    // 2. Check for duplicates in user profile
     const { data: existing } = await supabase
         .from('user_skills')
         .select('skill_id')
         .eq('user_id', user.id)
-        .eq('skill_id', parsed.data.skill_id)
+        .eq('skill_id', finalSkillId)
         .maybeSingle();
 
-    if (existing) return { success: false, error: 'You already have this skill.' };
+    if (existing) return { success: false, error: 'You already have this skill in your expertise board.' };
 
+    // 3. Link skill to user
     const { error } = await supabase
         .from('user_skills')
         .insert({
             user_id: user.id,
-            skill_id: parsed.data.skill_id,
+            skill_id: finalSkillId,
             level: parsed.data.level,
             source: 'manual',
-            is_public: true,
+            is_public: parsed.data.is_public ?? true,
         });
 
     if (error) return { success: false, error: error.message };
+    
     revalidatePath('/dashboard/portfolio');
+    revalidatePath('/portfolio', 'layout');
     return { success: true };
 }
 

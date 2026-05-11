@@ -500,7 +500,6 @@
     "strengths": "نقاط القوة",
     "improvements": "مجالات التحسين",
     "close": "إغلاق",
-    "submitInstructions": "نحن نقوم حالياً بمراجعة مشروعك. يستغرق هذا عادةً أقل من دقيقة.",
     "fastTracked": "مشروع تم تخطيه",
     "skippedNotice": "لقد قمت بتخطي هذا المشروع للتركيز على مراحل متقدمة. يمكنك العودة في أي وقت لتسليمه وتوثيق مهاراتك في ملفك الشخصي.",
     "resumeAndValidate": "استئناف والتحقق",
@@ -525,110 +524,22 @@
     "continue": "متابعة",
     "intro": {
       "title": "اكتشف مسارك المهني المثالي",
-      "subtitle": "أجب على بضع أسئلة لنبني لك خارطة طريق مهنية مخصصة، مدعومة بالذكاء الاصطناعي.",
-      "promise": "⏱ يستغرق حوالي دقيقتين. إجاباتك تساعدنا في تصميم رحلة التعلم المثالية لك.",
-      "startButton": "ابدأ رحلتي"
-    },
-    "identity": {
-      "question": "وينك فيه الآن بمسيرتك؟",
-      "options": {
-        "student": "طالب حالي",
-        "fresh_grad": "خريج جديد",
-        "career_shifter": "أبي أغير مساري المهني",
-        "no_tech": "مبتدئ من الصفر"
+      "goals": {
+        "job": "الحصول على وظيفة بدوام كامل",
+        "freelance": "العمل حر",
+        "startup": "بناء مشروعي الخاص",
+        "exploring": "استكشاف فقط"
       }
-    },
-    "goal": {
-      "question": "وش هدفك الأساسي؟",
-      "options": {
-        "job": "أبي وظيفة بدوام كامل",
-        "freelance": "أبي أشتغل عمل حر (Freelance)",
-        "startup": "أبي أبني مشروعي الخاص",
-        "exploring": "أبي أستكشف المجالات المتاحة"
-      }
-    },
-    "commitment": {
-      "question": "كم ساعة تقدر تخصص أسبوعياً؟",
-      "options": {
-        "0-3": "خفيف (0–3 ساعات/أسبوع)",
-        "4-7": "مستمر (4–7 ساعات/أسبوع)",
-        "8-12": "جاد (8–12 ساعة/أسبوع)",
-        "13+": "مكثف (+13 ساعة/أسبوع)"
-      },
-      "preview": "بهذا المعدل، تقدر تخلّص أول مشروع كبير لك خلال {weeks} أسابيع تقريباً."
-    },
-    "interests": {
-      "question": "وش اللي يشدك أكثر؟",
-      "hint": "اختر كل اللي يعجبك عشان نحسّن من دقة مسارك.",
-      "signals": {
-        "visual-building": "بناء تطبيقات وواجهات بصرية",
-        "puzzles-weaknesses": "حل الألغاز والأمن السيبراني",
-        "numbers-data": "التعامل مع البيانات والأنماط",
-        "logic-systems": "بناء المنطق والأنظمة الخلفية"
-      }
-    },
-    "confidence": {
-      "question": "قولنا شوي عن خبرتك",
-      "hint": "ما فيه إجابة غلط، هدفنا بس نحدد السرعة المناسبة لك.",
-      "statements": {
-        "git": "تعاملت مع Git من قبل",
-        "api": "أعرف وش يعني API",
-        "program": "قد كتبت كود بسيط من قبل",
-        "project": "بنيت مشروع من الصفر للآخر"
-      },
-      "levels": {
-        "never": "جديد على المجال",
-        "tried": "قد جربت",
-        "comfortable": "عندي خلفية كويسة"
-      }
-    },
-    "preferences": {
-      "title": "تفضيلات التعلم",
-      "languageQuestion": "وش اللغة اللي تفضل المساعد الذكي يتكلم بها؟",
-      "languages": {
-        "arabic": "العربية",
-        "english": "الإنجليزية",
-        "mix": "مزيج (عربي وإنجليزي)"
-      },
-      "detailQuestion": "كيف تبي أسلوب الشرح؟",
-      "details": {
-        "short": "مختصر ومباشر",
-        "balanced": "متوازن",
-        "detailed": "شرح عميق ومفصل"
-      },
-      "submit": "اعرض مساري"
-    },
-    "loading": {
-      "title": "جاري بناء ملفك...",
-      "subtitle": "نحلل إجاباتك الحين عشان نطلع لك أفضل مسار مهني يناسبك. ثواني بس..."
-    },
-    "recommendation": {
-      "matchScore": "تطابق بنسبة {score}%",
-      "matchLabel": "المسار الموصى به",
-      "whyFits": "ليش هذا المسار يناسبك؟",
-      "whatYoullLearn": "وش بتبدع فيه؟",
-      "skills": "أهم المهارات",
-      "projects": "المشاريع الأساسية",
-      "careers": "مستقبلك المهني",
-      "alternatives": "مسارات ثانية ممكن تهمك",
-      "startButton": "ابدأ رحلتي الآن",
-      "chooseDifferent": "استكشف مسارات أخرى",
-      "accepting": "جاري حفظ مسارك..."
-    },
-    "manual": {
-      "title": "جميع المسارات المهنية",
-      "subtitle": "اختر الاتجاه اللي تحس إنه يمثلك أكثر.",
-      "backToRecommendation": "← العودة لتوصيتي"
     }
   },
   "PortfolioHub": {
-    "title": "مركز الأعمال",
-    "subtitle": "استعرض مهاراتك، مشاريعك، ورحلة تعلمك.",
+    "title": "مركز معرض الأعمال",
+    "subtitle": "اعرض خبراتك التقنية، مشاريعك الموثقة، وزخمك المهني.",
     "shareProfile": "مشاركة الملف",
-    "publicProfileTooltip": "هذا هو رابط ملفك العام لمشاركته مع أصحاب العمل.",
+    "publicProfileTooltip": "هذا هو رابط ملفك الشخصي العام لمشاركته مع أصحاب العمل.",
     "tabs": {
       "projects": "المشاريع",
-      "skills": "فهرس المهارات"
+      "skills": "لوحة الخبرات"
     },
     "profile": {
       "path": "مسار {pathName}",
@@ -637,19 +548,64 @@
       "saveBio": "حفظ النبذة",
       "cancel": "إلغاء",
       "bioSaved": "تم تحديث النبذة بنجاح.",
-      "projectsCompleted": "{count} مشاريع منجزة",
-      "skillsMastered": "{count} مهارات مكتسبة",
+      "projectsCompleted": "{count} مشاريع مكتملة",
+      "skillsMastered": "{count} مهارات متقنة",
       "goalLabel": "الهدف الأساسي:",
       "goals": {
-        "job": "الحصول على وظيفة بدوام كامل",
-        "freelance": "العمل الحر",
-        "startup": "بناء مشروعي الخاص",
-        "exploring": "استكشاف فقط"
+        "job": "الحصول على وظيفة",
+        "freelance": "العمل حر",
+        "startup": "تأسيس شركة ناشئة",
+        "exploring": "الاستكشاف"
       }
     },
     "skills": {
+      "title": "الخبرات",
+      "subtitle": "تقنياتك المعتمدة ومستويات إتقانك المعلنة",
       "addSkill": "إضافة مهارة",
-      "searchSkills": "ابحث عن مهارات...",
+      "filters": {
+        "source": "المصدر",
+        "category": "الفئة",
+        "all_sources": "جميع المصادر",
+        "roadmap": "المسار",
+        "project": "المشاريع",
+        "manual": "يدوي",
+        "all_categories": "جميع الفئات",
+        "visibility": "الظهور",
+        "all_visibility": "جميع أنواع الظهور",
+        "public_only": "عام فقط",
+        "private_only": "خاص فقط",
+        "searchPlaceholder": "بحث في المهارات..."
+      },
+      "addModal": {
+        "title": "إضافة خبرة",
+        "description": "وسع ملفك الشخصي عن طريق إضافة مهارات من الكتالوج الخاص بنا أو تحديد مهاراتك الخاصة.",
+        "tabCatalog": "من الكتالوج",
+        "tabCustom": "تعريف مستخدم",
+        "skillLabel": "اختر مهارة",
+        "skillPlaceholder": "مثال: React, Python...",
+        "customSkillLabel": "تعريف مهارة مخصصة",
+        "nameLabel": "اسم المهارة",
+        "namePlaceholder": "مثال: Astro, Bun...",
+        "categoryLabel": "الفئة",
+        "categoryPlaceholder": "مثال: Frontend, DevOps...",
+        "levelLabel": "مستوى الإتقان",
+        "visibilityLabel": "الظهور العام",
+        "visibilityDesc": "السماح للآخرين برؤية هذه المهارة في ملفك الشخصي العام",
+        "submit": "إضافة إلى الخبرات",
+        "levels": {
+          "beginner": "مبتدئ",
+          "intermediate": "متوسط",
+          "advanced": "متقدم"
+        },
+        "cancel": "إلغاء",
+        "successMessage": "تمت إضافة المهارة إلى لوحة خبراتك!"
+      },
+      "empty": {
+        "title": "لم يتم العثور على مهارات",
+        "description": "قم بتعديل الفلاتر أو أضف مهارة جديدة إلى لوحة خبراتك."
+      },
+      "addExternalSkill": "إضافة مهارة خارجية",
+      "searchSkills": "البحث في الخبرات...",
       "noSkillsMessage": "لم تقم باكتساب أو إضافة أي مهارات بعد.",
       "noSearchMatch": "لا توجد مهارات تطابق بحثك.",
       "levelBadge": {
@@ -669,18 +625,8 @@
       "cancel": "إلغاء",
       "delete": "إزالة",
       "deleteConfirmCheck": "نعم، أزل المهارة",
-      "addModal": {
-        "title": "إضافة مهارة يدوياً",
-        "description": "اختر مهارة اكتسبتها خارج مسار ملاح.",
-        "skillLabel": "المهارة",
-        "levelLabel": "مستوى الإتقان",
-        "submit": "إضافة المهارة",
-        "submitting": "جاري الإضافة...",
-        "successMessage": "تمت إضافة المهارة يدوياً إلى ملفك.",
-        "placeholder": "اختر مهارة..."
-      },
-      "visibilityPublic": "تم تفعيل الظهور للعامة",
-      "visibilityPrivate": "تم إخفاء المهارة من العامة",
+      "visibilityPublic": "المهارة الآن عامة",
+      "visibilityPrivate": "المهارة الآن خاصة",
       "removed": "تمت إزالة المهارة",
       "earnedIn": "تم اكتسابها في"
     },
@@ -692,13 +638,64 @@
         "roadmap": "مسار ملاح",
         "user_custom": "مشروع خارجي"
       },
+      "tabs": {
+        "all": "الكل",
+        "available": "المتاحة",
+        "in_progress": "قيد التنفيذ",
+        "completed": "المكتملة"
+      },
+      "filters": {
+        "type": "النوع",
+        "visibility": "الظهور",
+        "all_types": "كل الأنواع",
+        "roadmap": "المسار",
+        "external": "خارجي",
+        "all_visibility": "الكل",
+        "public_only": "عام فقط",
+        "private_only": "خاص فقط",
+        "searchPlaceholder": "البحث في المشاريع..."
+      },
+      "empty": {
+        "all": "لم يتم العثور على مشاريع",
+        "all_desc": "لوحة مهامك صامتة حالياً. ابدأ مساراً أو أضف مشروعاً خارجياً للبدء.",
+        "available": "لا توجد مشاريع متاحة",
+        "available_desc": "لقد بدأت في كل شيء في قائمتك. تحقق من مسار التعلم لمهمات جديدة.",
+        "in_progress": "لا توجد مشاريع نشطة",
+        "in_progress_desc": "التركيز هو المفتاح. اختر مشروعاً من القائمة المتاحة للبدء في البناء.",
+        "completed": "لا توجد أعمال مكتملة",
+        "completed_desc": "الأرشيف فارغ. أكمل مشروعك الأول لعرضه هنا.",
+        "roadmap": "لا توجد مشاريع من المسار",
+        "roadmap_desc": "ستظهر مشاريع مسارك التعليمي هنا بمجرد البدء فيها.",
+        "external": "لا توجد مشاريع خارجية",
+        "external_desc": "لديك مشاريع جانبية؟ أضفها يدوياً لإثراء ملفك المهني.",
+        "public": "لا توجد مشاريع عامة",
+        "public_desc": "معرضك العام فارغ حالياً. اجعل المشاريع المكتملة عامة لإظهارها.",
+        "private": "لا توجد مشاريع خاصة",
+        "private_desc": "كل أعمالك عامة حالياً. استخدم الوضع الخاص للمشاريع التي لا تزال قيد التنفيذ."
+      },
+      "statusUpdated": "تم تحديث حالة المشروع بنجاح.",
+      "projectDeleted": "تم حذف المشروع بنجاح.",
+      "completionSuccess": "المهمة تمت! تم تحديث مهاراتك.",
+      "submissionModal": {
+        "title": "تمت المهمة بنجاح",
+        "description": "قدم عملك لإنهاء هذه المهمة وفتح المهارات التقنية المرتبطة بها.",
+        "githubLabel": "رابط مستودع GitHub",
+        "demoLabel": "رابط العرض الحي (اختياري)",
+        "techStackLabel": "التقنيات المستخدمة",
+        "noteLabel": "ملاحظة تنفيذ شخصية",
+        "notePlaceholder": "ما هو أصعب جزء واجهته؟ ماذا تعلمت؟",
+        "thumbnailLabel": "رابط صورة المشروع (اختياري)"
+      },
       "viewCode": "عرض الكود",
       "viewDemo": "عرض حي",
-      "privateNotice": "هذا المشروع مخفي حالياً عن ملفك العام.",
+      "privateNotice": "هذا المشروع مخفي حالياً عن معرض أعمالك العام.",
       "addDrawer": {
         "title": "إضافة مشروع خارجي",
         "description": "اعرض مشروعاً جانبياً أو شيئاً بنيته خارج مسارنا.",
         "titleLabel": "عنوان المشروع",
+        "statusLabel": "الحالة الحالية",
+        "statusAvailable": "متاح (مهمة مستقبلية)",
+        "statusCompleted": "مكتمل (عرض)",
         "titlePlaceholder": "مثال: مدونة شخصية",
         "descLabel": "الوصف",
         "descPlaceholder": "ماذا يفعل هذا المشروع؟",
@@ -712,64 +709,58 @@
         "demoLabel": "رابط العرض الحي (اختياري)",
         "techStackLabel": "التقنيات المستخدمة (مفصولة بفاصلة)",
         "skillsLabel": "المهارات الموضحة (اختر متعدد)",
+        "statusOptions": {
+          "available": "متاح (قائمة الانتظار)",
+          "in_progress": "قيد التنفيذ",
+          "completed": "مكتمل"
+        },
         "startLabel": "تاريخ البدء",
         "bulletsLabel": "الإنجازات الرئيسية / الميزات (نقاط)",
         "bulletsPlaceholder": "تطوير واجهة مستخدم مخصصة...",
-        "addBullet": "إضافة نقطة",
+        "addPoint": "إضافة نقطة",
         "uploadThumbnail": "رفع صورة مصغرة",
         "uploading": "جاري الرفع...",
         "dropToUpload": "أفلت الصورة للرفع",
         "removeImage": "إزالة الصورة",
         "submit": "إضافة المشروع",
         "submitting": "جاري الإضافة...",
-        "successMessage": "تمت إضافة المشروع الخارجي بنجاح.",
-        "searchSkillsPlaceholder": "ابحث عن المهارات...",
-        "noSkillsFound": "لم يتم العثور على مهارات تطابق بحثك.",
+        "successMessage": "تم إضافة المشروع الخارجي بنجاح.",
+        "searchSkillsPlaceholder": "البحث في المهارات...",
+        "noSkillsFound": "لا توجد مهارات تطابق بحثك.",
         "selectedSkillsCount": "تم اختيار {count}",
         "updateSubmit": "حفظ التغييرات",
         "updateSuccessMessage": "تم تحديث المشروع بنجاح!"
       },
+      "privateBadge": "خاص",
+      "visibilityPublic": "المشروع الآن عام",
+      "visibilityPrivate": "المشروع الآن خاص",
+      "privateNoticeDesc": "هذا المشروع خاص. أنت فقط من يمكنه رؤيته حتى تقوم بجعله عاماً.",
+      "statusAvailable": "متاح",
       "statusInProgress": "قيد التنفيذ",
       "statusCompleted": "مكتمل",
-      "statusAvailable": "متاح",
-      "statusUpdated": "تم تحديث حالة المشروع بنجاح",
       "edit": "تعديل المشروع",
       "actions": {
         "edit": "تعديل المشروع",
         "start": "بدء المشروع",
         "pause": "إيقاف مؤقت",
         "mark_complete": "تحديد كمكتمل",
-        "unmark_complete": "إلغاء التحديد كمكتمل",
+        "confirm_completion": "تسليم وفتح المهارات",
+        "unmark_complete": "إلغاء الاكتمال",
         "delete": "حذف",
         "cancel": "إلغاء",
         "confirm_delete": "حذف المشروع",
-        "delete_warning": "هل أنت متأكد من حذف هذا المشروع؟ لا يمكن التراجع عن هذا الإجراء.",
-        "delete_public_warning": "تنبيه: هذا المشروع متاح للعامة حالياً.",
+        "delete_warning": "هل أنت متأكد أنك تريد حذف هذا المشروع؟ لا يمكن التراجع عن هذا الإجراء.",
+        "delete_public_warning": "تحذير: هذا المشروع عام حالياً.",
         "confirm_unmark": "إلغاء اكتمال المشروع",
         "unmark_warning": "هل أنت متأكد من إلغاء اكتمال المشروع؟ سيعود إلى حالة متاح.",
         "confirm_mark_complete": "إكمال المشروع"
       },
-      "noDescription": "لا يوجد وصف متوفر.",
-      "privateBadge": "خاص",
-      "visibilityPublic": "تم تفعيل الظهور للعامة",
-      "visibilityPrivate": "تم إخفاء المشروع من العامة",
+      "technicalOverview": "نظرة تقنية عامة",
       "personalNoteLabel": "ملاحظة الملاح",
-      "technicalOverview": "نظرة تقنية",
-      "formalSkills": "المهارات المكتسبة",
       "techStack": "التقنيات المستخدمة",
-      "markAsComplete": "تحديد كمكتمل",
-      "deleteProject": "حذف المشروع",
-      "setPublic": "جعله عاماً",
-      "setPrivate": "جعله خاصاً",
-      "confirmDelete": "هل أنت متأكد من حذف هذا المشروع؟ لا يمكن التراجع عن هذا الإجراء.",
-      "projectDeleted": "تم حذف المشروع بنجاح",
-      "accessRestricted": "الدخول محدود",
-      "systemReady": "النظام جاهز",
-      "publicEmptyState": "لم يقم هذا الملاح بمشاركة أعماله مع العامة بعد.",
-      "privateEmptyState": "أكمل مشروعاً من خارطة طريقك لإضافته هنا",
-      "noStack": "لم يتم تحديد تقنيات",
-      "noSkills": "لا توجد مهارات موثقة مرتبطة",
-      "completedDateLabel": "تاريخ الإنجاز"
+      "formalSkills": "المهارات المكتسبة",
+      "noDescription": "لا يوجد وصف متوفر.",
+      "deleteProject": "حذف المشروع"
     }
   },
   "Common": {

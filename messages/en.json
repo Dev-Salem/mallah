@@ -622,15 +622,15 @@
   },
   "PortfolioHub": {
     "title": "Portfolio Hub",
-    "subtitle": "Showcase your skills, projects, and learning journey.",
+    "subtitle": "Showcase your technical expertise, verified projects, and career momentum.",
     "shareProfile": "Share Profile",
-    "publicProfileTooltip": "This is your public portfolio URL to share with employers.",
+    "publicProfileTooltip": "This is your public profile link to share with employers.",
     "tabs": {
       "projects": "Projects",
-      "skills": "Skills Catalog"
+      "skills": "Expertise Board"
     },
     "profile": {
-      "path": "{pathName} Track",
+      "path": "{pathName} Path",
       "bioPlaceholder": "Write a short bio about yourself...",
       "editBio": "Edit Bio",
       "saveBio": "Save Bio",
@@ -640,15 +640,60 @@
       "skillsMastered": "{count} Skills Mastered",
       "goalLabel": "Primary Goal:",
       "goals": {
-        "job": "Get a Full-Time Job",
+        "job": "Get a Full-time Job",
         "freelance": "Freelance",
-        "startup": "Build My Own Project",
-        "exploring": "Just Exploring"
+        "startup": "Build a Startup",
+        "exploring": "Exploring"
       }
     },
     "skills": {
+      "title": "Expertise",
+      "subtitle": "Your verified technical stack and declared proficiencies",
       "addSkill": "Add Skill",
-      "searchSkills": "Search skills...",
+      "filters": {
+        "source": "Source",
+        "category": "Category",
+        "all_sources": "All Sources",
+        "roadmap": "Roadmap",
+        "project": "Project",
+        "manual": "Manual",
+        "all_categories": "All Categories",
+        "visibility": "Visibility",
+        "all_visibility": "All Visibility",
+        "public_only": "Public Only",
+        "private_only": "Private Only",
+        "searchPlaceholder": "Search skills..."
+      },
+      "addModal": {
+        "title": "Add Expertise",
+        "description": "Expand your profile by adding skills from our catalog or defining your own.",
+        "tabCatalog": "From Catalog",
+        "tabCustom": "User Defined",
+        "skillLabel": "Select Skill",
+        "skillPlaceholder": "e.g. React, Python...",
+        "customSkillLabel": "Define Custom Skill",
+        "nameLabel": "Skill Name",
+        "namePlaceholder": "e.g. Astro, Bun...",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "e.g. Frontend, DevOps...",
+        "levelLabel": "Proficiency Level",
+        "visibilityLabel": "Public Visibility",
+        "visibilityDesc": "Allow others to see this skill on your public profile",
+        "submit": "Add to Expertise",
+        "levels": {
+          "beginner": "Beginner",
+          "intermediate": "Intermediate",
+          "advanced": "Advanced"
+        },
+        "cancel": "Cancel",
+        "successMessage": "Skill added to your expertise board!"
+      },
+      "empty": {
+        "title": "No skills found",
+        "description": "Adjust your filters or add a new skill to your expertise board."
+      },
+      "addExternalSkill": "Add External Skill",
+      "searchSkills": "Search expertise...",
       "noSkillsMessage": "You haven't unlocked or added any skills yet.",
       "noSearchMatch": "No skills match your search.",
       "levelBadge": {
@@ -668,16 +713,6 @@
       "cancel": "Cancel",
       "delete": "Remove",
       "deleteConfirmCheck": "Yes, remove skill",
-      "addModal": {
-        "title": "Add Skill Manually",
-        "description": "Select a skill you have acquired outside the Mallah roadmap.",
-        "skillLabel": "Skill",
-        "levelLabel": "Proficiency Level",
-        "submit": "Add Skill",
-        "submitting": "Adding Skill...",
-        "successMessage": "Skill added manually to your portfolio.",
-        "placeholder": "Select a skill..."
-      },
       "visibilityPublic": "Skill is now public",
       "visibilityPrivate": "Skill is now private",
       "removed": "Skill removed",
@@ -705,7 +740,8 @@
         "external": "External",
         "all_visibility": "All Visibility",
         "public_only": "Public Only",
-        "private_only": "Private Only"
+        "private_only": "Private Only",
+        "searchPlaceholder": "Search projects..."
       },
       "empty": {
         "all": "NO PROJECTS FOUND",

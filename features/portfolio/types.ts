@@ -137,8 +137,14 @@ export interface PortfolioData {
 
 // ─── Zod schemas for mutations ───
 export const addManualSkillSchema = z.object({
-    skill_id: z.string().min(1),
+    skill_id: z.string().optional(),
+    custom_name: z.string().optional(),
+    custom_category: z.string().optional(),
     level: z.enum(['beginner', 'intermediate', 'advanced']),
+    is_public: z.boolean().default(true),
+}).refine(data => data.skill_id || (data.custom_name && data.custom_category), {
+    message: "Either skill_id or both custom_name and custom_category must be provided",
+    path: ["skill_id"]
 });
 
 export type AddManualSkillInput = z.infer<typeof addManualSkillSchema>;
