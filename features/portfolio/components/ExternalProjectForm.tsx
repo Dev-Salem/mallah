@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Trash2, X, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, X, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
 import { addExternalProjectAction, updateExternalProjectAction } from '../actions/portfolio-actions';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ExternalProject } from '../types';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { createClient } from '@/lib/supabase/client';
 
 interface ExternalProjectFormProps {
     initialData?: ExternalProject;
@@ -40,6 +42,46 @@ export function ExternalProjectForm({ initialData, catalog, onSuccess, onCancel 
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const supabase = createClient();
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please upload an image file.');
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+            
+            const filePath = `${user.id}/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('portfolio-images')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('portfolio-images')
+                .getPublicUrl(filePath);
+
+            setThumbnailUrl(publicUrl);
+            toast.success('Thumbnail uploaded successfully!');
+        } catch (error: any) {
+            console.error('Upload error:', error);
+            toast.error('Error uploading image: ' + error.message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     const addBullet = () => setBullets([...bullets, '']);
     const updateBullet = (idx: number, val: string) => {
@@ -125,55 +167,136 @@ export function ExternalProjectForm({ initialData, catalog, onSuccess, onCancel 
                 />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <Label>{t('statusLabel')}</Label>
-                    <div className="flex gap-4">
-                        {(['available', 'in_progress', 'completed'] as const).map(s => (
-                            <label key={s} className="flex items-center gap-2 text-xs cursor-pointer">
-                                <input
-                                    type="radio"
-                                    name="status"
-                                    checked={status === s}
-                                    onChange={() => setStatus(s)}
-                                    className="accent-primary"
-                                />
-                                {s === 'available' ? t('statusAvailable') : s.replace('_', ' ')}
-                            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-4">
+                    <Label className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 ml-1">{t('statusLabel')}</Label>
+                    <RadioGroup 
+                        value={status} 
+                        onValueChange={(val) => setStatus(val as any)}
+                        className="flex flex-col gap-1"
+                    >
+                        {[
+                            { value: 'available', label: t('statusAvailable') },
+                            { value: 'in_progress', label: t('statusOptions.in_progress') },
+                            { value: 'completed', label: t('statusOptions.completed') }
+                        ].map((item) => (
+                            <Label
+                                key={item.value}
+                                className={cn(
+                                    "flex items-center px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 border",
+                                    status === item.value 
+                                        ? "bg-primary/[0.08] border-primary/20 text-primary" 
+                                        : "bg-transparent border-transparent text-muted-foreground hover:bg-muted/50"
+                                )}
+                            >
+                                <RadioGroupItem value={item.value} className="sr-only" />
+                                <span className={cn(
+                                    "text-xs font-medium transition-all",
+                                    status === item.value ? "font-bold" : ""
+                                )}>
+                                    {item.label}
+                                </span>
+                            </Label>
                         ))}
-                    </div>
+                    </RadioGroup>
                 </div>
 
-                <div className="space-y-2">
-                    <Label>{t('difficultyLabel')}</Label>
-                    <div className="flex gap-4">
-                        {(['beginner', 'intermediate', 'advanced'] as const).map(level => (
-                            <label key={level} className="flex items-center gap-2 text-xs capitalize cursor-pointer">
-                                <input
-                                    type="radio"
-                                    name="difficulty"
-                                    checked={difficultyLevel === level}
-                                    onChange={() => setDifficultyLevel(level)}
-                                    className="accent-primary"
-                                />
-                                {level}
-                            </label>
+                <div className="space-y-4">
+                    <Label className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 ml-1">{t('difficultyLabel')}</Label>
+                    <RadioGroup 
+                        value={difficultyLevel} 
+                        onValueChange={(val) => setDifficultyLevel(val as any)}
+                        className="flex flex-col gap-1"
+                    >
+                        {[
+                            { value: 'beginner', label: t('difficultyOptions.beginner') },
+                            { value: 'intermediate', label: t('difficultyOptions.intermediate') },
+                            { value: 'advanced', label: t('difficultyOptions.advanced') }
+                        ].map((item) => (
+                            <Label
+                                key={item.value}
+                                className={cn(
+                                    "flex items-center px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 border",
+                                    difficultyLevel === item.value 
+                                        ? "bg-primary/[0.08] border-primary/20 text-primary" 
+                                        : "bg-transparent border-transparent text-muted-foreground hover:bg-muted/50"
+                                )}
+                            >
+                                <RadioGroupItem value={item.value} className="sr-only" />
+                                <span className={cn(
+                                    "text-xs font-medium transition-all",
+                                    difficultyLevel === item.value ? "font-bold" : ""
+                                )}>
+                                    {item.label}
+                                </span>
+                            </Label>
                         ))}
-                    </div>
+                    </RadioGroup>
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="thumbnail" className="flex items-center gap-2">
+            <div className="space-y-3">
+                <Label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
                     <ImageIcon className="w-3 h-3" />
-                    Thumbnail URL (Optional)
+                    {t('uploadThumbnail')}
                 </Label>
-                <Input
-                    id="thumbnail"
-                    placeholder="https://images.unsplash.com/..."
-                    value={thumbnailUrl}
-                    onChange={(e) => setThumbnailUrl(e.target.value)}
-                />
+                <div 
+                    className={cn(
+                        "relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300",
+                        thumbnailUrl ? "aspect-video" : "h-32",
+                        isUploading ? "border-primary animate-pulse" : "border-border/50 hover:border-primary/50 hover:bg-primary/[0.02]"
+                    )}
+                    onClick={() => !isUploading && document.getElementById('thumbnail-upload')?.click()}
+                >
+                    {thumbnailUrl ? (
+                        <>
+                            <img src={thumbnailUrl} alt="Preview" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    className="h-8 text-[10px] font-black uppercase tracking-wider rounded-full"
+                                >
+                                    Change Image
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    className="h-8 text-[10px] font-black uppercase tracking-wider rounded-full"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setThumbnailUrl('');
+                                    }}
+                                >
+                                    {t('removeImage')}
+                                </Button>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground p-4">
+                            <div className="w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                                <Upload className="w-5 h-5 text-primary/60" />
+                            </div>
+                            <div className="text-center">
+                                <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground">{t('dropToUpload')}</p>
+                                <p className="text-[9px] font-medium opacity-60 mt-1">Supports PNG, JPG, WEBP</p>
+                            </div>
+                        </div>
+                    )}
+                    <input 
+                        id="thumbnail-upload"
+                        type="file" 
+                        className="hidden" 
+                        accept="image/*"
+                        onChange={handleFileChange}
+                    />
+                    {isUploading && (
+                        <div className="absolute inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center flex-col gap-3">
+                            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{t('uploading')}</span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {status === 'completed' && (

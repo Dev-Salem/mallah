@@ -703,7 +703,12 @@
         "descLabel": "الوصف",
         "descPlaceholder": "ماذا يفعل هذا المشروع؟",
         "difficultyLabel": "مستوى الصعوبة",
-        "githubLabel": "رابط مستودع GitHub (اختياري)",
+        "difficultyOptions": {
+          "beginner": "مبتدئ",
+          "intermediate": "متوسط",
+          "advanced": "متقدم"
+        },
+        "githubLabel": "رابط GitHub (اختياري)",
         "demoLabel": "رابط العرض الحي (اختياري)",
         "techStackLabel": "التقنيات المستخدمة (مفصولة بفاصلة)",
         "skillsLabel": "المهارات الموضحة (اختر متعدد)",
@@ -711,6 +716,10 @@
         "bulletsLabel": "الإنجازات الرئيسية / الميزات (نقاط)",
         "bulletsPlaceholder": "تطوير واجهة مستخدم مخصصة...",
         "addBullet": "إضافة نقطة",
+        "uploadThumbnail": "رفع صورة مصغرة",
+        "uploading": "جاري الرفع...",
+        "dropToUpload": "أفلت الصورة للرفع",
+        "removeImage": "إزالة الصورة",
         "submit": "إضافة المشروع",
         "submitting": "جاري الإضافة...",
         "successMessage": "تمت إضافة المشروع الخارجي بنجاح."

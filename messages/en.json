@@ -767,6 +767,11 @@
         "descLabel": "Description",
         "descPlaceholder": "What does this project do?",
         "difficultyLabel": "Difficulty Level",
+        "difficultyOptions": {
+          "beginner": "Beginner",
+          "intermediate": "Intermediate",
+          "advanced": "Advanced"
+        },
         "githubLabel": "GitHub Repository URL (Optional)",
         "demoLabel": "Live Demo URL (Optional)",
         "techStackLabel": "Tech Stack (Comma Separated)",
@@ -781,6 +786,10 @@
         "bulletsLabel": "Key Achievements / Features (Bullet points)",
         "bulletsPlaceholder": "Developed a custom UI...",
         "addBullet": "Add Point",
+        "uploadThumbnail": "Upload Thumbnail",
+        "uploading": "Uploading...",
+        "dropToUpload": "Drop image to upload",
+        "removeImage": "Remove Image",
         "submit": "Add Project",
         "submitting": "Adding Project.",
         "successMessage": "External project added successfully."

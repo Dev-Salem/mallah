@@ -154,6 +154,7 @@ export const addExternalProjectSchema = z.object({
     status: z.enum(['available', 'in_progress', 'completed']),
     started_at: z.string().optional(),
     bullets: z.array(z.string()).optional(),
+    thumbnail_url: z.string().optional().or(z.literal('')),
 });
 
 export type AddExternalProjectInput = z.infer<typeof addExternalProjectSchema>;
