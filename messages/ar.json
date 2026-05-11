@@ -664,7 +664,10 @@
       },
       "visibilityToggle": "إظهار للعامة",
       "deleteSkill": "إزالة المهارة",
+      "deleteConfirmTitle": "هل أنت متأكد؟",
       "deleteConfirmDesc": "هل أنت متأكد أنك تريد إزالة هذه المهارة المضافة يدوياً؟",
+      "cancel": "إلغاء",
+      "delete": "إزالة",
       "deleteConfirmCheck": "نعم، أزل المهارة",
       "addModal": {
         "title": "إضافة مهارة يدوياً",

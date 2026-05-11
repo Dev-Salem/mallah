@@ -663,7 +663,10 @@
       },
       "visibilityToggle": "Public Visibility",
       "deleteSkill": "Remove Skill",
+      "deleteConfirmTitle": "Are you sure?",
       "deleteConfirmDesc": "Are you sure you want to remove this manually added skill?",
+      "cancel": "Cancel",
+      "delete": "Remove",
       "deleteConfirmCheck": "Yes, remove skill",
       "addModal": {
         "title": "Add Skill Manually",
