@@ -186,7 +186,6 @@
       "AIMicroCoach": {
         "label": "AI Coach"
       },
-
       "RecentActivity": {
         "label": "Recent Activity",
         "topicCompleted": "Completed: {title}",
@@ -231,7 +230,7 @@
           "dragActive": "Processing resume...",
           "ready": "Resume processed",
           "empty": "Upload Resume (Optional)",
-          "formats": "Accepts PDF or DOCX up to 5MB",
+          "formats": "Accepts PDF up to 5MB",
           "status": "System Status: Ready"
         }
       },
@@ -370,6 +369,14 @@
       "resume_project": "Resume Project",
       "view_submission": "View Submission"
     },
+    "certificate_stage_label": "Certificate Track",
+    "certificate_stage_title": "External Certificate Suggestions",
+    "certificate_stage_description": "Optional credentials that fit your current level and strengthen your public signal once you finish the matching stage.",
+    "certificate_after": "After: {after}",
+    "certificate_provider": "Provider: {provider}",
+    "certificate_cost": "Cost: {cost}",
+    "certificate_why_now_label": "Why now:",
+    "certificate_cta": "Open Certificate",
     "milestone_project": "Milestone Project",
     "types": {
       "lesson": "Lesson",
@@ -511,7 +518,6 @@
       "confirmSkipButton": "Yes, skip it"
     }
   },
-
   "Onboarding": {
     "stepLabel": "Step {step} of {total}",
     "back": "Back",
@@ -616,15 +622,15 @@
   },
   "PortfolioHub": {
     "title": "Portfolio Hub",
-    "subtitle": "Showcase your skills, projects, and learning journey.",
+    "subtitle": "Showcase your technical expertise, verified projects, and career momentum.",
     "shareProfile": "Share Profile",
-    "publicProfileTooltip": "This is your public portfolio URL to share with employers.",
+    "publicProfileTooltip": "This is your public profile link to share with employers.",
     "tabs": {
       "projects": "Projects",
-      "skills": "Skills Catalog"
+      "skills": "Skills"
     },
     "profile": {
-      "path": "{pathName} Track",
+      "path": "{pathName} Path",
       "bioPlaceholder": "Write a short bio about yourself...",
       "editBio": "Edit Bio",
       "saveBio": "Save Bio",
@@ -634,15 +640,60 @@
       "skillsMastered": "{count} Skills Mastered",
       "goalLabel": "Primary Goal:",
       "goals": {
-        "job": "Get a Full-Time Job",
+        "job": "Get a Full-time Job",
         "freelance": "Freelance",
-        "startup": "Build My Own Project",
-        "exploring": "Just Exploring"
+        "startup": "Build a Startup",
+        "exploring": "Exploring"
       }
     },
     "skills": {
-      "addSkill": "Add Skill",
-      "searchSkills": "Search skills...",
+      "title": "Expertise",
+      "subtitle": "Your verified technical stack and declared proficiencies",
+      "addSkill": "Add External Skill",
+      "filters": {
+        "source": "Source",
+        "category": "Category",
+        "all_sources": "All Sources",
+        "roadmap": "Roadmap",
+        "project": "Project",
+        "manual": "External",
+        "all_categories": "All Categories",
+        "visibility": "Visibility",
+        "all_visibility": "All Visibility",
+        "public_only": "Public Only",
+        "private_only": "Private Only",
+        "searchPlaceholder": "Search skills..."
+      },
+      "addModal": {
+        "title": "Add Skill",
+        "description": "Expand your profile by adding skills from our catalog or defining your own.",
+        "tabCatalog": "From Catalog",
+        "tabCustom": "User Defined",
+        "skillLabel": "Select Skill",
+        "skillPlaceholder": "e.g. React, Python...",
+        "customSkillLabel": "Define Custom Skill",
+        "nameLabel": "Skill Name",
+        "namePlaceholder": "e.g. Astro, Bun...",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "e.g. Frontend, DevOps...",
+        "levelLabel": "Proficiency Level",
+        "visibilityLabel": "Public Visibility",
+        "visibilityDesc": "Allow others to see this skill on your public profile",
+        "submit": "Add Skill",
+        "levels": {
+          "beginner": "Beginner",
+          "intermediate": "Intermediate",
+          "advanced": "Advanced"
+        },
+        "cancel": "Cancel",
+        "successMessage": "Skill added to your Skills."
+      },
+      "empty": {
+        "title": "No skills found",
+        "description": "Adjust your filters or add a new skill to your expertise board."
+      },
+      "addExternalSkill": "Add External Skill",
+      "searchSkills": "Search expertise...",
       "noSkillsMessage": "You haven't unlocked or added any skills yet.",
       "noSearchMatch": "No skills match your search.",
       "levelBadge": {
@@ -653,22 +704,15 @@
       "sourceBadge": {
         "roadmap": "Verified (Roadmap)",
         "project": "Earned via Project",
-        "manual": "Manually Added"
+        "manual": "External"
       },
       "visibilityToggle": "Public Visibility",
       "deleteSkill": "Remove Skill",
-      "deleteConfirmDesc": "Are you sure you want to remove this manually added skill?",
+      "deleteConfirmTitle": "Are you sure?",
+      "deleteConfirmDesc": "Are you sure you want to remove this external skill?",
+      "cancel": "Cancel",
+      "delete": "Remove",
       "deleteConfirmCheck": "Yes, remove skill",
-      "addModal": {
-        "title": "Add Skill Manually",
-        "description": "Select a skill you have acquired outside the Mallah roadmap.",
-        "skillLabel": "Skill",
-        "levelLabel": "Proficiency Level",
-        "submit": "Add Skill",
-        "submitting": "Adding Skill...",
-        "successMessage": "Skill added manually to your portfolio.",
-        "placeholder": "Select a skill..."
-      },
       "visibilityPublic": "Skill is now public",
       "visibilityPrivate": "Skill is now private",
       "removed": "Skill removed",
@@ -682,6 +726,69 @@
         "roadmap": "Mallah Roadmap",
         "user_custom": "External Project"
       },
+      "tabs": {
+        "all": "All",
+        "available": "Available",
+        "in_progress": "In Progress",
+        "completed": "Completed"
+      },
+      "filters": {
+        "type": "Source",
+        "visibility": "Visibility",
+        "all_types": "All Sources",
+        "roadmap": "Roadmap",
+        "external": "External",
+        "all_visibility": "All Visibility",
+        "public_only": "Public Only",
+        "private_only": "Private Only",
+        "searchPlaceholder": "Search projects..."
+      },
+      "empty": {
+        "all": "NO PROJECTS FOUND",
+        "all_desc": "Your mission board is currently silent. Initiate a roadmap or add an external project to begin.",
+        "available": "NO PROJECTS AVAILABLE",
+        "available_desc": "You've initiated everything on your list. Check the Roadmap for new missions.",
+        "in_progress": "NO ACTIVE PROJECTS",
+        "in_progress_desc": "Focus is key. Pick a project from the Available list to start building.",
+        "completed": "NO COMPLETED WORK",
+        "completed_desc": "The archives are empty. Finish your first project to showcase it here.",
+        "roadmap": "NO ROADMAP PROJECTS",
+        "roadmap_desc": "Your curriculum path projects will appear here once initiated.",
+        "external": "NO EXTERNAL PROJECTS",
+        "external_desc": "Have side projects? Add them manually to enrich your professional signal.",
+        "public": "NO PUBLIC PROJECTS",
+        "public_desc": "Your public portfolio is currently empty. Set completed projects to Public to show them.",
+        "private": "NO PRIVATE PROJECTS",
+        "private_desc": "All your work is currently public. Use private mode for works in progress."
+      },
+      "actions": {
+        "start": "Start Project",
+        "mark_complete": "Mark as Complete",
+        "unmark_complete": "Unmark Complete",
+        "pause": "Revert to Available",
+        "delete": "Delete Project",
+        "confirm_unmark": "Are you sure you want to revert this project to Available? Submission data will be preserved.",
+        "confirm_mark_complete": "Are you sure you want to mark this external project as completed?",
+        "confirm_delete": "Are you sure you want to delete this project? This action is permanent.",
+        "unmark_warning": "This project will be set to Available and hidden from your public portfolio. All project data (URLs, notes) will be preserved.",
+        "delete_warning": "This action is permanent and cannot be undone.",
+        "delete_public_warning": "WARNING: This project is currently LIVE on your public portfolio. Deleting it will break external links.",
+        "confirm_completion": "Submit and Unlock Skills",
+        "cancel": "Cancel"
+      },
+      "statusUpdated": "Project status updated successfully.",
+      "projectDeleted": "Project deleted successfully.",
+      "completionSuccess": "Mission finalized! Your skills have been updated.",
+      "submissionModal": {
+        "title": "Mission Accomplished",
+        "description": "Submit your work to finalize this mission and unlock the associated technical skills.",
+        "githubLabel": "GitHub Repository URL",
+        "demoLabel": "Live Demo URL (Optional)",
+        "techStackLabel": "Refined Tech Stack",
+        "noteLabel": "Personal Implementation Note",
+        "notePlaceholder": "What was the most challenging part? What did you learn?",
+        "thumbnailLabel": "Project Thumbnail URL (Optional)"
+      },
       "viewCode": "View Code",
       "viewDemo": "Live Demo",
       "privateNotice": "This project is currently hidden from your public portfolio.",
@@ -689,38 +796,83 @@
         "title": "Add External Project",
         "description": "Showcase a side project or something you built outside our roadmap.",
         "titleLabel": "Project Title",
+        "statusLabel": "Current Status",
+        "statusAvailable": "Available (Future Task)",
+        "statusCompleted": "Completed (Showcase)",
         "titlePlaceholder": "e.g., Personal Blog",
         "descLabel": "Description",
         "descPlaceholder": "What does this project do?",
         "difficultyLabel": "Difficulty Level",
+        "difficultyOptions": {
+          "beginner": "Beginner",
+          "intermediate": "Intermediate",
+          "advanced": "Advanced"
+        },
         "githubLabel": "GitHub Repository URL (Optional)",
         "demoLabel": "Live Demo URL (Optional)",
         "techStackLabel": "Tech Stack (Comma Separated)",
         "skillsLabel": "Skills Demonstrated (Select multiple)",
+        "statusLabel": "Current Status",
+        "statusOptions": {
+          "available": "Available (Waiting List)",
+          "in_progress": "In Progress",
+          "completed": "Completed"
+        },
         "startLabel": "Start Date",
         "bulletsLabel": "Key Achievements / Features (Bullet points)",
         "bulletsPlaceholder": "Developed a custom UI...",
         "addBullet": "Add Point",
+        "uploadThumbnail": "Upload Thumbnail",
+        "uploading": "Uploading...",
+        "dropToUpload": "Drop image to upload",
+        "removeImage": "Remove Image",
         "submit": "Add Project",
-        "submitting": "Adding Project...",
-        "successMessage": "External project added successfully."
+        "submitting": "Adding Project.",
+        "successMessage": "External project added successfully.",
+        "searchSkillsPlaceholder": "Search skills...",
+        "noSkillsFound": "No skills matching your search.",
+        "selectedSkillsCount": "{count} Selected",
+        "updateSubmit": "Save Changes",
+        "updateSuccessMessage": "Project updated successfully!"
       },
-      "statusInProgress": "In Progress",
-      "statusCompleted": "Completed",
-      "noDescription": "No description provided.",
       "privateBadge": "Private",
       "visibilityPublic": "Project is now public",
       "visibilityPrivate": "Project is now private",
-      "personalNoteLabel": "Learner Note",
+      "privateNotice": "This project is private. Only you can see it until you mark it as public.",
+      "statusAvailable": "Available",
+      "statusInProgress": "In Progress",
+      "statusCompleted": "Completed",
+      "statusUpdated": "Project status updated successfully",
+      "edit": "Edit Project",
+      "actions": {
+        "edit": "Edit Project",
+        "start": "Start Project",
+        "pause": "Pause Project",
+        "mark_complete": "Mark as Complete",
+        "confirm_completion": "Submit and Unlock Skills",
+        "unmark_complete": "Unmark Complete",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "confirm_delete": "Delete Project",
+        "delete_warning": "Are you sure you want to delete this project? This action cannot be undone.",
+        "delete_public_warning": "Warning: This project is currently public.",
+        "confirm_unmark": "Unmark Project",
+        "unmark_warning": "Are you sure you want to unmark this project as complete? It will return to available status.",
+        "confirm_mark_complete": "Complete Project"
+      },
       "technicalOverview": "Technical Overview",
-      "formalSkills": "Formal Skills",
+      "personalNoteLabel": "Learner Note",
       "techStack": "Tech Stack",
-      "markAsComplete": "Mark as Complete",
+      "formalSkills": "Formal Skills",
+      "noDescription": "No description provided.",
       "deleteProject": "Delete Project",
       "setPublic": "Set Public",
       "setPrivate": "Set Private",
-      "confirmDelete": "Are you sure you want to delete this project? This action cannot be undone.",
       "projectDeleted": "Project deleted successfully",
+      "sourceBadge": {
+        "roadmap": "Roadmap Project",
+        "user_custom": "External Project"
+      },
       "accessRestricted": "Access Restricted",
       "systemReady": "System Ready",
       "publicEmptyState": "This learner hasn't made their portfolio public yet.",
@@ -890,6 +1042,7 @@
     "RefinementReport": "Optimization Report",
     "RefinementAudit": "Optimization Audit",
     "Targeting": "Targeting",
+    "Targeted": "Targeted",
     "NextSteps": "Next Steps",
     "GotIt": "Close",
     "Export": "Export PDF",
@@ -899,7 +1052,6 @@
     "CloningAndTailoring": "Updating your profile for the target role...",
     "OptimizationLog": "Updates Log",
     "PartialOptimization": "Partial Match"
-
   },
   "Admin": {
     "Sidebar": {

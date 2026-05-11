@@ -8,12 +8,12 @@ import { StageFilters } from "./StageFilters";
 import { Input } from "@/components/ui/input";
 import { Search, ListFilter, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
 
 interface ApplicationListProps {
@@ -40,7 +40,7 @@ export function ApplicationList({ initialApplications, onEdit, onDelete, onAdd }
   const filtered = useMemo(() => {
     return initialApplications
       .filter(app => {
-        const matchesSearch = 
+        const matchesSearch =
           app.company_name.toLowerCase().includes(search.toLowerCase()) ||
           app.role_title.toLowerCase().includes(search.toLowerCase());
         const matchesStage = stage === "all" || app.stage === stage;
@@ -66,7 +66,7 @@ export function ApplicationList({ initialApplications, onEdit, onDelete, onAdd }
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-[160px] bg-background/50">
@@ -87,20 +87,20 @@ export function ApplicationList({ initialApplications, onEdit, onDelete, onAdd }
         </div>
       </div>
 
-      <StageFilters 
-        selectedStage={stage} 
-        onStageChange={setStage} 
-        counts={counts} 
+      <StageFilters
+        selectedStage={stage}
+        onStageChange={setStage}
+        counts={counts}
       />
 
       {filtered.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map(app => (
-            <ApplicationCard 
-              key={app.application_id} 
-              application={app} 
-              onEdit={onEdit} 
-              onDelete={onDelete} 
+            <ApplicationCard
+              key={app.application_id}
+              application={app}
+              onEdit={onEdit}
+              onDelete={onDelete}
             />
           ))}
         </div>

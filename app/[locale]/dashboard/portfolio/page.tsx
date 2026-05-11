@@ -3,7 +3,12 @@ import { PortfolioHeader, ProjectsSection, SkillsSection } from '@/features/port
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getTranslations } from 'next-intl/server';
 
-export default async function PortfolioPage() {
+export default async function PortfolioPage({
+    searchParams,
+}: {
+    searchParams?: Promise<{ project?: string }>;
+}) {
+    const resolvedSearchParams = await searchParams;
     const [data, catalog, t] = await Promise.all([
         getPrivatePortfolio(),
         getSkillsCatalog(),
@@ -25,7 +30,11 @@ export default async function PortfolioPage() {
                 </TabsList>
 
                 <TabsContent value="projects" className="mt-0 outline-none">
-                    <ProjectsSection projects={data.projects} catalog={catalog} />
+                    <ProjectsSection
+                        projects={data.projects}
+                        catalog={catalog}
+                        initialOpenProjectId={resolvedSearchParams?.project ?? null}
+                    />
                 </TabsContent>
 
                 <TabsContent value="skills" className="mt-0 outline-none">

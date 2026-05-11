@@ -28,8 +28,6 @@ export function ActionPlanTab({ result }: { result: OpportunityAnalysisResult })
 
     return (
         <div className="space-y-6">
-            <h3 className="text-xl font-bold">Your 7-Step Roadmap</h3>
-            
             <div className="relative space-y-4 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
                 {result.action_plan.map((step, i) => (
                     <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">

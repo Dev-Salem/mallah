@@ -111,7 +111,7 @@ export async function evaluateProjectAction(projectId: string): Promise<{ succes
             status: 'completed'
         }).eq('id', submission.id);
 
-        revalidatePath('/dashboard/roadmap');
+        revalidatePath('/dashboard', 'layout');
         revalidatePath(`/dashboard/project/${projectId}`);
         return { success: true };
     } catch (error: any) {
@@ -251,7 +251,7 @@ export async function submitProjectAction(
         }
     }
 
-    revalidatePath('/dashboard/roadmap');
+    revalidatePath('/dashboard', 'layout');
     return { success: true };
 }
 
@@ -331,7 +331,7 @@ export async function skipProjectAction(projectId: string): Promise<{ success: b
         }
     }
 
-    revalidatePath('/dashboard/roadmap');
+    revalidatePath('/dashboard', 'layout');
     return { success: true };
 }
 

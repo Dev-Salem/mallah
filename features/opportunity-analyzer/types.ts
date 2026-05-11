@@ -1,11 +1,23 @@
 export type OpportunityScoreTier = 'NOT_READY' | 'EARLY_STAGE' | 'GETTING_CLOSE' | 'STRONG_CANDIDATE' | 'EXCELLENT_MATCH';
 
 export const SCORE_WEIGHT_MALLAH = 1.0;
-export const SCORE_WEIGHT_CV = 0.7;
+export const SCORE_WEIGHT_CV = 1.0;
+export const REQUIRED_SKILL_WEIGHT = 0.55;
+export const PREFERRED_SKILL_WEIGHT = 0.2;
+export const PROJECT_WEIGHT = 0.25;
+export const MAX_MATCH_SCORE = 95;
+export const APPLY_READY_SCORE = 75;
+
 export interface ExtractedSkill {
     name: string;
     level?: 'beginner' | 'intermediate' | 'advanced';
     category?: string;
+}
+
+export interface ExtractedCVProject {
+    project_name: string;
+    skills: string[];
+    summary?: string;
 }
 
 export interface ExtractedJD {
@@ -19,27 +31,85 @@ export interface ExtractedJD {
 
 export interface ExtractedCV {
     extracted_skills: Array<{ skill_name: string; inferred_level: string }>;
+    extracted_projects: ExtractedCVProject[];
     experience_years: number;
     previous_roles: string[];
 }
 
 export interface SkillMatchInfo {
     skill_name: string;
+    matched_requirement: string;
     source: 'roadmap' | 'project' | 'manual' | 'cv';
+    requirement_type?: 'required' | 'preferred';
     is_verified: boolean;
     current_level?: string;
     required_level?: string;
     weight: number;
     project_title?: string; // If source == project
+    match_reason?: string;
+}
+
+export interface MissingSkillRoadmapTopic {
+    topic_id: string;
+    topic_title: string;
+    stage_title: string;
+    stage_order_index: number;
+}
+
+export interface MissingSkillItem {
+    skill_name: string;
+    roadmap_topic: MissingSkillRoadmapTopic | null;
+    outside_current_path: boolean;
 }
 
 export interface MatchScoreBreakdown {
     matched: SkillMatchInfo[];
     partial: SkillMatchInfo[];
     missing: {
-        required: string[];
-        preferred: string[];
+        required: MissingSkillItem[];
+        preferred: MissingSkillItem[];
     };
+}
+
+export interface OpportunityAnalysisMetadata {
+    employment_type?: string | null;
+    responsibilities?: string[];
+    apply_url?: string | null;
+    projects_matched?: number;
+    cv_uploaded?: boolean;
+    cv_extracted_skills_count?: number;
+}
+
+export interface OpportunityExtractedSkills {
+    required: string[];
+    preferred: string[];
+    metadata?: OpportunityAnalysisMetadata;
+}
+
+export interface PortfolioSyncRelevantProject {
+    id: string;
+    title: string;
+    covered_skills: string[];
+    source_label: 'Mallah Roadmap' | 'Portfolio Hub' | 'From CV';
+    source_type: 'roadmap' | 'portfolio' | 'cv';
+    project_url: string | null;
+}
+
+export interface PortfolioSyncSuggestion {
+    suggestion_id: string;
+    suggestion_type: 'catalog' | 'generated';
+    project_id: string | null;
+    title: string;
+    covered_skills: string[];
+    effort_level: 'Beginner' | 'Intermediate';
+    reason: string;
+    description: string;
+}
+
+export interface PortfolioSyncData {
+    existing_total_count: number;
+    existing_relevant_projects: PortfolioSyncRelevantProject[];
+    build_suggestions: PortfolioSyncSuggestion[];
 }
 
 export type ActionStepType = 'learn_topic' | 'build_project' | 'update_resume' | 'apply_now';
@@ -58,14 +128,16 @@ export interface OpportunityAnalysisResult {
     company_name: string | null;
     location: string | null;
     seniority_level: string | null;
+    employment_type?: string | null;
+    responsibilities?: string[];
+    apply_url?: string | null;
     raw_jd_text: string;
-    extracted_skills: {
-        required: string[];
-        preferred: string[];
-    };
+    extracted_skills: OpportunityExtractedSkills;
     skills_breakdown: MatchScoreBreakdown;
     action_plan: ActionPlanStep[];
     cv_skills_contributed: number;
+    cv_uploaded?: boolean;
+    cv_extracted_skills_count?: number;
     is_saved: boolean;
     matchingResumeId?: string | null;
     created_at?: string;

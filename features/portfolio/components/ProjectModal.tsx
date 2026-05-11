@@ -7,25 +7,42 @@ import {
     DialogTitle,
     DialogDescription
 } from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, Globe, Calendar, Trash2, CheckCircle2, Lock, Unlock } from "lucide-react";
+import { Github, Globe, Calendar, Trash2, CheckCircle2, Lock, Unlock, Play, RotateCcw, Edit, ChevronLeft } from "lucide-react";
 import { Project, RoadmapProject, ExternalProject } from "../types";
+import { ExternalProjectForm } from "./ExternalProjectForm";
 import { useTranslations } from "next-intl";
-import { toggleProjectVisibilityAction, deleteProjectAction } from "../actions/portfolio-actions";
+import { toggleProjectVisibilityAction, deleteProjectAction, updateProjectStatusAction } from "../actions/portfolio-actions";
+import { RoadmapCompletionModal } from "./RoadmapCompletionModal";
 import { toast } from "sonner";
 import { useState } from "react";
-
 interface ProjectModalProps {
     project: Project;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     viewMode: "private" | "public";
+    catalog: { skill_id: string; name: string; category: string }[];
 }
 
-export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectModalProps) {
+export function ProjectModal({ project, open, onOpenChange, viewMode, catalog }: ProjectModalProps) {
     const t = useTranslations('PortfolioHub.projects');
     const [isUpdating, setIsUpdating] = useState(false);
+    const [showCompletionModal, setShowCompletionModal] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showUnmarkConfirm, setShowUnmarkConfirm] = useState(false);
+    const [showMarkCompleteConfirm, setShowMarkCompleteConfirm] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const isRoadmap = project.sourceType === "roadmap";
     const isPrivate = !project.isPublic;
@@ -45,18 +62,84 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
     };
 
     const handleDelete = async () => {
-        if (!confirm(t('confirmDelete' as any) || 'Are you sure you want to delete this project?')) return;
         setIsUpdating(true);
         try {
             const result = await deleteProjectAction(project.id);
             if (result.success) {
-                toast.success(t('projectDeleted' as any) || 'Project deleted successfully.');
+                toast.success(t('projectDeleted'));
                 onOpenChange(false);
+                setShowDeleteConfirm(false);
             } else {
                 toast.error(result.error);
             }
         } finally {
             setIsUpdating(false);
+        }
+    };
+
+    const handleStartProject = async () => {
+        setIsUpdating(true);
+        try {
+            const result = await updateProjectStatusAction(project.id, 'in_progress');
+            if (result.success) {
+                toast.success(t('statusUpdated'));
+            } else {
+                toast.error(result.error);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handlePauseProject = async () => {
+        setIsUpdating(true);
+        try {
+            const result = await updateProjectStatusAction(project.id, 'available');
+            if (result.success) {
+                toast.success(t('statusUpdated'));
+            } else {
+                toast.error(result.error);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleUnmarkComplete = async () => {
+        setIsUpdating(true);
+        try {
+            const result = await updateProjectStatusAction(project.id, 'available');
+            if (result.success) {
+                toast.success(t('statusUpdated'));
+                setShowUnmarkConfirm(false);
+            } else {
+                toast.error(result.error);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleMarkCompleteExternal = async () => {
+        setIsUpdating(true);
+        try {
+            const result = await updateProjectStatusAction(project.id, 'completed');
+            if (result.success) {
+                toast.success(t('statusUpdated'));
+                setShowMarkCompleteConfirm(false);
+            } else {
+                toast.error(result.error);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleMarkComplete = async () => {
+        if (isRoadmap) {
+            setShowCompletionModal(true);
+        } else {
+            setShowMarkCompleteConfirm(true);
         }
     };
 
@@ -82,16 +165,20 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <>
+            <Dialog open={open} onOpenChange={(val) => {
+                onOpenChange(val);
+                if (!val) setIsEditing(false); // Reset edit mode on close
+            }}>
             <DialogContent className="max-w-3xl glass-projects p-0 overflow-hidden border-none shadow-2xl">
                 {/* Thumbnail Header */}
-                <div className="relative w-full aspect-video bg-muted/20">
+                <div className="relative w-full aspect-[32/9] bg-muted/20">
                     {project.thumbnailUrl ? (
                         <img src={project.thumbnailUrl} alt={project.title} className="w-full h-full object-cover" />
                     ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-accent/20 gap-4">
-                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                                {isRoadmap ? <Lock className="w-8 h-8 text-primary/40" /> : <Unlock className="w-8 h-8 text-primary/40" />}
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-accent/20 gap-2">
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                                {isRoadmap ? <Lock className="w-6 h-6 text-primary/40" /> : <Unlock className="w-6 h-6 text-primary/40" />}
                             </div>
                             <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
                                 {isRoadmap ? project.title : "User Added Project"}
@@ -108,7 +195,30 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                     )}
                 </div>
 
-                <div className="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+                {isEditing ? (
+                    <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
+                        <div className="flex items-center gap-4 mb-4 border-b border-white/5 pb-4">
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => setIsEditing(false)} 
+                                className="gap-2 font-mono text-xs text-muted-foreground hover:text-foreground"
+                            >
+                                <ChevronLeft className="w-4 h-4" /> BACK
+                            </Button>
+                            <h3 className="font-mono text-sm font-bold uppercase tracking-widest text-primary">Edit Project</h3>
+                        </div>
+                        <div className="px-1">
+                            <ExternalProjectForm 
+                                initialData={project as ExternalProject}
+                                catalog={catalog}
+                                onSuccess={() => setIsEditing(false)}
+                                onCancel={() => setIsEditing(false)}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="p-8 space-y-6 max-h-[75vh] overflow-y-auto">
                     {/* Header Info */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                         <div className="space-y-2">
@@ -119,8 +229,14 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                                 <Badge variant="outline" className={`uppercase font-mono text-[10px] tracking-wider ${getDifficultyStyles(project.difficulty)}`}>
                                     {project.difficulty}
                                 </Badge>
-                                <Badge variant="outline" className={`uppercase font-mono text-[10px] tracking-wider ${project.status === 'completed' ? 'text-success border-success/30 bg-success/5' : 'text-warning border-warning/30 bg-warning/5'}`}>
-                                    {project.status === 'completed' ? t('statusCompleted' as any) : t('statusInProgress' as any)}
+                                <Badge variant="outline" className={`uppercase font-mono text-[10px] tracking-wider ${
+                                    project.status === 'completed' ? 'text-success border-success/30 bg-success/5' : 
+                                    project.status === 'in_progress' ? 'text-warning border-warning/30 bg-warning/5' :
+                                    'text-muted-foreground border-border bg-muted/5'
+                                }`}>
+                                    {project.status === 'completed' ? t('statusCompleted' as any) : 
+                                     project.status === 'in_progress' ? t('statusInProgress' as any) : 
+                                     t('statusAvailable' as any)}
                                 </Badge>
                             </div>
                             <DialogTitle className="text-3xl font-bold tracking-tight text-foreground">
@@ -214,29 +330,150 @@ export function ProjectModal({ project, open, onOpenChange, viewMode }: ProjectM
                                     {isPrivate ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
                                     {isPrivate ? t('setPublic') : t('setPrivate')}
                                 </Button>
-                                
+
                                 {!isRoadmap && (
                                     <Button 
                                         variant="ghost" 
                                         size="sm" 
-                                        className="gap-2 font-mono text-[10px] tracking-wider uppercase text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                                        onClick={handleDelete}
-                                        disabled={isUpdating}
+                                        className="gap-2 font-mono text-[10px] tracking-wider uppercase text-primary hover:bg-primary/10"
+                                        onClick={() => setIsEditing(true)}
                                     >
-                                        <Trash2 className="w-3.5 h-3.5" /> {t('deleteProject')}
+                                        <Edit className="w-3.5 h-3.5" /> {t('edit' as any) || 'Edit'}
                                     </Button>
+                                )}
+                                
+                                {!isRoadmap && (
+                                    <div className="flex items-center gap-2">
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="gap-2 font-mono text-[10px] tracking-wider uppercase text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                            onClick={() => setShowDeleteConfirm(true)}
+                                            disabled={isUpdating}
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" /> {t('deleteProject')}
+                                        </Button>
+
+                                        {project.status === 'completed' && (
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm" 
+                                                className="gap-2 font-mono text-[10px] tracking-wider uppercase text-muted-foreground hover:text-foreground hover:bg-white/5"
+                                                onClick={() => setShowUnmarkConfirm(true)}
+                                                disabled={isUpdating}
+                                            >
+                                                <RotateCcw className="w-3.5 h-3.5" /> {t('actions.unmark_complete')}
+                                            </Button>
+                                        )}
+                                    </div>
                                 )}
                             </div>
 
-                            {isRoadmap && project.status !== 'completed' && (
-                                <Button size="sm" className="gap-2 font-mono text-xs bg-success hover:bg-success/90 text-white shadow-[0_0_10px_rgba(var(--success),0.2)]">
-                                    <CheckCircle2 className="w-4 h-4" /> {t('markAsComplete')}
-                                </Button>
-                            )}
+                            <div className="flex items-center gap-2">
+                                {project.status === 'available' && (
+                                    <Button 
+                                        size="sm" 
+                                        onClick={handleStartProject}
+                                        disabled={isUpdating}
+                                        className="gap-2 font-mono text-xs bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
+                                    >
+                                        <Play className="w-4 h-4" /> {t('actions.start')}
+                                    </Button>
+                                )}
+
+                                {project.status === 'in_progress' && (
+                                    <div className="flex items-center gap-2">
+                                        <Button 
+                                            size="sm" 
+                                            variant="ghost"
+                                            onClick={handlePauseProject}
+                                            disabled={isUpdating}
+                                            className="gap-2 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-white/5"
+                                        >
+                                            <RotateCcw className="w-4 h-4" /> {t('actions.pause')}
+                                        </Button>
+                                        <Button 
+                                            size="sm" 
+                                            onClick={handleMarkComplete}
+                                            disabled={isUpdating}
+                                            className="gap-2 font-mono text-xs bg-success hover:bg-success/90 text-white shadow-[0_0_10px_rgba(var(--success),0.2)]"
+                                        >
+                                            <CheckCircle2 className="w-4 h-4" /> {t('actions.mark_complete')}
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
-                </div>
-            </DialogContent>
-        </Dialog>
+                    </div>
+                )}
+                </DialogContent>
+            </Dialog>
+            
+            {isRoadmap && (
+                <RoadmapCompletionModal 
+                    project={project as RoadmapProject}
+                    open={showCompletionModal}
+                    onOpenChange={setShowCompletionModal}
+                    onSuccess={() => {
+                        setShowCompletionModal(false);
+                        onOpenChange(false); // Close parent modal too
+                    }}
+                />
+            )}
+
+            {/* Confirmation Dialogs */}
+            <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+                <AlertDialogContent className="glass-projects border-white/10">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('actions.confirm_delete')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t('actions.delete_warning')}
+                            {project.isPublic && <div className="mt-2 text-destructive font-bold">{t('actions.delete_public_warning')}</div>}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-white/5 border-white/10">{t('actions.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 text-white">
+                            {t('actions.delete')}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={showUnmarkConfirm} onOpenChange={setShowUnmarkConfirm}>
+                <AlertDialogContent className="glass-projects border-white/10">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('actions.confirm_unmark')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t('actions.unmark_warning')}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-white/5 border-white/10">{t('actions.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleUnmarkComplete} className="bg-primary hover:bg-primary/90 text-white">
+                            {t('actions.unmark_complete')}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={showMarkCompleteConfirm} onOpenChange={setShowMarkCompleteConfirm}>
+                <AlertDialogContent className="glass-projects border-white/10">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('actions.confirm_mark_complete')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t('submissionModal.description')}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="bg-white/5 border-white/10">{t('actions.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleMarkCompleteExternal} className="bg-success hover:bg-success/90 text-white">
+                            {t('actions.mark_complete')}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }

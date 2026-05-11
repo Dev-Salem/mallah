@@ -98,6 +98,17 @@ export interface UserProjectSubmission {
     latest_review?: ProjectReview | null;
 }
 
+export interface CertificateSuggestion {
+    id: string;
+    stageLabel: string;
+    afterText?: string | null;
+    title: string;
+    provider: string;
+    url: string;
+    costLabel?: string | null;
+    costNote?: string | null;
+    whyNow?: string | null;
+}
 
 export interface Stage {
     stage_id: string;
@@ -110,7 +121,13 @@ export interface Stage {
     project: Project | null;
 }
 
+export interface RoadmapCertificateStage {
+    title: string;
+    suggestions: CertificateSuggestion[];
+}
+
 export interface RoadmapData {
     path_id: string;
     stages: Stage[];
+    certificateStage?: RoadmapCertificateStage | null;
 }

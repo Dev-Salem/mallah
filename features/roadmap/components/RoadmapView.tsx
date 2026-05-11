@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { RoadmapData, Stage, Topic } from '../types';
-import { CheckCircle2, Circle, Lock, PlayCircle, FileText, FlaskConical, LayoutTemplate, Trophy, Video, BookOpen, Clock, Zap } from 'lucide-react';
+import { CertificateSuggestion, RoadmapData, Stage, Topic } from '../types';
+import { Award, CheckCircle2, Circle, ExternalLink, Lock, PlayCircle, FileText, FlaskConical, LayoutTemplate, Trophy, Video, BookOpen, Clock, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocale } from 'next-intl';
 
@@ -28,6 +28,7 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
 
     const pathId = roadmap.path_id as keyof typeof PATH_HEADER_STATS;
     const stats = PATH_HEADER_STATS[pathId] || PATH_HEADER_STATS.frontend;
+    const certificateSuggestions = roadmap.certificateStage?.suggestions ?? [];
 
     // Calculate dynamic stats
     let completedTopics = 0;
@@ -51,16 +52,16 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
     return (
         <div className="w-full max-w-6xl py-8 px-4 md:px-10">
             {/* Header Card - Theme Aware & Accessible */}
-            <div 
+            <div
                 className="relative overflow-hidden rounded-xl border p-[18px_24px] mb-6 shadow-xl bg-card border-border dark:border-primary/20 transition-colors duration-500"
-                style={{ 
+                style={{
                     '--header-dark-bg': 'oklch(0.155 0.015 106)'
                 } as any}
             >
                 {/* Specific Dark Background Overlay to avoid blue tint */}
                 <div className="absolute inset-0 z-[-1] opacity-0 dark:opacity-100 dark:bg-[var(--header-dark-bg)] transition-opacity" />
                 {/* Top decorative accent line */}
-                <div 
+                <div
                     className="absolute top-0 left-0 right-0 h-[2px]"
                     style={{ background: 'linear-gradient(90deg, transparent, oklch(0.68 0.13 38.8), transparent)' }}
                 />
@@ -69,9 +70,9 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                     {/* Row 1 — Top Bar */}
                     <div className="flex items-center justify-between gap-4 mb-6">
                         {/* Path Tag Pill */}
-                        <div 
+                        <div
                             className="px-[10px] py-[3.5px] rounded-[4px] border text-[11px] font-mono font-bold uppercase tracking-[0.2em]"
-                            style={{ 
+                            style={{
                                 color: 'oklch(0.68 0.13 38.8)',
                                 backgroundColor: 'oklch(0.68 0.13 38.8 / 0.1)',
                                 borderColor: 'oklch(0.68 0.13 38.8 / 0.25)'
@@ -81,19 +82,19 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                         </div>
 
                         {/* Status Indicator */}
-                        <div 
+                        <div
                             className="flex items-center gap-[7px] text-[11px] font-mono font-bold uppercase tracking-[0.08em]"
-                            style={{ 
-                                color: isCompleted ? 'oklch(0.68 0.13 38.8)' : 'oklch(0.65 0.12 153)' 
+                            style={{
+                                color: isCompleted ? 'oklch(0.68 0.13 38.8)' : 'oklch(0.65 0.12 153)'
                             }}
                         >
                             <span className={cn(
                                 "flex h-[6px] w-[6px] rounded-full",
                                 !isCompleted && "animate-header-pulse"
-                            )} 
-                            style={{ 
-                                backgroundColor: isCompleted ? 'oklch(0.68 0.13 38.8)' : 'oklch(0.65 0.12 153)' 
-                            }} />
+                            )}
+                                style={{
+                                    backgroundColor: isCompleted ? 'oklch(0.68 0.13 38.8)' : 'oklch(0.65 0.12 153)'
+                                }} />
                             {isCompleted ? 'COMPLETED' : t('active_status', { fallback: 'ACTIVE' })}
                         </div>
                     </div>
@@ -156,8 +157,8 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
             </div>
 
             {/* Scanline Divider */}
-            <div className="w-full h-[1px] mb-8 opacity-30" 
-                style={{ 
+            <div className="w-full h-[1px] mb-8 opacity-30"
+                style={{
                     backgroundImage: 'repeating-linear-gradient(to right, oklch(0.68 0.13 38.8) 0, oklch(0.68 0.13 38.8) 4px, transparent 4px, transparent 8px)'
                 }}
             />
@@ -167,8 +168,8 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                 {/* Vertical Spine Line */}
                 <div className="absolute left-[19px] md:left-[24px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-primary/30 to-transparent opacity-20 dark:opacity-40" />
 
-                <Accordion 
-                    type="multiple" 
+                <Accordion
+                    type="multiple"
                     defaultValue={roadmap.stages
                         .filter(s => {
                             const stageTopicsCompleted = s.topics.filter(t => t.user_status === 'completed').length;
@@ -178,7 +179,7 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                             return s.is_unlocked && !isStageDone;
                         })
                         .slice(0, 1) // Only open the first incomplete stage
-                        .map(s => s.stage_id)} 
+                        .map(s => s.stage_id)}
                     className="contents"
                 >
                     {roadmap.stages.map((stage, index) => {
@@ -186,19 +187,19 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                         const projectCompleted = (stage.project?.user_status === 'completed' || stage.project?.user_status === 'waiting') ? 1 : 0;
                         const totalStageItems = stage.topics.length + (stage.project ? 1 : 0);
                         const isCompleted = (stageTopicsCompleted + projectCompleted) >= totalStageItems;
-                        
+
                         const state = !stage.is_unlocked ? 'locked' : isCompleted ? 'completed' : 'current';
 
                         return (
                             <AccordionItem key={stage.stage_id} value={stage.stage_id} className="contents border-none">
                                 {/* Timeline Node - Stage Number Circle */}
                                 <div className="relative flex flex-col items-center pt-8">
-                                    <div 
+                                    <div
                                         className={cn(
                                             "z-20 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 text-[10px] md:text-xs font-mono font-bold transition-all duration-700",
                                             state === 'completed' ? "bg-success border-success text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]" :
-                                            state === 'current' ? "bg-primary border-primary text-white shadow-[0_0_25px_rgba(249,115,22,0.5)] scale-110" :
-                                            "bg-muted border-border text-muted-foreground opacity-60"
+                                                state === 'current' ? "bg-primary border-primary text-white shadow-[0_0_25px_rgba(249,115,22,0.5)] scale-110" :
+                                                    "bg-muted border-border text-muted-foreground opacity-60"
                                         )}
                                     >
                                         {String(index + 1).padStart(2, '0')}
@@ -224,6 +225,23 @@ export function RoadmapView({ roadmap }: RoadmapViewProps) {
                         );
                     })}
                 </Accordion>
+
+                {certificateSuggestions.length > 0 && (
+                    <>
+                        <div className="relative flex flex-col items-center pt-8">
+                            <div className="z-20 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 border-primary/40 bg-primary/10 text-primary shadow-[0_0_18px_rgba(249,115,22,0.2)]">
+                                <Award className="h-4 w-4 md:h-5 md:w-5" />
+                            </div>
+                            <div className="absolute -bottom-7 text-[9px] font-mono text-primary/60 uppercase tracking-widest text-center">
+                                NEXT
+                            </div>
+                        </div>
+
+                        <div className="pb-16">
+                            <CertificateStageCard suggestions={certificateSuggestions} t={t} />
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
@@ -240,8 +258,8 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
             className={cn(
                 "relative flex flex-col gap-6 p-6 md:p-10 rounded-3xl border transition-all duration-700",
                 state === 'current' ? "border-primary/40 shadow-[0_0_40px_rgba(249,115,22,0.08)] bg-card/60 backdrop-blur-xl" :
-                state === 'completed' ? "border-success/20 bg-success/[0.03] dark:bg-success/[0.01]" :
-                "border-border/40 bg-muted/40 opacity-70 cursor-not-allowed overflow-hidden"
+                    state === 'completed' ? "border-success/20 bg-success/[0.03] dark:bg-success/[0.01]" :
+                        "border-border/40 bg-muted/40 opacity-70 cursor-not-allowed overflow-hidden"
             )}
         >
             {/* Glossy overlay for active stage */}
@@ -256,18 +274,18 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                         <div className="flex items-center gap-3">
                             <span className={cn(
                                 "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
-                                state === 'locked' ? "text-muted-foreground/60" : 
-                                state === 'completed' ? "text-success/80" : "text-primary/80"
+                                state === 'locked' ? "text-muted-foreground/60" :
+                                    state === 'completed' ? "text-success/80" : "text-primary/80"
                             )}>
-                                {state === 'locked' ? 'ENCRYPTED' : 
-                                 state === 'completed' ? t('completed_stage').toUpperCase() : 
-                                 t('current_stage').toUpperCase()} // {String(stage.order_index).padStart(2, '0')}
+                                {state === 'locked' ? 'ENCRYPTED' :
+                                    state === 'completed' ? t('completed_stage').toUpperCase() :
+                                        t('current_stage').toUpperCase()} // {String(stage.order_index).padStart(2, '0')}
                             </span>
                             <div className={cn(
                                 "text-[9px] px-2 py-0.5 rounded-md border uppercase font-mono font-bold tracking-widest",
                                 stage.difficulty_level === 'beginner' ? "border-success/30 text-success bg-success/5" :
-                                stage.difficulty_level === 'intermediate' ? "border-warning/30 text-warning bg-warning/5" :
-                                "border-destructive/30 text-destructive bg-destructive/5"
+                                    stage.difficulty_level === 'intermediate' ? "border-warning/30 text-warning bg-warning/5" :
+                                        "border-destructive/30 text-destructive bg-destructive/5"
                             )}>
                                 {t(`difficulty.${stage.difficulty_level}`)}
                             </div>
@@ -286,7 +304,7 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                         </div>
                     ) : (
                         <div className="flex items-center gap-6">
-                             <div className="text-right flex flex-col">
+                            <div className="text-right flex flex-col">
                                 <span className={cn(
                                     "text-3xl font-mono font-bold leading-none tracking-tighter",
                                     state === 'completed' ? "text-success" : "text-primary"
@@ -296,19 +314,19 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                                 <span className="text-[9px] text-muted-foreground/60 uppercase font-mono font-bold tracking-[0.1em] mt-2 text-center md:text-right">
                                     {state === 'completed' ? 'SYNCHRONIZED' : ''}
                                 </span>
-                             </div>
+                            </div>
                         </div>
                     )}
                 </div>
 
                 {state !== 'locked' && (
                     <div className="w-full h-[3px] bg-muted/50 overflow-hidden rounded-full p-[0.5px] border border-white/[0.03]">
-                        <div 
+                        <div
                             className={cn(
                                 "h-full transition-all duration-1000 ease-out rounded-full shadow-[0_0_10px_currentColor]",
                                 state === 'completed' ? "bg-success text-success" : "bg-primary text-primary"
-                            )} 
-                            style={{ width: `${progressPercent}%` }} 
+                            )}
+                            style={{ width: `${progressPercent}%` }}
                         />
                     </div>
                 )}
@@ -322,11 +340,11 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                             <TopicItem key={topic.topic_id} topic={topic} t={t} locale={locale} />
                         ))}
                     </div>
-                    
+
                     {stage.project && (
-                         <div className="mt-2">
+                        <div className="mt-2">
                             <ProjectItem project={{ ...stage.project, stage_order: stage.order_index }} t={t} locale={locale} />
-                         </div>
+                        </div>
                     )}
                 </AccordionContent>
             ) : (
@@ -336,6 +354,91 @@ function StageCard({ stage, t, locale, state, isFirst }: { stage: Stage; t: Retu
                     {t('unlock_notice', { stage: stage.order_index - 1 })}
                 </div>
             )}
+        </div>
+    );
+}
+
+function CertificateStageCard({ suggestions, t }: { suggestions: CertificateSuggestion[]; t: ReturnType<typeof useTranslations> }) {
+    return (
+        <div className="relative flex flex-col gap-6 rounded-3xl border border-primary/20 bg-card/70 p-6 md:p-10 shadow-[0_0_30px_rgba(249,115,22,0.06)]">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.04] via-transparent to-primary/[0.02] pointer-events-none rounded-3xl" />
+
+            <div className="relative z-10 flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                    <span className="rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-primary/80">
+                        {t('certificate_stage_label')}
+                    </span>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                        {t('certificate_stage_title')}
+                    </h3>
+                    <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                        {t('certificate_stage_description')}
+                    </p>
+                </div>
+            </div>
+
+            <div className="relative z-10 grid gap-4">
+                {suggestions.map((suggestion) => (
+                    <div
+                        key={suggestion.id}
+                        className="rounded-2xl border border-border/60 bg-background/80 p-5 transition-colors hover:border-primary/30"
+                    >
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                            <div className="min-w-0 flex-1">
+                                <div className="mb-3 flex flex-wrap items-center gap-2">
+                                    <span className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.15em] text-primary/80">
+                                        {suggestion.stageLabel}
+                                    </span>
+                                    {suggestion.afterText && (
+                                        <span className="text-[11px] font-mono uppercase tracking-[0.08em] text-muted-foreground/70">
+                                            {t('certificate_after', { after: suggestion.afterText })}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <h4 className="text-lg font-bold tracking-tight text-foreground">
+                                    {suggestion.title}
+                                </h4>
+
+                                <div className="mt-2 flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                    <span>{t('certificate_provider', { provider: suggestion.provider })}</span>
+                                    {suggestion.costLabel && (
+                                        <span>{t('certificate_cost', { cost: suggestion.costLabel })}</span>
+                                    )}
+                                </div>
+
+                                {suggestion.costNote && (
+                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                        {suggestion.costNote}
+                                    </p>
+                                )}
+
+                                {suggestion.whyNow && (
+                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                        <span className="font-semibold text-foreground">{t('certificate_why_now_label')} </span>
+                                        {suggestion.whyNow}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="md:pl-6">
+                                <Link
+                                    href={suggestion.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary px-4 py-2 text-xs font-mono font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_18px_rgba(249,115,22,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_22px_rgba(249,115,22,0.3)]"
+                                >
+                                    {t('certificate_cta')}
+                                    <ExternalLink className="h-3.5 w-3.5" />
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
@@ -355,15 +458,15 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                 <div className={cn(
                     "flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-500 relative",
                     isCompleted ? "bg-success/10 text-success" :
-                    isInProgress ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_20px_rgba(249,115,22,0.2)]" :
-                    "bg-muted text-muted-foreground/60"
+                        isInProgress ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_20px_rgba(249,115,22,0.2)]" :
+                            "bg-muted text-muted-foreground/60"
                 )}>
-                    {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : 
-                     topic.topic_type === 'lesson' ? <PlayCircle className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
-                     topic.topic_type === 'lesson_lab' ? <FlaskConical className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
-                     topic.topic_type.startsWith('project_') ? <LayoutTemplate className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
-                     <FileText className={cn("w-5 h-5", isInProgress && "animate-pulse")} />}
-                    
+                    {isCompleted ? <CheckCircle2 className="w-5 h-5" /> :
+                        topic.topic_type === 'lesson' ? <PlayCircle className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
+                            topic.topic_type === 'lesson_lab' ? <FlaskConical className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
+                                topic.topic_type.startsWith('project_') ? <LayoutTemplate className={cn("w-5 h-5", isInProgress && "animate-pulse")} /> :
+                                    <FileText className={cn("w-5 h-5", isInProgress && "animate-pulse")} />}
+
                     {isInProgress && (
                         <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-ping" />
                     )}
@@ -385,19 +488,19 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
             {/* Middle: Skills Section (New Better Placement) */}
             <div className="flex flex-wrap items-center gap-2 md:px-6 md:border-x border-border/30 min-w-[150px] max-w-[280px]">
                 {topic.skills && topic.skills.length > 0 && (
-                     <div className="flex flex-col gap-2 w-full">
+                    <div className="flex flex-col gap-2 w-full">
                         <span className="text-[10px] text-muted-foreground/50 font-mono font-bold uppercase tracking-[.15em] block">
                             ACQUIRED_SKILLS
                         </span>
                         <div className="flex flex-wrap gap-1.5 pt-1">
                             {topic.skills.slice(0, 3).map((skill: any) => (
-                                <span 
-                                    key={skill.skill_id} 
+                                <span
+                                    key={skill.skill_id}
                                     className={cn(
                                         "flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-mono leading-none transition-all duration-300 shadow-sm",
-                                        isCompleted ? "border-success/10 bg-success/[0.02] text-success/60" : 
-                                        isInProgress ? "border-primary/50 bg-primary/20 text-primary shadow-[0_0_10px_rgba(249,115,22,0.1)]" :
-                                        "border-primary/40 bg-primary/10 text-primary"
+                                        isCompleted ? "border-success/10 bg-success/[0.02] text-success/60" :
+                                            isInProgress ? "border-primary/50 bg-primary/20 text-primary shadow-[0_0_10px_rgba(249,115,22,0.1)]" :
+                                                "border-primary/40 bg-primary/10 text-primary"
                                     )}
                                 >
                                     <Zap className={cn("w-2.5 h-2.5", !isCompleted && "fill-current", isInProgress && "animate-pulse")} />
@@ -405,7 +508,7 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                                 </span>
                             ))}
                         </div>
-                     </div>
+                    </div>
                 )}
             </div>
 
@@ -414,8 +517,8 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                 <div className={cn(
                     "px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-widest border relative overflow-hidden whitespace-nowrap flex-shrink-0",
                     isCompleted ? "bg-success/5 border-success/20 text-success/70" :
-                    isInProgress ? "bg-primary/20 border-primary shadow-[0_0_15px_rgba(249,115,22,0.2)] text-primary" :
-                    "bg-muted border-border text-muted-foreground/40"
+                        isInProgress ? "bg-primary/20 border-primary shadow-[0_0_15px_rgba(249,115,22,0.2)] text-primary" :
+                            "bg-muted border-border text-muted-foreground/40"
                 )}>
                     {isInProgress && (
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_2s_infinite]" />
@@ -426,8 +529,8 @@ function TopicItem({ topic, t, locale }: { topic: Topic, t: ReturnType<typeof us
                 <div className={cn(
                     "px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 min-w-[80px] text-center whitespace-nowrap flex-shrink-0",
                     isCompleted ? "bg-muted text-muted-foreground border border-border" :
-                    isInProgress ? "bg-primary text-white border border-primary shadow-[0_2px_10px_rgba(249,115,22,0.2)]" :
-                    "bg-background border border-border text-foreground group-hover:border-primary group-hover:text-primary group-active:scale-95"
+                        isInProgress ? "bg-primary text-white border border-primary shadow-[0_2px_10px_rgba(249,115,22,0.2)]" :
+                            "bg-background border border-border text-foreground group-hover:border-primary group-hover:text-primary group-active:scale-95"
                 )}>
                     {isCompleted ? t('actions.review') : isInProgress ? t('actions.continue') : t('actions.start')}
                 </div>
@@ -444,11 +547,11 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
     return (
         <div className={cn(
             "relative overflow-hidden rounded-3xl border transition-all duration-700",
-            isCompleted 
-                ? "border-success/20 bg-success/[0.03]" 
+            isCompleted
+                ? "border-success/20 bg-success/[0.03]"
                 : isWaiting
-                ? "border-warning/20 bg-warning/[0.03]"
-                : "border-primary/30 bg-card shadow-[0_0_40px_rgba(249,115,22,0.05)]"
+                    ? "border-warning/20 bg-warning/[0.03]"
+                    : "border-primary/30 bg-card shadow-[0_0_40px_rgba(249,115,22,0.05)]"
         )}>
             {/* Glossy top accent for current */}
             {(!isCompleted && !isWaiting) && (
@@ -459,11 +562,11 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
                 <div className="flex flex-col md:flex-row items-start gap-8">
                     {/* Trophy Hub Icon - Square Box */}
                     <div className={cn(
-                        isCompleted 
-                            ? "border-success/30 bg-success/10 text-success shadow-[0_0_20px_rgba(34,197,94,0.1)]" 
+                        isCompleted
+                            ? "border-success/30 bg-success/10 text-success shadow-[0_0_20px_rgba(34,197,94,0.1)]"
                             : isWaiting
-                            ? "border-warning/30 bg-warning/10 text-warning"
-                            : "border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(249,115,22,0.15)]"
+                                ? "border-warning/30 bg-warning/10 text-warning"
+                                : "border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(249,115,22,0.15)]"
                     )}>
                         <Trophy className={cn("w-10 h-10", (!isCompleted && !isWaiting) && "animate-pulse")} />
                     </div>
@@ -492,22 +595,22 @@ function ProjectItem({ project, t, locale }: { project: { user_status?: string, 
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-border/50">
                     <div className="flex items-center gap-3">
-                         <span className={cn(
-                             "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
-                             isCompleted ? "text-success/60" : isWaiting ? "text-warning/60" : "text-primary/70"
-                         )}>
-                             ● {isWaiting ? t('waiting_notice') : t('gates_stage', { stage: (project.stage_order || 0) + 1 })}
-                         </span>
+                        <span className={cn(
+                            "text-[10px] font-mono font-bold uppercase tracking-[0.2em]",
+                            isCompleted ? "text-success/60" : isWaiting ? "text-warning/60" : "text-primary/70"
+                        )}>
+                            ● {isWaiting ? t('waiting_notice') : t('gates_stage', { stage: (project.stage_order || 0) + 1 })}
+                        </span>
                     </div>
 
                     <Link href={`/${locale}/dashboard/project/${project.project_id}`} className="w-full sm:w-auto">
                         <button className={cn(
                             "group relative w-full sm:w-auto px-10 py-4 rounded-2xl font-mono font-bold text-xs uppercase tracking-[0.2em] transition-all duration-300 overflow-hidden",
-                            isCompleted 
-                                ? "bg-transparent border border-success/30 text-success hover:bg-success hover:text-white" 
+                            isCompleted
+                                ? "bg-transparent border border-success/30 text-success hover:bg-success hover:text-white"
                                 : isWaiting
-                                ? "bg-transparent border border-warning/30 text-warning hover:bg-warning hover:text-white"
-                                : "bg-primary text-white border border-primary shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_30px_rgba(249,115,22,0.5)] hover:-translate-y-1"
+                                    ? "bg-transparent border border-warning/30 text-warning hover:bg-warning hover:text-white"
+                                    : "bg-primary text-white border border-primary shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:shadow-[0_15px_30px_rgba(249,115,22,0.5)] hover:-translate-y-1"
                         )}>
                             <span className="relative z-10">
                                 {isCompleted ? t('actions.view_submission') : isWaiting ? t('actions.resume_project') : isInProgress ? t('actions.continue_project') : t('actions.start_project')}

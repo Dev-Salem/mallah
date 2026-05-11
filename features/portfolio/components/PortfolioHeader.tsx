@@ -61,7 +61,7 @@ export function PortfolioHeader({ profile, isPublicView = false }: PortfolioHead
                             {profile.first_name} {profile.last_name}
                         </h1>
                         {profile.path_name && (
-                            <p className="text-primary font-mono text-sm uppercase">
+                            <p className="text-primary/90 font-mono text-base uppercase tracking-tight">
                                 {t('path', { pathName: profile.path_name })}
                             </p>
                         )}
@@ -87,7 +87,7 @@ export function PortfolioHeader({ profile, isPublicView = false }: PortfolioHead
                         </div>
                     ) : (
                         <div className="group relative">
-                            <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">
+                            <p className="text-foreground/80 text-base leading-relaxed max-w-xl">
                                 {profile.bio || (!isPublicView ? t('bioPlaceholder') : '')}
                             </p>
                             {!isPublicView && (
@@ -104,8 +104,8 @@ export function PortfolioHeader({ profile, isPublicView = false }: PortfolioHead
                     )}
 
                     {profile.primary_goal && (
-                        <div className="flex items-center gap-2 text-xs font-mono">
-                            <span className="text-muted-foreground">{t('goalLabel')}</span>
+                        <div className="flex items-center gap-2 text-sm font-mono">
+                            <span className="text-muted-foreground/90">{t('goalLabel')}</span>
                             <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
                                 {t(`goals.${profile.primary_goal as 'job' | 'freelance' | 'startup' | 'exploring'}`, { fallback: profile.primary_goal })}
                             </Badge>
@@ -141,13 +141,13 @@ export function PortfolioHeader({ profile, isPublicView = false }: PortfolioHead
                     <div className="flex flex-row md:flex-col gap-4 mt-2">
                         <div className="text-center md:text-right">
                             <p className="text-3xl font-light text-foreground font-mono">{profile.projects_completed_count}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
+                            <p className="text-xs text-muted-foreground/90 uppercase tracking-widest mt-1">
                                 {t('projectsCompleted', { count: profile.projects_completed_count }).replace(/\d+ /, '')}
                             </p>
                         </div>
                         <div className="text-center md:text-right">
                             <p className="text-3xl font-light text-foreground font-mono">{profile.skills_count}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
+                            <p className="text-xs text-muted-foreground/90 uppercase tracking-widest mt-1">
                                 {t('skillsMastered', { count: profile.skills_count }).replace(/\d+ /, '')}
                             </p>
                         </div>

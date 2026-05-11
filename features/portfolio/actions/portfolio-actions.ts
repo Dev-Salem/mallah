@@ -3,8 +3,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
-import { addManualSkillSchema, addExternalProjectSchema, updateBioSchema } from '../types';
-import type { AddManualSkillInput, AddExternalProjectInput, UpdateBioInput } from '../types';
+import { addManualSkillSchema, addExternalProjectSchema, updateBioSchema, updateExternalProjectSchema } from '../types';
+import type { AddManualSkillInput, AddExternalProjectInput, UpdateBioInput, UpdateExternalProjectInput } from '../types';
+import { updateProjectStatus, deleteExternalProject, updateExternalProject } from '../services/portfolio-service';
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -35,7 +36,7 @@ export async function toggleProjectVisibilityAction(projectId: string, isPublic:
         .from('user_projects')
         .update({ is_public: isPublic })
         .eq('user_id', user.id)
-        .eq('project_id', projectId);
+        .eq('id', projectId);
 
     if (error) return { success: false, error: error.message };
     revalidatePath('/dashboard/portfolio');
@@ -51,28 +52,67 @@ export async function addManualSkillAction(input: AddManualSkillInput): Promise<
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: 'Unauthorized' };
 
-    // Check for duplicates
+    const admin = getSupabaseAdmin();
+    let finalSkillId = parsed.data.skill_id;
+
+    // 1. Handle Custom Skill Creation
+    if (!finalSkillId && parsed.data.custom_name) {
+        // Check if a skill with this name already exists (to avoid duplicate skills in catalog)
+        const { data: existingSkill } = await admin
+            .from('skills')
+            .select('skill_id')
+            .ilike('name', parsed.data.custom_name)
+            .maybeSingle();
+
+        if (existingSkill) {
+            finalSkillId = existingSkill.skill_id;
+        } else {
+            // Create new unverified skill
+            const { data: newSkill, error: skillErr } = await admin
+                .from('skills')
+                .insert({
+                    skill_id: crypto.randomUUID(),
+                    name: parsed.data.custom_name,
+                    category: parsed.data.custom_category || 'other',
+                    is_verified: false
+                })
+                .select()
+                .single();
+
+            if (skillErr || !newSkill) {
+                return { success: false, error: skillErr?.message || 'Failed to create custom skill' };
+            }
+            finalSkillId = newSkill.skill_id;
+        }
+    }
+
+    if (!finalSkillId) return { success: false, error: 'No skill selected or defined' };
+
+    // 2. Check for duplicates in user profile
     const { data: existing } = await supabase
         .from('user_skills')
         .select('skill_id')
         .eq('user_id', user.id)
-        .eq('skill_id', parsed.data.skill_id)
+        .eq('skill_id', finalSkillId)
         .maybeSingle();
 
-    if (existing) return { success: false, error: 'You already have this skill.' };
+    if (existing) return { success: false, error: 'You already have this skill in your expertise board.' };
 
+    // 3. Link skill to user
     const { error } = await supabase
         .from('user_skills')
         .insert({
             user_id: user.id,
-            skill_id: parsed.data.skill_id,
+            skill_id: finalSkillId,
             level: parsed.data.level,
             source: 'manual',
-            is_public: true,
+            is_public: parsed.data.is_public ?? true,
         });
 
     if (error) return { success: false, error: error.message };
+    
     revalidatePath('/dashboard/portfolio');
+    revalidatePath('/portfolio', 'layout');
     return { success: true };
 }
 
@@ -82,7 +122,7 @@ export async function deleteManualSkillAction(skillId: string): Promise<ActionRe
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: 'Unauthorized' };
 
-    // Only manual skills can be deleted
+    // Only external skills can be deleted
     const { data: skill } = await supabase
         .from('user_skills')
         .select('source')
@@ -91,7 +131,7 @@ export async function deleteManualSkillAction(skillId: string): Promise<ActionRe
         .maybeSingle();
 
     if (!skill || skill.source !== 'manual') {
-        return { success: false, error: 'Only manually added skills can be deleted.' };
+        return { success: false, error: 'Only external skills can be deleted.' };
     }
 
     const { error } = await supabase
@@ -134,6 +174,7 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
                 description: data.description,
                 difficulty_level: data.difficulty_level,
                 source_type: 'user_custom',
+                thumbnail_url: data.thumbnail_url,
                 is_public_default: true,
                 is_active: true,
             })
@@ -166,6 +207,7 @@ export async function addExternalProjectAction(input: AddExternalProjectInput): 
                 is_public: true,
                 github_url: data.github_url || null,
                 demo_url: data.demo_url || null,
+                thumbnail_url: data.thumbnail_url || null,
                 tech_stack: data.tech_stack ?? [],
                 completed_at: data.status === 'completed' ? new Date().toISOString() : null,
                 started_at: (data.started_at && data.started_at.trim() !== '') ? data.started_at : null,
@@ -231,41 +273,121 @@ export async function deleteProjectAction(projectId: string): Promise<ActionResu
 
     const admin = getSupabaseAdmin();
 
-    // 1. Verify ownership and that it's NOT a roadmap project
+    // 1. Get the template ID from user_projects record
+    const { data: userProject } = await admin
+        .from('user_projects')
+        .select('project_id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)
+        .single();
+
+    if (!userProject) return { success: false, error: 'Project not found' };
+    const templateId = userProject.project_id;
+
+    // 2. Verify ownership and that it's NOT a roadmap project
     const { data: project } = await admin
         .from('projects')
         .select('source_type')
-        .eq('project_id', projectId)
+        .eq('project_id', templateId)
         .single();
 
     if (!project || project.source_type === 'roadmap') {
         return { success: false, error: 'Cannot delete roadmap projects.' };
     }
 
-    // 2. Delete user_projects link first
+    // 3. Delete user_projects link first
     const { error: upErr } = await admin
         .from('user_projects')
         .delete()
         .eq('user_id', user.id)
-        .eq('project_id', projectId);
+        .eq('id', projectId);
 
     if (upErr) return { success: false, error: upErr.message };
 
-    // 3. Delete project_skills associations
+    // 4. Delete project_skills associations
     await admin
         .from('project_skills')
         .delete()
-        .eq('project_id', projectId);
+        .eq('project_id', templateId);
 
-    // 4. Delete the project template itself
+    // 5. Delete the project template itself
     const { error: pErr } = await admin
         .from('projects')
         .delete()
-        .eq('project_id', projectId);
+        .eq('project_id', templateId);
 
     if (pErr) return { success: false, error: pErr.message };
 
     revalidatePath('/dashboard/portfolio');
     revalidatePath('/portfolio', 'layout');
     return { success: true };
+}
+// ─── Update project status ───
+export async function updateProjectStatusAction(projectId: string, status: 'available' | 'in_progress' | 'completed'): Promise<ActionResult> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: 'Unauthorized' };
+
+    try {
+        await updateProjectStatus(projectId, status);
+        revalidatePath('/dashboard/portfolio');
+        revalidatePath('/portfolio', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+// ─── Complete roadmap project ───
+export async function completeRoadmapProjectAction(projectId: string, data: {
+    githubUrl?: string;
+    demoUrl?: string;
+    personalNote?: string;
+    thumbnailUrl?: string;
+    techStack?: string[];
+}): Promise<ActionResult> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: 'Unauthorized' };
+
+    try {
+        await updateProjectStatus(projectId, 'completed', {
+            ...data,
+            completed_at: new Date().toISOString()
+        });
+        revalidatePath('/dashboard/portfolio');
+        revalidatePath('/portfolio', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
+// ─── Update external project ───
+export async function updateExternalProjectAction(input: UpdateExternalProjectInput): Promise<ActionResult> {
+    const parsed = updateExternalProjectSchema.safeParse(input);
+    if (!parsed.success) {
+        const errorMsg = parsed.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ');
+        return { success: false, error: `Invalid input: ${errorMsg}` };
+    }
+
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { success: false, error: 'Unauthorized' };
+
+    try {
+        await updateExternalProject(parsed.data.projectId, {
+            ...parsed.data,
+            github_url: parsed.data.github_url || undefined,
+            demo_url: parsed.data.demo_url || undefined,
+            thumbnail_url: parsed.data.thumbnail_url || undefined,
+            started_at: parsed.data.started_at || undefined,
+        });
+
+        revalidatePath('/dashboard/portfolio');
+        revalidatePath('/portfolio', 'layout');
+        return { success: true };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
 }

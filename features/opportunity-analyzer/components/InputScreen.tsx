@@ -113,12 +113,7 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
                                 setUploadedFileName(null);
                             }}
                         />
-                        {cvData && (
-                             <div className="flex items-center gap-2 px-2 py-1 mt-2 text-[9px] font-mono text-emerald-500/60 uppercase tracking-[0.2em] animate-pulse">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,1)]" />
-                                Persistent Analysis Profile Loaded
-                             </div>
-                        )}
+
                     </div>
 
                     {error && (
@@ -145,11 +140,7 @@ export function InputScreen({ onAnalyze, isAnalyzing, error, initialJD }: InputS
                             )}
                         </Button>
                         
-                        {cvData && isReady && !isAnalyzing && (
-                            <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest animate-in slide-in-from-top-2 duration-500">
-                                <CheckCircle2 className="w-3 h-3" /> Full Analysis Mode: CV Included
-                            </div>
-                        )}
+
                     </div>
                 </form>
             </CardContent>

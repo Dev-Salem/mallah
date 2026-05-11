@@ -13,7 +13,7 @@ export const mergeProfileAndCVSkills = (
 ): MergedSkill[] => {
     const mergedMap = new Map<string, MergedSkill>();
 
-    // 1. Add CV skills first (with 0.7x weight)
+    // 1. Add CV skills first at full weight
     cvSkills.forEach(cv => {
         const key = cv.skill_name.toLowerCase();
         mergedMap.set(key, {
@@ -24,7 +24,7 @@ export const mergeProfileAndCVSkills = (
         });
     });
 
-    // 2. Add Mallah skills, overwriting CV duplicates (with 1.0x weight)
+    // 2. Add Mallah skills, overwriting CV duplicates at full weight
     mallahSkills.forEach(m => {
         if (!m.skills?.name) return;
         

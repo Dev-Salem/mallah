@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { revalidatePath } from 'next/cache';
 import { Topic } from '../types';
 
 export async function getTopicAction(topicId: string): Promise<Topic | null> {
@@ -106,6 +107,7 @@ export async function markTopicCompleteAction(topicId: string): Promise<{ succes
         await supabase.from('user_skills').upsert(finalSkillUpserts, { onConflict: 'user_id, skill_id' });
     }
 
+    revalidatePath('/dashboard', 'layout');
     return { success: true };
 }
 

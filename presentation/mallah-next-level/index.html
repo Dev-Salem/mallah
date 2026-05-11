@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mallah | Next Level Presentation</title>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    />
+
+    <style>
+      :root {
+        --bg-primary: #050505;
+        --bg-panel: rgba(255, 255, 255, 0.06);
+        --bg-panel-strong: rgba(255, 255, 255, 0.1);
+        --text-primary: #f6f3ed;
+        --text-secondary: #b8b1a7;
+        --text-faint: #807a73;
+        --line: rgba(255, 255, 255, 0.13);
+        --line-strong: rgba(255, 255, 255, 0.22);
+        --accent: #ff6a2b;
+        --accent-soft: rgba(255, 106, 43, 0.16);
+        --accent-cool: #9ce7ff;
+        --success: #7ff0b6;
+        --warning: #ffd16a;
+        --font-display: "Space Grotesk", sans-serif;
+        --font-body: "Space Grotesk", sans-serif;
+        --font-mono: "IBM Plex Mono", monospace;
+        --title-size: clamp(2.25rem, 6vw, 5.75rem);
+        --subtitle-size: clamp(0.95rem, 1.8vw, 1.35rem);
+        --body-size: clamp(0.78rem, 1.25vw, 1.05rem);
+        --small-size: clamp(0.66rem, 0.95vw, 0.82rem);
+        --slide-padding: clamp(1rem, 4vw, 4rem);
+        --content-gap: clamp(0.75rem, 2vw, 2rem);
+        --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        --duration-normal: 0.6s;
+        --shadow-glow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background:
+          radial-gradient(circle at top left, rgba(255, 106, 43, 0.12), transparent 32%),
+          radial-gradient(circle at 80% 20%, rgba(156, 231, 255, 0.08), transparent 24%),
+          linear-gradient(180deg, #080808 0%, #050505 100%);
+        color: var(--text-primary);
+      }
+
+      /* ===========================================
+         CODEX SLIDES VIEWPORT FITTING: MANDATORY BASE STYLES
+         Include this ENTIRE file in every generated presentation.
+         These styles ensure slides fit exactly in the viewport.
+         =========================================== */
+
+      /* 1. Lock html/body to viewport */
+      html, body {
+          height: 100%;
+          overflow-x: hidden;
+      }
+
+      html {
+          scroll-snap-type: y mandatory;
+          scroll-behavior: smooth;
+      }
+
+      /* 2. Each slide = exact viewport height */
+      .slide {
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh; /* Dynamic viewport height for mobile browsers */
+          overflow: hidden; /* CRITICAL: Prevent ANY overflow */
+          scroll-snap-align: start;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+      }
+
+      /* 3. Content container with flex for centering */
+      .slide-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          max-height: 100%;
+          overflow: hidden; /* Double-protection against overflow */
+          padding: var(--slide-padding);
+      }
+
+      /* 4. ALL typography uses clamp() for responsive scaling */
+      :root {
+          /* Titles scale from mobile to desktop */
+          --title-size: clamp(1.5rem, 5vw, 4rem);
+          --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+          --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+
+          /* Body text */
+          --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+          --small-size: clamp(0.65rem, 1vw, 0.875rem);
+
+          /* Spacing scales with viewport */
+          --slide-padding: clamp(1rem, 4vw, 4rem);
+          --content-gap: clamp(0.5rem, 2vw, 2rem);
+          --element-gap: clamp(0.25rem, 1vw, 1rem);
+      }
+
+      /* 5. Cards/containers use viewport-relative max sizes */
+      .card, .container, .content-box {
+          max-width: min(90vw, 1000px);
+          max-height: min(80vh, 700px);
+      }
+
+      /* 6. Lists auto-scale with viewport */
+      .feature-list, .bullet-list {
+          gap: clamp(0.4rem, 1vh, 1rem);
+      }
+
+      .feature-list li, .bullet-list li {
+          font-size: var(--body-size);
+          line-height: 1.4;
+      }
+
+      /* 7. Grids adapt to available space */
+      .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+          gap: clamp(0.5rem, 1.5vw, 1rem);
+      }
+
+      /* 8. Images constrained to viewport */
+      img, .image-container {
+          max-width: 100%;
+          max-height: min(50vh, 400px);
+          object-fit: contain;
+      }
+
+      /* ===========================================
+         RESPONSIVE BREAKPOINTS
+         Aggressive scaling for smaller viewports
+         =========================================== */
+
+      /* Short viewports (< 700px height) */
+      @media (max-height: 700px) {
+          :root {
+              --slide-padding: clamp(0.75rem, 3vw, 2rem);
+              --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+              --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+              --h2-size: clamp(1rem, 3vw, 1.75rem);
+          }
+      }
+
+      /* Very short viewports (< 600px height) */
+      @media (max-height: 600px) {
+          :root {
+              --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+              --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+              --title-size: clamp(1.1rem, 4vw, 2rem);
+              --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+          }
+
+          /* Hide non-essential elements */
+          .nav-dots, .keyboard-hint, .decorative {
+              display: none;
+          }
+      }
+
+      /* Extremely short (landscape phones, < 500px height) */
+      @media (max-height: 500px) {
+          :root {
+              --slide-padding: clamp(0.4rem, 2vw, 1rem);
+              --title-size: clamp(1rem, 3.5vw, 1.5rem);
+              --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+              --body-size: clamp(0.65rem, 1vw, 0.85rem);
+          }
+      }
+
+      /* Narrow viewports (< 600px width) */
+      @media (max-width: 600px) {
+          :root {
+              --title-size: clamp(1.25rem, 7vw, 2.5rem);
+          }
+
+          /* Stack grids vertically */
+          .grid {
+              grid-template-columns: 1fr;
+          }
+      }
+
+      /* ===========================================
+         REDUCED MOTION
+         Respect user preferences
+         =========================================== */
+      @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+              animation-duration: 0.01ms !important;
+              transition-duration: 0.2s !important;
+          }
+
+          html {
+              scroll-behavior: auto;
+          }
+      }
+
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent), #ffb16c);
+        z-index: 1000;
+        transition: width 0.2s ease;
+      }
+
+      .nav-dots {
+        position: fixed;
+        right: clamp(0.75rem, 2vw, 1.5rem);
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        z-index: 1000;
+      }
+
+      .nav-dot {
+        width: 0.55rem;
+        height: 0.55rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+
+      .nav-dot.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        transform: scale(1.15);
+      }
+
+      .ambient-grid,
+      .ambient-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .ambient-grid {
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+        background-size: clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px);
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 92%);
+        opacity: 0.42;
+      }
+
+      .ambient-glow {
+        background:
+          radial-gradient(circle at 10% 20%, rgba(255, 106, 43, 0.22), transparent 28%),
+          radial-gradient(circle at 75% 10%, rgba(156, 231, 255, 0.14), transparent 24%),
+          radial-gradient(circle at 50% 90%, rgba(255, 255, 255, 0.05), transparent 28%);
+        animation: driftGlow 16s ease-in-out infinite alternate;
+      }
+
+      @keyframes driftGlow {
+        from {
+          transform: scale(1) translate3d(0, 0, 0);
+        }
+        to {
+          transform: scale(1.04) translate3d(0, -1.5%, 0);
+        }
+      }
+
+      .slide-shell {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: min(92vw, 1320px);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1rem, 2vw, 1.8rem);
+      }
+
+      .eyebrow,
+      .micro-label,
+      .mini-tag {
+        font-family: var(--font-mono);
+        font-size: var(--small-size);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        color: var(--accent);
+      }
+
+      .slide-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .slide-index {
+        color: var(--text-faint);
+        font-family: var(--font-mono);
+        font-size: var(--small-size);
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+      }
+
+      h1 {
+        font-size: clamp(2.85rem, 8vw, 7.2rem);
+        max-width: 9ch;
+      }
+
+      h2 {
+        font-size: var(--title-size);
+        max-width: 11ch;
+      }
+
+      h3 {
+        font-size: clamp(1.05rem, 2vw, 1.55rem);
+      }
+
+      p,
+      li {
+        font-size: var(--body-size);
+        line-height: 1.5;
+      }
+
+      .lede {
+        max-width: 65ch;
+        color: var(--text-secondary);
+      }
+
+      .hero-grid,
+      .two-column,
+      .three-column,
+      .stats-grid,
+      .compare-table,
+      .module-matrix {
+        display: grid;
+        gap: clamp(0.8rem, 1.6vw, 1.25rem);
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+        align-items: center;
+      }
+
+      .title-meta {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+        max-width: min(62rem, 100%);
+      }
+
+      .panel,
+      .glass-card,
+      .stage-card,
+      .module-card,
+      .proof-card,
+      .arch-card,
+      .compare-row {
+        position: relative;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+        border-radius: 1.5rem;
+        box-shadow: var(--shadow-glow);
+        overflow: hidden;
+      }
+
+      .panel::before,
+      .glass-card::before,
+      .stage-card::before,
+      .module-card::before,
+      .proof-card::before,
+      .arch-card::before,
+      .compare-row::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255, 106, 43, 0.12), transparent 40%, rgba(156, 231, 255, 0.05));
+        pointer-events: none;
+      }
+
+      .glass-card,
+      .proof-card,
+      .module-card,
+      .arch-card,
+      .stage-card {
+        padding: clamp(1rem, 2vw, 1.4rem);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity var(--duration-normal) var(--ease-out-expo),
+          transform var(--duration-normal) var(--ease-out-expo);
+      }
+
+      .reveal-scale {
+        opacity: 0;
+        transform: scale(0.96);
+        transition:
+          opacity 0.8s var(--ease-out-expo),
+          transform 0.8s var(--ease-out-expo);
+      }
+
+      .scan-reveal {
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path 0.9s var(--ease-out-expo);
+      }
+
+      .slide.visible .reveal,
+      .slide.visible .reveal-scale {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .slide.visible .scan-reveal {
+        clip-path: inset(0 0 0 0);
+      }
+
+      .reveal:nth-child(1) { transition-delay: 0.08s; }
+      .reveal:nth-child(2) { transition-delay: 0.16s; }
+      .reveal:nth-child(3) { transition-delay: 0.24s; }
+      .reveal:nth-child(4) { transition-delay: 0.32s; }
+
+      .hero-orbit {
+        min-height: min(62vh, 520px);
+        display: grid;
+        place-items: center;
+        border-radius: 2rem;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255, 106, 43, 0.16), transparent 30%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-orbit svg {
+        width: min(100%, 560px);
+        height: auto;
+      }
+
+      .institution-badge {
+        position: absolute;
+        right: clamp(1rem, 2vw, 1.5rem);
+        bottom: clamp(1rem, 2vw, 1.5rem);
+        width: min(16vw, 120px);
+        opacity: 0.18;
+        filter: grayscale(1) contrast(1.1);
+      }
+
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .problem-grid .glass-card {
+        min-height: min(33vh, 260px);
+      }
+
+      .big-quote {
+        font-size: clamp(1.5rem, 4.5vw, 3.6rem);
+        line-height: 1;
+        max-width: 11ch;
+      }
+
+      .context-stack,
+      .flow-track,
+      .timeline-track {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .context-row {
+        display: grid;
+        grid-template-columns: minmax(160px, 220px) 1fr;
+        gap: 1rem;
+        align-items: center;
+        padding: 0.95rem 1.1rem;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 1.1rem;
+      }
+
+      .context-row .micro-label {
+        color: var(--accent);
+      }
+
+      .journey-flow {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.7rem;
+        align-items: stretch;
+      }
+
+      .journey-flow .module-card {
+        min-height: min(25vh, 200px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .journey-flow .arrow {
+        position: absolute;
+        right: -0.42rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 1.1rem;
+        font-family: var(--font-mono);
+      }
+
+      .stage-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .stage-num {
+        color: var(--accent);
+        font-family: var(--font-mono);
+        margin-bottom: 1rem;
+      }
+
+      .module-matrix {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .module-card {
+        min-height: min(26vh, 220px);
+      }
+
+      .module-card ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        margin-top: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .module-card li::before,
+      .bullet-list li::before {
+        content: "◆";
+        color: var(--accent);
+        margin-right: 0.55rem;
+        font-size: 0.75em;
+      }
+
+      .deep-dive-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .bullet-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .proof-stack,
+      .proof-pair {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .proof-stack {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-pair {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .proof-card {
+        min-height: min(28vh, 220px);
+      }
+
+      .product-shell {
+        border: 1px solid var(--line-strong);
+        border-radius: 1rem;
+        padding: 0.85rem;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+          radial-gradient(circle at top right, rgba(255, 106, 43, 0.12), transparent 32%);
+      }
+
+      .window-chrome {
+        display: flex;
+        gap: 0.35rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .window-chrome span {
+        width: 0.58rem;
+        height: 0.58rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .window-chrome span:first-child {
+        background: var(--accent);
+      }
+
+      .fake-bars,
+      .fake-rows,
+      .fake-columns,
+      .fake-track {
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .fake-bars div,
+      .fake-rows div,
+      .fake-columns div,
+      .fake-track div {
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+      }
+
+      .fake-bars div { height: 0.65rem; }
+      .fake-rows div { height: 0.8rem; }
+      .fake-track {
+        grid-template-columns: repeat(4, 1fr);
+        align-items: end;
+        min-height: 7rem;
+      }
+      .fake-track div { width: 100%; }
+      .fake-columns {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: end;
+        min-height: 6rem;
+      }
+      .fake-columns div { width: 100%; }
+
+      .architecture-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.2fr;
+        gap: 1rem;
+      }
+
+      .arch-card ul,
+      .reference-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+        color: var(--text-secondary);
+      }
+
+      .timeline-line {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 0.8rem;
+        margin-top: 0.5rem;
+      }
+
+      .timeline-line::before {
+        content: "";
+        position: absolute;
+        left: 2%;
+        right: 2%;
+        top: 1.1rem;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), var(--line-strong), rgba(255, 255, 255, 0.06));
+      }
+
+      .timeline-step {
+        position: relative;
+        padding-top: 2rem;
+      }
+
+      .timeline-step::before {
+        content: "";
+        position: absolute;
+        top: 0.64rem;
+        left: 50%;
+        width: 0.95rem;
+        height: 0.95rem;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 0 6px rgba(255, 106, 43, 0.12);
+      }
+
+      .stats-grid {
+        grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+      }
+
+      .stat-cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-card {
+        padding: 1rem;
+        border-radius: 1.2rem;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .stat-card strong,
+      .countup {
+        display: block;
+        font-size: clamp(1.9rem, 4vw, 3.2rem);
+        color: var(--accent);
+        font-family: var(--font-display);
+        line-height: 1;
+      }
+
+      .compare-header,
+      .compare-row {
+        display: grid;
+        grid-template-columns: 1.05fr 1.15fr 1.35fr;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .compare-header {
+        color: var(--accent);
+        font-family: var(--font-mono);
+        font-size: var(--small-size);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0 0.25rem;
+      }
+
+      .compare-row {
+        padding: 0.95rem 1rem;
+        border-radius: 1rem;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .compare-row.highlight {
+        background: linear-gradient(135deg, rgba(255, 106, 43, 0.18), rgba(255, 255, 255, 0.08));
+        border-color: rgba(255, 106, 43, 0.38);
+      }
+
+      .closing-layout,
+      .qa-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .closing-points {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .closing-points li::before {
+        content: "◆";
+        color: var(--accent);
+        margin-right: 0.65rem;
+      }
+
+      .achievement-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        margin-top: 1rem;
+        color: var(--text-secondary);
+      }
+
+      .achievement-list li::before {
+        content: "+";
+        color: var(--success);
+        margin-right: 0.65rem;
+        font-family: var(--font-mono);
+      }
+
+      .reference-list li {
+        padding-bottom: 0.55rem;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      }
+
+      .keyboard-hint {
+        position: fixed;
+        left: clamp(0.8rem, 2vw, 1.4rem);
+        bottom: clamp(0.8rem, 2vw, 1.4rem);
+        z-index: 1000;
+        color: var(--text-faint);
+        font-family: var(--font-mono);
+        font-size: var(--small-size);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .orbital-note {
+        position: absolute;
+        padding: 0.45rem 0.65rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.35);
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+
+      .orbital-note.one { top: 14%; left: 10%; }
+      .orbital-note.two { top: 18%; right: 8%; }
+      .orbital-note.three { bottom: 12%; left: 14%; }
+
+      .qa-mark {
+        font-size: clamp(7rem, 18vw, 14rem);
+        color: rgba(255, 106, 43, 0.14);
+        line-height: 0.8;
+      }
+
+      .print-mode .reveal,
+      .print-mode .reveal-scale,
+      .print-mode .scan-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: inset(0 0 0 0) !important;
+      }
+
+      @media (max-width: 1100px) {
+        .hero-grid,
+        .deep-dive-layout,
+        .stats-grid,
+        .closing-layout,
+        .qa-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .journey-flow {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .architecture-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .problem-grid,
+        .module-matrix,
+        .title-meta,
+        .proof-pair,
+        .compare-header,
+        .compare-row {
+          grid-template-columns: 1fr;
+        }
+
+        .context-row {
+          grid-template-columns: 1fr;
+        }
+
+        .journey-flow {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .stage-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .problem-grid .glass-card,
+        .journey-flow .module-card,
+        .module-card,
+        .proof-card {
+          min-height: auto;
+        }
+
+        .reference-list {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Asset Manifest
+      - assets/slide1_img1.png: source proposal title image reused as institutional badge
+      - assets/slide15_img1.png: source proposal reference image available for appendix use if needed
+      - No generated raster assets were used in this version; the presentation relies on code-native visuals and motion
+    -->
+
+    <div class="progress-bar" aria-hidden="true"></div>
+    <nav class="nav-dots" aria-label="Slide navigation"></nav>
+    <div class="keyboard-hint">Arrows / Space / Swipe</div>
+
+    <main>
+      <!--
+        Slide 01 note:
+        Open with the core promise. Mallah is not another content site; it is a system that turns uncertainty into a guided progression from learning to employability.
+      -->
+      <section class="slide" data-title="Opening">
+        <div class="ambient-grid"></div>
+        <div class="ambient-glow"></div>
+        <div class="slide-content">
+          <div class="slide-shell hero-grid">
+            <div class="reveal">
+              <p class="eyebrow">Graduation Project | Mallah ملّاح</p>
+              <h1>From confusion to job readiness.</h1>
+              <p class="lede" style="margin-top: 1rem;">
+                One platform for the full tech journey: path selection, structured learning, portfolio proof,
+                resume refinement, job analysis, and application tracking.
+              </p>
+
+              <div class="title-meta" style="margin-top: 1.4rem;">
+                <div class="glass-card reveal">
+                  <p class="mini-tag">Presented By</p>
+                  <p>Abdulaziz F. Alotaibi</p>
+                  <p>Salem S. Hamed</p>
+                  <p>Nader F. Alotaibi</p>
+                  <p>Jamal A. Sweidan</p>
+                </div>
+                <div class="glass-card reveal">
+                  <p class="mini-tag">Context</p>
+                  <p>Supervisor: Dr. Mohammed Elfaki</p>
+                  <p>Shaqra University</p>
+                  <p>College of Computing and Information Technology</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-orbit reveal-scale">
+              <span class="orbital-note one">Path Match</span>
+              <span class="orbital-note two">Portfolio Proof</span>
+              <span class="orbital-note three">Job Readiness</span>
+              <svg viewBox="0 0 560 560" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ring" x1="0%" x2="100%" y1="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ff6a2b" stop-opacity="1"></stop>
+                    <stop offset="100%" stop-color="#9ce7ff" stop-opacity="0.8"></stop>
+                  </linearGradient>
+                </defs>
+                <circle cx="280" cy="280" r="214" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="1"></circle>
+                <circle cx="280" cy="280" r="170" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"></circle>
+                <circle cx="280" cy="280" r="126" fill="none" stroke="url(#ring)" stroke-width="2"></circle>
+                <circle cx="280" cy="280" r="82" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.18)" stroke-width="1"></circle>
+                <circle cx="280" cy="280" r="18" fill="#ff6a2b"></circle>
+                <g stroke="rgba(255,255,255,0.18)" stroke-width="1.5">
+                  <line x1="280" y1="280" x2="392" y2="198"></line>
+                  <line x1="280" y1="280" x2="184" y2="172"></line>
+                  <line x1="280" y1="280" x2="144" y2="344"></line>
+                  <line x1="280" y1="280" x2="400" y2="360"></line>
+                </g>
+                <g fill="#f6f3ed">
+                  <circle cx="392" cy="198" r="11"></circle>
+                  <circle cx="184" cy="172" r="9"></circle>
+                  <circle cx="144" cy="344" r="8"></circle>
+                  <circle cx="400" cy="360" r="10"></circle>
+                </g>
+                <g font-family="IBM Plex Mono, monospace" font-size="12" fill="#b8b1a7">
+                  <text x="410" y="195">Resume</text>
+                  <text x="116" y="168">Roadmap</text>
+                  <text x="98" y="360">Projects</text>
+                  <text x="412" y="378">Tracker</text>
+                  <text x="258" y="286" fill="#050505">M</text>
+                </g>
+              </svg>
+              <img
+                class="institution-badge"
+                src="assets/slide1_img1.png"
+                alt="Institutional emblem from the original proposal"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 02 -->
+      <section class="slide" data-title="Problem">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Problem</p>
+                <h2>Graduates do not need more content.</h2>
+              </div>
+              <p class="slide-index">02</p>
+            </div>
+            <p class="big-quote reveal">They need direction, proof, and a clear moment when they know they are ready to apply.</p>
+            <div class="problem-grid">
+              <article class="glass-card reveal">
+                <p class="micro-label">01 | Theory</p>
+                <h3 style="margin-top: 1rem;">Knowledge is not the bottleneck.</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">
+                  University and the internet provide information. What learners still lack is a sequence that turns theory into visible capability.
+                </p>
+              </article>
+              <article class="glass-card reveal">
+                <p class="micro-label">02 | Noise</p>
+                <h3 style="margin-top: 1rem;">The path is fragmented.</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">
+                  Tutorials, roadmaps, resume tips, and job boards all live in separate worlds. Beginners waste energy stitching them together.
+                </p>
+              </article>
+              <article class="glass-card reveal">
+                <p class="micro-label">03 | Readiness</p>
+                <h3 style="margin-top: 1rem;">No one knows when to move.</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">
+                  Many apply too early, while others keep learning forever. The missing signal is measurable readiness backed by proof.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 03 -->
+      <section class="slide" data-title="Saudi Context">
+        <div class="ambient-grid"></div>
+        <div class="ambient-glow"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Saudi Context</p>
+                <h2>This gap matters even more now.</h2>
+              </div>
+              <p class="slide-index">03</p>
+            </div>
+            <p class="lede reveal">
+              Saudi digital transformation creates demand for talent, but many learners still reach graduation without a structured bridge into entry-level technical work.
+            </p>
+            <div class="context-stack">
+              <div class="context-row reveal">
+                <p class="micro-label">Local Need</p>
+                <p>Digital employability is a national priority. The market wants capability, not just course completion.</p>
+              </div>
+              <div class="context-row reveal">
+                <p class="micro-label">Graduate Reality</p>
+                <p>Students still face path confusion, weak portfolios, and unclear readiness even after serious effort.</p>
+              </div>
+              <div class="context-row reveal">
+                <p class="micro-label">Product Opportunity</p>
+                <p>A guided bilingual platform fits both the regional market need and the learner context better than a generic global tool.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 04 -->
+      <section class="slide" data-title="Product Definition">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Product Definition</p>
+                <h2>Mallah connects the full journey.</h2>
+              </div>
+              <p class="slide-index">04</p>
+            </div>
+            <p class="lede reveal">
+              One workflow links onboarding, roadmap learning, project evidence, resume building, job analysis, and application tracking.
+            </p>
+            <div class="journey-flow">
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Start</p>
+                <h3>Onboarding</h3>
+                <p style="color: var(--text-secondary);">Profile, goals, weekly time, confidence.</p>
+                <span class="arrow">→</span>
+              </article>
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Decision</p>
+                <h3>Path Match</h3>
+                <p style="color: var(--text-secondary);">Assign the most suitable technical direction.</p>
+                <span class="arrow">→</span>
+              </article>
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Learning</p>
+                <h3>Roadmap</h3>
+                <p style="color: var(--text-secondary);">Path → stage → topic with milestones.</p>
+                <span class="arrow">→</span>
+              </article>
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Proof</p>
+                <h3>Projects</h3>
+                <p style="color: var(--text-secondary);">Visible work replaces vague completion claims.</p>
+                <span class="arrow">→</span>
+              </article>
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Packaging</p>
+                <h3>Resume</h3>
+                <p style="color: var(--text-secondary);">ATS-aware drafting built from real learner data.</p>
+                <span class="arrow">→</span>
+              </article>
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Alignment</p>
+                <h3>Analysis</h3>
+                <p style="color: var(--text-secondary);">Match jobs to skills, gaps, and next steps.</p>
+                <span class="arrow">→</span>
+              </article>
+              <article class="module-card reveal scan-reveal">
+                <p class="micro-label">Execution</p>
+                <h3>Tracking</h3>
+                <p style="color: var(--text-secondary);">Move from saved opportunity to offer with continuity.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 05 -->
+      <section class="slide" data-title="Learner Journey">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Learner Journey</p>
+                <h2>Four stages. One destination.</h2>
+              </div>
+              <p class="slide-index">05</p>
+            </div>
+            <p class="lede reveal">The learner moves through a simple progression: understand where to start, follow a path, build proof, then approach the market with evidence.</p>
+            <div class="stage-grid">
+              <article class="stage-card reveal">
+                <p class="stage-num">01</p>
+                <h3>Assessment</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">Profile, goals, weekly availability, confidence.</p>
+              </article>
+              <article class="stage-card reveal">
+                <p class="stage-num">02</p>
+                <h3>Pathing</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">Four structured technical tracks matched to intent.</p>
+              </article>
+              <article class="stage-card reveal">
+                <p class="stage-num">03</p>
+                <h3>Execution</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">Topics, milestones, projects, verified skills, resume assets.</p>
+              </article>
+              <article class="stage-card reveal">
+                <p class="stage-num">04</p>
+                <h3>Readiness</h3>
+                <p style="margin-top: 0.8rem; color: var(--text-secondary);">Opportunity analysis, action plans, and application follow-through.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 06 -->
+      <section class="slide" data-title="Platform Overview">
+        <div class="ambient-grid"></div>
+        <div class="ambient-glow"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Platform Overview</p>
+                <h2>A working system, not a feature list.</h2>
+              </div>
+              <p class="slide-index">06</p>
+            </div>
+            <p class="lede reveal">These modules are already designed to reinforce each other instead of living as isolated tools.</p>
+            <div class="module-matrix">
+              <article class="module-card reveal">
+                <p class="micro-label">Dashboard</p>
+                <h3>Command Center</h3>
+                <ul>
+                  <li>Progress visibility</li>
+                  <li>Current path status</li>
+                  <li>Actionable next moves</li>
+                </ul>
+              </article>
+              <article class="module-card reveal">
+                <p class="micro-label">Roadmap</p>
+                <h3>Structured Learning</h3>
+                <ul>
+                  <li>Stage-based progression</li>
+                  <li>Topic sequence</li>
+                  <li>Milestone gating</li>
+                </ul>
+              </article>
+              <article class="module-card reveal">
+                <p class="micro-label">Portfolio</p>
+                <h3>Proof Layer</h3>
+                <ul>
+                  <li>Verified skills</li>
+                  <li>Project records</li>
+                  <li>Public visibility controls</li>
+                </ul>
+              </article>
+              <article class="module-card reveal">
+                <p class="micro-label">Resume</p>
+                <h3>Job-Facing Assets</h3>
+                <ul>
+                  <li>ATS-oriented structure</li>
+                  <li>AI refinement by section</li>
+                  <li>Grounded in real evidence</li>
+                </ul>
+              </article>
+              <article class="module-card reveal">
+                <p class="micro-label">Analyzer</p>
+                <h3>Gap Intelligence</h3>
+                <ul>
+                  <li>Match score</li>
+                  <li>Missing skills</li>
+                  <li>Roadmap-linked action plan</li>
+                </ul>
+              </article>
+              <article class="module-card reveal">
+                <p class="micro-label">Tracker</p>
+                <h3>Application Pipeline</h3>
+                <ul>
+                  <li>Saved to offer stages</li>
+                  <li>One-click imports</li>
+                  <li>Context preserved end to end</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 07 -->
+      <section class="slide" data-title="Roadmap Engine">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell deep-dive-layout">
+            <div>
+              <p class="eyebrow reveal">Deep Dive 1</p>
+              <h2 class="reveal">The roadmap is the engine.</h2>
+              <p class="lede reveal">
+                Mallah organizes each path into stages and topics, tracks progress, and uses project milestones to turn passive study into visible advancement.
+              </p>
+              <ul class="bullet-list" style="margin-top: 1.2rem;">
+                <li class="reveal">Four predefined technical paths for cleaner decision-making.</li>
+                <li class="reveal">Path → stage → topic structure instead of random tutorial hopping.</li>
+                <li class="reveal">Project-gated progression so momentum leads to proof.</li>
+                <li class="reveal">Topic-level tracking with AI lesson support where language understanding helps.</li>
+              </ul>
+            </div>
+            <div class="proof-card reveal-scale">
+              <div class="product-shell">
+                <div class="window-chrome"><span></span><span></span><span></span></div>
+                <p class="micro-label">Roadmap View</p>
+                <div class="fake-bars" style="margin-top: 0.9rem;">
+                  <div style="width: 72%;"></div>
+                  <div style="width: 44%;"></div>
+                </div>
+                <div class="fake-columns" style="margin-top: 1rem;">
+                  <div style="height: 5rem;"></div>
+                  <div style="height: 7.5rem;"></div>
+                  <div style="height: 4.1rem;"></div>
+                </div>
+                <div class="fake-rows" style="margin-top: 1rem;">
+                  <div style="width: 92%;"></div>
+                  <div style="width: 86%;"></div>
+                  <div style="width: 78%;"></div>
+                  <div style="width: 68%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 08 -->
+      <section class="slide" data-title="Proof Layer">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell deep-dive-layout">
+            <div>
+              <p class="eyebrow reveal">Deep Dive 2</p>
+              <h2 class="reveal">Learning becomes recruiter-visible proof.</h2>
+              <p class="lede reveal">
+                Portfolio Hub and Resume Builder turn completed work into evidence that can be shown, shared, and tailored for opportunities.
+              </p>
+              <ul class="bullet-list" style="margin-top: 1.2rem;">
+                <li class="reveal">Verified skills unlock from roadmap and completed projects.</li>
+                <li class="reveal">Project records become shareable, not buried.</li>
+                <li class="reveal">ATS-aware resume building stays grounded in real data.</li>
+                <li class="reveal">The bridge from progress to presentation becomes native to the platform.</li>
+              </ul>
+            </div>
+            <div class="proof-pair">
+              <article class="proof-card reveal-scale">
+                <div class="product-shell">
+                  <div class="window-chrome"><span></span><span></span><span></span></div>
+                  <p class="micro-label">Portfolio Hub</p>
+                  <div class="fake-track" style="margin-top: 1rem;">
+                    <div style="height: 60%;"></div>
+                    <div style="height: 85%;"></div>
+                    <div style="height: 40%;"></div>
+                    <div style="height: 75%;"></div>
+                  </div>
+                  <div class="fake-rows" style="margin-top: 1rem;">
+                    <div style="width: 95%;"></div>
+                    <div style="width: 82%;"></div>
+                    <div style="width: 71%;"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="proof-card reveal-scale">
+                <div class="product-shell">
+                  <div class="window-chrome"><span></span><span></span><span></span></div>
+                  <p class="micro-label">Resume Builder</p>
+                  <div class="fake-bars" style="margin-top: 1rem;">
+                    <div style="width: 84%;"></div>
+                    <div style="width: 58%;"></div>
+                  </div>
+                  <div class="fake-rows" style="margin-top: 1rem;">
+                    <div style="width: 92%;"></div>
+                    <div style="width: 87%;"></div>
+                    <div style="width: 76%;"></div>
+                    <div style="width: 69%;"></div>
+                    <div style="width: 82%;"></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 09 -->
+      <section class="slide" data-title="Readiness">
+        <div class="ambient-grid"></div>
+        <div class="ambient-glow"></div>
+        <div class="slide-content">
+          <div class="slide-shell deep-dive-layout">
+            <div>
+              <p class="eyebrow reveal">Deep Dive 3</p>
+              <h2 class="reveal">Job readiness becomes measurable.</h2>
+              <p class="lede reveal">
+                The Opportunity Analyzer and Application Tracker connect jobs to skills, missing topics, action plans, and follow-through.
+              </p>
+              <ul class="bullet-list" style="margin-top: 1.2rem;">
+                <li class="reveal">Paste a job description or review the Saudi opportunity feed.</li>
+                <li class="reveal">See matched skills, missing skills, and a practical next-step plan.</li>
+                <li class="reveal">Map missing requirements directly back to the roadmap.</li>
+                <li class="reveal">Track the full application lifecycle without losing analysis context.</li>
+              </ul>
+            </div>
+            <div class="proof-pair">
+              <article class="proof-card reveal-scale">
+                <div class="product-shell">
+                  <div class="window-chrome"><span></span><span></span><span></span></div>
+                  <p class="micro-label">Opportunity Analyzer</p>
+                  <strong class="countup" data-target="84" style="margin-top: 1rem;">0</strong>
+                  <p style="color: var(--text-secondary); margin-top: 0.3rem;">Sample match score signal</p>
+                  <div class="fake-bars" style="margin-top: 1rem;">
+                    <div style="width: 84%;"></div>
+                    <div style="width: 62%;"></div>
+                    <div style="width: 40%;"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="proof-card reveal-scale">
+                <div class="product-shell">
+                  <div class="window-chrome"><span></span><span></span><span></span></div>
+                  <p class="micro-label">Application Tracker</p>
+                  <div class="fake-rows" style="margin-top: 1rem;">
+                    <div style="width: 90%;"></div>
+                    <div style="width: 82%;"></div>
+                    <div style="width: 76%;"></div>
+                    <div style="width: 67%;"></div>
+                    <div style="width: 58%;"></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10 -->
+      <section class="slide" data-title="Architecture">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Architecture</p>
+                <h2>The system was built for reliability.</h2>
+              </div>
+              <p class="slide-index">10</p>
+            </div>
+            <p class="lede reveal">
+              The technical architecture favors modularity, secure data handling, and clear boundaries between learner-facing features and platform logic.
+            </p>
+            <div class="architecture-grid">
+              <article class="arch-card reveal">
+                <p class="micro-label">Frontend</p>
+                <h3 style="margin: 0.8rem 0 0.9rem;">Experience Layer</h3>
+                <ul>
+                  <li>Next.js 16</li>
+                  <li>React 19</li>
+                  <li>App Router</li>
+                  <li>Bilingual interface</li>
+                </ul>
+              </article>
+              <article class="arch-card reveal">
+                <p class="micro-label">Application</p>
+                <h3 style="margin: 0.8rem 0 0.9rem;">Logic Layer</h3>
+                <ul>
+                  <li>Feature-based modules</li>
+                  <li>Server actions</li>
+                  <li>Zod validation</li>
+                  <li>Rule-based logic first</li>
+                </ul>
+              </article>
+              <article class="arch-card reveal">
+                <p class="micro-label">Data + AI</p>
+                <h3 style="margin: 0.8rem 0 0.9rem;">Trust Layer</h3>
+                <ul>
+                  <li>Supabase / PostgreSQL with RLS-aware access</li>
+                  <li>OpenAI used only for tasks that need language understanding</li>
+                  <li>Evidence over fabrication across resume and analyzer flows</li>
+                  <li>Admin visibility without compromising learner ownership</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11 -->
+      <section class="slide" data-title="Methodology">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Methodology</p>
+                <h2>We built it iteratively and deliberately.</h2>
+              </div>
+              <p class="slide-index">11</p>
+            </div>
+            <p class="lede reveal">
+              The project followed an Agile path from problem framing and analysis through design, implementation, testing, and live deployment.
+            </p>
+            <div class="timeline-line">
+              <div class="timeline-step reveal">
+                <h3>Planning</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.45rem;">Scope, users, context.</p>
+              </div>
+              <div class="timeline-step reveal">
+                <h3>Requirements</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.45rem;">Research and competitive review.</p>
+              </div>
+              <div class="timeline-step reveal">
+                <h3>Design</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.45rem;">UML and system structure.</p>
+              </div>
+              <div class="timeline-step reveal">
+                <h3>Build</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.45rem;">Eight learner-facing features.</p>
+              </div>
+              <div class="timeline-step reveal">
+                <h3>Test</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.45rem;">Validation across modules.</p>
+              </div>
+              <div class="timeline-step reveal">
+                <h3>Deploy</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.45rem;">Live platform and iteration.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12 -->
+      <section class="slide" data-title="Product Completeness">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell stats-grid">
+            <div>
+              <p class="eyebrow reveal">What Was Built</p>
+              <h2 class="reveal">This is already a complete product.</h2>
+              <p class="lede reveal">
+                Mallah is not a single prototype screen. It is a connected platform with breadth across learner workflow, administration, and bilingual delivery.
+              </p>
+              <div class="stat-cards" style="margin-top: 1.2rem;">
+                <article class="stat-card reveal">
+                  <strong class="countup" data-target="4">0</strong>
+                  <p>Career paths</p>
+                </article>
+                <article class="stat-card reveal">
+                  <strong class="countup" data-target="8">0</strong>
+                  <p>Learner-facing features</p>
+                </article>
+                <article class="stat-card reveal">
+                  <strong class="countup" data-target="2">0</strong>
+                  <p>Languages</p>
+                </article>
+                <article class="stat-card reveal">
+                  <strong class="countup" data-target="1">0</strong>
+                  <p>Admin control layer</p>
+                </article>
+              </div>
+            </div>
+            <article class="proof-card reveal-scale">
+              <div class="product-shell" style="height: 100%;">
+                <div class="window-chrome"><span></span><span></span><span></span></div>
+                <p class="micro-label">Platform Breadth</p>
+                <div class="module-matrix" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem;">
+                  <div class="glass-card" style="padding: 0.9rem;">
+                    <p class="micro-label">Learn</p>
+                    <p>Roadmaps</p>
+                  </div>
+                  <div class="glass-card" style="padding: 0.9rem;">
+                    <p class="micro-label">Build</p>
+                    <p>Projects</p>
+                  </div>
+                  <div class="glass-card" style="padding: 0.9rem;">
+                    <p class="micro-label">Package</p>
+                    <p>Resume</p>
+                  </div>
+                  <div class="glass-card" style="padding: 0.9rem;">
+                    <p class="micro-label">Apply</p>
+                    <p>Analyzer + Tracker</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13 -->
+      <section class="slide" data-title="Differentiation">
+        <div class="ambient-grid"></div>
+        <div class="ambient-glow"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Differentiation</p>
+                <h2>Mallah closes the loop others leave open.</h2>
+              </div>
+              <p class="slide-index">13</p>
+            </div>
+            <p class="lede reveal">
+              Most tools solve one fragment. Mallah links decision-making, skill-building, evidence, job analysis, and tracking in a single learner workflow.
+            </p>
+            <div class="compare-header reveal">
+              <span>System Type</span>
+              <span>What it does well</span>
+              <span>What it leaves open</span>
+            </div>
+            <div class="flow-track">
+              <div class="compare-row reveal">
+                <strong>Learning Platform</strong>
+                <span>Teaches content</span>
+                <span>Does not prove readiness</span>
+              </div>
+              <div class="compare-row reveal">
+                <strong>Resume Scanner</strong>
+                <span>Optimizes keywords</span>
+                <span>Does not guide learning</span>
+              </div>
+              <div class="compare-row reveal">
+                <strong>Job Tracker</strong>
+                <span>Tracks applications</span>
+                <span>Does not build missing capability</span>
+              </div>
+              <div class="compare-row highlight reveal">
+                <strong>Mallah</strong>
+                <span>Connects all four</span>
+                <span style="color: var(--success);">Turns gaps into action</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14 -->
+      <section class="slide" data-title="Closing">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell closing-layout">
+            <div>
+              <p class="eyebrow reveal">Closing</p>
+              <h2 class="reveal">From confusion to clearer readiness.</h2>
+              <p class="lede reveal">
+                Mallah is not just a learning platform. It is a complete employability system that turns uncertainty into direction, effort into visible proof, and ambition into real career readiness.
+              </p>
+              <ul class="closing-points" style="margin-top: 1.2rem;">
+                <li class="reveal">Clearer starting point</li>
+                <li class="reveal">Structured progression</li>
+                <li class="reveal">Real project evidence</li>
+                <li class="reveal">Better job-facing decisions</li>
+              </ul>
+            </div>
+            <article class="proof-card reveal-scale">
+              <p class="micro-label">Final Position</p>
+              <h3 style="margin-top: 0.9rem; max-width: 15ch;">
+                In a market that does not reward learning alone, Mallah helps beginners know where to start, what to build, and when they are truly ready to move.
+              </h3>
+              <ul class="achievement-list">
+                <li>Built one connected workflow from onboarding to application tracking.</li>
+                <li>Created 4 structured career paths with guided roadmap progression.</li>
+                <li>Delivered 8 learner-facing features plus an admin control layer.</li>
+                <li>Turned learning into portfolio proof, resume assets, and job-ready action.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 15 -->
+      <section class="slide" data-title="References">
+        <div class="ambient-grid"></div>
+        <div class="slide-content">
+          <div class="slide-shell">
+            <div class="slide-header reveal">
+              <div>
+                <p class="eyebrow">Appendix</p>
+                <h2>References</h2>
+              </div>
+              <p class="slide-index">15</p>
+            </div>
+            <ul class="reference-list reveal" style="margin-top: 0.4rem;">
+              <li>[1] A. Burke, Digital Technologies in Career Guidance for Youth: Opportunities and Challenges, OECD, 2024.</li>
+              <li>[2] OECD, Observatory on Digital Technologies in Career Guidance for Youth (ODiCY), 2024.</li>
+              <li>[3] S. Bankins and S. Formosa, Navigating career stages in the age of artificial intelligence, Business Horizons, 2024.</li>
+              <li>[4] R. Buchanan, Exploring the Role of AI in Career Access Through a Social Justice Lens, 2025.</li>
+              <li>[5] Kingdom of Saudi Arabia, Saudi Vision 2030, 2025.</li>
+              <li>[6] Vision 2030, Human Capability Development Program, 2025.</li>
+              <li>[7] MCIT, Digital Economy Policy in the Kingdom of Saudi Arabia, 2020.</li>
+              <li>[8] Digital Government Authority (DGA), Digital Transformation Strategies Across Saudi Arabia, 2024.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 16 -->
+      <section class="slide" data-title="Q&A">
+        <div class="ambient-grid"></div>
+        <div class="ambient-glow"></div>
+        <div class="slide-content">
+          <div class="slide-shell qa-layout">
+            <div>
+              <p class="eyebrow reveal">Appendix</p>
+              <h2 class="reveal">Questions?</h2>
+              <p class="lede reveal">
+                Thank you for listening. The product is real, the workflow is connected, and the problem it solves is immediate.
+              </p>
+            </div>
+            <div class="reveal-scale" style="position: relative;">
+              <div class="qa-mark">?</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      class SlidePresentation {
+        constructor() {
+          this.slides = Array.from(document.querySelectorAll(".slide"));
+          this.currentSlide = 0;
+          this.progressBar = document.querySelector(".progress-bar");
+          this.navDotsContainer = document.querySelector(".nav-dots");
+          this.touchStartY = 0;
+          this.lastWheelTime = 0;
+          this.animatedCounters = new WeakSet();
+
+          this.setupIntersectionObserver();
+          this.setupKeyboardNav();
+          this.setupTouchNav();
+          this.setupWheelNav();
+          this.setupNavDots();
+          this.setupPrintMode();
+          this.goToSlide(0);
+        }
+
+        setupIntersectionObserver() {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("visible");
+                  this.currentSlide = this.slides.indexOf(entry.target);
+                  this.updateProgress();
+                  this.updateNavDots();
+                  this.animateCounts(entry.target);
+                }
+              });
+            },
+            { threshold: 0.58 }
+          );
+
+          this.slides.forEach((slide) => observer.observe(slide));
+        }
+
+        setupKeyboardNav() {
+          document.addEventListener("keydown", (event) => {
+            if (["ArrowDown", "PageDown", "Space"].includes(event.code)) {
+              event.preventDefault();
+              this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1));
+            }
+
+            if (["ArrowUp", "PageUp"].includes(event.code)) {
+              event.preventDefault();
+              this.goToSlide(Math.max(this.currentSlide - 1, 0));
+            }
+
+            if (event.code === "Home") {
+              event.preventDefault();
+              this.goToSlide(0);
+            }
+
+            if (event.code === "End") {
+              event.preventDefault();
+              this.goToSlide(this.slides.length - 1);
+            }
+          });
+        }
+
+        setupTouchNav() {
+          window.addEventListener("touchstart", (event) => {
+            this.touchStartY = event.changedTouches[0].clientY;
+          }, { passive: true });
+
+          window.addEventListener("touchend", (event) => {
+            const touchEndY = event.changedTouches[0].clientY;
+            const diff = this.touchStartY - touchEndY;
+
+            if (Math.abs(diff) < 50) return;
+            if (diff > 0) this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1));
+            if (diff < 0) this.goToSlide(Math.max(this.currentSlide - 1, 0));
+          }, { passive: true });
+        }
+
+        setupWheelNav() {
+          window.addEventListener("wheel", (event) => {
+            const now = Date.now();
+            if (now - this.lastWheelTime < 800) return;
+
+            if (Math.abs(event.deltaY) < 28) return;
+            this.lastWheelTime = now;
+
+            if (event.deltaY > 0) this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1));
+            if (event.deltaY < 0) this.goToSlide(Math.max(this.currentSlide - 1, 0));
+          }, { passive: true });
+        }
+
+        setupNavDots() {
+          this.slides.forEach((slide, index) => {
+            const button = document.createElement("button");
+            button.className = "nav-dot";
+            button.type = "button";
+            button.setAttribute("aria-label", `Go to slide ${index + 1}: ${slide.dataset.title}`);
+            button.addEventListener("click", () => this.goToSlide(index));
+            this.navDotsContainer.appendChild(button);
+          });
+          this.updateNavDots();
+        }
+
+        setupPrintMode() {
+          const togglePrintMode = (value) => {
+            document.body.classList.toggle("print-mode", value);
+          };
+
+          window.addEventListener("beforeprint", () => togglePrintMode(true));
+          window.addEventListener("afterprint", () => togglePrintMode(false));
+        }
+
+        goToSlide(index) {
+          const slide = this.slides[index];
+          if (!slide) return;
+          slide.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        }
+
+        updateProgress() {
+          const progress = ((this.currentSlide + 1) / this.slides.length) * 100;
+          this.progressBar.style.width = `${progress}%`;
+        }
+
+        updateNavDots() {
+          Array.from(this.navDotsContainer.children).forEach((dot, index) => {
+            dot.classList.toggle("active", index === this.currentSlide);
+          });
+        }
+
+        animateCounts(slide) {
+          const counters = Array.from(slide.querySelectorAll(".countup"));
+          counters.forEach((counter) => {
+            if (this.animatedCounters.has(counter)) return;
+            this.animatedCounters.add(counter);
+
+            const target = Number(counter.dataset.target || 0);
+            const start = performance.now();
+            const duration = 900;
+
+            const tick = (now) => {
+              const progress = Math.min((now - start) / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              counter.textContent = Math.round(target * eased);
+              if (progress < 1) requestAnimationFrame(tick);
+            };
+
+            requestAnimationFrame(tick);
+          });
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        new SlidePresentation();
+      });
+    </script>
+  </body>
+</html>

@@ -102,6 +102,7 @@ export async function getPrivatePortfolio(): Promise<PortfolioData> {
     const projects: PortfolioProject[] = (userProjectsRaw ?? []).map(up => {
         const template = projectsMap[up.project_id];
         return {
+            id: up.id,
             project_id: up.project_id,
             title: template?.title ?? 'Unknown Project',
             description: template?.description ?? null,
@@ -247,6 +248,7 @@ export async function getPublicPortfolio(slug: string): Promise<PortfolioData | 
     const projects: PortfolioProject[] = (userProjectsRaw ?? []).map(up => {
         const template = projectsMap[up.project_id];
         return {
+            id: up.id,
             project_id: up.project_id,
             title: template?.title ?? 'Unknown Project',
             description: template?.description ?? null,
@@ -337,3 +339,177 @@ export async function getSkillsCatalog(): Promise<{ skill_id: string; name: stri
         .order('name');
     return data ?? [];
 }
+
+/**
+ * Updates a project's status and optional fields.
+ * Roadmap projects are irreversible once completed (handled at UI level).
+ */
+export async function updateProjectStatus(
+  projectId: string,
+  status: 'available' | 'in_progress' | 'completed',
+  updates: Partial<PortfolioProject> = {}
+) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Unauthorized');
+
+    // Extract database-compatible fields from the update object
+    const dbUpdates: any = {
+        status
+    };
+
+    if (updates.github_url !== undefined) dbUpdates.github_url = updates.github_url;
+    if (updates.demo_url !== undefined) dbUpdates.demo_url = updates.demo_url;
+    if (updates.personal_note !== undefined) dbUpdates.personal_note = updates.personal_note;
+    if (updates.thumbnail_url !== undefined) dbUpdates.thumbnail_url = updates.thumbnail_url;
+    if (updates.tech_stack !== undefined) dbUpdates.tech_stack = updates.tech_stack;
+    if (updates.is_public !== undefined) dbUpdates.is_public = updates.is_public;
+    if (updates.custom_name !== undefined) dbUpdates.custom_name = updates.custom_name;
+    if (updates.custom_description !== undefined) dbUpdates.custom_description = updates.custom_description;
+
+    if (status === 'completed') {
+        dbUpdates.completed_at = new Date().toISOString();
+    } else if (status === 'in_progress' && !updates.started_at) {
+        dbUpdates.started_at = new Date().toISOString();
+    } else if (status === 'available') {
+        // When reverting to available, we might want to clear some fields depending on logic
+        dbUpdates.completed_at = null;
+        // is_public must be false for available projects
+        dbUpdates.is_public = false;
+    }
+
+    const { data, error } = await supabase
+        .from('user_projects')
+        .update(dbUpdates)
+        .eq('id', projectId)
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+}
+
+/**
+ * Deletes an external (user_custom) project from the Portfolio Hub.
+ * Roadmap projects cannot be deleted, only "removed from hub" if we added that, 
+ * but for now we follow the spec: only external projects.
+ */
+export async function deleteExternalProject(projectId: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Unauthorized');
+
+    // Verify ownership and type
+    const { data: project, error: fetchError } = await supabase
+        .from('user_projects')
+        .select('id, project_id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)
+        .single();
+
+    if (fetchError || !project) throw new Error('Project not found');
+
+    // Check source_type from the projects table
+    const admin = getSupabaseAdmin();
+    const { data: projectTemplate } = await admin
+        .from('projects')
+        .select('source_type')
+        .eq('project_id', project.project_id)
+        .single();
+
+    if (projectTemplate?.source_type !== 'user_custom') {
+        throw new Error('Only external projects can be deleted.');
+    }
+
+    const { error: deleteError } = await supabase
+        .from('user_projects')
+        .delete()
+        .eq('id', projectId);
+
+    if (deleteError) throw new Error(deleteError.message);
+}
+
+export async function updateExternalProject(
+    projectId: string, // Record ID
+    data: {
+        title: string;
+        description: string;
+        difficulty_level: 'beginner' | 'intermediate' | 'advanced';
+        github_url?: string;
+        demo_url?: string;
+        tech_stack: string[];
+        thumbnail_url?: string;
+        status: 'available' | 'in_progress' | 'completed';
+        started_at?: string;
+        bullets?: string[];
+        skill_ids?: string[];
+    }
+) {
+    const supabase = await createClient();
+    const admin = getSupabaseAdmin();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Unauthorized');
+
+    // 1. Get template ID
+    const { data: up } = await admin
+        .from('user_projects')
+        .select('project_id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)
+        .single();
+
+    if (!up) throw new Error('Project not found');
+    const templateId = up.project_id;
+
+    // 2. Update projects table
+    const { error: pErr } = await admin
+        .from('projects')
+        .update({
+            title: data.title,
+            description: data.description,
+            difficulty_level: data.difficulty_level,
+            thumbnail_url: data.thumbnail_url,
+            is_public_default: true // Custom projects are usually public templates
+        })
+        .eq('project_id', templateId);
+
+    if (pErr) throw pErr;
+
+    // 3. Update user_projects table
+    const { error: upErr } = await admin
+        .from('user_projects')
+        .update({
+            status: data.status,
+            github_url: data.github_url,
+            demo_url: data.demo_url,
+            thumbnail_url: data.thumbnail_url,
+            tech_stack: data.tech_stack,
+            started_at: data.started_at,
+            bullets: data.bullets,
+            completed_at: data.status === 'completed' ? new Date().toISOString() : null
+        })
+        .eq('id', projectId);
+
+    if (upErr) throw upErr;
+
+    // 4. Sync skills
+    if (data.skill_ids) {
+        await admin
+            .from('project_skills')
+            .delete()
+            .eq('project_id', templateId);
+
+        if (data.skill_ids.length > 0) {
+            const skillInserts = data.skill_ids.map(sid => ({
+                project_id: templateId,
+                skill_id: sid
+            }));
+            const { error: sErr } = await admin.from('project_skills').insert(skillInserts);
+            if (sErr) throw sErr;
+        }
+    }
+
+    return { success: true };
+}
+
