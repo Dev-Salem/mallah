@@ -55,7 +55,7 @@ export function SkillsSection({ skills, catalog, isPublicView = false }: SkillsS
     const sourceOptions = [
         { id: 'all', label: t('filters.all_sources') },
         { id: 'verified', label: t('filters.roadmap') },
-        { id: 'manual', label: t('filters.manual') },
+        { id: 'external', label: t('filters.manual') },
     ];
 
     return (

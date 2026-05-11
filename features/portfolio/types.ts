@@ -1,5 +1,15 @@
 import { z } from 'zod/v4';
 
+export const SKILL_CATEGORIES = [
+    'fundamentals',
+    'language',
+    'framework_library',
+    'tool',
+    'platform_service',
+    'practice',
+    'other'
+] as const;
+
 // ─── Skill types ───
 export interface PortfolioSkill {
     skill_id: string;
@@ -139,7 +149,7 @@ export interface PortfolioData {
 export const addManualSkillSchema = z.object({
     skill_id: z.string().optional(),
     custom_name: z.string().optional(),
-    custom_category: z.string().optional(),
+    custom_category: z.enum(SKILL_CATEGORIES).optional(),
     level: z.enum(['beginner', 'intermediate', 'advanced']),
     is_public: z.boolean().default(true),
 }).refine(data => data.skill_id || (data.custom_name && data.custom_category), {

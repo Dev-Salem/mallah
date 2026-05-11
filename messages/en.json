@@ -665,7 +665,7 @@
         "searchPlaceholder": "Search skills..."
       },
       "addModal": {
-        "title": "Add Expertise",
+        "title": "Add Skill",
         "description": "Expand your profile by adding skills from our catalog or defining your own.",
         "tabCatalog": "From Catalog",
         "tabCustom": "User Defined",
@@ -679,14 +679,14 @@
         "levelLabel": "Proficiency Level",
         "visibilityLabel": "Public Visibility",
         "visibilityDesc": "Allow others to see this skill on your public profile",
-        "submit": "Add to Expertise",
+        "submit": "Add Skill",
         "levels": {
           "beginner": "Beginner",
           "intermediate": "Intermediate",
           "advanced": "Advanced"
         },
         "cancel": "Cancel",
-        "successMessage": "Skill added to your expertise board!"
+        "successMessage": "Skill added to your Skills."
       },
       "empty": {
         "title": "No skills found",
@@ -704,12 +704,12 @@
       "sourceBadge": {
         "roadmap": "Verified (Roadmap)",
         "project": "Earned via Project",
-        "manual": "Manually Added"
+        "manual": "External"
       },
       "visibilityToggle": "Public Visibility",
       "deleteSkill": "Remove Skill",
       "deleteConfirmTitle": "Are you sure?",
-      "deleteConfirmDesc": "Are you sure you want to remove this manually added skill?",
+      "deleteConfirmDesc": "Are you sure you want to remove this external skill?",
       "cancel": "Cancel",
       "delete": "Remove",
       "deleteConfirmCheck": "Yes, remove skill",

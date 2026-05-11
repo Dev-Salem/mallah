@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { PortfolioSkill } from '../types';
 
-export type SkillSourceFilter = 'all' | 'verified' | 'manual';
+export type SkillSourceFilter = 'all' | 'verified' | 'external';
 export type SkillVisibilityFilter = 'all' | 'public' | 'private';
 
 export function useSkillFilters(skills: PortfolioSkill[]) {
@@ -39,7 +39,7 @@ export function useSkillFilters(skills: PortfolioSkill[]) {
             const isVerified = s.source === 'roadmap' || s.source === 'project';
             const matchesSource = sourceFilter === 'all' || 
                                  (sourceFilter === 'verified' && isVerified) ||
-                                 (sourceFilter === 'manual' && s.source === 'manual');
+                                 (sourceFilter === 'external' && s.source === 'manual');
             
             const matchesVisibility = visibilityFilter === 'all' ||
                                      (visibilityFilter === 'public' && s.is_public) ||
@@ -60,7 +60,7 @@ export function useSkillFilters(skills: PortfolioSkill[]) {
             const isVerified = s.source === 'roadmap' || s.source === 'project';
             const matchesSource = sourceFilter === 'all' || 
                                  (sourceFilter === 'verified' && isVerified) ||
-                                 (sourceFilter === 'manual' && s.source === 'manual');
+                                 (sourceFilter === 'external' && s.source === 'manual');
             
             const matchesVisibility = visibilityFilter === 'all' ||
                                      (visibilityFilter === 'public' && s.is_public) ||
@@ -77,7 +77,7 @@ export function useSkillFilters(skills: PortfolioSkill[]) {
             
             const matchesSource = sourceFilter === 'all' || 
                                  (sourceFilter === 'verified' && isVerified) ||
-                                 (sourceFilter === 'manual' && s.source === 'manual');
+                                 (sourceFilter === 'external' && s.source === 'manual');
             
             const matchesVisibility = visibilityFilter === 'all' ||
                                      (visibilityFilter === 'public' && s.is_public) ||
@@ -104,4 +104,3 @@ export function useSkillFilters(skills: PortfolioSkill[]) {
         totalCountForSource
     };
 }
-

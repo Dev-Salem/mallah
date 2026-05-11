@@ -4,14 +4,14 @@ import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Search, Plus, Check, Loader2, Info, User, ShieldCheck, Globe, Lock, Eye, X } from 'lucide-react';
+import { Search, Plus, Check, Loader2, User, ShieldCheck, Lock, Eye, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { addManualSkillSchema, type AddManualSkillInput } from '../types';
+import { addManualSkillSchema, SKILL_CATEGORIES, type AddManualSkillInput } from '../types';
 import { addManualSkillAction } from '../actions/portfolio-actions';
 import { toast } from 'sonner';
 
@@ -21,17 +21,6 @@ interface UserDefinedSkillFormProps {
     onSuccess: () => void;
     onCancel: () => void;
 }
-
-const COMMON_CATEGORIES = [
-    'FRONTEND_DEV',
-    'BACKEND_DEV',
-    'MOBILE_DEV',
-    'DEVOPS',
-    'DATA_SCIENCE',
-    'DESIGN',
-    'LANGUAGE',
-    'OTHER'
-];
 
 export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel }: UserDefinedSkillFormProps) {
     const t = useTranslations('PortfolioHub.skills.addModal');
@@ -81,7 +70,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
         setIsCustomMode(true);
         setValue('skill_id', undefined);
         setValue('custom_name', searchQuery);
-        setValue('custom_category', 'OTHER');
+        setValue('custom_category', 'other');
     };
 
     const formatCategory = (cat: string) => {
@@ -124,7 +113,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                                 placeholder={t('skillPlaceholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 h-12 bg-muted/10 border-white/5 font-mono text-sm focus-visible:ring-primary/20 rounded-xl"
+                                className="pl-10 h-12 bg-background border-border/60 font-mono text-sm focus-visible:ring-primary/20 rounded-xl"
                                 disabled={isSubmitting}
                             />
                         </div>
@@ -138,7 +127,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                                     {isCustomMode ? customName : catalog.find(s => s.skill_id === selectedSkillId)?.name}
                                 </p>
                                 <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">
-                                    {isCustomMode ? 'User Defined Expertise' : 'Catalog Verified Skill'}
+                                    {isCustomMode ? 'External Custom Skill' : 'Catalog Skill'}
                                 </p>
                             </div>
                             <Button 
@@ -160,7 +149,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
 
                     {/* Search Results Dropdown */}
                     {searchQuery && !selectedSkillId && !isCustomMode && (
-                        <div className="rounded-xl border border-white/5 bg-[#0A0A0A] overflow-hidden divide-y divide-white/5 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="rounded-xl border border-border/60 bg-popover text-popover-foreground overflow-hidden divide-y divide-border/60 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
                             {filteredCatalog.length > 0 && (
                                 <div className="p-2">
                                     <p className="px-3 py-2 text-[9px] uppercase font-mono text-muted-foreground tracking-widest">Matches from Catalog</p>
@@ -169,7 +158,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                                             key={skill.skill_id}
                                             type="button"
                                             onClick={() => handleSelectFromCatalog(skill)}
-                                            className="w-full px-3 py-2.5 flex items-center justify-between hover:bg-white/5 transition-all text-left group rounded-lg"
+                                            className="w-full px-3 py-2.5 flex items-center justify-between hover:bg-muted/60 transition-all text-left group rounded-lg"
                                         >
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{skill.name}</span>
@@ -191,7 +180,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-sm font-bold text-foreground group-hover:text-orange-500 transition-colors">
-                                        Define "{searchQuery}" manually
+                                        Add "{searchQuery}" as external
                                     </span>
                                     <span className="text-[10px] text-muted-foreground font-mono uppercase tracking-tight">Create a custom expertise entry</span>
                                 </div>
@@ -215,7 +204,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                            {COMMON_CATEGORIES.map((cat) => (
+                            {SKILL_CATEGORIES.map((cat) => (
                                 <button
                                     key={cat}
                                     type="button"
@@ -231,16 +220,6 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                                 </button>
                             ))}
                         </div>
-
-                        {selectedCategory === 'OTHER' && (
-                            <div className="relative animate-in fade-in duration-200">
-                                <Input
-                                    {...register('custom_category')}
-                                    placeholder="Type custom category name..."
-                                    className="h-11 bg-muted/10 border-white/5 font-mono text-sm focus-visible:ring-orange-500/20 rounded-xl"
-                                />
-                            </div>
-                        )}
                         
                         {errors.custom_category && (
                             <p className="text-[10px] text-red-400 font-mono tracking-tight">{errors.custom_category.message}</p>
@@ -261,7 +240,7 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                             {watch('level')}
                         </Badge>
                     </div>
-                    <div className="flex bg-[#0A0A0A] p-1.5 rounded-xl border border-white/5 gap-1.5">
+                    <div className="flex bg-muted/20 p-1.5 rounded-xl border border-border/60 gap-1.5">
                         {(['beginner', 'intermediate', 'advanced'] as const).map((lvl) => (
                             <button
                                 key={lvl}
@@ -270,8 +249,8 @@ export function UserDefinedSkillForm({ catalog, existingIds, onSuccess, onCancel
                                 className={cn(
                                     "flex-1 py-2.5 text-[10px] font-mono uppercase tracking-widest transition-all rounded-lg border border-transparent",
                                     watch('level') === lvl 
-                                        ? "bg-muted/20 text-primary border-primary/20 shadow-xl" 
-                                        : "text-muted-foreground hover:text-foreground hover:bg-white/[0.02]"
+                                        ? "bg-background text-primary border-primary/20 shadow-sm" 
+                                        : "text-muted-foreground hover:text-foreground hover:bg-background/70"
                                 )}
                             >
                                 {t(`levels.${lvl}`)}

@@ -73,7 +73,7 @@ export async function addManualSkillAction(input: AddManualSkillInput): Promise<
                 .insert({
                     skill_id: crypto.randomUUID(),
                     name: parsed.data.custom_name,
-                    category: parsed.data.custom_category || 'Other',
+                    category: parsed.data.custom_category || 'other',
                     is_verified: false
                 })
                 .select()
@@ -122,7 +122,7 @@ export async function deleteManualSkillAction(skillId: string): Promise<ActionRe
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: 'Unauthorized' };
 
-    // Only manual skills can be deleted
+    // Only external skills can be deleted
     const { data: skill } = await supabase
         .from('user_skills')
         .select('source')
@@ -131,7 +131,7 @@ export async function deleteManualSkillAction(skillId: string): Promise<ActionRe
         .maybeSingle();
 
     if (!skill || skill.source !== 'manual') {
-        return { success: false, error: 'Only manually added skills can be deleted.' };
+        return { success: false, error: 'Only external skills can be deleted.' };
     }
 
     const { error } = await supabase
