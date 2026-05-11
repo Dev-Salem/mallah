@@ -154,6 +154,24 @@ const CREDENTIAL_PATTERNS = [
     /\bbootcamp\b/,
 ] as const;
 
+const SOFT_SKILL_PATTERNS = [
+    /\bcommunication\b/,
+    /\bteam\s*collaboration\b/,
+    /\bcollaboration\b/,
+    /\bproblem[\s-]*solving\b/,
+    /\bproblem[\s-]*solver\b/,
+    /\bleadership\b/,
+    /\binterpersonal\b/,
+    /\btime\s*management\b/,
+    /\badaptability\b/,
+    /\bcritical\s*thinking\b/,
+    /\bdetail[\s-]*oriented\b/,
+    /\bself[\s-]*motivated\b/,
+    /\bwork\s*ethic\b/,
+    /\bmultitask(?:ing)?\b/,
+    /\bfast[\s-]*paced\b/,
+] as const;
+
 function normalizeText(value: string | null | undefined): string {
     let normalized = (value ?? '').toLowerCase().trim();
 
@@ -174,11 +192,17 @@ export function isCredentialRequirement(value: string): boolean {
     return CREDENTIAL_PATTERNS.some((pattern) => pattern.test(normalized));
 }
 
+export function isNonTechnicalRequirement(value: string): boolean {
+    const normalized = normalizeText(value);
+    return CREDENTIAL_PATTERNS.some((pattern) => pattern.test(normalized)) ||
+        SOFT_SKILL_PATTERNS.some((pattern) => pattern.test(normalized));
+}
+
 export function sanitizeExtractedSkills(skills: string[]): string[] {
     const deduped = new Map<string, string>();
 
     for (const skill of skills) {
-        if (isCredentialRequirement(skill)) continue;
+        if (isNonTechnicalRequirement(skill)) continue;
         const normalized = normalizeText(skill);
         if (!normalized) continue;
         if (!deduped.has(normalized)) deduped.set(normalized, skill.trim());

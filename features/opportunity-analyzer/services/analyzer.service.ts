@@ -1,6 +1,24 @@
 import { createClient } from '@/lib/supabase/server';
 import { OpportunityAnalysisResult, ExtractedCV } from '../types';
 
+function isSeniorityConstraintError(error: unknown): boolean {
+    if (error && typeof error === 'object') {
+        const record = error as Record<string, unknown>;
+        const parts = [
+            typeof record.message === 'string' ? record.message : '',
+            typeof record.details === 'string' ? record.details : '',
+            typeof record.hint === 'string' ? record.hint : '',
+            typeof record.code === 'string' ? record.code : '',
+            JSON.stringify(record),
+        ].filter(Boolean);
+
+        return parts.some((part) => part.includes('opportunity_analyses_seniority_level_check'));
+    }
+
+    const message = error instanceof Error ? error.message : String(error ?? '');
+    return message.includes('opportunity_analyses_seniority_level_check');
+}
+
 export const analyzerService = {
     saveCvUpload: async (fileName: string, extractedData: ExtractedCV) => {
         const supabase = await createClient();
@@ -65,32 +83,50 @@ export const analyzerService = {
             last_reanalyzed_at: new Date().toISOString(),
         };
 
-        let result;
-        if (existingAnalysisId) {
-            // Update
-            const { data, error } = await supabase
-                .from('opportunity_analyses')
-                .update(payload)
-                .eq('analysis_id', existingAnalysisId)
-                .eq('user_id', user.id)
-                .select()
-                .single();
-            if (error) throw error;
-            result = data;
-        } else {
-            // Insert
+        const saveWithPayload = async (payloadToSave: typeof payload) => {
+            if (existingAnalysisId) {
+                const { data, error } = await supabase
+                    .from('opportunity_analyses')
+                    .update(payloadToSave)
+                    .eq('analysis_id', existingAnalysisId)
+                    .eq('user_id', user.id)
+                    .select()
+                    .single();
+                if (error) throw error;
+                return { data, inserted: false as const };
+            }
+
             const { data, error } = await supabase
                 .from('opportunity_analyses')
                 .insert({
-                    ...payload,
+                    ...payloadToSave,
                     created_at: new Date().toISOString()
                 })
                 .select()
                 .single();
             if (error) throw error;
-            result = data;
+            return { data, inserted: true as const };
+        };
 
-            // Increment the counter only on insert
+        let result;
+        let inserted = false;
+
+        try {
+            const saved = await saveWithPayload(payload);
+            result = saved.data;
+            inserted = saved.inserted;
+        } catch (error) {
+            if (!isSeniorityConstraintError(error)) throw error;
+
+            const saved = await saveWithPayload({
+                ...payload,
+                seniority_level: null,
+            });
+            result = saved.data;
+            inserted = saved.inserted;
+        }
+
+        if (inserted) {
             await supabase.rpc('increment_opportunity_analyses_count', { user_uuid: user.id });
         }
 

@@ -446,11 +446,15 @@ export const analyzeJobAction = async (jobDescription: string, cvData: Extracted
                     responsibilities: (jdData.responsibilities || []).filter(Boolean).slice(0, 4),
                     apply_url: jdData.apply_url || null,
                     projects_matched: scoring.relevantProjectCount,
+                    cv_uploaded: Boolean(cvData),
+                    cv_extracted_skills_count: cvData?.extracted_skills.length ?? 0,
                 }
             },
             skills_breakdown: enrichedBreakdown,
             action_plan: actionPlanResult.action_plan,
             cv_skills_contributed: scoring.cvSkillsContributed,
+            cv_uploaded: Boolean(cvData),
+            cv_extracted_skills_count: cvData?.extracted_skills.length ?? 0,
             is_saved: false
         };
 
@@ -646,8 +650,17 @@ export const addPortfolioSyncProjectAction = async (
     }
 };
 
-export const saveAnalysisAction = async (data: OpportunityAnalysisResult) => {
-    return await analyzerService.saveAnalysis(data);
+export const saveAnalysisAction = async (
+    data: OpportunityAnalysisResult
+): Promise<{ success: boolean; data?: Awaited<ReturnType<typeof analyzerService.saveAnalysis>>; error?: string }> => {
+    try {
+        const saved = await analyzerService.saveAnalysis(data, data.analysis_id);
+        return { success: true, data: saved };
+    } catch (e: unknown) {
+        const err = e as Error;
+        console.error("Save Analysis Error:", err);
+        return { success: false, error: err.message || 'Failed to save analysis.' };
+    }
 };
 
 export const getSavedAnalysesAction = async () => {

@@ -1,0 +1,546 @@
+[
+  {
+    "number": 1,
+    "title": "Mallah \u0645\u0644\u0651\u0627\u062d |\u000bOne Platform for Your Tech Journey",
+    "content": [
+      {
+        "type": "text",
+        "content": "\nSupervisor:\nDr. Mohammed Elfaki\n\nPresented by:\nAbdulaziz F. Alotaibi \nSalem S. Hamed\nNader F. Alotaibi \nJamal A. Sweidan"
+      },
+      {
+        "type": "text",
+        "content": "1"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": "Kingdom of Saudi Arabia \nMinistry of Education \nShaqra University \nCollege of Computing and Information Technology \nComputer Science Department "
+      }
+    ],
+    "images": [
+      {
+        "path": "assets/slide1_img1.png",
+        "width": 4500855,
+        "height": 4847074
+      }
+    ],
+    "notes": ""
+  },
+  {
+    "number": 2,
+    "title": "",
+    "content": [
+      {
+        "type": "text",
+        "content": "2"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Restrcutre for better readablitiy "
+  },
+  {
+    "number": 3,
+    "title": "Introduction",
+    "content": [
+      {
+        "type": "text",
+        "content": "The tech landscape accelerates daily, yet for most CS and IT students, the path to entry level job remains dangerously unclear. Beginners often drift through a 'fog' of disconnected tutorials and generic advice, resulting in wasted time, scattered skill sets, and weak portfolios.\nIn the Saudi and Arab context, where digital employability is a national priority, this lack of structure is a critical gap. Mallah replaces confusion with precision. It starts by assigning a Suitable Career path based on the learner's specific goals. From there, it guides them from theory to practice\u2014building tangible skills through real-world projects\u2014and finally bridges the gap to employment."
+      },
+      {
+        "type": "text",
+        "content": "3"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "How presentation will benefit audience: Adult learners are more interested in a subject if they know how or why it is important to them.\nPresenter\u2019s level of expertise in the subject: Briefly state your credentials in this area, or explain why participants should listen to you."
+  },
+  {
+    "number": 4,
+    "title": "Problem Statement",
+    "content": [
+      {
+        "type": "text",
+        "content": "Technology beginners (CS/IT students, fresh graduates, career shifters) commonly face:\u000b\nTrack confusion: difficulty choosing a suitable tech path and starting point.\nUnstructured learning: scattered tutorials with no sequencing, milestones, or progress visibility.\nWeak outcomes: completing courses without producing real, shareable evidence. No skills record, no project portfolio, nothing a recruiter can actually see.\nJob description barrier: job postings feel like a foreign language. Beginners can't map what employers ask for to what they should learn next..\nReadiness uncertainty: there is no clear moment where a beginner knows they are ready to apply. Without a measurable signal, most either apply too early or keep learning indefinitely without taking action.\nCore gap: learning, portfolio evidence, resume preparation, job alignment, and application tracking are rarely connected in one workflow.\n"
+      },
+      {
+        "type": "text",
+        "content": "4"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Make core gap more visible \n"
+  },
+  {
+    "number": 5,
+    "title": "Project Objectives",
+    "content": [
+      {
+        "type": "text",
+        "content": "Primary objective: enable beginners to move from confusion to job readiness through a guided, low-complexity workflow.\nMallah aims to provide:\nGuided onboarding: AI-powered wizard that builds a complete learner profile and recommends the most suitable career path based on background, goals, weekly availability, and confidence.\nPredefined roadmaps: assign users to a structured roadmap organized as Path \u2192 Stage \u2192 Topic.\nSkills & Projects Hub: a verified record of earned skills and completed projects, with a public shareable profile and granular visibility control over what recruiters can see.\nSmart Resume Builder: build a complete, ATS-optimized resume section by section. AI refines wording and tailors the entire resume to a specific job description on demand.\nOpportunity Analyzer: paste a job description or browse the Saudi job feed to receive a match score, matched and missing skills, an AI action plan, and direct links to roadmap topics that close the gap.\u000bApplication Tracker: manage the full job search pipeline from saved to offer, with one-click import from saved analyses and a direct bridge back to the original AI report for every application."
+      },
+      {
+        "type": "text",
+        "content": "5"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Lesson descriptions should be brief.\n"
+  },
+  {
+    "number": 6,
+    "title": "Methodology",
+    "content": [
+      {
+        "type": "text",
+        "content": "Methodology: Approach & Phases\nMallah was developed following an Agile methodology an iterative, incremental approach that allowed the team to continuously evaluate, refine, and adapt across all phases of the project lifecycle.\nPlanning:  defined project scope, objectives, target users, and feasibility within the Saudi digital employability context \nRequirements Analysis:  gathered requirements through literature review, competitive analysis of 7 platforms, and user needs analysis \nSystem Design: translated requirements into standard UML artifacts before any implementation began \nImplementation: built all 8 learner-facing features and the admin panel \nTesting & Integration: manual testing, integration testing, and feature validation across all modules \nDeployment & Maintenance: platform deployed and live, iterative improvements ongoing.\n"
+      },
+      {
+        "type": "text",
+        "content": "6"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Add agile graph\nPresenter\u2019s level of expertise in the subject: Briefly state your credentials in this area, or explain why participants should listen to you."
+  },
+  {
+    "number": 7,
+    "title": "Methodology Cont.",
+    "content": [
+      {
+        "type": "text",
+        "content": "Methodology: Technical Decisions & Design Principles\nThe tech stack was chosen to match the system's specific requirements not convention.\nThe platform is built on Next.js with Feature-Sliced Design, ensuring each feature is fully self-contained and independently maintainable. Supabase (PostgreSQL) handles all data with row-level security enforced per user role. Zod validates every input at the server action layer. gpt-4o powers all AI features.\nTwo principles guided every decision.\nAI by exception: rule-based logic was used wherever consistency and transparency were achievable. AI was reserved only for tasks that genuinely required language understanding: JD extraction, CV parsing, tutoring, and resume refinement.\nEvidence over fabrication: every AI feature operates strictly on the learner's real data. The resume builder never invented experience. The analyzer only compares against verified skills. This was a deliberate product and ethical decision.\n"
+      },
+      {
+        "type": "text",
+        "content": "7"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "How presentation will benefit audience: Adult learners are more interested in a subject if they know how or why it is important to them.\nPresenter\u2019s level of expertise in the subject: Briefly state your credentials in this area, or explain why participants should listen to you."
+  },
+  {
+    "number": 8,
+    "title": "Platform Journey",
+    "content": [
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": "8"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "How presentation will benefit audience: Adult learners are more interested in a subject if they know how or why it is important to them.\nPresenter\u2019s level of expertise in the subject: Briefly state your credentials in this area, or explain why participants should listen to you."
+  },
+  {
+    "number": 9,
+    "title": "Platform Journey",
+    "content": [
+      {
+        "type": "text",
+        "content": "9"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Lesson descriptions should be brief.\n"
+  },
+  {
+    "number": 10,
+    "title": "Features Walkthrough",
+    "content": [
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": "10"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "How presentation will benefit audience: Adult learners are more interested in a subject if they know how or why it is important to them.\nPresenter\u2019s level of expertise in the subject: Briefly state your credentials in this area, or explain why participants should listen to you."
+  },
+  {
+    "number": 11,
+    "title": "Features Walkthrough",
+    "content": [
+      {
+        "type": "text",
+        "content": "11"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Lesson descriptions should be brief.\n"
+  },
+  {
+    "number": 12,
+    "title": "Timeline and Current Stage",
+    "content": [
+      {
+        "type": "text",
+        "content": "12"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Lesson descriptions should be brief.\n"
+  },
+  {
+    "number": 13,
+    "title": "Conclusion",
+    "content": [
+      {
+        "type": "text",
+        "content": "Mallah is a web-based platform that bridges learning and employment preparation for CS/IT students, fresh graduates, and career switchers.\nIt guides learners through predefined roadmaps and project-based learning to produce real skills and portfolio evidence.\nIt then supports resume building from the learner\u2019s actual work and analyzes job descriptions to show match level, missing skills, and next learning steps.\nOverall, Mallah reduces confusion and helps learners progress toward entry-level roles with clearer, evidence-based decisions.\n"
+      },
+      {
+        "type": "text",
+        "content": "13"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "How presentation will benefit audience: Adult learners are more interested in a subject if they know how or why it is important to them.\nPresenter\u2019s level of expertise in the subject: Briefly state your credentials in this area, or explain why participants should listen to you."
+  },
+  {
+    "number": 14,
+    "title": "References",
+    "content": [
+      {
+        "type": "text",
+        "content": "14"
+      },
+      {
+        "type": "text",
+        "content": "[1] A. Burke, Digital Technologies in Career Guidance for Youth: Opportunities and Challenges, OECD, 2024. https://www.oecd.org/en/publications/digital-technologies-in-career-guidance-for-youth_c9ab23da-en.html\n[2] OECD, \u201cObservatory on Digital Technologies in Career Guidance for Youth (ODiCY),\u201d 2024. https://www.oecd.org/en/toolkits/odicy.html\n[3] S. Bankins and S. Formosa, \u201cNavigating career stages in the age of artificial intelligence: A systematic interdisciplinary review and agenda for future research,\u201d Business Horizons, 2024. https://www.sciencedirect.com/science/article/pii/S0001879124000526\n[4] R. Buchanan, \u201cExploring the Role of AI in Career Access Through a Social Justice Lens,\u201d Nordic Journal of Transitions, Careers and Guidance, 2025. https://njtcg.org/articles/77/files/67af27411f1a0.pdf\n[5] Kingdom of Saudi Arabia, Saudi Vision 2030, 2025. https://www.vision2030.gov.sa/en\n[6] Vision 2030, \u201cHuman Capability Development Program,\u201d 2025. https://www.vision2030.gov.sa/en/explore/programs/human-capability-development-program\n[7] MCIT, Digital Economy Policy in the Kingdom of Saudi Arabia, 2020. https://www.mcit.gov.sa/sites/default/files/digitaleconomypolicy_en.pdf\n[8] Digital Government Authority (DGA), Digital Transformation Strategies Across Saudi Arabia, v1.0, 2024. https://dga.gov.sa/sites/default/files/2024-10/Digital%20Transformation%20Strategies%20Across%20Saudi%20Arabia-%20V1.0.pdf\n"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [],
+    "notes": "Lesson descriptions should be brief.\n"
+  },
+  {
+    "number": 15,
+    "title": "Thank you for Listening!\u000b\u000bAny Questions?",
+    "content": [
+      {
+        "type": "text",
+        "content": "15"
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      },
+      {
+        "type": "text",
+        "content": ""
+      }
+    ],
+    "images": [
+      {
+        "path": "assets/slide15_img1.png",
+        "width": 2180499,
+        "height": 2348229
+      }
+    ],
+    "notes": ""
+  }
+]

@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { OpportunityAnalysisResult } from '../types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -20,13 +21,19 @@ interface ResultsScreenProps {
 
 export function ResultsScreen({ result, onNewAnalysis }: ResultsScreenProps) {
     const t = useTranslations('Dashboard.Opportunities');
+    const [activeTab, setActiveTab] = useState('results');
 
     const handleSave = async () => {
         try {
-            await saveAnalysisAction({ ...result, is_saved: true });
+            const response = await saveAnalysisAction({ ...result, is_saved: true });
+            if (!response.success) {
+                toast.error(response.error || "Failed to save analysis.");
+                return;
+            }
             toast.success("Analysis saved successfully!");
-        } catch {
-            toast.error("Failed to save analysis.");
+        } catch (e: unknown) {
+            const err = e as Error;
+            toast.error(err.message || "Failed to save analysis.");
         }
     };
 
@@ -66,7 +73,7 @@ export function ResultsScreen({ result, onNewAnalysis }: ResultsScreenProps) {
                 </div>
             </div>
 
-            <Tabs defaultValue="results" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="flex w-full items-center justify-start h-12 p-0 bg-transparent rounded-none border-b border-primary/10 overflow-x-auto overflow-y-hidden inline-flex flex-nowrap snap-x no-scrollbar">
                     <TabsTrigger value="results" className="tactical-tab-trigger snap-center">{t('results.tabs.report')}</TabsTrigger>
                     <TabsTrigger value="overview" className="tactical-tab-trigger snap-center">{t('results.tabs.intel')}</TabsTrigger>
@@ -76,7 +83,7 @@ export function ResultsScreen({ result, onNewAnalysis }: ResultsScreenProps) {
                 </TabsList>
 
                 <div className="mt-8">
-                    <TabsContent value="results"><ResultsTab result={result} /></TabsContent>
+                    <TabsContent value="results"><ResultsTab result={result} onSelectTab={setActiveTab} /></TabsContent>
                     <TabsContent value="overview"><OverviewTab result={result} /></TabsContent>
                     <TabsContent value="skills"><SkillsTab result={result} /></TabsContent>
                     <TabsContent value="actionplan"><ActionPlanTab result={result} /></TabsContent>

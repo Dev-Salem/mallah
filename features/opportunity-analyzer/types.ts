@@ -76,6 +76,8 @@ export interface OpportunityAnalysisMetadata {
     responsibilities?: string[];
     apply_url?: string | null;
     projects_matched?: number;
+    cv_uploaded?: boolean;
+    cv_extracted_skills_count?: number;
 }
 
 export interface OpportunityExtractedSkills {
@@ -134,6 +136,8 @@ export interface OpportunityAnalysisResult {
     skills_breakdown: MatchScoreBreakdown;
     action_plan: ActionPlanStep[];
     cv_skills_contributed: number;
+    cv_uploaded?: boolean;
+    cv_extracted_skills_count?: number;
     is_saved: boolean;
     matchingResumeId?: string | null;
     created_at?: string;
