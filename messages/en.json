@@ -627,7 +627,7 @@
     "publicProfileTooltip": "This is your public profile link to share with employers.",
     "tabs": {
       "projects": "Projects",
-      "skills": "Expertise Board"
+      "skills": "Skills"
     },
     "profile": {
       "path": "{pathName} Path",
@@ -649,14 +649,14 @@
     "skills": {
       "title": "Expertise",
       "subtitle": "Your verified technical stack and declared proficiencies",
-      "addSkill": "Add Skill",
+      "addSkill": "Add External Skill",
       "filters": {
         "source": "Source",
         "category": "Category",
         "all_sources": "All Sources",
         "roadmap": "Roadmap",
         "project": "Project",
-        "manual": "Manual",
+        "manual": "External",
         "all_categories": "All Categories",
         "visibility": "Visibility",
         "all_visibility": "All Visibility",
@@ -733,9 +733,9 @@
         "completed": "Completed"
       },
       "filters": {
-        "type": "Type",
+        "type": "Source",
         "visibility": "Visibility",
-        "all_types": "All Types",
+        "all_types": "All Sources",
         "roadmap": "Roadmap",
         "external": "External",
         "all_visibility": "All Visibility",
