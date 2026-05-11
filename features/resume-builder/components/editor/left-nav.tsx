@@ -19,7 +19,7 @@ interface LeftNavProps {
 
 export function LeftNav({ items, onSelect, className }: LeftNavProps) {
   return (
-    <nav className={cn("py-6 px-3 space-y-1 w-full flex flex-col h-full", className)}>
+    <nav className={cn("py-6 px-3 space-y-1 w-full flex flex-col", className)}>
       <h3 className="text-xs font-bold text-muted-foreground mb-4 px-3 hidden md:block">
         SECTIONS
       </h3>

@@ -186,7 +186,6 @@
       "AIMicroCoach": {
         "label": "AI Coach"
       },
-
       "RecentActivity": {
         "label": "Recent Activity",
         "topicCompleted": "Completed: {title}",
@@ -519,7 +518,6 @@
       "confirmSkipButton": "Yes, skip it"
     }
   },
-
   "Onboarding": {
     "stepLabel": "Step {step} of {total}",
     "back": "Back",
@@ -991,6 +989,7 @@
     "RefinementReport": "Optimization Report",
     "RefinementAudit": "Optimization Audit",
     "Targeting": "Targeting",
+    "Targeted": "Targeted",
     "NextSteps": "Next Steps",
     "GotIt": "Close",
     "Export": "Export PDF",
@@ -1000,7 +999,6 @@
     "CloningAndTailoring": "Updating your profile for the target role...",
     "OptimizationLog": "Updates Log",
     "PartialOptimization": "Partial Match"
-
   },
   "Admin": {
     "Sidebar": {

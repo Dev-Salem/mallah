@@ -46,6 +46,8 @@ import {
 import PersonalizationModal from "./personalization-modal";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { PageDivider } from "@/components/shared/page-divider";
+
 
 export default function ResumeCardsGrid({ initialData = [] }: { initialData: any[] }) {
   const t = useTranslations("ResumeBuilder");
@@ -120,86 +122,53 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   return (
     <TooltipProvider>
       <div className="space-y-8 max-w-7xl mx-auto px-4 py-8">
-        {/* Enhanced Glassmorphism Header */}
-        <div className="relative group">
-          {/* Background Glow */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
-          
-          <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 p-8 rounded-3xl bg-card/30 backdrop-blur-xl border border-primary/10 shadow-2xl overflow-hidden">
-            {/* Inner HUD Grid Decoration */}
-            <div className="absolute inset-0 hud-grid opacity-[0.02] pointer-events-none" />
-            
-            {/* Soft Glow */}
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] pointer-events-none" />
-            
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6 relative z-10">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground uppercase italic">
-                    {t("MyResumes")}
-                  </h1>
-                  <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/5 text-primary font-bold px-3 py-0.5 text-[10px] uppercase tracking-widest animate-pulse">
-                    {t("SystemActive")}
-                  </Badge>
+        {/* Simplified Premium Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-2 px-1">
+          <div className="space-y-1">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+              {t("MyResumes")}
+            </h1>
+            <p className="text-sm text-muted-foreground font-medium">
+              {t("ManageResumesDesc")}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-full sm:w-auto">
+                  <Button
+                    disabled={isAtLimit || isCreatingGeneral}
+                    onClick={isAtLimit ? undefined : handleCreateGeneral}
+                    className={cn(
+                      "w-full sm:w-auto h-12 px-8 rounded-xl font-bold transition-all active:scale-95 group/btn overflow-hidden relative",
+                      isAtLimit
+                        ? "bg-muted text-muted-foreground grayscale cursor-not-allowed"
+                        : "bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 dark:shadow-[0_0_25px_-5px_var(--primary)]"
+                    )}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+
+                    {isCreatingGeneral ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Plus className="w-4 h-4 mr-2 group-hover/btn:rotate-90 transition-transform duration-300" />
+                    )}
+                    <span>{t("NewResume")}</span>
+                  </Button>
                 </div>
-                <p className="text-muted-foreground text-xs font-bold uppercase tracking-[0.2em] opacity-70 max-w-md leading-relaxed">
-                  {t("ManageResumesDesc")}
-                </p>
-                
-                {/* Stats Hub */}
-                <div className="flex items-center gap-4 pt-2">
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-background/40 border border-primary/5 relative overflow-hidden group/stat">
-                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
-                    <FileText className="w-3.5 h-3.5 text-primary/60" />
-                    <span className="text-[10px] font-black text-foreground uppercase tracking-tight relative z-10">
-                      {resumes.length} <span className="text-muted-foreground ml-1">Documents</span>
-                    </span>
-                  </div>
-                  {bestAts > 0 && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-background/40 border border-primary/5 relative overflow-hidden group/stat">
-                      <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
-                      <Sparkles className="w-3.5 h-3.5 text-yellow-500/60" />
-                      <span className="text-[10px] font-black text-foreground uppercase tracking-tight relative z-10">
-                        {bestAts}% <span className="text-muted-foreground ml-1">Best Score</span>
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 relative z-10">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="w-full sm:w-auto">
-                    <Button
-                      disabled={isAtLimit || isCreatingGeneral}
-                      onClick={isAtLimit ? undefined : handleCreateGeneral}
-                      className={cn(
-                        "w-full sm:w-auto h-14 px-8 rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 group/btn overflow-hidden relative",
-                        isAtLimit ? "bg-muted text-muted-foreground grayscale" : "bg-primary hover:bg-primary/90 text-white shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary),0.5)]"
-                      )}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
-                      
-                      {isCreatingGeneral ? (
-                        <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                      ) : (
-                        <Plus className="w-5 h-5 mr-3 group-hover/btn:rotate-90 transition-transform duration-300" />
-                      )}
-                      <span>{t("NewResume")}</span>
-                    </Button>
-                  </div>
-                </TooltipTrigger>
-                {isAtLimit && (
-                  <TooltipContent className="bg-slate-900 text-white border-none rounded-xl p-4 shadow-2xl max-w-[200px]">
-                    <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed text-center">{t("LimitReachedTooltip")}</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </div>
+              </TooltipTrigger>
+              {isAtLimit && (
+                <TooltipContent className="bg-slate-900 text-white border-none rounded-xl p-4 shadow-2xl max-w-[200px]">
+                  <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed text-center">{t("LimitReachedTooltip")}</p>
+                </TooltipContent>
+              )}
+            </Tooltip>
           </div>
         </div>
+
+        <PageDivider className="mb-10" />
+
 
         {/* Resumes Grid */}
         {resumes.length === 0 ? (
@@ -211,7 +180,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
               {/* HUD Background Elements */}
               <div className="absolute inset-0 hud-grid opacity-[0.03] pointer-events-none" />
 
-              
+
 
               <CardContent className="p-16 text-center flex flex-col items-center justify-center min-h-[350px] relative z-10">
                 <div className="w-20 h-20 rounded-2xl bg-background/50 backdrop-blur-sm shadow-xl border border-primary/30 flex items-center justify-center mb-8 group-hover:scale-105 group-hover:border-primary/60 transition-all duration-500 glow-border">
@@ -219,11 +188,11 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
                 </div>
                 <h3 className="font-black text-2xl text-foreground uppercase tracking-tight leading-none mb-4 drop-shadow-sm">{t("GeneralDescriptionTitle")}</h3>
                 <p className="text-muted-foreground max-w-sm mx-auto leading-relaxed font-bold text-[10px] uppercase tracking-[0.2em] opacity-80">
-                   {t("EmptyStateMessage")}
+                  {t("EmptyStateMessage")}
                 </p>
-                <Button 
-                  variant="outline" 
-                  className="mt-10 rounded-xl border-primary/30 font-bold group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all px-10 h-14 text-sm tracking-wide shadow-lg shadow-primary/5 group-hover:shadow-primary/20" 
+                <Button
+                  variant="outline"
+                  className="mt-10 rounded-xl border-primary/30 font-bold group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all px-10 h-14 text-sm tracking-wide shadow-lg shadow-primary/5 group-hover:shadow-primary/20"
                   disabled={isCreatingGeneral}>
                   {isCreatingGeneral ? (
                     <Loader2 className="w-5 h-5 mr-3 animate-spin" />
@@ -238,7 +207,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {resumes.map((resume) => (
-              <ResumeCard 
+              <ResumeCard
                 key={resume.resume_id}
                 resume={resume}
                 t={t}
@@ -258,7 +227,7 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
             <div className="p-8 space-y-6">
               <AlertDialogHeader>
                 <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-4">
-                   <Trash2 className="w-7 h-7 text-red-500" />
+                  <Trash2 className="w-7 h-7 text-red-500" />
                 </div>
                 <AlertDialogTitle className="text-2xl font-black uppercase tracking-tight text-foreground">{t("DeleteTitle")}</AlertDialogTitle>
                 <AlertDialogDescription className="space-y-4 pt-2 block" asChild>
@@ -273,14 +242,14 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
                       </p>
                     </div>
                     <div className="space-y-2 mt-4">
-                       <p className="text-[10px] font-mono font-bold text-primary uppercase tracking-widest ml-1">{t("TypeDeleteToConfirm")}</p>
-                       <Input
-                         value={deleteConfirmationText}
-                         onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                         placeholder="DELETE"
-                         disabled={isDeleting}
-                         className="h-12 rounded-xl border-border bg-muted/30 focus:ring-red-500 focus:border-red-500 font-mono text-center tracking-widest font-bold"
-                       />
+                      <p className="text-[10px] font-mono font-bold text-primary uppercase tracking-widest ml-1">{t("TypeDeleteToConfirm")}</p>
+                      <Input
+                        value={deleteConfirmationText}
+                        onChange={(e) => setDeleteConfirmationText(e.target.value)}
+                        placeholder="DELETE"
+                        disabled={isDeleting}
+                        className="h-12 rounded-xl border-border bg-muted/30 focus:ring-red-500 focus:border-red-500 font-mono text-center tracking-widest font-bold"
+                      />
                     </div>
                   </div>
                 </AlertDialogDescription>
@@ -320,10 +289,10 @@ export default function ResumeCardsGrid({ initialData = [] }: { initialData: any
   );
 }
 
-function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLimit }: { 
-  resume: any; 
-  t: any; 
-  onClone: (id: string, title: string) => void; 
+function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLimit }: {
+  resume: any;
+  t: any;
+  onClone: (id: string, title: string) => void;
   onDelete: (id: string) => void;
   onTailor: (id: string, title: string) => void;
   isCloning: boolean;
@@ -353,7 +322,7 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
         {/* Card Header Illustration Area */}
         <div className="h-40 bg-muted/20 flex items-end justify-center overflow-hidden border-b border-primary/10 relative">
           <div className="absolute inset-0 bg-[radial-gradient(var(--primary)_0.5px,transparent_0.5px)] [background-size:12px_12px] opacity-[0.03]"></div>
-          
+
           <div className="bg-card shadow-2xl border border-border rounded-xl w-[120px] h-[160px] p-2.5 relative z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out flex flex-col gap-2">
             <div className="w-12 h-1.5 bg-muted rounded-full"></div>
             <div className="space-y-1">
@@ -369,54 +338,54 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
           </div>
 
           {isJobBased && (
-             <div className="absolute top-4 start-4 z-10">
-                <div className="flex items-center gap-1.5 bg-dashboard-card-bg/90 backdrop-blur px-2.5 py-1 border border-primary/10 rounded-full shadow-sm">
-                   <Target className="w-3.5 h-3.5 text-primary" />
-                   <span className="text-[9px] font-black uppercase tracking-wider text-primary">
-                      {t("Targeted")}
-                   </span>
-                </div>
-             </div>
+            <div className="absolute top-4 start-4 z-10">
+              <div className="flex items-center gap-1.5 bg-dashboard-card-bg/90 backdrop-blur px-2.5 py-1 border border-primary/10 rounded-full shadow-sm">
+                <Target className="w-3.5 h-3.5 text-primary" />
+                <span className="text-[9px] font-black uppercase tracking-wider text-primary">
+                  {t("Targeted")}
+                </span>
+              </div>
+            </div>
           )}
 
           <div className="absolute top-4 end-4 z-10">
-             {(() => {
-                const score = resume.ats_score || 0;
-                const scoreColor = score >= 80 ? "text-green-400 bg-green-500/5 border-green-500/10 shadow-green-500/5" :
-                                 score >= 60 ? "text-yellow-400 bg-yellow-500/5 border-yellow-500/10 shadow-yellow-500/5" :
-                                 score > 0 ? "text-red-400 bg-red-500/5 border-red-500/10 shadow-red-500/5" :
-                                 "text-muted-foreground bg-dashboard-card-bg/50 border-primary/5";
-                
-                return (
-                  <div className={cn(
-                    "backdrop-blur-md px-3 py-1 border rounded-full shadow-sm text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                    scoreColor
-                  )}>
-                    <span className="opacity-50 mr-1">ATS</span> {resume.ats_score || "—"}
-                  </div>
-                );
-             })()}
+            {(() => {
+              const score = resume.ats_score || 0;
+              const scoreColor = score >= 80 ? "text-green-400 bg-green-500/5 border-green-500/10 shadow-green-500/5" :
+                score >= 60 ? "text-yellow-400 bg-yellow-500/5 border-yellow-500/10 shadow-yellow-500/5" :
+                  score > 0 ? "text-red-400 bg-red-500/5 border-red-500/10 shadow-red-500/5" :
+                    "text-muted-foreground bg-dashboard-card-bg/50 border-primary/5";
+
+              return (
+                <div className={cn(
+                  "backdrop-blur-md px-3 py-1 border rounded-full shadow-sm text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                  scoreColor
+                )}>
+                  <span className="opacity-50 mr-1">ATS</span> {resume.ats_score || "—"}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Header HUD Overlay */}
           <AnimatePresence>
             {isHovered && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="absolute inset-0 bg-background/80 backdrop-blur-md z-30 flex items-center justify-center p-4 border-b border-primary/20"
               >
 
-                
+
                 <div className="grid grid-cols-2 gap-4 w-full max-w-[160px] relative z-40">
                   <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.05 }}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button 
-                          variant="secondary" 
-                          size="icon" 
-                          asChild 
+                        <Button
+                          variant="secondary"
+                          size="icon"
+                          asChild
                           className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
                         >
                           <Link href={`/dashboard/resume-builder/${resume.resume_id}`}>
@@ -432,9 +401,9 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span>
-                          <Button 
-                            variant="secondary" 
-                            size="icon" 
+                          <Button
+                            variant="secondary"
+                            size="icon"
                             disabled={isAtLimit}
                             onClick={() => onTailor(resume.resume_id, resume.title)}
                             className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
@@ -451,9 +420,9 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span>
-                          <Button 
-                            variant="secondary" 
-                            size="icon" 
+                          <Button
+                            variant="secondary"
+                            size="icon"
                             disabled={isAtLimit || isCloning}
                             onClick={() => onClone(resume.resume_id, resume.title)}
                             className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
@@ -469,9 +438,9 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
                   <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2 }}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button 
-                          variant="secondary" 
-                          size="icon" 
+                        <Button
+                          variant="secondary"
+                          size="icon"
                           asChild
                           className="w-full h-12 rounded-2xl bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary transition-all active:scale-90 glow-border"
                         >
@@ -490,42 +459,49 @@ function ResumeCard({ resume, t, onClone, onDelete, onTailor, isCloning, isAtLim
         </div>
 
         <div className="p-5 flex flex-col flex-grow bg-dashboard-card-bg relative z-10">
-          <div className="space-y-1.5 mb-4">
-            <h3 className="font-black text-foreground uppercase truncate pr-4 leading-tight group-hover:text-primary transition-colors text-sm tracking-tight" title={resume.title}>
+          <div className="space-y-1 mb-4">
+            <div className={cn(
+              "font-mono text-[9px] uppercase tracking-[0.15em] opacity-60 mb-1",
+              isJobBased ? "text-info" : "text-primary"
+            )}>
+              // {isJobBased ? "JOB-BASED" : "GENERAL"}
+            </div>
+            
+            <h3 className="font-bold text-foreground dark:text-white light:text-black uppercase truncate pr-4 leading-tight group-hover:text-primary transition-colors text-[15px] tracking-tighter" title={resume.title}>
               {resume.title || t("UntitledResume")}
             </h3>
-            
+
             {isJobBased && (
               <div className="flex items-center gap-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
-                 <span className="truncate">{targetCompany || targetRole || "Specific Role"}</span>
+                <span className="truncate">{targetCompany || targetRole || "Specific Role"}</span>
               </div>
             )}
           </div>
 
           <div className="mt-auto flex items-center justify-between pt-3 border-t border-primary/10">
-             <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest opacity-60">
-                UPD: {new Date(resume.last_updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-             </span>
-             
-             <AnimatePresence>
-                {isHovered && (
-                  <motion.div
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.5, opacity: 0 }}
+            <span className="text-[9px] font-mono font-bold text-muted-foreground uppercase tracking-widest opacity-60">
+              UPD: {new Date(resume.last_updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+            </span>
+
+            <AnimatePresence>
+              {isHovered && (
+                <motion.div
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.5, opacity: 0 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDelete(resume.resume_id)}
+                    className="h-7 text-red-500/60 hover:text-red-500 hover:bg-red-500/10 rounded-lg px-2"
                   >
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => onDelete(resume.resume_id)}
-                      className="h-7 text-red-500/60 hover:text-red-500 hover:bg-red-500/10 rounded-lg px-2"
-                    >
-                       <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                       <span className="text-[9px] font-black uppercase tracking-widest">{t("Delete")}</span>
-                    </Button>
-                  </motion.div>
-                )}
-             </AnimatePresence>
+                    <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                    <span className="text-[9px] font-black uppercase tracking-widest">{t("Delete")}</span>
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </Card>

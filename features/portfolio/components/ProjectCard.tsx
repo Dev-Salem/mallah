@@ -164,7 +164,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                             <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
                                 {isRoadmap ? <Code2 className="w-6 h-6 text-primary/30" /> : <User className="w-6 h-6 text-primary/30" />}
                             </div>
-                            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60 px-4 text-center line-clamp-1">
+                            <span className="font-mono text-xs uppercase tracking-tight text-muted-foreground/80 px-4 text-center line-clamp-1">
                                 {isRoadmap ? project.title : "User Added"}
                             </span>
                         </div>
@@ -172,7 +172,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
 
                     {/* Source Badge */}
                     <div className="absolute top-3 left-3">
-                        <Badge variant="outline" className={cn("uppercase font-mono text-[9px] tracking-wider py-0 px-2 h-5 border-none", isRoadmap ? 'bg-info/10 text-info' : 'bg-success/10 text-success')}>
+                        <Badge variant="outline" className={cn("uppercase font-mono text-xs tracking-tight py-0.5 px-2 h-6 border-none", isRoadmap ? 'bg-info/10 text-info' : 'bg-success/10 text-success')}>
                             {isRoadmap ? 'Roadmap' : 'External'}
                         </Badge>
                     </div>
@@ -184,7 +184,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
 
                     {/* Private Ribbon */}
                     {viewMode === "private" && isPrivate && (
-                        <div className="absolute bottom-0 left-0 right-0 bg-destructive/80 backdrop-blur-sm text-white text-[9px] font-mono uppercase tracking-widest py-1 text-center">
+                        <div className="absolute bottom-0 left-0 right-0 bg-destructive/90 backdrop-blur-sm text-white text-xs font-mono uppercase tracking-tight py-1.5 text-center">
                             Private — Hidden from public portfolio
                         </div>
                     )}
@@ -197,11 +197,11 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                             <h3 className="font-bold text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                                 {project.title}
                             </h3>
-                            <Badge variant="outline" className={cn("uppercase font-mono text-[9px] h-4 px-1.5", getDifficultyStyles(project.difficulty))}>
+                            <Badge variant="outline" className={cn("uppercase font-mono text-xs h-5 px-2", getDifficultyStyles(project.difficulty))}>
                                 {project.difficulty}
                             </Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed">
+                        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                             {project.description}
                         </p>
                     </div>
@@ -209,7 +209,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                     {/* Tech Stack Tags */}
                     <div className="flex flex-wrap gap-1.5 mt-auto">
                         {project.techStack.slice(0, 3).map(tech => (
-                            <span key={tech} className="text-[9px] font-mono text-primary/70 bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
+                            <span key={tech} className="text-xs font-mono text-primary/90 bg-primary/5 px-2 py-0.5 rounded border border-primary/10">
                                 {tech}
                             </span>
                         ))}
@@ -227,7 +227,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                                 <Button 
                                     size="sm" 
                                     variant="outline"
-                                    className="flex-1 h-8 font-mono text-[10px] uppercase tracking-tighter gap-1.5 bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary"
+                                    className="flex-1 h-8 font-mono text-xs uppercase tracking-tight gap-1.5 bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary"
                                     onClick={handleStartProject}
                                     disabled={isUpdating}
                                 >
@@ -240,7 +240,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                                 <div className="flex flex-1 gap-2">
                                     <Button 
                                         size="sm" 
-                                        className="flex-1 h-8 font-mono text-[10px] uppercase tracking-tighter gap-1.5 bg-success hover:bg-success/90 text-white"
+                                        className="flex-1 h-8 font-mono text-xs uppercase tracking-tight gap-1.5 bg-success hover:bg-success/90 text-white"
                                         onClick={handleMarkCompleteClick}
                                         disabled={isUpdating}
                                     >
@@ -250,7 +250,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                                     <Button 
                                         size="sm" 
                                         variant="ghost"
-                                        className="h-8 px-2 font-mono text-[10px] uppercase tracking-tighter text-muted-foreground hover:text-foreground hover:bg-white/5 border border-white/5"
+                                        className="h-8 px-2 font-mono text-xs uppercase tracking-tight text-muted-foreground hover:text-foreground hover:bg-white/5 border border-white/5"
                                         onClick={handlePauseProject}
                                         disabled={isUpdating}
                                         title={t('actions.pause')}
@@ -264,7 +264,7 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                                 <Button 
                                     size="sm" 
                                     variant="ghost"
-                                    className="flex-1 h-8 font-mono text-[10px] uppercase tracking-tighter gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/5 border border-transparent hover:border-white/10"
+                                    className="flex-1 h-8 font-mono text-xs uppercase tracking-tight gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/5 border border-transparent hover:border-white/10"
                                     onClick={() => setShowUnmarkConfirm(true)}
                                     disabled={isUpdating}
                                 >
@@ -275,8 +275,8 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
 
                             {/* View Details / Expand Hint if no main action */}
                             {project.status === 'completed' && isRoadmap && (
-                                <div className="flex-1 flex items-center justify-end gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-[10px] font-mono uppercase tracking-tighter">View Outcome</span>
+                                <div className="flex-1 flex items-center justify-end gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-mono uppercase tracking-tight">View Outcome</span>
                                     <ArrowUpRight className="w-3 h-3" />
                                 </div>
                             )}
@@ -284,8 +284,8 @@ export function ProjectCard({ project, viewMode, initiallyOpen = false, catalog 
                     )}
 
                     {viewMode === "public" && (
-                        <div className="flex items-center justify-end gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
-                            <span className="text-[10px] font-mono uppercase tracking-tighter">expand</span>
+                        <div className="flex items-center justify-end gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <span className="text-xs font-mono uppercase tracking-tight">expand</span>
                             <ArrowUpRight className="w-3 h-3" />
                         </div>
                     )}

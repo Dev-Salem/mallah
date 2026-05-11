@@ -73,8 +73,8 @@ export function SkillCard({ skill, isPublicView = false }: SkillCardProps) {
         <div className={`p-4 rounded-xl border transition-all ${isPublicView ? 'bg-card' : 'bg-card hover:border-primary/30'} flex flex-col h-full`}>
             <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-2">
-                    <SourceIcon className={`w-4 h-4 ${iconColor}`} />
-                    <span className="text-[10px] font-mono uppercase text-muted-foreground tracking-wider">
+                    <SourceIcon className={`w-5 h-5 ${iconColor}`} />
+                    <span className="text-xs font-mono uppercase text-muted-foreground tracking-tight">
                         {t(`sourceBadge.${skill.source}`)}
                     </span>
                 </div>
@@ -102,10 +102,10 @@ export function SkillCard({ skill, isPublicView = false }: SkillCardProps) {
                 <h3 className="font-bold text-foreground mb-4">{skill.name}</h3>
 
                 <div className="flex flex-wrap gap-2 mt-auto">
-                    <Badge variant="secondary" className="bg-primary/5 text-primary text-[10px] font-mono">
+                    <Badge variant="secondary" className="bg-primary/5 text-primary text-xs font-mono">
                         {t(`levelBadge.${skill.level as 'beginner' | 'intermediate' | 'advanced'}`)}
                     </Badge>
-                    <Badge variant="outline" className="text-[10px] text-muted-foreground font-mono">
+                    <Badge variant="outline" className="text-xs text-muted-foreground font-mono">
                         {skill.category}
                     </Badge>
                 </div>
@@ -114,7 +114,7 @@ export function SkillCard({ skill, isPublicView = false }: SkillCardProps) {
             {/* Linked Projects Section */}
             {skill.linked_projects && skill.linked_projects.length > 0 && (
                 <div className="mt-4 pt-3 border-t border-primary/10">
-                    <p className="text-[10px] text-muted-foreground font-mono mb-2 uppercase">{t('earnedIn')}</p>
+                    <p className="text-xs text-muted-foreground font-mono mb-2 uppercase">{t('earnedIn')}</p>
                     <div className="flex flex-wrap gap-1">
                         {skill.linked_projects.map((proj: string, idx: number) => (
                             <span key={idx} className="text-xs text-foreground bg-primary/5 px-2 py-0.5 rounded-sm">

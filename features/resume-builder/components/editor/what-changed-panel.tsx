@@ -47,7 +47,7 @@ export function WhatChangedPanel({ resumeId }: WhatChangedPanelProps) {
 
   const changes: { icon: any; label: string }[] = [];
   if (whatChanged.summaryRewritten) {
-    changes.push({ icon: Wand2, label: t("SummaryRewritten") });
+    changes.push({ icon: Wand2, label: t("SummaryRewritten", { skills: whatChanged.jobTitle }) });
   }
   if (whatChanged.bulletsUpdatedCount > 0) {
     changes.push({ icon: CheckCircle2, label: t("BulletsUpdated", { count: whatChanged.bulletsUpdatedCount }) });

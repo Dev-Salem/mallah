@@ -172,13 +172,13 @@ export function ProjectModal({ project, open, onOpenChange, viewMode, catalog }:
             }}>
             <DialogContent className="max-w-3xl glass-projects p-0 overflow-hidden border-none shadow-2xl">
                 {/* Thumbnail Header */}
-                <div className="relative w-full aspect-video bg-muted/20">
+                <div className="relative w-full aspect-[32/9] bg-muted/20">
                     {project.thumbnailUrl ? (
                         <img src={project.thumbnailUrl} alt={project.title} className="w-full h-full object-cover" />
                     ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-accent/20 gap-4">
-                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                                {isRoadmap ? <Lock className="w-8 h-8 text-primary/40" /> : <Unlock className="w-8 h-8 text-primary/40" />}
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-accent/20 gap-2">
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                                {isRoadmap ? <Lock className="w-6 h-6 text-primary/40" /> : <Unlock className="w-6 h-6 text-primary/40" />}
                             </div>
                             <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
                                 {isRoadmap ? project.title : "User Added Project"}
@@ -218,7 +218,7 @@ export function ProjectModal({ project, open, onOpenChange, viewMode, catalog }:
                         </div>
                     </div>
                 ) : (
-                    <div className="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+                    <div className="p-8 space-y-6 max-h-[75vh] overflow-y-auto">
                     {/* Header Info */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                         <div className="space-y-2">

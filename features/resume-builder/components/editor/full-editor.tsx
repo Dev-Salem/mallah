@@ -249,7 +249,7 @@ export default function FullEditor({ resume }: { resume: any }) {
   );
 
   const leftNavNode = (
-    <div className="flex flex-col h-full bg-card border-r border-border">
+    <div className="flex flex-col bg-card">
       <LeftNav 
         items={navItems}
         onSelect={(id) => {
@@ -258,7 +258,7 @@ export default function FullEditor({ resume }: { resume: any }) {
         }}
       />
       {isJobBased && (
-        <div className="mt-auto p-4 border-t border-border overflow-hidden">
+        <div className="mt-8 mb-4 px-4">
           <LiveKeywordPanel requiredSkills={requiredSkills} preferredSkills={[]} resumeText={JSON.stringify(sections)} />
         </div>
       )}

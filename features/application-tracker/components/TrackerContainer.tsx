@@ -31,7 +31,7 @@ export function TrackerContainer({ initialApplications }: TrackerContainerProps)
 
   const handleDelete = useCallback(async (id: string) => {
     if (!window.confirm(t("deleteConfirm"))) return;
-    
+
     try {
       const res = await deleteApplicationAction(id);
       if (res.success) {

@@ -76,7 +76,7 @@ export function ProjectsSection({ projects, catalog, isPublicView = false, initi
                     </h2>
 
                     {!isPublicView && (
-                        <Button onClick={() => setIsAddOpen(true)} size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-white font-mono text-xs tracking-tighter">
+                        <Button onClick={() => setIsAddOpen(true)} size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-white font-mono text-sm tracking-tight">
                             <Plus className="w-4 h-4" />
                             {t('addExternal')}
                         </Button>
@@ -91,7 +91,7 @@ export function ProjectsSection({ projects, catalog, isPublicView = false, initi
                                 key={tab.id}
                                 value={tab.id}
                                 className={cn(
-                                    "flex items-center gap-2 py-2 px-4 font-mono text-xs tracking-tighter uppercase transition-all data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm",
+                                    "flex items-center gap-2 py-2 px-4 font-mono text-sm tracking-tight uppercase transition-all data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm",
                                     activeTab === tab.id ? "text-primary" : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
@@ -99,7 +99,7 @@ export function ProjectsSection({ projects, catalog, isPublicView = false, initi
                                 <Badge 
                                     variant="outline" 
                                     className={cn(
-                                        "h-5 min-w-[20px] px-1 border-none bg-muted/50 text-[10px]",
+                                        "h-5 min-w-[20px] px-1 border-none bg-muted/50 text-xs",
                                         activeTab === tab.id ? "bg-primary/20 text-primary" : "text-muted-foreground"
                                     )}
                                 >
@@ -116,14 +116,14 @@ export function ProjectsSection({ projects, catalog, isPublicView = false, initi
                 <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-y border-white/5">
                     {/* Type Filter Chips */}
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono uppercase text-muted-foreground mr-2">{t('filters.type')}:</span>
+                        <span className="text-xs font-mono uppercase text-muted-foreground mr-2">{t('filters.type')}:</span>
                         <div className="flex bg-muted/20 p-1 rounded-md border border-white/5">
                             {typeOptions.map((opt) => (
                                 <button
                                     key={opt.id}
                                     onClick={() => setFilter('type', opt.id)}
                                     className={cn(
-                                        "px-3 py-1 text-[10px] font-mono uppercase tracking-tighter transition-all rounded-sm",
+                                        "px-3 py-1 text-xs font-mono uppercase tracking-tight transition-all rounded-sm",
                                         typeFilter === opt.id 
                                             ? "bg-background text-primary shadow-sm" 
                                             : "text-muted-foreground hover:text-foreground"
@@ -137,10 +137,10 @@ export function ProjectsSection({ projects, catalog, isPublicView = false, initi
 
                     {/* Visibility Dropdown */}
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono uppercase text-muted-foreground mr-2">{t('filters.visibility')}:</span>
+                        <span className="text-xs font-mono uppercase text-muted-foreground mr-2">{t('filters.visibility')}:</span>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm" className="h-8 border-white/5 bg-muted/20 font-mono text-[10px] gap-2 hover:bg-muted/40">
+                                <Button variant="outline" size="sm" className="h-8 border-white/5 bg-muted/20 font-mono text-xs gap-2 hover:bg-muted/40">
                                     {visibilityFilter === 'all' && <Globe className="w-3 h-3" />}
                                     {visibilityFilter === 'public' && <Eye className="w-3 h-3" />}
                                     {visibilityFilter === 'private' && <Lock className="w-3 h-3" />}
