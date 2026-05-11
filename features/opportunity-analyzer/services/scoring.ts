@@ -471,6 +471,7 @@ export function calculateOpportunityScore(params: {
     breakdown: MatchScoreBreakdown;
     cvSkillsContributed: number;
     experienceBonus: number;
+    relevantProjectCount: number;
 } {
     const { requiredSkills, preferredSkills, cvData, currentPathId } = params;
     const mallahSkills = (params.mallahSkills ?? []) as MallahSkill[];
@@ -564,6 +565,7 @@ export function calculateOpportunityScore(params: {
         breakdown,
         cvSkillsContributed,
         experienceBonus,
+        relevantProjectCount,
     };
 }
 

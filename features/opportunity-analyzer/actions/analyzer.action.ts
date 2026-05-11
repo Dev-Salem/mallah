@@ -362,11 +362,12 @@ export const analyzeJobAction = async (jobDescription: string, cvData: Extracted
                 seniority: z.enum(['Intern', 'Junior', 'Mid', 'Senior']).nullable(),
                 employment_type: z.enum(['Full-time', 'Part-time', 'Contract', 'Remote']).nullable(),
                 location: z.string().nullable(),
+                apply_url: z.string().nullable(),
                 required_skills: z.array(z.string()),
                 preferred_skills: z.array(z.string()),
                 responsibilities: z.array(z.string())
             }),
-            system: "You are an expert technical recruiter extracting details from a job description. Extract only actual skills into required_skills and preferred_skills. Degrees, certifications, and credentials are not skills and must be excluded.",
+            system: "You are an expert technical recruiter extracting details from a job description. Extract only actual skills into required_skills and preferred_skills. Degrees, certifications, and credentials are not skills and must be excluded. If a direct job application or posting URL appears in the text, place it in apply_url.",
             prompt: `Extract the details from this job description:\n\n${jobDescription}`
         });
 
@@ -433,10 +434,19 @@ export const analyzeJobAction = async (jobDescription: string, cvData: Extracted
             company_name: jdData.company_name || null,
             location: jdData.location || null,
             seniority_level: jdData.seniority || null,
+            employment_type: jdData.employment_type || null,
+            responsibilities: (jdData.responsibilities || []).filter(Boolean).slice(0, 4),
+            apply_url: jdData.apply_url || null,
             raw_jd_text: jobDescription,
             extracted_skills: {
                 required: requiredSkills,
-                preferred: preferredSkills
+                preferred: preferredSkills,
+                metadata: {
+                    employment_type: jdData.employment_type || null,
+                    responsibilities: (jdData.responsibilities || []).filter(Boolean).slice(0, 4),
+                    apply_url: jdData.apply_url || null,
+                    projects_matched: scoring.relevantProjectCount,
+                }
             },
             skills_breakdown: enrichedBreakdown,
             action_plan: actionPlanResult.action_plan,

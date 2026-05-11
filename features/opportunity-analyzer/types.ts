@@ -71,6 +71,19 @@ export interface MatchScoreBreakdown {
     };
 }
 
+export interface OpportunityAnalysisMetadata {
+    employment_type?: string | null;
+    responsibilities?: string[];
+    apply_url?: string | null;
+    projects_matched?: number;
+}
+
+export interface OpportunityExtractedSkills {
+    required: string[];
+    preferred: string[];
+    metadata?: OpportunityAnalysisMetadata;
+}
+
 export interface PortfolioSyncRelevantProject {
     id: string;
     title: string;
@@ -113,11 +126,11 @@ export interface OpportunityAnalysisResult {
     company_name: string | null;
     location: string | null;
     seniority_level: string | null;
+    employment_type?: string | null;
+    responsibilities?: string[];
+    apply_url?: string | null;
     raw_jd_text: string;
-    extracted_skills: {
-        required: string[];
-        preferred: string[];
-    };
+    extracted_skills: OpportunityExtractedSkills;
     skills_breakdown: MatchScoreBreakdown;
     action_plan: ActionPlanStep[];
     cv_skills_contributed: number;
