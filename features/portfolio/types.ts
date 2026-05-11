@@ -157,7 +157,7 @@ export const addManualSkillSchema = z.object({
     path: ["skill_id"]
 });
 
-export type AddManualSkillInput = z.infer<typeof addManualSkillSchema>;
+export type AddManualSkillInput = z.input<typeof addManualSkillSchema>;
 
 export const addExternalProjectSchema = z.object({
     title: z.string().min(1).max(200),
