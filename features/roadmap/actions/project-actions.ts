@@ -163,14 +163,14 @@ export async function submitProjectAction(
 
     if (error) {
         console.error('Error submitting project:', error);
-        return { success: false, error: error.message };
+        const friendlyError = error.message.includes('schema "net" does not exist')
+            ? 'Project submission is blocked because the database webhook extension is not enabled. Apply the latest Supabase migration, then try again.'
+            : error.message;
+
+        return { success: false, error: friendlyError };
     }
 
-    // Trigger AI evaluation if GitHub URL is provided
-    if (data.github_url) {
-        // We trigger it asynchronously to not block the submission response
-        evaluateProjectAction(projectId).catch(err => console.error('Delayed evaluation failed:', err));
-    }
+    // AI evaluation is triggered by the database webhook when review_status becomes pending.
 
     // 2. Skill acquisition
     const { data: projectSkills } = await supabase

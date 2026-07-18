@@ -8,12 +8,13 @@ import {
     ArrowLeft, Trophy, ExternalLink, Link as LinkIcon, Edit2, CheckCircle2, 
     Github, BookOpen, AlertCircle, ChevronRight, X, Target, Lightbulb, 
     ListChecks, Star, Timer, Hammer, Sparkles, Briefcase, FileText,
-    Percent, Award, Clock, Code2, Zap, RefreshCcw, Check, ArrowRight
+    Percent, Award, Clock, Code2, Zap, RefreshCcw, Check, ArrowRight, ImageIcon, Eye, Upload, Loader2
 } from 'lucide-react';
 import { Project, Skill, UserProjectSubmission, ProjectReview } from '../types';
 import { submitProjectAction, skipProjectAction } from '../actions/project-actions';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { createClient } from '@/lib/supabase/client';
 
 interface ProjectViewerViewProps {
     project: Project & { 
@@ -66,6 +67,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
     const t = useTranslations('ProjectViewer');
     const locale = useLocale();
     const router = useRouter();
+    const supabase = React.useMemo(() => createClient(), []);
 
     const [isPending, startTransition] = React.useTransition();
     const [isEditing, setIsEditing] = React.useState(!project.submission || (project.submission.status !== 'completed' && project.submission.status !== 'waiting'));
@@ -73,9 +75,11 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
     // Form fields
     const [githubUrl, setGithubUrl] = React.useState(project.submission?.github_url || '');
     const [demoUrl, setDemoUrl] = React.useState(project.submission?.demo_url || '');
+    const [thumbnailUrl, setThumbnailUrl] = React.useState(project.submission?.thumbnail_url || '');
     const [notes, setNotes] = React.useState(project.submission?.personal_note || '');
     const [customName, setCustomName] = React.useState(project.submission?.custom_name || '');
     const [customDescription, setCustomDescription] = React.useState(project.submission?.custom_description || '');
+    const [publicPortfolio, setPublicPortfolio] = React.useState(project.submission?.is_public ?? true);
     const [selectedTags, setSelectedTags] = React.useState<string[]>(
         project.submission?.tech_tags || project.skills?.map(s => s.name) || []
     );
@@ -83,6 +87,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
     const [error, setError] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isSkipping, setIsSkipping] = React.useState(false);
+    const [isUploading, setIsUploading] = React.useState(false);
     const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
 
     const safeFormatDate = (dateStr: string | null | undefined) => {
@@ -94,6 +99,48 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
             month: 'long',
             day: 'numeric'
         });
+    };
+
+    const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            setError('Please upload an image file for the thumbnail.');
+            return;
+        }
+
+        setError('');
+        setIsUploading(true);
+
+        try {
+            const fileExt = file.name.split('.').pop() || 'png';
+            const fileName = `${Math.random().toString(36).slice(2)}.${fileExt}`;
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (!user) {
+                throw new Error('Unauthorized');
+            }
+
+            const filePath = `${user.id}/${fileName}`;
+            const { error: uploadError } = await supabase.storage
+                .from('portfolio-images')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('portfolio-images')
+                .getPublicUrl(filePath);
+
+            setThumbnailUrl(publicUrl);
+        } catch (uploadError: any) {
+            console.error('Thumbnail upload failed:', uploadError);
+            setError(uploadError.message || 'Failed to upload thumbnail.');
+        } finally {
+            setIsUploading(false);
+            e.target.value = '';
+        }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -108,8 +155,9 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                 personal_note: notes.trim() || undefined,
                 custom_name: customName.trim() || undefined,
                 custom_description: customDescription.trim() || undefined,
+                thumbnail_url: thumbnailUrl.trim() || undefined,
                 tech_tags: selectedTags.length > 0 ? selectedTags : undefined,
-                public_portfolio: true,
+                public_portfolio: publicPortfolio,
             });
 
             setIsSubmitting(false);
@@ -381,54 +429,138 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                         {isEditing ? (
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 {/* Header */}
-                                <div className="space-y-2 pb-2">
+                                <div className="space-y-3 pb-2">
                                     <h3 className="text-xl font-black flex items-center gap-2.5">
                                         <div className="p-1.5 bg-indigo-500/10 rounded-lg">
                                             <Trophy className="w-5 h-5 text-indigo-500" />
                                         </div>
                                         {t('submissionForm.header')}
                                     </h3>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="rounded-2xl border border-border/50 bg-secondary/20 px-4 py-3">
+                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Required</p>
+                                            <p className="mt-1 text-sm font-bold">GitHub repository</p>
+                                        </div>
+                                        <div className="rounded-2xl border border-border/50 bg-secondary/20 px-4 py-3">
+                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Outcome</p>
+                                            <p className="mt-1 text-sm font-bold">Marks this milestone complete</p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-6">
-                                    {/* Github URL */}
-                                    <div className="space-y-2.5">
-                                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                            <Github className="w-3.5 h-3.5" />
-                                            {t('submissionForm.githubLabel')}
-                                        </label>
-                                        <input
-                                            type="url"
-                                            value={githubUrl}
-                                            onChange={(e) => setGithubUrl(e.target.value)}
-                                            placeholder="https://github.com/username/project"
-                                            className="w-full px-4 py-3.5 bg-secondary/30 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
-                                            required
-                                        />
+                                    <div className="space-y-4 rounded-3xl border border-border/50 bg-secondary/10 p-5">
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-black uppercase tracking-[0.18em] text-muted-foreground">Project links</h4>
+                                            <p className="text-xs text-muted-foreground">Add the main proof that your project is real, reviewable, and shareable.</p>
+                                        </div>
+
+                                        <div className="space-y-2.5">
+                                            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                                <Github className="w-3.5 h-3.5" />
+                                                {t('submissionForm.githubLabel')}
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={githubUrl}
+                                                onChange={(e) => setGithubUrl(e.target.value)}
+                                                placeholder="https://github.com/username/project"
+                                                className="w-full px-4 py-3.5 bg-background/70 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
+                                                required
+                                            />
+                                            <p className="text-xs text-muted-foreground">Required. This is the main link used for submission and review.</p>
+                                        </div>
+
+                                        <div className="space-y-2.5">
+                                            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                                <ExternalLink className="w-3.5 h-3.5" />
+                                                {t('submissionForm.demoLabel')}
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={demoUrl}
+                                                onChange={(e) => setDemoUrl(e.target.value)}
+                                                placeholder="https://your-project.vercel.app"
+                                                className="w-full px-4 py-3.5 bg-background/70 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
+                                            />
+                                            <p className="text-xs text-muted-foreground">Optional. Add a live demo if the project can be opened in a browser.</p>
+                                        </div>
+
+                                        <div className="space-y-2.5">
+                                            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                                <ImageIcon className="w-3.5 h-3.5" />
+                                                Thumbnail Image
+                                            </label>
+                                            <div
+                                                className={cn(
+                                                    "relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300",
+                                                    thumbnailUrl ? "aspect-video" : "h-36",
+                                                    isUploading ? "border-primary animate-pulse" : "border-border/50 hover:border-primary/50 hover:bg-primary/[0.02]"
+                                                )}
+                                                onClick={() => !isUploading && document.getElementById('roadmap-thumbnail-upload')?.click()}
+                                            >
+                                                {thumbnailUrl ? (
+                                                    <>
+                                                        <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
+                                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px] p-4">
+                                                            <button
+                                                                type="button"
+                                                                className="h-8 px-3 bg-background/90 text-[10px] font-black uppercase tracking-wider rounded-full"
+                                                            >
+                                                                Change Image
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="h-8 px-3 bg-destructive text-destructive-foreground text-[10px] font-black uppercase tracking-wider rounded-full"
+                                                                onClick={(event) => {
+                                                                    event.stopPropagation();
+                                                                    setThumbnailUrl('');
+                                                                }}
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-muted-foreground p-4">
+                                                        <div className="w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                                                            <Upload className="w-5 h-5 text-primary/60" />
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground">Upload thumbnail</p>
+                                                            <p className="text-[9px] font-medium opacity-60 mt-1">Supports PNG, JPG, WEBP</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                <input
+                                                    id="roadmap-thumbnail-upload"
+                                                    type="file"
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                    onChange={handleThumbnailUpload}
+                                                />
+                                                {isUploading && (
+                                                    <div className="absolute inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center flex-col gap-3">
+                                                        <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Uploading</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-muted-foreground">Optional. Upload a thumbnail image just like in the Portfolio Hub.</p>
+                                        </div>
                                     </div>
 
-                                    {/* Demo URL */}
-                                    <div className="space-y-2.5">
-                                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                            <ExternalLink className="w-3.5 h-3.5" />
-                                            {t('submissionForm.demoLabel')}
-                                        </label>
-                                        <input
-                                            type="url"
-                                            value={demoUrl}
-                                            onChange={(e) => setDemoUrl(e.target.value)}
-                                            placeholder="https://your-project.vercel.app"
-                                            className="w-full px-4 py-3.5 bg-secondary/30 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
-                                        />
-                                    </div>
+                                    <div className="space-y-4 rounded-3xl border border-border/50 bg-secondary/10 p-5">
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-black uppercase tracking-[0.18em] text-muted-foreground">Tech stack</h4>
+                                            <p className="text-xs text-muted-foreground">Pick the skills and tools this project demonstrates best.</p>
+                                        </div>
 
-                                    {/* Tech Stack Tags */}
-                                    <div className="space-y-3">
                                         <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">
                                             {t('submissionForm.techStackLabel')}
                                         </label>
                                         <div className="flex flex-wrap gap-2">
-                                            {(project.skills || []).map((skill) => {
+                                            {(project.skills || []).length > 0 ? (project.skills || []).map((skill) => {
                                                 const isSelected = selectedTags.includes(skill.name);
                                                 return (
                                                     <button
@@ -439,23 +571,31 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                                             "px-3 py-1.5 rounded-lg text-xs font-bold border transition-all flex items-center gap-1.5",
                                                             isSelected 
                                                                 ? "bg-primary/10 border-primary text-primary" 
-                                                                : "bg-secondary/30 border-border/50 text-muted-foreground hover:border-primary/30"
+                                                                : "bg-background/70 border-border/50 text-muted-foreground hover:border-primary/30"
                                                         )}
                                                     >
                                                         {isSelected && <Check className="w-3 h-3" />}
                                                         {skill.name}
                                                     </button>
                                                 );
-                                            })}
+                                            }) : (
+                                                <div className="w-full rounded-2xl border border-dashed border-border/60 bg-background/50 px-4 py-3 text-xs text-muted-foreground">
+                                                    No suggested skills were attached to this project yet. You can still submit it.
+                                                </div>
+                                            )}
                                         </div>
+                                        {selectedTags.length > 0 && (
+                                            <p className="text-xs text-muted-foreground">{selectedTags.length} tag{selectedTags.length === 1 ? '' : 's'} selected</p>
+                                        )}
                                     </div>
 
-                                    <div className="pt-4 border-t border-border/40 space-y-6">
+                                    <div className="space-y-4 rounded-3xl border border-border/50 bg-secondary/10 p-5">
                                         <div className="space-y-1">
                                             <h4 className="text-sm font-black flex items-center gap-2">
                                                 <Sparkles className="w-4 h-4 text-amber-500" />
                                                 {t('submissionForm.customizationHeader')}
                                             </h4>
+                                            <p className="text-xs text-muted-foreground">Control how the project appears in your portfolio and add context for reviewers.</p>
                                         </div>
 
                                         <div className="space-y-4">
@@ -468,7 +608,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                                     value={customName}
                                                     onChange={(e) => setCustomName(e.target.value)}
                                                     placeholder={project.title}
-                                                    className="w-full px-4 py-3 bg-secondary/30 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
+                                                    className="w-full px-4 py-3 bg-background/70 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm"
                                                 />
                                             </div>
 
@@ -481,9 +621,39 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                                     onChange={(e) => setCustomDescription(e.target.value)}
                                                     placeholder={project.description || ''}
                                                     rows={3}
-                                                    className="w-full px-4 py-3 bg-secondary/30 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm resize-none"
+                                                    className="w-full px-4 py-3 bg-background/70 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm resize-none"
                                                 />
                                             </div>
+
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-black text-muted-foreground ml-1">
+                                                    Submission Notes
+                                                </label>
+                                                <textarea
+                                                    value={notes}
+                                                    onChange={(e) => setNotes(e.target.value)}
+                                                    placeholder="What did you build, what tradeoffs did you make, and what should a reviewer pay attention to?"
+                                                    rows={4}
+                                                    className="w-full px-4 py-3 bg-background/70 border border-border/50 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-sm resize-none"
+                                                />
+                                                <p className="text-xs text-muted-foreground">Optional. Great for explaining scope, constraints, or standout decisions.</p>
+                                            </div>
+
+                                            <label className="flex items-start gap-3 rounded-2xl border border-border/50 bg-background/60 px-4 py-4 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={publicPortfolio}
+                                                    onChange={(e) => setPublicPortfolio(e.target.checked)}
+                                                    className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary/20"
+                                                />
+                                                <div className="space-y-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <Eye className="w-4 h-4 text-primary" />
+                                                        <span className="text-sm font-black">Show in public portfolio</span>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground">Turn this off if you want the project saved as completed without displaying it publicly.</p>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -491,11 +661,11 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                 <div className="space-y-4">
                                     <button
                                         type="submit"
-                                        disabled={isPending || isSubmitting || isSkipping}
+                                        disabled={isPending || isSubmitting || isSkipping || isUploading}
                                         className={cn(
                                             "w-full py-4 bg-primary text-primary-foreground font-black rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] group relative overflow-hidden",
                                             isSubmitting ? "opacity-90 cursor-not-allowed shadow-inner" : "hover:bg-primary/90 hover:shadow-primary/20 hover:-translate-y-0.5",
-                                            isSkipping && "opacity-50 cursor-not-allowed",
+                                            (isSkipping || isUploading) && "opacity-50 cursor-not-allowed",
                                             isSubmitting && "animate-pulse"
                                         )}
                                     >
@@ -508,7 +678,7 @@ export function ProjectViewerView({ project, breadcrumb }: ProjectViewerViewProp
                                         ) : (
                                             <Check className="w-5 h-5" />
                                         )}
-                                        {t('markComplete')}
+                                        Submit Project
                                     </button>
                                     
                                     {!isCompleted && !isWaiting && (
